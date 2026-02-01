@@ -13,17 +13,37 @@ import StoryForm from '../components/story/StoryForm';
 import StoryDisplay from '../components/story/StoryDisplay';
 import LoadingAnimation from '../components/story/LoadingAnimation';
 
-const themeDescriptions = {
-  adventure: 'הרפתקאה מרגשת',
-  friendship: 'חברות אמיתית',
-  courage: 'אומץ וגבורה',
-  kindness: 'חסד ונתינה',
-  dreams: 'חלומות וכוכבים',
-  nature: 'טבע ופלאיו',
-  space: 'חלל והרפתקאות בין הכוכבים',
-  underwater: 'עולם מתחת למים',
-  magic: 'קסם ופלאות',
-  animals: 'חיות וחברים מהטבע',
+const settingLabels = {
+  space: 'חלל',
+  forest: 'יער קסום',
+  castle: 'ארמון',
+  sports: 'עולם הספורט',
+  real_life: 'חיים אמיתיים',
+};
+
+const challengeLabels = {
+  fears: 'פחדים',
+  social_difficulty: 'קושי חברתי',
+  changes: 'התמודדות עם שינויים',
+  emotional_regulation: 'ויסות רגשי',
+  separation_anxiety: 'חרדת נטישה',
+  self_confidence: 'ביטחון עצמי',
+  sleep_issues: 'קשיי שינה',
+};
+
+const reactionLabels = {
+  outburst: 'התפרצות',
+  withdrawal: 'הסתגרות',
+  attention_seeking: 'חיפוש תשומת לב',
+  crying: 'בכי',
+  aggression: 'תוקפנות',
+  avoidance: 'הימנעות',
+};
+
+const genderLabels = {
+  boy: 'בן',
+  girl: 'בת',
+  other: '',
 };
 
 export default function CreateStory() {
@@ -36,8 +56,15 @@ export default function CreateStory() {
   const [formData, setFormData] = useState({
     childName: '',
     childAge: '',
-    theme: '',
-    characters: '',
+    gender: '',
+    childImage: '',
+    setting: '',
+    challengeType: '',
+    triggerDesc: '',
+    reactionType: '',
+    hobbies: '',
+    contactEmail: '',
+    contactPhone: '',
   });
 
   useEffect(() => {
@@ -50,7 +77,6 @@ export default function CreateStory() {
       setUser(currentUser);
       setCredits(currentUser.credits ?? 3);
     } catch (e) {
-      // Redirect to login
       base44.auth.redirectToLogin(window.location.href);
     }
   };
@@ -64,7 +90,7 @@ export default function CreateStory() {
       return;
     }
 
-    if (!formData.childName || !formData.childAge || !formData.theme) {
+    if (!formData.childName || !formData.childAge || !formData.gender || !formData.setting || !formData.challengeType) {
       setError('נא למלא את כל השדות הנדרשים');
       return;
     }
@@ -72,23 +98,26 @@ export default function CreateStory() {
     setIsLoading(true);
 
     try {
-      const themeDesc = themeDescriptions[formData.theme] || formData.theme;
-      const charactersText = formData.characters
-        ? `שלבו בסיפור את הדמויות הבאות: ${formData.characters}.`
-        : '';
+      const genderText = genderLabels[formData.gender] || '';
+      const settingText = settingLabels[formData.setting] || formData.setting;
+      const challengeText = challengeLabels[formData.challengeType] || formData.challengeType;
+      const reactionText = formData.reactionType ? reactionLabels[formData.reactionType] : '';
+      
+      const triggerPart = formData.triggerDesc ? `הקושי צף במיוחד כש${formData.triggerDesc}` : '';
+      const reactionPart = reactionText ? `והתגובה שלו/ה היא ${reactionText}` : '';
+      const hobbiesPart = formData.hobbies ? `הגיבור/ה מאוד אוהב/ת ${formData.hobbies}.` : '';
 
-      const prompt = `כתוב סיפור מקסים ומרגש לילד/ה בשם ${formData.childName} בגיל ${formData.childAge}.
-נושא הסיפור: ${themeDesc}.
-${charactersText}
+      const prompt = `כתוב סיפור ילדים טיפולי עבור ${formData.childName} (${genderText}), בגיל ${formData.childAge}.
 
-דגשים חשובים:
-- השפה צריכה להיות עברית תקנית, חמה ומעצימה
-- התאם את רמת השפה לגיל הילד/ה
-- הסיפור צריך להיות באורך של כ-300-400 מילים
-- שלב הומור עדין ורגעים מרגשים
-- סיום הסיפור צריך להיות חיובי ומעצים
-- הפוך את ${formData.childName} לגיבור/ה של הסיפור
+עולם הסיפור: ${settingText}.
 
+האתגר: הגיבור/ה מתמודד/ת עם ${challengeText}. ${triggerPart} ${reactionPart}.
+
+חיבור אישי: ${hobbiesPart}
+
+משימה: צור סיפור בעברית חמה ומעצימה בתוך עולם ה${settingText}. אם יש תחביבים, השתמש בהם ככוח שעוזר לגיבור/ה להתמודד עם האתגר הרגשי. הסיפור צריך להסתיים בתחושת הצלחה, ביטחון וכלים להתמודדות.
+
+אורך הסיפור: כ-400-500 מילים.
 כתוב את הסיפור בלבד, ללא כותרת וללא הסברים נוספים.`;
 
       const response = await base44.integrations.Core.InvokeLLM({
@@ -98,7 +127,7 @@ ${charactersText}
           properties: {
             story: {
               type: 'string',
-              description: 'The complete story in Hebrew',
+              description: 'The complete therapeutic story in Hebrew',
             },
           },
           required: ['story'],
@@ -111,8 +140,15 @@ ${charactersText}
       const savedStory = await base44.entities.Story.create({
         child_name: formData.childName,
         child_age: parseInt(formData.childAge),
-        theme: formData.theme,
-        characters: formData.characters,
+        gender: formData.gender,
+        child_image_url: formData.childImage || null,
+        setting: formData.setting,
+        challenge_type: formData.challengeType,
+        trigger_desc: formData.triggerDesc || null,
+        reaction_type: formData.reactionType || null,
+        hobbies: formData.hobbies || null,
+        contact_email: formData.contactEmail || null,
+        contact_phone: formData.contactPhone || null,
         content: storyContent,
       });
 
@@ -135,8 +171,15 @@ ${charactersText}
     setFormData({
       childName: '',
       childAge: '',
-      theme: '',
-      characters: '',
+      gender: '',
+      childImage: '',
+      setting: '',
+      challengeType: '',
+      triggerDesc: '',
+      reactionType: '',
+      hobbies: '',
+      contactEmail: '',
+      contactPhone: '',
     });
   };
 
@@ -161,7 +204,7 @@ ${charactersText}
             <Sparkles className="w-6 h-6 text-white" />
           </div>
         </motion.div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">יצירת סיפור חדש</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">יצירת סיפור טיפולי</h1>
         <p className="text-gray-600">מלאו את הפרטים והקסם יעשה את השאר ✨</p>
       </div>
 
