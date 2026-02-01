@@ -4,21 +4,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen, Calendar, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 
-const themeLabels = {
-  adventure: { label: 'הרפתקאות', emoji: '🗺️', color: 'bg-orange-100 text-orange-700' },
-  friendship: { label: 'חברות', emoji: '🤝', color: 'bg-pink-100 text-pink-700' },
-  courage: { label: 'אומץ', emoji: '🦁', color: 'bg-amber-100 text-amber-700' },
-  kindness: { label: 'חסד', emoji: '💝', color: 'bg-rose-100 text-rose-700' },
-  dreams: { label: 'חלומות', emoji: '🌙', color: 'bg-indigo-100 text-indigo-700' },
-  nature: { label: 'טבע', emoji: '🌳', color: 'bg-green-100 text-green-700' },
+const settingLabels = {
   space: { label: 'חלל', emoji: '🚀', color: 'bg-blue-100 text-blue-700' },
-  underwater: { label: 'ים', emoji: '🐠', color: 'bg-cyan-100 text-cyan-700' },
-  magic: { label: 'קסם', emoji: '✨', color: 'bg-violet-100 text-violet-700' },
-  animals: { label: 'חיות', emoji: '🐾', color: 'bg-teal-100 text-teal-700' },
+  forest: { label: 'יער קסום', emoji: '🌳', color: 'bg-green-100 text-green-700' },
+  castle: { label: 'ארמון', emoji: '🏰', color: 'bg-purple-100 text-purple-700' },
+  sports: { label: 'ספורט', emoji: '⚽', color: 'bg-orange-100 text-orange-700' },
+  real_life: { label: 'חיים אמיתיים', emoji: '🏠', color: 'bg-amber-100 text-amber-700' },
 };
 
 export default function StoryCard({ story, onClick, index = 0 }) {
-  const theme = themeLabels[story.theme] || { label: story.theme, emoji: '📖', color: 'bg-gray-100 text-gray-700' };
+  const setting = settingLabels[story.setting] || { label: story.setting, emoji: '📖', color: 'bg-gray-100 text-gray-700' };
   const preview = story.content?.substring(0, 120) + '...' || '';
 
   return (
@@ -47,8 +42,8 @@ export default function StoryCard({ story, onClick, index = 0 }) {
                 <p className="text-xs text-gray-500">גיל {story.child_age}</p>
               </div>
             </div>
-            <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${theme.color}`}>
-              {theme.emoji} {theme.label}
+            <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${setting.color}`}>
+              {setting.emoji} {setting.label}
             </span>
           </div>
 
