@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Star, Wand2 } from 'lucide-react';
 
@@ -11,9 +11,9 @@ const loadingMessages = [
 ];
 
 export default function LoadingAnimation() {
-  const [messageIndex, setMessageIndex] = React.useState(0);
+  const [messageIndex, setMessageIndex] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % loadingMessages.length);
     }, 3000);
