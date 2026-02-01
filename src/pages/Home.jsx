@@ -4,7 +4,7 @@ import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Sparkles, Star, BookOpen, Wand2, Heart, Users, ArrowLeft } from 'lucide-react';
+import { Sparkles, Star, BookOpen, Wand2, Heart, Users, ArrowLeft, Dumbbell } from 'lucide-react';
 
 export default function Home() {
   const features = [
@@ -15,15 +15,15 @@ export default function Home() {
       color: 'violet',
     },
     {
-      icon: Heart,
-      title: 'ערכים חיוביים',
-      description: 'סיפורים מעצימים שמלמדים על חברות, אומץ ודמיון',
+      icon: Dumbbell,
+      title: 'העצמה',
+      description: 'עוזרים לילדים לזהות ולדבר על רגשותיהם, כדי שירגישו נראים, בטוחים ומובנים',
       color: 'rose',
     },
     {
-      icon: BookOpen,
-      title: 'שפה עשירה',
-      description: 'עברית תקנית וחמה שמתאימה לגיל הילד/ה',
+      icon: Heart,
+      title: 'חיבור רגשי',
+      description: 'יצירת רגעים שמקרבים ילדים ויקיריהם, מעודדים שיחות עמוקות וחיבור',
       color: 'amber',
     },
   ];
@@ -66,7 +66,7 @@ export default function Home() {
             </h1>
 
             <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
-              צרו סיפורים מותאמים אישית עבור הילדים שלכם בעזרת בינה מלאכותית.
+              העצמת התפתחותם הרגשית של ילדים באמצעות סיפורים מותאמים אישית.
               <br />
               כל סיפור הוא הרפתקה ייחודית שנכתבה במיוחד עבורם.
             </p>
