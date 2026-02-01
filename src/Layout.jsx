@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
 import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
+import OnboardingTour from './components/onboarding/OnboardingTour';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [credits, setCredits] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     loadUser();
@@ -20,8 +22,31 @@ export default function Layout({ children, currentPageName }) {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       setCredits(currentUser.credits || 0);
+      
+      // הצג סיור היכרות למשתמשים חדשים
+      if (!currentUser.onboarding_completed) {
+        setShowOnboarding(true);
+      }
     } catch (e) {
       // User not logged in
+    }
+  };
+
+  const handleOnboardingComplete = async () => {
+    setShowOnboarding(false);
+    try {
+      await base44.auth.updateMe({ onboarding_completed: true });
+    } catch (e) {
+      console.error('Error updating onboarding status:', e);
+    }
+  };
+
+  const handleOnboardingSkip = async () => {
+    setShowOnboarding(false);
+    try {
+      await base44.auth.updateMe({ onboarding_completed: true });
+    } catch (e) {
+      console.error('Error updating onboarding status:', e);
     }
   };
 
@@ -177,6 +202,14 @@ export default function Layout({ children, currentPageName }) {
           </p>
         </div>
       </footer>
-    </div>
-  );
-}
+
+        {/* Onboarding Tour */}
+        {showOnboarding && (
+          <OnboardingTour
+            onComplete={handleOnboardingComplete}
+            onSkip={handleOnboardingSkip}
+          />
+        )}
+      </div>
+      );
+      }
