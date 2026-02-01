@@ -30,6 +30,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'CreateStory', label: 'סיפור חדש', icon: Sparkles },
     { name: 'MyStories', label: 'הסיפורים שלי', icon: BookOpen },
     { name: 'Credits', label: 'קרדיטים', icon: Wallet },
+    ...(user?.role === 'admin' ? [{ name: 'Admin', label: 'ניהול', icon: Home }] : []),
   ];
 
   return (

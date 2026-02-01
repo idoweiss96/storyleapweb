@@ -107,16 +107,13 @@ export default function CreateStory() {
       const reactionPart = reactionText ? `והתגובה שלו/ה היא ${reactionText}` : '';
       const hobbiesPart = formData.hobbies ? `הגיבור/ה מאוד אוהב/ת ${formData.hobbies}.` : '';
 
-      const prompt = `כתוב סיפור ילדים עבור ${formData.childName} (${genderText}), בגיל ${formData.childAge}.
+      const prompt = `כתוב סיפור ילדים טיפולי בעברית עבור ${formData.childName} (${genderText}), בגיל ${formData.childAge}.
 
-עולם הסיפור: ${settingText}.
+הנושא: ${settingText}.
+הגיבור/ה מתמודד/ת עם ${challengeText} ${triggerPart ? `שקורה במיוחד כש${formData.triggerDesc}` : ''}, ${reactionText ? `והוא/היא מגיב/ה ב${reactionText}` : ''}.
+${formData.hobbies ? `הגיבור/ה אוהב/ת ${formData.hobbies}. השתמש בתחביבים ככוח לעזור לו/ה להתגבר על האתגר.` : ''}
 
-האתגר: הגיבור/ה מתמודד/ת עם ${challengeText}. ${triggerPart} ${reactionPart}.
-
-חיבור אישי: ${hobbiesPart}
-
-משימה: צור סיפור בעברית חמה ומעצימה בתוך עולם ה${settingText}. אם יש תחביבים, השתמש בהם ככוח שעוזר לגיבור/ה להתמודד עם האתגר הרגשי. הסיפור צריך להסתיים בתחושת הצלחה, ביטחון וכלים להתמודדות.
-
+הסוף חייב להיות מרגיע ומעצים.
 אורך הסיפור: כ-400-500 מילים.
 כתוב את הסיפור בלבד, ללא כותרת וללא הסברים נוספים.`;
 

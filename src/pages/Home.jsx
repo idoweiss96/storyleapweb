@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sparkles, Star, BookOpen, Wand2, Heart, Users, ArrowLeft, Dumbbell } from 'lucide-react';
 
+// דף נחיתה ציבורי - פתוח לכולם
 export default function Home() {
   const features = [
     {
