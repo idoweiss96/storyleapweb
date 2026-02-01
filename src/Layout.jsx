@@ -56,15 +56,11 @@ export default function Layout({ children, currentPageName }) {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link to={createPageUrl('Home')} className="flex items-center gap-2 group">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-lg shadow-violet-200 group-hover:shadow-violet-300 transition-shadow">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-                <Star className="w-3 h-3 text-amber-400 absolute -top-1 -right-1 star-twinkle fill-amber-400" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-violet-600 to-violet-800 bg-clip-text text-transparent">
-                StoryLeap
-              </span>
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/cb127acae_unnamed.png" 
+                alt="StoryLeap" 
+                className="h-12 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}
