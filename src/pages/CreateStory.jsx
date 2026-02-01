@@ -107,7 +107,7 @@ export default function CreateStory() {
       const reactionPart = reactionText ? `והתגובה שלו/ה היא ${reactionText}` : '';
       const hobbiesPart = formData.hobbies ? `הגיבור/ה מאוד אוהב/ת ${formData.hobbies}.` : '';
 
-      const prompt = `כתוב סיפור ילדים טיפולי עבור ${formData.childName} (${genderText}), בגיל ${formData.childAge}.
+      const prompt = `כתוב סיפור ילדים עבור ${formData.childName} (${genderText}), בגיל ${formData.childAge}.
 
 עולם הסיפור: ${settingText}.
 
@@ -127,7 +127,7 @@ export default function CreateStory() {
           properties: {
             story: {
               type: 'string',
-              description: 'The complete therapeutic story in Hebrew',
+              description: 'The complete story in Hebrew',
             },
           },
           required: ['story'],
@@ -204,7 +204,7 @@ export default function CreateStory() {
             <Sparkles className="w-6 h-6 text-white" />
           </div>
         </motion.div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">יצירת סיפור טיפולי</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">יצירת סיפור לגיבור/ה</h1>
         <p className="text-gray-600">מלאו את הפרטים והקסם יעשה את השאר ✨</p>
       </div>
 
