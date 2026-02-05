@@ -47,7 +47,6 @@ const genderLabels = {
 export default function CreateStory() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [credits, setCredits] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [generatedStory, setGeneratedStory] = useState(null);
@@ -73,7 +72,6 @@ export default function CreateStory() {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
-      setCredits(currentUser.credits ?? 3);
     } catch (e) {
       base44.auth.redirectToLogin(window.location.href);
     }
@@ -82,11 +80,6 @@ export default function CreateStory() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    if (credits < 1) {
-      setError('אין לכם מספיק קרדיטים. רכשו עוד כדי להמשיך.');
-      return;
-    }
 
     if (!formData.childName || !formData.childAge || !formData.gender || !formData.setting || !formData.challengeType) {
       setError('נא למלא את כל השדות הנדרשים');
