@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Star, AlertCircle, Coins } from 'lucide-react';
+import { Sparkles, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import StoryForm from '../components/story/StoryForm';
@@ -147,32 +147,24 @@ export default function CreateStory() {
         <p className="text-gray-600">מלאו את הפרטים והקסם יעשה את השאר ✨</p>
       </div>
 
-      {/* Credits Warning */}
-      {credits < 1 && (
-        <Alert className="mb-6 border-amber-200 bg-amber-50">
-          <Coins className="w-4 h-4 text-amber-600" />
-          <AlertDescription className="text-amber-800">
-            אין לכם קרדיטים. {' '}
-            <Link to={createPageUrl('Credits')} className="font-semibold underline">
-              רכשו עכשיו
-            </Link>
-            {' '} כדי להמשיך ליצור סיפורים.
-          </AlertDescription>
-        </Alert>
-      )}
 
-      {/* Credits Display */}
-      <div className="flex justify-center mb-6">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-100 to-amber-50 rounded-full border border-amber-200">
-          <Star className="w-5 h-5 text-amber-500 fill-amber-400" />
-          <span className="font-semibold text-amber-700">
-            {credits} קרדיטים זמינים
-          </span>
-        </div>
-      </div>
 
       <AnimatePresence mode="wait">
-        {generatedStory ? (
+        {isLoading ? (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Card className="border-0 shadow-xl shadow-violet-100">
+              <CardContent className="p-8 text-center">
+                <div className="animate-spin w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full mx-auto mb-4" />
+                <p className="text-gray-600">שומר את הבקשה...</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ) : generatedStory ? (
           <motion.div
             key="success"
             initial={{ opacity: 0, scale: 0.95 }}
