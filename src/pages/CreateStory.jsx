@@ -10,8 +10,6 @@ import { Sparkles, Star, AlertCircle, Coins } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import StoryForm from '../components/story/StoryForm';
-import StoryDisplay from '../components/story/StoryDisplay';
-import LoadingAnimation from '../components/story/LoadingAnimation';
 
 const settingLabels = {
   space: 'חלל',
@@ -98,42 +96,7 @@ export default function CreateStory() {
     setIsLoading(true);
 
     try {
-      const genderText = genderLabels[formData.gender] || '';
-      const settingText = settingLabels[formData.setting] || formData.setting;
-      const challengeText = challengeLabels[formData.challengeType] || formData.challengeType;
-      const reactionText = formData.reactionType ? reactionLabels[formData.reactionType] : '';
-      
-      const triggerPart = formData.triggerDesc ? `הקושי צף במיוחד כש${formData.triggerDesc}` : '';
-      const reactionPart = reactionText ? `והתגובה שלו/ה היא ${reactionText}` : '';
-      const hobbiesPart = formData.hobbies ? `הגיבור/ה מאוד אוהב/ת ${formData.hobbies}.` : '';
-
-      const prompt = `כתוב סיפור ילדים טיפולי בעברית עבור ${formData.childName} (${genderText}), בגיל ${formData.childAge}.
-
-הנושא: ${settingText}.
-הגיבור/ה מתמודד/ת עם ${challengeText} ${triggerPart ? `שקורה במיוחד כש${formData.triggerDesc}` : ''}, ${reactionText ? `והוא/היא מגיב/ה ב${reactionText}` : ''}.
-${formData.hobbies ? `הגיבור/ה אוהב/ת ${formData.hobbies}. השתמש בתחביבים ככוח לעזור לו/ה להתגבר על האתגר.` : ''}
-
-הסוף חייב להיות מרגיע ומעצים.
-אורך הסיפור: כ-400-500 מילים.
-כתוב את הסיפור בלבד, ללא כותרת וללא הסברים נוספים.`;
-
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt,
-        response_json_schema: {
-          type: 'object',
-          properties: {
-            story: {
-              type: 'string',
-              description: 'The complete story in Hebrew',
-            },
-          },
-          required: ['story'],
-        },
-      });
-
-      const storyContent = response.story;
-
-      // Save story to database
+      // Save story request to database (without generating story)
       const savedStory = await base44.entities.Story.create({
         child_name: formData.childName,
         child_age: parseInt(formData.childAge),
@@ -146,38 +109,17 @@ ${formData.hobbies ? `הגיבור/ה אוהב/ת ${formData.hobbies}. השתמ�
         hobbies: formData.hobbies || null,
         contact_email: formData.contactEmail || null,
         contact_phone: formData.contactPhone || null,
-        content: storyContent,
+        content: null,
+        story_link: null,
       });
-
-      // Deduct credit
-      const newCredits = credits - 1;
-      await base44.auth.updateMe({ credits: newCredits });
-      setCredits(newCredits);
 
       setGeneratedStory(savedStory);
     } catch (err) {
-      console.error('Error generating story:', err);
-      setError('אירעה שגיאה ביצירת הסיפור. נסו שוב.');
+      console.error('Error saving story:', err);
+      setError('אירעה שגיאה בשמירת הבקשה. נסו שוב.');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleNewStory = () => {
-    setGeneratedStory(null);
-    setFormData({
-      childName: '',
-      childAge: '',
-      gender: '',
-      childImage: '',
-      setting: '',
-      challengeType: '',
-      triggerDesc: '',
-      reactionType: '',
-      hobbies: '',
-      contactEmail: '',
-      contactPhone: '',
-    });
   };
 
   if (!user) {
@@ -230,27 +172,55 @@ ${formData.hobbies ? `הגיבור/ה אוהב/ת ${formData.hobbies}. השתמ�
       </div>
 
       <AnimatePresence mode="wait">
-        {isLoading ? (
+        {generatedStory ? (
           <motion.div
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            key="success"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
           >
             <Card className="border-0 shadow-xl shadow-violet-100">
-              <CardContent className="p-0">
-                <LoadingAnimation />
+              <CardContent className="p-8 text-center">
+                <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-10 h-10 text-green-600" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">הבקשה נשלחה בהצלחה! 🎉</h2>
+                <p className="text-gray-600 mb-6">
+                  הסיפור של {generatedStory.child_name} נמצא בהכנה.<br />
+                  תקבלו עדכון כשהסיפור יהיה מוכן.
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate(createPageUrl('MyStories'))}
+                    className="rounded-xl"
+                  >
+                    לסיפורים שלי
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setGeneratedStory(null);
+                      setFormData({
+                        childName: '',
+                        childAge: '',
+                        gender: '',
+                        childImage: '',
+                        setting: '',
+                        challengeType: '',
+                        triggerDesc: '',
+                        reactionType: '',
+                        hobbies: '',
+                        contactEmail: '',
+                        contactPhone: '',
+                      });
+                    }}
+                    className="bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 rounded-xl"
+                  >
+                    סיפור נוסף
+                  </Button>
+                </div>
               </CardContent>
             </Card>
-          </motion.div>
-        ) : generatedStory ? (
-          <motion.div
-            key="story"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <StoryDisplay story={generatedStory} onNewStory={handleNewStory} />
           </motion.div>
         ) : (
           <motion.div
