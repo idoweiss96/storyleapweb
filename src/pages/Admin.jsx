@@ -4,7 +4,11 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Download, FileSpreadsheet, Users, BookOpen, Loader2, ShieldAlert } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink } from 'lucide-react';
 import { format } from 'date-fns';
 
 const genderLabels = { boy: 'בן', girl: 'בת', other: 'אחר' };
@@ -18,6 +22,9 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [editingStory, setEditingStory] = useState(null);
+  const [storyLink, setStoryLink] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -91,6 +98,53 @@ export default function Admin() {
       URL.revokeObjectURL(url);
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const handleEditStory = (story) => {
+    setEditingStory(story);
+    setStoryLink(story.story_link || '');
+  };
+
+  const handleSaveStoryLink = async () => {
+    if (!editingStory || !storyLink.trim()) return;
+    
+    setIsSaving(true);
+    try {
+      // עדכון הקישור בדאטאבייס
+      await base44.entities.Story.update(editingStory.id, {
+        story_link: storyLink.trim()
+      });
+
+      // שליחת מייל ללקוח
+      if (editingStory.contact_email) {
+        await base44.integrations.Core.SendEmail({
+          to: editingStory.contact_email,
+          subject: `הסיפור של ${editingStory.child_name} מוכן! ✨`,
+          body: `שלום,
+
+יש לנו חדשות מרגשות! הסיפור המותאם אישית של ${editingStory.child_name} מוכן!
+
+לחצו על הקישור הבא כדי לצפות בסיפור:
+${storyLink.trim()}
+
+תודה שבחרתם ב-StoryLeap!
+בברכה,
+צוות StoryLeap ✨`
+        });
+      }
+
+      // עדכון הרשימה המקומית
+      setStories(stories.map(s => 
+        s.id === editingStory.id ? { ...s, story_link: storyLink.trim() } : s
+      ));
+
+      setEditingStory(null);
+      setStoryLink('');
+    } catch (err) {
+      console.error('Error saving story link:', err);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -180,6 +234,8 @@ export default function Admin() {
                     <TableHead className="text-right">תפאורה</TableHead>
                     <TableHead className="text-right">אתגר</TableHead>
                     <TableHead className="text-right">מייל</TableHead>
+                    <TableHead className="text-right">סטטוס</TableHead>
+                    <TableHead className="text-right">פעולות</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -193,6 +249,38 @@ export default function Admin() {
                       <TableCell>{settingLabels[story.setting] || story.setting}</TableCell>
                       <TableCell>{challengeLabels[story.challenge_type] || story.challenge_type}</TableCell>
                       <TableCell className="text-sm text-gray-500">{story.contact_email || '-'}</TableCell>
+                      <TableCell>
+                        {story.story_link ? (
+                          <Badge className="bg-green-100 text-green-700">
+                            <Check className="w-3 h-3 ml-1" />
+                            הושלם
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-amber-100 text-amber-700">ממתין</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEditStory(story)}
+                            className="h-8 px-2"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          {story.story_link && (
+                            <a
+                              href={story.story_link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-violet-600 hover:text-violet-800"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )}
+                        </div>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -201,6 +289,48 @@ export default function Admin() {
           )}
         </CardContent>
       </Card>
+
+      {/* Edit Story Dialog */}
+      <Dialog open={!!editingStory} onOpenChange={() => setEditingStory(null)}>
+        <DialogContent className="max-w-md" dir="rtl">
+          <DialogHeader>
+            <DialogTitle>
+              עדכון קישור לסיפור של {editingStory?.child_name}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Label htmlFor="storyLink" className="text-sm font-medium text-gray-700">
+              קישור לסיפור
+            </Label>
+            <Input
+              id="storyLink"
+              value={storyLink}
+              onChange={(e) => setStoryLink(e.target.value)}
+              placeholder="https://..."
+              className="mt-2"
+              dir="ltr"
+            />
+            {editingStory?.contact_email && (
+              <p className="text-sm text-gray-500 mt-3">
+                📧 לאחר השמירה, תישלח הודעה למייל: {editingStory.contact_email}
+              </p>
+            )}
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setEditingStory(null)}>
+              ביטול
+            </Button>
+            <Button
+              onClick={handleSaveStoryLink}
+              disabled={isSaving || !storyLink.trim()}
+              className="bg-gradient-to-r from-violet-500 to-violet-600"
+            >
+              {isSaving ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : null}
+              שמור ושלח הודעה
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Plus, Sparkles, ExternalLink, Clock } from 'lucide-react';
 import { format } from 'date-fns';
+import StoryReadyNotification from '../components/story/StoryReadyNotification';
 
 const genderLabels = { boy: 'בן', girl: 'בת', other: 'אחר' };
 const settingLabels = { space: 'חלל 🚀', forest: 'יער קסום 🌳', castle: 'ארמון 🏰', sports: 'ספורט ⚽', real_life: 'חיים אמיתיים 🏠' };
@@ -21,6 +22,7 @@ export default function MyStories() {
   const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStory, setSelectedStory] = useState(null);
+  const [readyNotification, setReadyNotification] = useState(null);
 
   useEffect(() => {
     loadStories();
@@ -37,6 +39,26 @@ export default function MyStories() {
       setIsLoading(false);
     }
   };
+
+  // האזנה לעדכונים בזמן אמת
+  useEffect(() => {
+    const unsubscribe = base44.entities.Story.subscribe((event) => {
+      if (event.type === 'update' && event.data.story_link) {
+        // בדיקה אם הסיפור שייך למשתמש הנוכחי
+        const updatedStory = stories.find(s => s.id === event.id);
+        if (updatedStory && !updatedStory.story_link && event.data.story_link) {
+          // הסיפור עודכן עם קישור חדש - הצג הודעה
+          setReadyNotification({ ...updatedStory, ...event.data });
+          // עדכון הרשימה
+          setStories(prev => prev.map(s => 
+            s.id === event.id ? { ...s, ...event.data } : s
+          ));
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [stories]);
 
   if (isLoading) {
     return (
@@ -208,6 +230,14 @@ export default function MyStories() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Story Ready Notification */}
+      {readyNotification && (
+        <StoryReadyNotification
+          story={readyNotification}
+          onClose={() => setReadyNotification(null)}
+        />
+      )}
     </div>
   );
 }
