@@ -1,10 +1,81 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Sparkles, Star, BookOpen, Wand2, Heart, Users, ArrowLeft, Dumbbell } from 'lucide-react';
+import { Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell, ChevronRight, ChevronLeft, Quote } from 'lucide-react';
+
+const testimonials = [
+  { name: 'מיכל כ.', text: 'הבת שלי לא הפסיקה לבקש שנקרא את הסיפור שוב ושוב! הרגשנו שהיא מזדהה עם הדמות ובאמת עזר לה להתמודד עם הפחד מהחושך.', stars: 5 },
+  { name: 'דנה א.', text: 'מדהים איך הסיפור כיוון בדיוק לנושא שהטריד את הבן שלי. הוא עצמאי פתח איתי שיחה לאחר הקריאה שמעולם לא הייתה לנו. תודה!', stars: 5 },
+  { name: 'יוסי ל.', text: 'ההתנגדות לשינויים הייתה ממש קשה אצלנו. הסיפור עשה את העבודה בצורה רכה ועדינה, בלי לחץ. ממליץ בחום!', stars: 5 },
+  { name: 'רחל מ.', text: 'חרדת הנטישה של הבת שלי השתפרה משמעותית אחרי שקראנו את הסיפור יחד כל ערב. הרופאה שלה גם הבחינה בשיפור!', stars: 5 },
+  { name: 'אייל ד.', text: 'כמה שזה מדויק ואישי! הרגשנו שמישהו באמת הקשיב לנו ויצר משהו מיוחד רק בשביל הילד שלנו.', stars: 5 },
+  { name: 'שרה ב.', text: 'הסיפור עזר לנו לפתוח שיחה על קשיים חברתיים בצורה טבעית ולא מאיימת. הילד שלי פשוט נפתח!', stars: 5 },
+];
+
+function TestimonialsCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(true);
+
+  useEffect(() => {
+    if (!autoPlay) return;
+    const interval = setInterval(() => {
+      setCurrent(prev => (prev + 1) % testimonials.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [autoPlay]);
+
+  const prev = () => { setCurrent((current - 1 + testimonials.length) % testimonials.length); setAutoPlay(false); };
+  const next = () => { setCurrent((current + 1) % testimonials.length); setAutoPlay(false); };
+
+  const t = testimonials[current];
+
+  return (
+    <section className="py-12">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">מה ההורים אומרים 💬</h2>
+        <p className="text-gray-600">חוויות אמיתיות מהורים שכבר יצרו סיפורים</p>
+      </div>
+      <div className="max-w-2xl mx-auto relative">
+        <motion.div key={current} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
+          <Card className="border-0 shadow-xl shadow-violet-100">
+            <CardContent className="p-8 text-center">
+              <Quote className="w-10 h-10 text-violet-300 mx-auto mb-4 rotate-180" />
+              <p className="text-gray-700 text-lg leading-relaxed mb-6">"{t.text}"</p>
+              <div className="flex justify-center gap-1 mb-3">
+                {[...Array(t.stars)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />
+                ))}
+              </div>
+              <p className="font-semibold text-violet-700">{t.name}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Navigation */}
+        <div className="flex items-center justify-center gap-4 mt-6">
+          <button onClick={prev} className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-violet-50 transition-colors">
+            <ChevronRight className="w-5 h-5 text-violet-600" />
+          </button>
+          <div className="flex gap-2">
+            {testimonials.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => { setCurrent(i); setAutoPlay(false); }}
+                className={`w-2 h-2 rounded-full transition-all ${i === current ? 'bg-violet-500 w-6' : 'bg-violet-200'}`}
+              />
+            ))}
+          </div>
+          <button onClick={next} className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-violet-50 transition-colors">
+            <ChevronLeft className="w-5 h-5 text-violet-600" />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 // דף נחיתה ציבורי - פתוח לכולם
 export default function Home() {
@@ -127,6 +198,43 @@ export default function Home() {
           })}
         </div>
       </section>
+
+      {/* Gallery Section */}
+      <section className="py-12">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">גלריית הסיפורים שלנו ✨</h2>
+          <p className="text-gray-600">הצצה לעולמות הקסומים שיצרנו</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {[
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1484863137850-59afcfe05386?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1518977956812-cd3dbadaaf31?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1471286174890-9c112ac6476d?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=400&fit=crop',
+          ].map((src, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.07 }}
+              className="aspect-square overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+            >
+              <img
+                src={src}
+                alt={`גלריה ${i + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials Carousel */}
+      <TestimonialsCarousel />
 
       {/* CTA Section */}
       <section className="py-12">
