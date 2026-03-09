@@ -1,0 +1,145 @@
+import React, { createContext, useContext, useState } from 'react';
+
+const translations = {
+  he: {
+    nav_home: 'בית', nav_new_story: 'סיפור חדש', nav_my_stories: 'הסיפורים שלי', nav_credits: 'קרדיטים', nav_admin: 'ניהול',
+    login: 'התחברות',
+    footer: '© 2024 StoryLeap - סיפורי קסם לילדים שלכם ✨',
+    hero_badge: 'סיפורי קסם לילדים', hero_title1: 'כל ילד/ה ראויים', hero_title2: 'לסיפור משלהם',
+    hero_subtitle: 'העצמת התפתחותם הרגשית של ילדים באמצעות סיפורים מותאמים אישית.\nכל סיפור הוא הרפתקה ייחודית שנכתבה במיוחד עבורם.',
+    hero_cta_new: 'צרו סיפור חדש', hero_cta_mine: 'הסיפורים שלי',
+    feature1_title: 'סיפורים מותאמים אישית', feature1_desc: 'כל סיפור נכתב במיוחד עבור הילד/ה שלכם עם השם והדמויות שבחרתם',
+    feature2_title: 'העצמה', feature2_desc: 'עוזרים לילדים לזהות ולדבר על רגשותיהם, כדי שירגישו נראים, בטוחים ומובנים',
+    feature3_title: 'חיבור רגשי', feature3_desc: 'יצירת רגעים שמקרבים ילדים ויקיריהם, מעודדים שיחות עמוקות וחיבור',
+    gallery_title: 'גלריית הסיפורים שלנו ✨', gallery_subtitle: 'הצצה לעולמות הקסומים שיצרנו',
+    testimonials_title: 'מה ההורים אומרים 💬', testimonials_subtitle: 'חוויות אמיתיות מהורים שכבר יצרו סיפורים',
+    cta_title: 'מוכנים ליצור קסם? ✨', cta_subtitle: 'הצטרפו עכשיו וקבלו 3 קרדיטים חינם ליצירת הסיפורים הראשונים שלכם', cta_btn: 'התחילו עכשיו',
+    t1_name: 'מיכל כ.', t1_text: 'הבת שלי לא הפסיקה לבקש שנקרא את הסיפור שוב ושוב! הרגשנו שהיא מזדהה עם הדמות ובאמת עזר לה להתמודד עם הפחד מהחושך.',
+    t2_name: 'דנה א.', t2_text: 'מדהים איך הסיפור כיוון בדיוק לנושא שהטריד את הבן שלי. הוא עצמאי פתח איתי שיחה לאחר הקריאה שמעולם לא הייתה לנו. תודה!',
+    t3_name: 'יוסי ל.', t3_text: 'ההתנגדות לשינויים הייתה ממש קשה אצלנו. הסיפור עשה את העבודה בצורה רכה ועדינה, בלי לחץ. ממליץ בחום!',
+    t4_name: 'רחל מ.', t4_text: 'חרדת הנטישה של הבת שלי השתפרה משמעותית אחרי שקראנו את הסיפור יחד כל ערב. הרופאה שלה גם הבחינה בשיפור!',
+    t5_name: 'אייל ד.', t5_text: 'כמה שזה מדויק ואישי! הרגשנו שמישהו באמת הקשיב לנו ויצר משהו מיוחד רק בשביל הילד שלנו.',
+    t6_name: 'שרה ב.', t6_text: 'הסיפור עזר לנו לפתוח שיחה על קשיים חברתיים בצורה טבעית ולא מאיימת. הילד שלי פשוט נפתח!',
+    create_title: 'יצירת סיפור לגיבור/ה', create_subtitle: 'מלאו את הפרטים והקסם יעשה את השאר ✨',
+    create_saving: 'שומר את הבקשה...', create_success_title: 'הבקשה נשלחה בהצלחה! 🎉',
+    create_success_msg_suffix: 'נמצא בהכנה.\nתקבלו עדכון כשהסיפור יהיה מוכן.',
+    create_to_stories: 'לסיפורים שלי', create_another: 'סיפור נוסף',
+    create_error_required: 'נא למלא את כל השדות הנדרשים', create_error_save: 'אירעה שגיאה בשמירת הבקשה. נסו שוב.',
+    form_child_info: 'פרטי הילד/ה', form_child_name: 'שם הילד/ה *', form_child_name_ph: 'למשל: יובל',
+    form_age: 'גיל *', form_age_ph: 'למשל: 5', form_gender: 'מגדר *', form_gender_ph: 'בחרו מגדר',
+    form_image: 'תמונת הילד/ה (אופציונלי)', form_upload: 'העלו תמונה',
+    form_story_world: 'עולם הסיפור', form_setting: 'נושא / תפאורה *', form_setting_ph: 'בחרו תפאורה לסיפור',
+    form_challenge_section: 'האתגר הרגשי', form_challenge: 'האתגר שהילד/ה חווה *', form_challenge_ph: 'בחרו את סוג האתגר',
+    form_trigger: 'מתי זה קורה? (תיאור הטריגר)', form_trigger_ph: 'למשל: כשצריך להיפרד ממא בבוקר בגן...',
+    form_reaction: 'איך הילד/ה מגיב/ה?', form_reaction_ph: 'בחרו סוג תגובה',
+    form_personal: 'חיבור אישי', form_hobbies: 'מה הילד/ה אוהב/ת? (תחביבים, צעצועים, דמויות)', form_hobbies_ph: 'למשל: דינוזאורים, לגו, כדורגל, ציור...',
+    form_contact: 'פרטי התקשרות', form_email: 'מייל', form_phone: 'טלפון',
+    form_submit: 'צרו את הסיפור שלי', form_writing: 'הפיה כותבת את הסיפור...',
+    gender_boy: 'בן', gender_girl: 'בת', gender_other: 'אחר',
+    setting_space: 'חלל', setting_forest: 'יער קסום', setting_castle: 'ארמון', setting_sports: 'ספורט', setting_real_life: 'חיים אמיתיים',
+    ch_fears: 'פחדים', ch_social: 'קושי חברתי', ch_changes: 'התמודדות עם שינויים', ch_emotional: 'ויסות רגשי', ch_separation: 'חרדת נטישה', ch_confidence: 'ביטחון עצמי', ch_sleep: 'קשיי שינה',
+    r_outburst: 'התפרצות', r_withdrawal: 'הסתגרות', r_attention: 'חיפוש תשומת לב', r_crying: 'בכי', r_aggression: 'תוקפנות', r_avoidance: 'הימנעות',
+    my_stories_title: 'הסיפורים שלי', my_stories_subtitle: 'כל הבקשות לסיפורים שיצרתם',
+    my_stories_empty_title: 'עדיין אין סיפורים', my_stories_empty_msg: 'צרו את הסיפור הראשון שלכם!', my_stories_new: 'סיפור חדש',
+    my_story_age: 'גיל', my_story_ready: 'הסיפור מוכן', my_story_pending: 'בהכנה',
+    dialog_title_prefix: 'פרטי הסיפור של',
+    field_name: 'שם הילד/ה', field_age: 'גיל', field_gender: 'מגדר', field_setting: 'תפאורה', field_challenge: 'אתגר רגשי', field_trigger: 'טריגר', field_reaction: 'תגובה', field_hobbies: 'תחביבים', field_date: 'תאריך יצירה', field_link: 'קישור לסיפור',
+    view_story: 'צפייה בסיפור', story_in_progress: 'הסיפור בהכנה...',
+    credits_badge: 'חבילות קרדיטים', credits_title: 'רכישת קרדיטים', credits_subtitle: 'בחרו את החבילה המתאימה לכם',
+    credits_balance_label: 'היתרה שלכם', credits_balance_unit: 'קרדיטים',
+    pkg_starter: 'מתחילים', pkg_family: 'משפחתי', pkg_premium: 'פרימיום', pkg_popular: 'הכי פופולרי', pkg_stories_unit: 'סיפורים', pkg_buy: 'רכישה', pkg_processing: 'מעבד...',
+    credits_no_expiry: 'כל הקרדיטים אינם פוגעים ניתנים לשימוש ללא הגבלת זמן',
+    feat_1: '5 סיפורים מותאמים אישית', feat_2: 'הורדה והדפסה', feat_3: 'שמירה בענן', feat_4: 'תמיכה מועדפת', feat_5: 'גישה לנושאים בלעדיים',
+    feat_15: '15 סיפורים מותאמים אישית', feat_30: '30 סיפורים מותאמים אישית',
+    admin_title: 'ניהול המערכת', admin_subtitle: 'צפייה וייצוא נתוני הסיפורים', admin_total: 'סה"כ סיפורים',
+    admin_export: 'ייצוא לאקסל (CSV)', admin_table_title: 'רשימת סיפורים', admin_no_stories: 'אין סיפורים עדיין',
+    admin_col_date: 'תאריך', admin_col_name: 'שם', admin_col_age: 'גיל', admin_col_setting: 'תפאורה', admin_col_challenge: 'אתגר', admin_col_email: 'מייל', admin_col_status: 'סטטוס', admin_col_actions: 'פעולות',
+    admin_done: 'הושלם', admin_pending: 'ממתין', admin_no_access: 'אין גישה', admin_no_access_msg: 'הדף הזה מיועד למנהלים בלבד.',
+    admin_edit_title_prefix: 'עדכון קישור לסיפור של', admin_link_label: 'קישור לסיפור', admin_email_note_prefix: '📧 לאחר השמירה, תישלח הודעה למייל:',
+    admin_cancel: 'ביטול', admin_save: 'שמור ושלח הודעה',
+  },
+  en: {
+    nav_home: 'Home', nav_new_story: 'New Story', nav_my_stories: 'My Stories', nav_credits: 'Credits', nav_admin: 'Admin',
+    login: 'Login',
+    footer: '© 2024 StoryLeap - Magic stories for your children ✨',
+    hero_badge: 'Magic stories for children', hero_title1: 'Every child deserves', hero_title2: 'their own story',
+    hero_subtitle: "Empowering children's emotional growth through personalized stories.\nEvery story is a unique adventure written just for them.",
+    hero_cta_new: 'Create a New Story', hero_cta_mine: 'My Stories',
+    feature1_title: 'Personalized Stories', feature1_desc: 'Every story is written especially for your child with the name and characters you chose',
+    feature2_title: 'Empowerment', feature2_desc: 'Helping children identify and talk about their feelings so they feel seen, safe, and understood',
+    feature3_title: 'Emotional Connection', feature3_desc: 'Creating moments that bring children and loved ones closer, encouraging deep conversations and bonding',
+    gallery_title: 'Our Story Gallery ✨', gallery_subtitle: 'A peek into the magical worlds we created',
+    testimonials_title: 'What Parents Say 💬', testimonials_subtitle: 'Real experiences from parents who already created stories',
+    cta_title: 'Ready to create magic? ✨', cta_subtitle: 'Join now and get 3 free credits to create your first stories', cta_btn: 'Start Now',
+    t1_name: 'Michal K.', t1_text: 'My daughter kept asking us to read the story again and again! We felt she identified with the character and it really helped her cope with her fear of the dark.',
+    t2_name: 'Dana A.', t2_text: 'Amazing how the story targeted exactly the issue that was bothering my son. He independently opened a conversation with me after reading that we never had before. Thank you!',
+    t3_name: 'Yossi L.', t3_text: 'Resistance to changes was really hard for us. The story did the work in a gentle and delicate way, without pressure. Highly recommend!',
+    t4_name: 'Rachel M.', t4_text: "My daughter's separation anxiety improved significantly after we read the story together every evening. Her doctor noticed the improvement too!",
+    t5_name: 'Ayal D.', t5_text: 'How accurate and personal this is! We felt that someone really listened to us and created something special just for our child.',
+    t6_name: 'Sara B.', t6_text: 'The story helped us open a conversation about social difficulties in a natural and non-threatening way. My child just opened up!',
+    create_title: 'Create a Story for Your Hero', create_subtitle: 'Fill in the details and the magic will do the rest ✨',
+    create_saving: 'Saving your request...', create_success_title: 'Request sent successfully! 🎉',
+    create_success_msg_suffix: "is being prepared.\nYou'll receive an update when the story is ready.",
+    create_to_stories: 'My Stories', create_another: 'Another Story',
+    create_error_required: 'Please fill in all required fields', create_error_save: 'An error occurred. Please try again.',
+    form_child_info: 'Child Details', form_child_name: "Child's Name *", form_child_name_ph: 'e.g.: Emma',
+    form_age: 'Age *', form_age_ph: 'e.g.: 5', form_gender: 'Gender *', form_gender_ph: 'Select gender',
+    form_image: "Child's Photo (optional)", form_upload: 'Upload photo',
+    form_story_world: 'Story World', form_setting: 'Theme / Setting *', form_setting_ph: 'Choose a story setting',
+    form_challenge_section: 'Emotional Challenge', form_challenge: 'The challenge your child faces *', form_challenge_ph: 'Choose the type of challenge',
+    form_trigger: 'When does it happen? (trigger description)', form_trigger_ph: 'e.g.: When they need to say goodbye to mom in the morning...',
+    form_reaction: 'How does your child react?', form_reaction_ph: 'Choose reaction type',
+    form_personal: 'Personal Connection', form_hobbies: 'What does your child love? (hobbies, toys, characters)', form_hobbies_ph: 'e.g.: dinosaurs, lego, soccer, drawing...',
+    form_contact: 'Contact Details', form_email: 'Email', form_phone: 'Phone',
+    form_submit: 'Create My Story', form_writing: 'The fairy is writing the story...',
+    gender_boy: 'Boy', gender_girl: 'Girl', gender_other: 'Other',
+    setting_space: 'Space', setting_forest: 'Magical Forest', setting_castle: 'Castle', setting_sports: 'Sports', setting_real_life: 'Real Life',
+    ch_fears: 'Fears', ch_social: 'Social Difficulty', ch_changes: 'Coping with Changes', ch_emotional: 'Emotional Regulation', ch_separation: 'Separation Anxiety', ch_confidence: 'Self Confidence', ch_sleep: 'Sleep Issues',
+    r_outburst: 'Outburst', r_withdrawal: 'Withdrawal', r_attention: 'Attention Seeking', r_crying: 'Crying', r_aggression: 'Aggression', r_avoidance: 'Avoidance',
+    my_stories_title: 'My Stories', my_stories_subtitle: 'All your story requests',
+    my_stories_empty_title: 'No stories yet', my_stories_empty_msg: 'Create your first story!', my_stories_new: 'New Story',
+    my_story_age: 'Age', my_story_ready: 'Story Ready', my_story_pending: 'In Progress',
+    dialog_title_prefix: 'Story details for',
+    field_name: "Child's Name", field_age: 'Age', field_gender: 'Gender', field_setting: 'Setting', field_challenge: 'Emotional Challenge', field_trigger: 'Trigger', field_reaction: 'Reaction', field_hobbies: 'Hobbies', field_date: 'Creation Date', field_link: 'Story Link',
+    view_story: 'View Story', story_in_progress: 'Story in progress...',
+    credits_badge: 'Credit Packages', credits_title: 'Purchase Credits', credits_subtitle: 'Choose the package that suits you',
+    credits_balance_label: 'Your Balance', credits_balance_unit: 'credits',
+    pkg_starter: 'Starter', pkg_family: 'Family', pkg_premium: 'Premium', pkg_popular: 'Most Popular', pkg_stories_unit: 'stories', pkg_buy: 'Purchase', pkg_processing: 'Processing...',
+    credits_no_expiry: 'All credits never expire and can be used without time limit',
+    feat_1: '5 personalized stories', feat_2: 'Download & Print', feat_3: 'Cloud Storage', feat_4: 'Priority Support', feat_5: 'Access to Exclusive Themes',
+    feat_15: '15 personalized stories', feat_30: '30 personalized stories',
+    admin_title: 'System Management', admin_subtitle: 'View and export story data', admin_total: 'Total Stories',
+    admin_export: 'Export to Excel (CSV)', admin_table_title: 'Story List', admin_no_stories: 'No stories yet',
+    admin_col_date: 'Date', admin_col_name: 'Name', admin_col_age: 'Age', admin_col_setting: 'Setting', admin_col_challenge: 'Challenge', admin_col_email: 'Email', admin_col_status: 'Status', admin_col_actions: 'Actions',
+    admin_done: 'Completed', admin_pending: 'Pending', admin_no_access: 'No Access', admin_no_access_msg: 'This page is for administrators only.',
+    admin_edit_title_prefix: 'Update story link for', admin_link_label: 'Story Link', admin_email_note_prefix: '📧 After saving, a notification will be sent to:',
+    admin_cancel: 'Cancel', admin_save: 'Save & Send Notification',
+  }
+};
+
+export const LanguageContext = createContext();
+
+export function LanguageProvider({ children }) {
+  const [lang, setLang] = React.useState(() => {
+    try { return localStorage.getItem('sl_lang') || 'he'; } catch { return 'he'; }
+  });
+
+  const toggleLang = () => {
+    const newLang = lang === 'he' ? 'en' : 'he';
+    setLang(newLang);
+    try { localStorage.setItem('sl_lang', newLang); } catch {}
+  };
+
+  const t = (key) => translations[lang]?.[key] ?? translations['he']?.[key] ?? key;
+  const isRTL = lang === 'he';
+
+  return (
+    <LanguageContext.Provider value={{ lang, toggleLang, t, isRTL }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  return React.useContext(LanguageContext);
+}
