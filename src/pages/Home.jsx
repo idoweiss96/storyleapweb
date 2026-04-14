@@ -74,7 +74,7 @@ function TestimonialsCarousel() {
 }
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   const features = [
     { icon: Wand2, title: t('feature1_title'), description: t('feature1_desc'), color: 'violet' },
@@ -176,6 +176,17 @@ export default function Home() {
 
       {/* Testimonials Carousel */}
       <TestimonialsCarousel />
+
+      {/* Security Badge */}
+      <section className="py-4 flex justify-center">
+        <div className="flex items-center gap-6 px-6 py-3 bg-white border border-gray-100 rounded-2xl shadow-sm text-sm text-gray-500">
+          <span className="flex items-center gap-2"><span className="text-green-500">🔒</span> {lang === 'he' ? 'המידע שלכם מוצפן ומאובטח' : 'Your data is encrypted & secure'}</span>
+          <span className="w-px h-4 bg-gray-200" />
+          <span className="flex items-center gap-2"><span>🛡️</span> {lang === 'he' ? 'לא נשתף מידע עם צד שלישי' : 'We never share your data'}</span>
+          <span className="w-px h-4 bg-gray-200 hidden sm:block" />
+          <span className="hidden sm:flex items-center gap-2"><span>✅</span> {lang === 'he' ? 'עמידה בתקני פרטיות' : 'Privacy compliant'}</span>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="py-12">
