@@ -192,7 +192,7 @@ export default function Home() {
       <section className="py-12">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.3 }}>
           <Card className="overflow-hidden border-0 shadow-2xl shadow-slate-200">
-            <div className="bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 p-8 md:p-12 text-white text-center relative">
+            <div className="p-8 md:p-12 text-white text-center relative" style={{background: 'linear-gradient(135deg, #BAD1FA, #9ab8f5)'}}>
               <Star className="absolute top-4 right-8 w-6 h-6 text-blue-300 fill-blue-300 opacity-60" />
               <Star className="absolute bottom-6 left-12 w-4 h-4 text-blue-200 fill-blue-200 opacity-40" />
               <Star className="absolute top-8 left-20 w-3 h-3 text-white/30 fill-white/30" />
