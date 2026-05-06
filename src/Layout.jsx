@@ -52,7 +52,7 @@ function LayoutInner({ children, currentPageName }) {
   ];
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/20">
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen" style={{background: 'linear-gradient(135deg, #c5d8f5 0%, #e8f0fb 15%, #ffffff 35%, #fff8ed 55%, #fde8d0 70%, #fad4e0 83%, #e8c8ee 100%)'}}>
       <style>{`
         @keyframes twinkle {
           0%, 100% { opacity: 0.3; transform: scale(0.8); }
