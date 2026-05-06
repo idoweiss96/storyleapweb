@@ -132,7 +132,7 @@ export default function Contact() {
           <Card className="border-0 shadow-md text-center p-4">
             <Phone className="w-6 h-6 mx-auto mb-2 text-blue-400" />
             <p className="text-xs text-slate-500">{t('contact_info_phone')}</p>
-            <p className="text-sm font-medium text-slate-700">+972-</p>
+            <p className="text-sm font-medium text-slate-700">+972-528330198</p>
           </Card>
         </motion.div>
       </div>
