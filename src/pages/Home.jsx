@@ -13,24 +13,24 @@ function TestimonialsCarousel() {
   const [autoPlay, setAutoPlay] = useState(true);
 
   const testimonials = [
-    { name: t('t1_name'), text: t('t1_text'), stars: 5 },
-    { name: t('t2_name'), text: t('t2_text'), stars: 5 },
-    { name: t('t3_name'), text: t('t3_text'), stars: 5 },
-    { name: t('t4_name'), text: t('t4_text'), stars: 5 },
-    { name: t('t5_name'), text: t('t5_text'), stars: 5 },
-    { name: t('t6_name'), text: t('t6_text'), stars: 5 },
-  ];
+  { name: t('t1_name'), text: t('t1_text'), stars: 5 },
+  { name: t('t2_name'), text: t('t2_text'), stars: 5 },
+  { name: t('t3_name'), text: t('t3_text'), stars: 5 },
+  { name: t('t4_name'), text: t('t4_text'), stars: 5 },
+  { name: t('t5_name'), text: t('t5_text'), stars: 5 },
+  { name: t('t6_name'), text: t('t6_text'), stars: 5 }];
+
 
   useEffect(() => {
     if (!autoPlay) return;
     const interval = setInterval(() => {
-      setCurrent(prev => (prev + 1) % testimonials.length);
+      setCurrent((prev) => (prev + 1) % testimonials.length);
     }, 4000);
     return () => clearInterval(interval);
   }, [autoPlay, testimonials.length]);
 
-  const prev = () => { setCurrent((current - 1 + testimonials.length) % testimonials.length); setAutoPlay(false); };
-  const next = () => { setCurrent((current + 1) % testimonials.length); setAutoPlay(false); };
+  const prev = () => {setCurrent((current - 1 + testimonials.length) % testimonials.length);setAutoPlay(false);};
+  const next = () => {setCurrent((current + 1) % testimonials.length);setAutoPlay(false);};
   const item = testimonials[current];
 
   return (
@@ -46,9 +46,9 @@ function TestimonialsCarousel() {
               <Quote className="w-10 h-10 text-slate-300 mx-auto mb-4 rotate-180" />
               <p className="text-slate-700 text-lg leading-relaxed mb-6">"{item.text}"</p>
               <div className="flex justify-center gap-1 mb-3">
-                {[...Array(item.stars)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />
-                ))}
+                {[...Array(item.stars)].map((_, i) =>
+                <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />
+                )}
               </div>
               <p className="font-semibold text-slate-700">{item.name}</p>
             </CardContent>
@@ -59,39 +59,39 @@ function TestimonialsCarousel() {
             <ChevronRight className="w-5 h-5 text-slate-600" />
           </button>
           <div className="flex gap-2">
-            {testimonials.map((_, i) => (
-              <button key={i} onClick={() => { setCurrent(i); setAutoPlay(false); }}
-                className={`w-2 h-2 rounded-full transition-all ${i === current ? 'bg-slate-700 w-6' : 'bg-slate-300'}`} />
-            ))}
+            {testimonials.map((_, i) =>
+            <button key={i} onClick={() => {setCurrent(i);setAutoPlay(false);}}
+            className={`w-2 h-2 rounded-full transition-all ${i === current ? 'bg-slate-700 w-6' : 'bg-slate-300'}`} />
+            )}
           </div>
           <button onClick={next} className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-slate-50 transition-colors">
             <ChevronLeft className="w-5 h-5 text-slate-600" />
           </button>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
 
 export default function Home() {
   const { t, lang } = useLanguage();
 
   const features = [
-    { icon: Wand2, title: t('feature1_title'), description: t('feature1_desc'), bg: 'bg-blue-50', iconColor: 'text-blue-600' },
-    { icon: Dumbbell, title: t('feature2_title'), description: t('feature2_desc'), bg: 'bg-rose-50', iconColor: 'text-rose-500' },
-    { icon: Heart, title: t('feature3_title'), description: t('feature3_desc'), bg: 'bg-amber-50', iconColor: 'text-amber-500' },
-  ];
+  { icon: Wand2, title: t('feature1_title'), description: t('feature1_desc'), bg: 'bg-blue-50', iconColor: 'text-blue-600' },
+  { icon: Dumbbell, title: t('feature2_title'), description: t('feature2_desc'), bg: 'bg-rose-50', iconColor: 'text-rose-500' },
+  { icon: Heart, title: t('feature3_title'), description: t('feature3_desc'), bg: 'bg-amber-50', iconColor: 'text-amber-500' }];
+
 
   return (
     <div className="pb-12">
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          {[...Array(12)].map((_, i) => (
-            <Star key={i}
-              className={`absolute w-3 h-3 text-blue-200 fill-blue-100 opacity-60 star-twinkle${i % 3 === 0 ? '' : i % 3 === 1 ? '-delay' : '-delay-2'}`}
-              style={{ top: `${10 + (i * 7) % 80}%`, left: `${(i * 9) % 100}%` }} />
-          ))}
+          {[...Array(12)].map((_, i) =>
+          <Star key={i}
+          className={`absolute w-3 h-3 text-blue-200 fill-blue-100 opacity-60 star-twinkle${i % 3 === 0 ? '' : i % 3 === 1 ? '-delay' : '-delay-2'}`}
+          style={{ top: `${10 + i * 7 % 80}%`, left: `${i * 9 % 100}%` }} />
+          )}
         </div>
         <div className="relative text-center max-w-3xl mx-auto px-4">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -111,7 +111,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={createPageUrl('CreateStory')}>
-                <Button size="lg" className="h-14 px-8 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 text-white shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all">
+                <Button size="lg" className="h-14 px-8 text-lg rounded-xl hover:bg-slate-700 text-white shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all bg-[#372f1b]">
                   <Sparkles className="w-5 h-5 ml-2" />
                   {t('hero_cta_new')}
                 </Button>
@@ -143,8 +143,8 @@ export default function Home() {
                     <p className="text-slate-500 text-sm leading-relaxed">{feature.description}</p>
                   </CardContent>
                 </Card>
-              </motion.div>
-            );
+              </motion.div>);
+
           })}
         </div>
       </section>
@@ -157,20 +157,20 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/ee44ec4b5_image4.png',
-            'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/aacd843f4_image52.png',
-            'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/dd316698e_image51.png',
-            'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/0e345ce30_image5.png',
-            'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/e38dd71a8_image54.png',
-            'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/ad2824198_image53.png',
-            'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/83af1df79_image1.png',
-            'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/465dd64af_image3.png',
-          ].map((src, i) => (
-            <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.07 }}
-              className="aspect-square overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer">
+          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/ee44ec4b5_image4.png',
+          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/aacd843f4_image52.png',
+          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/dd316698e_image51.png',
+          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/0e345ce30_image5.png',
+          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/e38dd71a8_image54.png',
+          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/ad2824198_image53.png',
+          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/83af1df79_image1.png',
+          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/465dd64af_image3.png'].
+          map((src, i) =>
+          <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.07 }}
+          className="aspect-square overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer">
               <img src={src} alt={`gallery ${i + 1}`} className="w-full h-full object-cover" />
             </motion.div>
-          ))}
+          )}
         </div>
       </section>
 
@@ -208,6 +208,6 @@ export default function Home() {
           </Card>
         </motion.div>
       </section>
-    </div>
-  );
+    </div>);
+
 }
