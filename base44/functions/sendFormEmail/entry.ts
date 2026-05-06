@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const RECIPIENT_EMAIL = 'hello@storyleapai.com';
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
 Deno.serve(async (req) => {
   try {
@@ -22,11 +23,6 @@ Deno.serve(async (req) => {
       additionalFields = {},
     } = body;
 
-    // Basic spam protection
-    if (!email || !email.includes('@')) {
-      return Response.json({ error: 'Invalid email' }, { status: 400 });
-    }
-
     const now = new Date();
     const dateStr = now.toLocaleDateString('he-IL', { timeZone: 'Asia/Jerusalem' });
     const timeStr = now.toLocaleTimeString('he-IL', { timeZone: 'Asia/Jerusalem' });
@@ -47,7 +43,6 @@ Deno.serve(async (req) => {
     if (hobbies) fieldsHtml += `<tr><td style="padding:8px 12px;font-weight:bold;color:#374151;">תחביבים</td><td style="padding:8px 12px;color:#1f2937;">${hobbies}</td></tr>`;
     if (message) fieldsHtml += `<tr><td style="padding:8px 12px;font-weight:bold;color:#374151;">הודעה</td><td style="padding:8px 12px;color:#1f2937;">${message}</td></tr>`;
 
-    // Add any extra fields
     for (const [key, value] of Object.entries(additionalFields)) {
       if (value) fieldsHtml += `<tr><td style="padding:8px 12px;font-weight:bold;color:#374151;">${key}</td><td style="padding:8px 12px;color:#1f2937;">${value}</td></tr>`;
     }
@@ -67,11 +62,24 @@ Deno.serve(async (req) => {
       </div>
     `;
 
-    await base44.asServiceRole.integrations.Core.SendEmail({
-      to: RECIPIENT_EMAIL,
-      subject: `[StoryLeap] ${formType} — ${name || email}`,
-      body: htmlBody,
+    const resendRes = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'StoryLeap AI <onboarding@resend.dev>',
+        to: [RECIPIENT_EMAIL],
+        subject: `[StoryLeap] ${formType} — ${name || email}`,
+        html: htmlBody,
+      }),
     });
+
+    if (!resendRes.ok) {
+      const err = await resendRes.text();
+      return Response.json({ error: err }, { status: 500 });
+    }
 
     return Response.json({ success: true });
   } catch (error) {
