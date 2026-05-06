@@ -192,12 +192,12 @@ export default function Home() {
       <section className="py-12">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.3 }}>
           <Card className="overflow-hidden border-0 shadow-2xl shadow-slate-200">
-            <div className="p-8 md:p-12 text-white text-center relative" style={{background: 'linear-gradient(135deg, #BAD1FA, #9ab8f5)'}}>
+            <div className="p-8 md:p-12 text-white text-center relative" style={{ background: 'linear-gradient(135deg, #BAD1FA, #9ab8f5)' }}>
               <Star className="absolute top-4 right-8 w-6 h-6 text-blue-300 fill-blue-300 opacity-60" />
               <Star className="absolute bottom-6 left-12 w-4 h-4 text-blue-200 fill-blue-200 opacity-40" />
               <Star className="absolute top-8 left-20 w-3 h-3 text-white/30 fill-white/30" />
               <h2 className="text-2xl md:text-3xl font-bold mb-4">{t('cta_title')}</h2>
-              <p className="text-slate-300 mb-6 max-w-lg mx-auto">{t('cta_subtitle')}</p>
+              <p className="mb-6 max-w-lg mx-auto text-slate-500">{t('cta_subtitle')}</p>
               <Link to={createPageUrl('CreateStory')}>
                 <Button size="lg" className="h-12 px-8 rounded-xl bg-white text-slate-800 hover:bg-slate-100 font-semibold">
                   {t('cta_btn')}
