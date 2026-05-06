@@ -131,10 +131,10 @@ export default function Admin() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        <Card className="border-0 shadow-lg shadow-violet-50">
+        <Card className="border-0 shadow-lg shadow-slate-100">
           <CardContent className="p-6 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-violet-600" />
+            <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-slate-600" />
             </div>
             <div>
               <p className="text-sm text-gray-500">{t('admin_total')}</p>
@@ -142,10 +142,10 @@ export default function Admin() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-lg shadow-violet-50">
+        <Card className="border-0 shadow-lg shadow-slate-100">
           <CardContent className="p-6">
             <Button onClick={exportToCSV} disabled={isExporting || stories.length === 0}
-              className="w-full h-12 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl">
+              className="w-full h-12 bg-slate-700 hover:bg-slate-600 rounded-xl">
               {isExporting ? <Loader2 className="w-5 h-5 animate-spin ml-2" /> : <FileSpreadsheet className="w-5 h-5 ml-2" />}
               {t('admin_export')}
             </Button>
@@ -153,7 +153,7 @@ export default function Admin() {
         </Card>
       </div>
 
-      <Card className="border-0 shadow-xl shadow-violet-50">
+      <Card className="border-0 shadow-xl shadow-slate-100">
         <CardHeader>
           <CardTitle className="text-lg">{t('admin_table_title')}</CardTitle>
         </CardHeader>
@@ -197,7 +197,7 @@ export default function Admin() {
                             <Pencil className="w-4 h-4" />
                           </Button>
                           {story.story_link && (
-                            <a href={story.story_link} target="_blank" rel="noopener noreferrer" className="text-violet-600 hover:text-violet-800">
+                            <a href={story.story_link} target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-slate-800">
                               <ExternalLink className="w-4 h-4" />
                             </a>
                           )}
@@ -226,7 +226,7 @@ export default function Admin() {
           </div>
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={() => setEditingStory(null)}>{t('admin_cancel')}</Button>
-            <Button onClick={handleSaveStoryLink} disabled={isSaving || !storyLink.trim()} className="bg-gradient-to-r from-violet-500 to-violet-600">
+            <Button onClick={handleSaveStoryLink} disabled={isSaving || !storyLink.trim()} className="bg-slate-800 hover:bg-slate-700">
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : null}
               {t('admin_save')}
             </Button>

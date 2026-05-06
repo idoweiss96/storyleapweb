@@ -61,7 +61,7 @@ export default function Credits() {
   if (!user) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="animate-spin w-8 h-8 border-4 border-violet-500 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-slate-300 border-t-slate-700 rounded-full" />
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function Credits() {
     <div className="max-w-4xl mx-auto pb-12">
       <div className="text-center mb-10">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 text-amber-700 text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-medium mb-4 border border-blue-100">
             <Gift className="w-4 h-4" />
             {t('credits_badge')}
           </div>
@@ -78,10 +78,10 @@ export default function Credits() {
           <p className="text-gray-600">{t('credits_subtitle')}</p>
         </motion.div>
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="mt-6">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-violet-500 to-violet-600 rounded-2xl text-white shadow-lg shadow-violet-200">
+          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-slate-700 to-slate-800 rounded-2xl text-white shadow-lg shadow-slate-200">
             <Star className="w-6 h-6 text-amber-300 fill-amber-300" />
             <div className="text-right">
-              <p className="text-violet-100 text-sm">{t('credits_balance_label')}</p>
+              <p className="text-slate-300 text-sm">{t('credits_balance_label')}</p>
               <p className="text-2xl font-bold">{credits} {t('credits_balance_unit')}</p>
             </div>
           </div>
@@ -94,7 +94,7 @@ export default function Credits() {
           const isProcessingThis = isProcessing === pkg.id;
           return (
             <motion.div key={pkg.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
-              <Card className={`relative h-full border-2 transition-all hover:shadow-xl ${pkg.isPopular ? 'border-amber-300 shadow-lg shadow-amber-100' : 'border-transparent shadow-lg shadow-violet-50 hover:border-violet-200'}`}>
+              <Card className={`relative h-full border-2 transition-all hover:shadow-xl ${pkg.isPopular ? 'border-amber-300 shadow-lg shadow-amber-100' : 'border-transparent shadow-lg shadow-slate-100 hover:border-slate-200'}`}>
                 {pkg.isPopular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <Badge className="bg-gradient-to-r from-amber-400 to-amber-500 text-white px-4 py-1">
@@ -120,7 +120,7 @@ export default function Credits() {
                     ))}
                   </ul>
                   <Button onClick={() => handlePurchase(pkg)} disabled={!!isProcessing}
-                    className={`w-full h-12 rounded-xl ${pkg.isPopular ? 'bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white' : 'bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white'}`}>
+                    className={`w-full h-12 rounded-xl ${pkg.isPopular ? 'bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}>
                     {isProcessingThis ? (
                       <span className="flex items-center gap-2">
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

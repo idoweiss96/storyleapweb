@@ -51,6 +51,27 @@ export default function CreateStory() {
         contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
         content: null, story_link: null,
       });
+
+      // Send notification email
+      try {
+        await base44.functions.invoke('sendFormEmail', {
+          formType: 'בקשת סיפור חדש',
+          name: formData.childName,
+          email: formData.contactEmail || '',
+          phone: formData.contactPhone || '',
+          childName: formData.childName,
+          childAge: formData.childAge,
+          gender: formData.gender,
+          setting: formData.setting,
+          challengeType: formData.challengeType,
+          hobbies: formData.hobbies || '',
+          additionalFields: {
+            'טריגר': formData.triggerDesc || '',
+            'תגובה': formData.reactionType || '',
+          },
+        });
+      } catch (_) { /* email failure should not block the user */ }
+
       setGeneratedStory(savedStory);
     } catch (err) {
       setError(t('create_error_save'));
@@ -67,7 +88,7 @@ export default function CreateStory() {
   if (!user) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="animate-spin w-8 h-8 border-4 border-violet-500 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-slate-300 border-t-slate-700 rounded-full" />
       </div>
     );
   }
@@ -76,7 +97,7 @@ export default function CreateStory() {
     <div className="max-w-2xl mx-auto pb-12">
       <div className="text-center mb-8">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 mb-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-lg shadow-violet-200">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center shadow-lg shadow-slate-200">
             <Sparkles className="w-6 h-6 text-white" />
           </div>
         </motion.div>
@@ -87,16 +108,16 @@ export default function CreateStory() {
       <AnimatePresence mode="wait">
         {isLoading ? (
           <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <Card className="border-0 shadow-xl shadow-violet-100">
+            <Card className="border-0 shadow-xl shadow-slate-100">
               <CardContent className="p-8 text-center">
-                <div className="animate-spin w-12 h-12 border-4 border-violet-500 border-t-transparent rounded-full mx-auto mb-4" />
+                <div className="animate-spin w-12 h-12 border-4 border-slate-200 border-t-slate-700 rounded-full mx-auto mb-4" />
                 <p className="text-gray-600">{t('create_saving')}</p>
               </CardContent>
             </Card>
           </motion.div>
         ) : generatedStory ? (
           <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-            <Card className="border-0 shadow-xl shadow-violet-100">
+            <Card className="border-0 shadow-xl shadow-slate-100">
               <CardContent className="p-8 text-center">
                 <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
                   <Sparkles className="w-10 h-10 text-green-600" />
@@ -109,7 +130,7 @@ export default function CreateStory() {
                   <Button variant="outline" onClick={() => navigate(createPageUrl('MyStories'))} className="rounded-xl">
                     {t('create_to_stories')}
                   </Button>
-                  <Button onClick={resetForm} className="bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 rounded-xl">
+                  <Button onClick={resetForm} className="bg-slate-800 hover:bg-slate-700 rounded-xl">
                     {t('create_another')}
                   </Button>
                 </div>
@@ -118,7 +139,7 @@ export default function CreateStory() {
           </motion.div>
         ) : (
           <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <Card className="border-0 shadow-xl shadow-violet-100">
+            <Card className="border-0 shadow-xl shadow-slate-100">
               <CardContent className="p-6 md:p-8">
                 {error && (
                   <Alert className="mb-6 border-red-200 bg-red-50">

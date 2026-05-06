@@ -69,7 +69,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
     <form onSubmit={onSubmit} className="space-y-6">
       {/* Section 1: Child Info */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-violet-800 border-b border-violet-100 pb-2">{t('form_child_info')}</h3>
+        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_child_info')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label htmlFor="childName" className="text-gray-700 font-medium">{t('form_child_name')}</Label>
@@ -104,10 +104,10 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               </button>
             </div>
           ) : (
-            <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-violet-200 rounded-xl cursor-pointer hover:border-violet-400 hover:bg-violet-50 transition-colors">
+            <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-slate-200 rounded-xl cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
               <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-              {uploading ? <Loader2 className="w-6 h-6 text-violet-400 animate-spin" /> : (
-                <><Upload className="w-6 h-6 text-violet-400 mb-1" /><span className="text-xs text-violet-500">{t('form_upload')}</span></>
+              {uploading ? <Loader2 className="w-6 h-6 text-slate-400 animate-spin" /> : (
+                <><Upload className="w-6 h-6 text-slate-400 mb-1" /><span className="text-xs text-slate-500">{t('form_upload')}</span></>
               )}
             </label>
           )}
@@ -116,11 +116,11 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
 
       {/* Section 2: Story Setting */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-violet-800 border-b border-violet-100 pb-2">{t('form_story_world')}</h3>
+        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_story_world')}</h3>
         <div className="space-y-2">
           <Label htmlFor="setting" className="text-gray-700 font-medium">{t('form_setting')}</Label>
           <Select value={formData.setting} onValueChange={(value) => handleChange('setting', value)} required>
-            <SelectTrigger className="h-11 rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400">
+            <SelectTrigger className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400">
               <SelectValue placeholder={t('form_setting_ph')} />
             </SelectTrigger>
             <SelectContent>
@@ -136,11 +136,11 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
 
       {/* Section 3: Challenge */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-violet-800 border-b border-violet-100 pb-2">{t('form_challenge_section')}</h3>
+        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_challenge_section')}</h3>
         <div className="space-y-2">
           <Label htmlFor="challengeType" className="text-gray-700 font-medium">{t('form_challenge')}</Label>
           <Select value={formData.challengeType} onValueChange={(value) => handleChange('challengeType', value)} required>
-            <SelectTrigger className="h-11 rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400">
+            <SelectTrigger className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400">
               <SelectValue placeholder={t('form_challenge_ph')} />
             </SelectTrigger>
             <SelectContent>
@@ -155,12 +155,12 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
         <div className="space-y-2">
           <Label htmlFor="triggerDesc" className="text-gray-700 font-medium">{t('form_trigger')}</Label>
           <Textarea id="triggerDesc" value={formData.triggerDesc} onChange={(e) => handleChange('triggerDesc', e.target.value)}
-            placeholder={t('form_trigger_ph')} className="rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400 resize-none" rows={2} />
+            placeholder={t('form_trigger_ph')} className="rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400 resize-none" rows={2} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="reactionType" className="text-gray-700 font-medium">{t('form_reaction')}</Label>
           <Select value={formData.reactionType} onValueChange={(value) => handleChange('reactionType', value)}>
-            <SelectTrigger className="h-11 rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400">
+            <SelectTrigger className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400">
               <SelectValue placeholder={t('form_reaction_ph')} />
             </SelectTrigger>
             <SelectContent>
@@ -172,33 +172,33 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
 
       {/* Section 4: Personal Connection */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-violet-800 border-b border-violet-100 pb-2">{t('form_personal')}</h3>
+        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_personal')}</h3>
         <div className="space-y-2">
           <Label htmlFor="hobbies" className="text-gray-700 font-medium">{t('form_hobbies')}</Label>
           <Textarea id="hobbies" value={formData.hobbies} onChange={(e) => handleChange('hobbies', e.target.value)}
-            placeholder={t('form_hobbies_ph')} className="rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400 resize-none" rows={2} />
+            placeholder={t('form_hobbies_ph')} className="rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400 resize-none" rows={2} />
         </div>
       </div>
 
       {/* Section 5: Contact */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-violet-800 border-b border-violet-100 pb-2">{t('form_contact')}</h3>
+        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_contact')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="contactEmail" className="text-gray-700 font-medium">{t('form_email')}</Label>
             <Input id="contactEmail" type="email" value={formData.contactEmail} onChange={(e) => handleChange('contactEmail', e.target.value)}
-              placeholder="your@email.com" className="h-11 rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400" />
+              placeholder="your@email.com" className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="contactPhone" className="text-gray-700 font-medium">{t('form_phone')}</Label>
             <Input id="contactPhone" type="tel" value={formData.contactPhone} onChange={(e) => handleChange('contactPhone', e.target.value)}
-              placeholder="050-0000000" className="h-11 rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400" />
+              placeholder="050-0000000" className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400" />
           </div>
         </div>
       </div>
 
       <Button type="submit" disabled={isLoading}
-        className="w-full h-14 text-lg rounded-xl bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 shadow-lg shadow-violet-200 hover:shadow-violet-300 transition-all">
+        className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all">
         {isLoading ? (
           <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
         ) : (

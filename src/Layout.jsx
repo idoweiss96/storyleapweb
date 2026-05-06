@@ -8,6 +8,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import OnboardingTour from './components/onboarding/OnboardingTour';
 import { LanguageProvider, useLanguage } from './components/LanguageContext';
 
+// New brand logo URL
+const LOGO_URL = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/941d8b8cf_1.png';
+
 function LayoutInner({ children, currentPageName }) {
   const { t, lang, toggleLang, isRTL } = useLanguage();
   const [user, setUser] = useState(null);
@@ -49,7 +52,7 @@ function LayoutInner({ children, currentPageName }) {
   ];
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-gradient-to-b from-violet-50 via-white to-amber-50/30">
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/20">
       <style>{`
         @keyframes twinkle {
           0%, 100% { opacity: 0.3; transform: scale(0.8); }
@@ -60,11 +63,11 @@ function LayoutInner({ children, currentPageName }) {
         .star-twinkle-delay-2 { animation: twinkle 2s ease-in-out infinite 1s; }
       `}</style>
 
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/70 border-b border-violet-100">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-slate-200/60">
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Link to={createPageUrl('Home')} className="flex items-center gap-2 group">
-              <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/cb127acae_unnamed.png" alt="StoryLeap" className="h-12 w-auto" />
+              <img src={LOGO_URL} alt="StoryLeap AI" className="h-10 w-auto" />
             </Link>
 
             <nav className="hidden md:flex items-center gap-1">
@@ -73,7 +76,7 @@ function LayoutInner({ children, currentPageName }) {
                 const isActive = currentPageName === item.name;
                 return (
                   <Link key={item.name} to={createPageUrl(item.name)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${isActive ? 'bg-violet-100 text-violet-700 font-medium' : 'text-gray-600 hover:bg-violet-50 hover:text-violet-600'}`}>
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${isActive ? 'bg-slate-100 text-slate-800 font-medium' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}>
                     <Icon className="w-4 h-4" />
                     <span className="text-sm">{item.label}</span>
                   </Link>
@@ -85,24 +88,24 @@ function LayoutInner({ children, currentPageName }) {
               {/* Language Toggle */}
               <button
                 onClick={toggleLang}
-                className="px-3 py-1.5 text-sm font-semibold rounded-xl border border-violet-200 text-violet-700 hover:bg-violet-50 transition-colors"
+                className="px-3 py-1.5 text-sm font-semibold rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
               >
                 {lang === 'he' ? 'EN' : 'עב'}
               </button>
 
               {user && (
-                <Link to={createPageUrl('Credits')} className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-100 to-amber-50 rounded-full border border-amber-200">
+                <Link to={createPageUrl('Credits')} className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-amber-100 rounded-full border border-amber-200">
                   <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
                   <span className="text-sm font-semibold text-amber-700">{credits}</span>
                 </Link>
               )}
 
               {user ? (
-                <Button variant="ghost" size="sm" onClick={() => base44.auth.logout()} className="text-gray-500 hover:text-gray-700">
+                <Button variant="ghost" size="sm" onClick={() => base44.auth.logout()} className="text-slate-500 hover:text-slate-700">
                   <LogOut className="w-4 h-4" />
                 </Button>
               ) : (
-                <Button onClick={() => base44.auth.redirectToLogin()} className="bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white rounded-xl">
+                <Button onClick={() => base44.auth.redirectToLogin()} className="bg-slate-800 hover:bg-slate-700 text-white rounded-xl">
                   {t('login')}
                 </Button>
               )}
@@ -117,14 +120,14 @@ function LayoutInner({ children, currentPageName }) {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-violet-100 bg-white/90 backdrop-blur-xl">
+              className="md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-xl">
               <nav className="flex flex-col p-4 gap-1">
                 {navItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = currentPageName === item.name;
                   return (
                     <Link key={item.name} to={createPageUrl(item.name)} onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-violet-100 text-violet-700 font-medium' : 'text-gray-600 hover:bg-violet-50'}`}>
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-slate-100 text-slate-800 font-medium' : 'text-slate-600 hover:bg-slate-50'}`}>
                       <Icon className="w-5 h-5" />
                       <span>{item.label}</span>
                     </Link>
@@ -140,9 +143,9 @@ function LayoutInner({ children, currentPageName }) {
         {children}
       </main>
 
-      <footer className="border-t border-violet-100 bg-white/50 mt-auto">
+      <footer className="border-t border-slate-200/60 bg-white/60 mt-auto">
         <div className="max-w-6xl mx-auto px-4 py-6 text-center">
-          <p className="text-sm text-gray-500">{t('footer')}</p>
+          <p className="text-sm text-slate-400">{t('footer')}</p>
         </div>
       </footer>
 

@@ -65,7 +65,7 @@ export default function MyStories() {
     <div className="max-w-6xl mx-auto pb-12">
       <div className="text-center mb-8">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 mb-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center shadow-lg shadow-violet-200">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center shadow-lg shadow-slate-200">
             <BookOpen className="w-6 h-6 text-white" />
           </div>
         </motion.div>
@@ -100,8 +100,8 @@ export default function MyStories() {
               <motion.div key={story.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}>
                 <Card className="border-0 shadow-lg shadow-violet-50 hover:shadow-xl hover:shadow-violet-100 transition-all cursor-pointer group" onClick={() => setSelectedStory(story)}>
                   <CardContent className="p-6 text-center">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-100 to-violet-200 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                      <Sparkles className="w-7 h-7 text-violet-600" />
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                      <Sparkles className="w-7 h-7 text-slate-600" />
                     </div>
                     <h3 className="font-bold text-gray-800 text-lg mb-1">{story.child_name}</h3>
                     <p className="text-sm text-gray-500 mb-2">{t('my_story_age')} {story.child_age}</p>
@@ -123,7 +123,7 @@ export default function MyStories() {
       <Dialog open={!!selectedStory} onOpenChange={() => setSelectedStory(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-violet-800">
+            <DialogTitle className="text-xl font-bold text-slate-800">
               {t('dialog_title_prefix')} {selectedStory?.child_name}
             </DialogTitle>
           </DialogHeader>
