@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut } from 'lucide-react';
+import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import OnboardingTour from './components/onboarding/OnboardingTour';
@@ -43,13 +43,23 @@ function LayoutInner({ children, currentPageName }) {
     try { await base44.auth.updateMe({ onboarding_completed: true }); } catch (e) {}
   };
 
-  const navItems = [
+  const publicNavItems = [
+    { name: 'Home', label: t('nav_home'), icon: Home },
+    { name: 'Pricing', label: t('nav_pricing'), icon: Star },
+    { name: 'Contact', label: t('nav_contact'), icon: Mail },
+  ];
+
+  const authNavItems = [
     { name: 'Home', label: t('nav_home'), icon: Home },
     { name: 'CreateStory', label: t('nav_new_story'), icon: Sparkles },
     { name: 'MyStories', label: t('nav_my_stories'), icon: BookOpen },
     { name: 'Credits', label: t('nav_credits'), icon: Wallet },
+    { name: 'Pricing', label: t('nav_pricing'), icon: Star },
+    { name: 'Contact', label: t('nav_contact'), icon: Mail },
     ...(user?.role === 'admin' ? [{ name: 'Admin', label: t('nav_admin'), icon: Home }] : []),
   ];
+
+  const navItems = user ? authNavItems : publicNavItems;
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen" style={{background: 'linear-gradient(135deg, #c5d8f5 0%, #e8f0fb 15%, #ffffff 35%, #fff8ed 55%, #fde8d0 70%, #fad4e0 83%, #e8c8ee 100%)'}}>

@@ -57,6 +57,16 @@ const translations = {
     admin_done: 'הושלם', admin_pending: 'ממתין', admin_no_access: 'אין גישה', admin_no_access_msg: 'הדף הזה מיועד למנהלים בלבד.',
     admin_edit_title_prefix: 'עדכון קישור לסיפור של', admin_link_label: 'קישור לסיפור', admin_email_note_prefix: '📧 לאחר השמירה, תישלח הודעה למייל:',
     admin_cancel: 'ביטול', admin_save: 'שמור ושלח הודעה',
+    nav_pricing: 'תמחור', nav_contact: 'צור קשר',
+    pricing_badge: 'חבילות מחיר', pricing_title: 'בחרו את החבילה המתאימה לכם', pricing_subtitle: 'כל הקרדיטים ניתנים לשימוש ללא הגבלת זמן',
+    pricing_get_started: 'התחילו עכשיו', pricing_questions: 'יש שאלות?', pricing_contact_us: 'צרו איתנו קשר',
+    contact_title: 'צור קשר', contact_subtitle: 'נשמח לשמוע מכם! מלאו את הטופס ונחזור אליכם בהקדם.',
+    contact_name: 'שם מלא', contact_name_ph: 'למשל: ישראל ישראלי',
+    contact_email: 'מייל', contact_phone: 'טלפון', contact_message: 'הודעה', contact_message_ph: 'כתבו לנו...',
+    contact_send: 'שלח הודעה', contact_sending: 'שולח...',
+    contact_success_title: 'תודה! ההודעה נשלחה 🎉', contact_success_msg: 'קיבלנו את הפנייה שלכם ונחזור אליכם בהקדם.',
+    contact_error_required: 'אנא מלאו את כל השדות הנדרשים', contact_error_send: 'אירעה שגיאה. נסו שוב.',
+    contact_info_email: 'מייל', contact_info_phone: 'טלפון',
   },
   en: {
     nav_home: 'Home', nav_new_story: 'New Story', nav_my_stories: 'My Stories', nav_credits: 'Credits', nav_admin: 'Admin',
@@ -114,6 +124,16 @@ const translations = {
     admin_done: 'Completed', admin_pending: 'Pending', admin_no_access: 'No Access', admin_no_access_msg: 'This page is for administrators only.',
     admin_edit_title_prefix: 'Update story link for', admin_link_label: 'Story Link', admin_email_note_prefix: '📧 After saving, a notification will be sent to:',
     admin_cancel: 'Cancel', admin_save: 'Save & Send Notification',
+    nav_pricing: 'Pricing', nav_contact: 'Contact',
+    pricing_badge: 'Pricing Plans', pricing_title: 'Choose the Right Plan for You', pricing_subtitle: 'All credits never expire and can be used anytime',
+    pricing_get_started: 'Get Started', pricing_questions: 'Have questions?', pricing_contact_us: 'Contact us',
+    contact_title: 'Contact Us', contact_subtitle: "We'd love to hear from you! Fill out the form and we'll get back to you soon.",
+    contact_name: 'Full Name', contact_name_ph: 'e.g.: John Smith',
+    contact_email: 'Email', contact_phone: 'Phone', contact_message: 'Message', contact_message_ph: 'Write to us...',
+    contact_send: 'Send Message', contact_sending: 'Sending...',
+    contact_success_title: 'Thank you! Message sent 🎉', contact_success_msg: "We've received your message and will get back to you soon.",
+    contact_error_required: 'Please fill in all required fields', contact_error_send: 'An error occurred. Please try again.',
+    contact_info_email: 'Email', contact_info_phone: 'Phone',
   }
 };
 
@@ -121,7 +141,7 @@ export const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
   const [lang, setLang] = React.useState(() => {
-    try { return localStorage.getItem('sl_lang') || 'he'; } catch { return 'he'; }
+    try { return localStorage.getItem('sl_lang') || 'en'; } catch { return 'en'; }
   });
 
   const toggleLang = () => {
