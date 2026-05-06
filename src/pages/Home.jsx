@@ -111,7 +111,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={createPageUrl('CreateStory')}>
-                <Button size="lg" className="h-14 px-8 text-lg rounded-xl text-white shadow-lg shadow-slate-200 transition-all bg-[#372f1b] hover:bg-[#BAD1FA] hover:text-slate-800 hover:shadow-blue-200">
+                <Button size="lg" className="h-14 px-8 text-lg rounded-xl text-white shadow-lg shadow-slate-200 transition-all hover:bg-[#BAD1FA] hover:text-slate-800 hover:shadow-blue-200 bg-[#ffc157]">
                   <Sparkles className="w-5 h-5 ml-2" />
                   {t('hero_cta_new')}
                 </Button>
