@@ -166,10 +166,10 @@ export default function Home() {
                     </Button>
                   </Link>
                 </div>
-                <img
-                  src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e36f50cc6_image1.png"
-                  alt="Princess Maya"
-                  className="w-36 md:w-44 object-contain drop-shadow-lg" />
+                <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/c42203c28_Generated_Image_September_30__2025_-_2_44PM.png"
+
+                alt="Princess Maya"
+                className="w-36 md:w-44 object-contain drop-shadow-lg" />
                 
               </div>
             </CardContent>
