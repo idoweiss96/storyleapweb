@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 
-const COVER_IMAGE = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/203904ade_image.png';
+const COVER_IMAGE = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/f638f6573_image11.png';
 
 const PAGES = [
   { type: 'cover' },
