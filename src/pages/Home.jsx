@@ -149,6 +149,34 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Maya Story CTA */}
+      <section className="py-8">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <Card className="border-0 shadow-lg shadow-amber-100 overflow-hidden">
+            <CardContent className="p-0">
+              <div className="flex flex-col md:flex-row items-center gap-6 p-6 md:p-8"
+                style={{ background: 'linear-gradient(135deg, #fff8ed 0%, #fde8c8 100%)' }}>
+                <div className="flex-1 text-center md:text-right">
+                  <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-2">✨ סיפור לדוגמה</p>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-2">הנסיכה מאיה וענן הבלבול</h3>
+                  <p className="text-slate-500 text-sm mb-4">סיפור קסום על התמודדות עם שינויים — קראו אותו עכשיו!</p>
+                  <Link to="/MayaStory">
+                    <Button className="rounded-xl px-6" style={{ background: '#c07028', color: 'white' }}>
+                      📖 פתחו את הסיפור
+                    </Button>
+                  </Link>
+                </div>
+                <img
+                  src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e36f50cc6_image1.png"
+                  alt="Princess Maya"
+                  className="w-36 md:w-44 object-contain drop-shadow-lg"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </section>
+
       {/* Gallery Section */}
       <section className="py-12">
         <div className="text-center mb-8">
