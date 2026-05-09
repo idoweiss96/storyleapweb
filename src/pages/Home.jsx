@@ -159,17 +159,17 @@ export default function Home() {
                 <div className="flex-1 text-center md:text-right">
                   <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-2">✨ Sample Story</p>
                   <h3 className="text-2xl font-bold text-slate-800 mb-2">Princess Maya and the Cloud of Confusion</h3>
-                  <p className="text-slate-500 text-sm mb-4 hidden">A magical story about coping with change — read it now!</p>
+                  
                   <Link to="/MayaStory">
                     <Button className="rounded-xl px-6" style={{ background: '#c07028', color: 'white' }}>
                       📖 Open the Story
                     </Button>
                   </Link>
                 </div>
-                <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/c42203c28_Generated_Image_September_30__2025_-_2_44PM.png"
-
-                alt="Princess Maya"
-                className="w-36 md:w-44 object-contain drop-shadow-lg" />
+                <img
+                  src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e36f50cc6_image1.png"
+                  alt="Princess Maya"
+                  className="w-36 md:w-44 object-contain drop-shadow-lg" />
                 
               </div>
             </CardContent>
