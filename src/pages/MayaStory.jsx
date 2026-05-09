@@ -79,7 +79,7 @@ export default function MayaStory() {
                 style={{ color: '#fde68a', textShadow: '2px 2px 8px rgba(0,0,0,0.5)', fontFamily: 'Georgia, serif' }}>
                     Princess Maya and<br />the Cloud of Confusion
                   </h1>
-                  
+                  <img src={COVER_IMAGE} alt="Maya" className="w-52 md:w-64 object-contain drop-shadow-2xl mb-8 hidden" />
                   <button onClick={goNext}
                 className="px-8 py-2 rounded-full border border-amber-300 text-amber-200 text-sm hover:bg-amber-800/40 transition-colors">
                     Start ›
