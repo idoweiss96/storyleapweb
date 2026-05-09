@@ -166,7 +166,7 @@ export default function Home() {
                     </Button>
                   </Link>
                 </div>
-                <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/c42203c28_Generated_Image_September_30__2025_-_2_44PM.png"
+                <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/7455564e3_MAYA.png"
 
                 alt="Princess Maya"
                 className="w-36 md:w-44 object-contain drop-shadow-lg rounded-md" />
