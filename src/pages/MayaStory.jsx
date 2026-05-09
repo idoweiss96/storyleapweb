@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RotateCcw, Home } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const COVER_IMAGE = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/203904ade_image.png';
 
@@ -126,7 +127,12 @@ export default function MayaStory() {
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-between mt-4 px-1">
+        <div className="flex justify-start mt-3 px-1 mb-1">
+          <Link to="/" className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/80 shadow text-slate-500 hover:bg-white transition-all text-sm">
+            <Home className="w-4 h-4" /> Home
+          </Link>
+        </div>
+        <div className="flex items-center justify-between mt-2 px-1">
           <button onClick={goPrev} disabled={currentPage === 0}
           className="flex items-center gap-1 px-4 py-2 rounded-xl bg-white/80 shadow text-slate-600 hover:bg-white disabled:opacity-30 transition-all text-sm">
             <ChevronLeft className="w-4 h-4" /> Previous
