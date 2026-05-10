@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink } from 'lucide-react';
+import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageContext';
 
@@ -22,6 +22,8 @@ export default function Admin() {
   const [editingStory, setEditingStory] = useState(null);
   const [storyLink, setStoryLink] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncMsg, setSyncMsg] = useState('');
 
   const settingLabels = { space: t('setting_space'), forest: t('setting_forest'), castle: t('setting_castle'), sports: t('setting_sports'), real_life: t('setting_real_life') };
   const challengeLabels = { fears: t('ch_fears'), social_difficulty: t('ch_social'), changes: t('ch_changes'), emotional_regulation: t('ch_emotional'), separation_anxiety: t('ch_separation'), self_confidence: t('ch_confidence'), sleep_issues: t('ch_sleep') };
@@ -72,6 +74,19 @@ export default function Admin() {
       URL.revokeObjectURL(url);
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const handleSyncSheet = async () => {
+    setIsSyncing(true);
+    setSyncMsg('');
+    try {
+      const res = await base44.functions.invoke('initSheet', {});
+      setSyncMsg(`✓ סונכרן: ${res.data?.hebrew || 0} עברית, ${res.data?.english || 0} אנגלית`);
+    } catch (err) {
+      setSyncMsg('שגיאה בסנכרון');
+    } finally {
+      setIsSyncing(false);
     }
   };
 
@@ -143,12 +158,18 @@ export default function Admin() {
           </CardContent>
         </Card>
         <Card className="border-0 shadow-lg shadow-slate-100">
-          <CardContent className="p-6">
+          <CardContent className="p-6 space-y-3">
             <Button onClick={exportToCSV} disabled={isExporting || stories.length === 0}
               className="w-full h-12 bg-slate-700 hover:bg-slate-600 rounded-xl">
               {isExporting ? <Loader2 className="w-5 h-5 animate-spin ml-2" /> : <FileSpreadsheet className="w-5 h-5 ml-2" />}
               {t('admin_export')}
             </Button>
+            <Button onClick={handleSyncSheet} disabled={isSyncing} variant="outline"
+              className="w-full h-12 rounded-xl">
+              {isSyncing ? <Loader2 className="w-5 h-5 animate-spin ml-2" /> : <RefreshCw className="w-5 h-5 ml-2" />}
+              סנכרן לגיליון Google
+            </Button>
+            {syncMsg && <p className="text-sm text-center text-green-600">{syncMsg}</p>}
           </CardContent>
         </Card>
       </div>
