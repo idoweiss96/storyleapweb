@@ -19,9 +19,9 @@ export default function Pricing() {
       icon: Zap,
       color: 'blue',
       price: 19,
-      credits: 5,
+      credits: 1,
       name: t('pkg_starter'),
-      features: [`5 ${t('pkg_stories_unit')}`, t('feat_2'), t('feat_3')],
+      features: [`1 סיפור`, t('feat_2'), t('feat_3')],
     },
     {
       id: 'family',

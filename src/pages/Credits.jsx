@@ -16,9 +16,9 @@ export default function Credits() {
 
   const creditPackages = [
     {
-      id: 'starter', icon: Zap, color: 'violet', price: 19, credits: 5,
+      id: 'starter', icon: Zap, color: 'violet', price: 19, credits: 1,
       name: t('pkg_starter'),
-      features: [`5 ${t('pkg_stories_unit')}`, t('feat_2'), t('feat_3')],
+      features: [`1 ${t('pkg_stories_unit')}`, t('feat_2'), t('feat_3')],
     },
     {
       id: 'family', icon: Star, color: 'amber', price: 49, credits: 15, isPopular: true,
@@ -47,10 +47,10 @@ export default function Credits() {
   const handlePurchase = async (pkg) => {
     setIsProcessing(pkg.id);
     try {
-      const newCredits = credits + pkg.credits;
+      const newCredits = credits + (pkg.credits * 20);
       await base44.auth.updateMe({ credits: newCredits });
       setCredits(newCredits);
-      toast.success(`${pkg.credits} ${t('pkg_stories_unit')} added!`);
+      toast.success(`${pkg.credits} ${t('pkg_stories_unit')} ${t('pkg_stories_unit') === 'סיפורים' ? 'נוספו!' : 'added!'}`);
     } catch (err) {
       toast.error('An error occurred. Please try again.');
     } finally {
@@ -109,7 +109,7 @@ export default function Credits() {
                     </div>
                     <h3 className="text-xl font-bold text-gray-800 mb-1">{pkg.name}</h3>
                     <p className="text-3xl font-bold text-gray-900">₪{pkg.price}</p>
-                    <p className="text-sm text-gray-500">{pkg.credits} {t('pkg_stories_unit')}</p>
+                    <p className="text-sm text-gray-500">{pkg.credits} {pkg.credits === 1 ? 'סיפור' : t('pkg_stories_unit')}</p>
                   </div>
                   <ul className="space-y-3 mb-6 flex-grow">
                     {pkg.features.map((feature, i) => (

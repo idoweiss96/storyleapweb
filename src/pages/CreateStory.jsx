@@ -28,6 +28,11 @@ export default function CreateStory() {
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
+      // Give 20 credits to new users on first visit
+      if (currentUser.credits === undefined || currentUser.credits === null) {
+        await base44.auth.updateMe({ credits: 20 });
+        currentUser.credits = 20;
+      }
       setUser(currentUser);
     } catch (e) {
       base44.auth.redirectToLogin(window.location.href);
@@ -41,8 +46,14 @@ export default function CreateStory() {
       setError(t('create_error_required'));
       return;
     }
+    if ((user.credits || 0) < 20) {
+      setError('אין מספיק קרדיטים. רכשו חבילה כדי ליצור סיפור נוסף.');
+      return;
+    }
     setIsLoading(true);
     try {
+      await base44.auth.updateMe({ credits: (user.credits || 0) - 20 });
+      setUser(prev => ({ ...prev, credits: (prev.credits || 0) - 20 }));
       const savedStory = await base44.entities.Story.create({
         child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
         child_image_url: formData.childImage || null, setting: formData.setting,

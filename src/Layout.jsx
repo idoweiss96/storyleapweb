@@ -25,6 +25,11 @@ function LayoutInner({ children, currentPageName }) {
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
+      // Give 20 credits to new users
+      if (currentUser.credits === undefined || currentUser.credits === null) {
+        await base44.auth.updateMe({ credits: 20 });
+        currentUser.credits = 20;
+      }
       setUser(currentUser);
       setCredits(currentUser.credits || 0);
       if (!currentUser.onboarding_completed) {
