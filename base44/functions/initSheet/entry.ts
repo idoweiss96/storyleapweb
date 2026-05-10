@@ -30,8 +30,8 @@ function isHebrew(text) {
 }
 
 function getFields(story) {
-  // entity automation payload wraps in .data, SDK list returns flat
-  return story.data && story.data.child_name !== undefined ? story.data : story;
+  // SDK list always returns story.data as nested object
+  return (story.data && typeof story.data === 'object') ? story.data : story;
 }
 
 function detectLanguage(story) {
