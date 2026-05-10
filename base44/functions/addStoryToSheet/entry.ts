@@ -1,7 +1,40 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-const SPREADSHEET_ID = '1-LZ-ai2LdJ4BoTTdSacDRl-L0LpcIEg5JrCKK6txLxg';
+const SPREADSHEET_ID_EN = '1-LZ-ai2LdJ4BoTTdSacDRl-L0LpcIEg5JrCKK6txLxg';
+const SPREADSHEET_ID_HE = '1yT2WdAlyjpp8gciT4iZYEL122FyrliTin3MEcTvvr20';
 const SHEET_NAME = 'Sheet1';
+
+const genderMap = { boy: 'בן', girl: 'בת', other: 'אחר' };
+const settingMap = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' };
+const challengeMap = { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' };
+const reactionMap = { outburst: 'התפרצות', withdrawal: 'הסתגרות', attention_seeking: 'חיפוש תשומת לב', crying: 'בכי', aggression: 'תוקפנות', avoidance: 'הימנעות' };
+
+function isHebrew(text) {
+  return /[\u0590-\u05FF]/.test(text || '');
+}
+
+function detectLanguage(story) {
+  return isHebrew(story.child_name) || isHebrew(story.trigger_desc) || isHebrew(story.hobbies) ? 'he' : 'en';
+}
+
+function storyToRow(story) {
+  const createdDate = story.created_date ? new Date(story.created_date).toLocaleDateString('he-IL') : '';
+  return [
+    createdDate,
+    story.child_name || '',
+    story.child_age || '',
+    genderMap[story.gender] || story.gender || '',
+    settingMap[story.setting] || story.setting || '',
+    challengeMap[story.challenge_type] || story.challenge_type || '',
+    story.trigger_desc || '',
+    reactionMap[story.reaction_type] || story.reaction_type || '',
+    story.hobbies || '',
+    story.contact_email || '',
+    story.contact_phone || '',
+    story.child_image_url || '',
+    story.story_link || '',
+  ];
+}
 
 Deno.serve(async (req) => {
   try {
@@ -15,30 +48,13 @@ Deno.serve(async (req) => {
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
-    const genderMap = { boy: 'בן', girl: 'בת', other: 'אחר' };
-    const settingMap = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' };
-    const challengeMap = { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' };
-    const reactionMap = { outburst: 'התפרצות', withdrawal: 'הסתגרות', attention_seeking: 'חיפוש תשומת לב', crying: 'בכי', aggression: 'תוקפנות', avoidance: 'הימנעות' };
+    const lang = detectLanguage(story);
+    const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
 
-    const createdDate = story.created_date ? new Date(story.created_date).toLocaleDateString('he-IL') : '';
-
-    const row = [
-      createdDate,
-      story.child_name || '',
-      story.child_age || '',
-      genderMap[story.gender] || story.gender || '',
-      settingMap[story.setting] || story.setting || '',
-      challengeMap[story.challenge_type] || story.challenge_type || '',
-      story.trigger_desc || '',
-      reactionMap[story.reaction_type] || story.reaction_type || '',
-      story.hobbies || '',
-      story.contact_email || '',
-      story.contact_phone || '',
-      story.story_link || '',
-    ];
+    const row = storyToRow(story);
 
     const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}:append?valueInputOption=USER_ENTERED`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${SHEET_NAME}:append?valueInputOption=USER_ENTERED`,
       {
         method: 'POST',
         headers: {
@@ -54,7 +70,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: err }, { status: 500 });
     }
 
-    return Response.json({ success: true });
+    return Response.json({ success: true, lang });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
