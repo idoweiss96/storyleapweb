@@ -20,6 +20,10 @@ function LayoutInner({ children, currentPageName }) {
 
   useEffect(() => {
     loadUser();
+    // Refresh credits on custom event (e.g. after story creation)
+    const handleCreditsUpdate = () => loadUser();
+    window.addEventListener('credits-updated', handleCreditsUpdate);
+    return () => window.removeEventListener('credits-updated', handleCreditsUpdate);
   }, []);
 
   const loadUser = async () => {

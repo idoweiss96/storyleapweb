@@ -54,6 +54,7 @@ export default function CreateStory() {
     try {
       await base44.auth.updateMe({ credits: (user.credits || 0) - 20 });
       setUser(prev => ({ ...prev, credits: (prev.credits || 0) - 20 }));
+      window.dispatchEvent(new Event('credits-updated'));
       const savedStory = await base44.entities.Story.create({
         child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
         child_image_url: formData.childImage || null, setting: formData.setting,
