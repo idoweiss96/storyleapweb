@@ -62,7 +62,6 @@ function LayoutInner({ children, currentPageName }) {
     { name: 'Home', label: t('nav_home'), icon: Home },
     { name: 'CreateStory', label: t('nav_new_story'), icon: Sparkles },
     { name: 'MyStories', label: t('nav_my_stories'), icon: BookOpen },
-    { name: 'Credits', label: t('nav_credits'), icon: Wallet },
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
     { name: 'Contact', label: t('nav_contact'), icon: Mail },
     ...(user?.role === 'admin' ? [{ name: 'Admin', label: t('nav_admin'), icon: Home }] : []),
@@ -114,10 +113,10 @@ function LayoutInner({ children, currentPageName }) {
               </button>
 
               {user && (
-                <Link to={createPageUrl('Credits')} className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-amber-100 rounded-full border border-amber-200">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-amber-100 rounded-full border border-amber-200">
                   <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
                   <span className="text-sm font-semibold text-amber-700">{credits}</span>
-                </Link>
+                </div>
               )}
 
               {user ? (
