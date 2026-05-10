@@ -2,8 +2,6 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const SPREADSHEET_ID_EN = '1-LZ-ai2LdJ4BoTTdSacDRl-L0LpcIEg5JrCKK6txLxg';
 const SPREADSHEET_ID_HE = '1yT2WdAlyjpp8gciT4iZYEL122FyrliTin3MEcTvvr20';
-const SHEET_NAME = 'Sheet1';
-
 const genderMap = { boy: 'בן', girl: 'בת', other: 'אחר' };
 const settingMap = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' };
 const challengeMap = { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' };
@@ -56,7 +54,7 @@ Deno.serve(async (req) => {
     const row = storyToRow(storyData);
 
     const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${SHEET_NAME}:append?valueInputOption=USER_ENTERED`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:append?valueInputOption=USER_ENTERED`,
       {
         method: 'POST',
         headers: {
