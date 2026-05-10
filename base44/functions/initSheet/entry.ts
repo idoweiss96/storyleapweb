@@ -4,7 +4,7 @@ const SPREADSHEET_ID_EN = '1-LZ-ai2LdJ4BoTTdSacDRl-L0LpcIEg5JrCKK6txLxg';
 const SPREADSHEET_ID_HE = '1yT2WdAlyjpp8gciT4iZYEL122FyrliTin3MEcTvvr20';
 const SHEET_NAME = 'Sheet1';
 
-const HEADERS = [
+const HEADERS_HE = [
   'תאריך',
   'שם הילד/ה',
   'גיל',
@@ -18,6 +18,22 @@ const HEADERS = [
   'טלפון',
   'קישור לתמונה',
   'קישור לסיפור',
+];
+
+const HEADERS_EN = [
+  'Date',
+  "Child's Name",
+  'Age',
+  'Gender',
+  'Setting',
+  'Challenge',
+  'Trigger',
+  'Reaction',
+  'Hobbies',
+  'Email',
+  'Phone',
+  'Image Link',
+  'Story Link',
 ];
 
 const genderMap = { boy: 'בן', girl: 'בת', other: 'אחר' };
@@ -59,7 +75,7 @@ function storyToRow(story) {
   ];
 }
 
-async function writeToSheet(spreadsheetId, rows, accessToken) {
+async function writeToSheet(spreadsheetId, rows, headers, accessToken) {
   // Clear first
   await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${SHEET_NAME}:clear`,
@@ -75,7 +91,7 @@ async function writeToSheet(spreadsheetId, rows, accessToken) {
     {
       method: 'PUT',
       headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ values: rows }),
+      body: JSON.stringify({ values: [headers, ...rows] }),
     }
   );
 
@@ -101,8 +117,8 @@ Deno.serve(async (req) => {
     const enStories = stories.filter(s => detectLanguage(s) === 'en');
 
     await Promise.all([
-      writeToSheet(SPREADSHEET_ID_HE, [HEADERS, ...heStories.map(storyToRow)], accessToken),
-      writeToSheet(SPREADSHEET_ID_EN, [HEADERS, ...enStories.map(storyToRow)], accessToken),
+      writeToSheet(SPREADSHEET_ID_HE, heStories.map(storyToRow), HEADERS_HE, accessToken),
+      writeToSheet(SPREADSHEET_ID_EN, enStories.map(storyToRow), HEADERS_EN, accessToken),
     ]);
 
     return Response.json({ success: true, hebrew: heStories.length, english: enStories.length });
