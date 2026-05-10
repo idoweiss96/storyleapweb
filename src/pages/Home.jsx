@@ -97,7 +97,7 @@ export default function Home() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-medium mb-6 border border-blue-100">
               <Sparkles className="w-4 h-4" />
-              {t('hero_badge')}
+              Emotional growth through stories
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-slate-800 mb-6 leading-tight">
               {t('hero_title1')}
