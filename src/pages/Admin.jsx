@@ -24,6 +24,8 @@ export default function Admin() {
   const [isSaving, setIsSaving] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState('');
+  const [isSyncingLinks, setIsSyncingLinks] = useState(false);
+  const [syncLinksMsg, setSyncLinksMsg] = useState('');
 
   const settingLabels = { space: t('setting_space'), forest: t('setting_forest'), castle: t('setting_castle'), sports: t('setting_sports'), real_life: t('setting_real_life') };
   const challengeLabels = { fears: t('ch_fears'), social_difficulty: t('ch_social'), changes: t('ch_changes'), emotional_regulation: t('ch_emotional'), separation_anxiety: t('ch_separation'), self_confidence: t('ch_confidence'), sleep_issues: t('ch_sleep') };
@@ -87,6 +89,23 @@ export default function Admin() {
       setSyncMsg('שגיאה בסנכרון');
     } finally {
       setIsSyncing(false);
+    }
+  };
+
+  const handleSyncLinks = async () => {
+    setIsSyncingLinks(true);
+    setSyncLinksMsg('');
+    try {
+      const res = await base44.functions.invoke('syncLinksFromSheet', {});
+      setSyncLinksMsg(`✓ עודכנו ${res.data?.updated || 0} לינקים`);
+      if (res.data?.updated > 0) {
+        const allStories = await base44.entities.Story.list('-created_date');
+        setStories(allStories);
+      }
+    } catch (err) {
+      setSyncLinksMsg('שגיאה בסנכרון לינקים');
+    } finally {
+      setIsSyncingLinks(false);
     }
   };
 
@@ -170,6 +189,12 @@ export default function Admin() {
               סנכרן לגיליון Google
             </Button>
             {syncMsg && <p className="text-sm text-center text-green-600">{syncMsg}</p>}
+            <Button onClick={handleSyncLinks} disabled={isSyncingLinks} variant="outline"
+              className="w-full h-12 rounded-xl border-green-300 text-green-700 hover:bg-green-50">
+              {isSyncingLinks ? <Loader2 className="w-5 h-5 animate-spin ml-2" /> : <RefreshCw className="w-5 h-5 ml-2" />}
+              סנכרן לינקים מהגיליון
+            </Button>
+            {syncLinksMsg && <p className="text-sm text-center text-green-600">{syncLinksMsg}</p>}
           </CardContent>
         </Card>
       </div>
