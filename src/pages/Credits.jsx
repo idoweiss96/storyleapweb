@@ -50,7 +50,8 @@ export default function Credits() {
       const newCredits = credits + (pkg.credits * 20);
       await base44.auth.updateMe({ credits: newCredits });
       setCredits(newCredits);
-      toast.success(`${pkg.credits} ${t('pkg_stories_unit')} ${t('pkg_stories_unit') === 'סיפורים' ? 'נוספו!' : 'added!'}`);
+      setUser(prev => ({ ...prev, credits: newCredits }));
+      toast.success(`✨ ${pkg.credits === 1 ? '1 story' : pkg.credits + ' stories'} added to your account!`);
     } catch (err) {
       toast.error('An error occurred. Please try again.');
     } finally {

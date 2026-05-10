@@ -7,39 +7,39 @@ import { Sparkles, Star, BookOpen, Wallet, ArrowLeft, ArrowRight, X, PartyPopper
 const tourSteps = [
   {
     id: 'welcome',
-    title: 'ברוכים הבאים ל-StoryLeap! 🎉',
-    description: 'אנחנו שמחים שהצטרפתם! בואו נכיר לכם את הפלטפורמה בכמה צעדים פשוטים.',
+    title: 'Welcome to StoryLeap! 🎉',
+    description: "We're so glad you joined! Let us show you around in a few simple steps.",
     icon: PartyPopper,
     position: 'center',
   },
   {
     id: 'credits',
-    title: 'הקרדיטים שלכם ⭐',
-    description: 'קיבלתם 3 קרדיטים חינם! כל קרדיט מאפשר ליצור סיפור אחד מותאם אישית.',
+    title: 'Your Free Credits ⭐',
+    description: "You've received 20 free credits — enough to create your first personalized story!",
     icon: Star,
     position: 'top-right',
     highlight: 'credits',
   },
   {
     id: 'create',
-    title: 'יצירת סיפור ✨',
-    description: 'לחצו על "סיפור חדש" כדי ליצור סיפור מותאם אישית לילד/ה שלכם. פשוט מלאו את הפרטים והקסם יקרה!',
+    title: 'Create a Story ✨',
+    description: 'Click "New Story" to create a personalized story for your child. Just fill in the details and the magic happens!',
     icon: Sparkles,
     position: 'top',
     highlight: 'create',
   },
   {
     id: 'stories',
-    title: 'הסיפורים שלי 📚',
-    description: 'כל הסיפורים שיצרתם נשמרים כאן. תוכלו לקרוא אותם שוב, להדפיס או להוריד.',
+    title: 'My Stories 📚',
+    description: 'All your created stories are saved here. You can re-read, print, or download them anytime.',
     icon: BookOpen,
     position: 'top',
     highlight: 'stories',
   },
   {
     id: 'finish',
-    title: 'מוכנים להתחיל! 🚀',
-    description: 'זהו! עכשיו אתם יודעים את הכל. בואו ניצור את הסיפור הראשון שלכם!',
+    title: "You're all set! 🚀",
+    description: "That's it! Now you know everything. Let's create your first story!",
     icon: Sparkles,
     position: 'center',
   },
@@ -131,8 +131,8 @@ export default function OnboardingTour({ onComplete, onSkip }) {
                     onClick={handlePrev}
                     className="flex-1 h-11 rounded-xl border-violet-200 text-violet-600 hover:bg-violet-50"
                   >
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                    הקודם
+                    <ArrowLeft className="w-4 h-4 mr-1" />
+                    Back
                   </Button>
                 )}
                 
@@ -140,8 +140,8 @@ export default function OnboardingTour({ onComplete, onSkip }) {
                   onClick={handleNext}
                   className={`flex-1 h-11 rounded-xl bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 ${isFirst ? 'w-full' : ''}`}
                 >
-                  {isLast ? 'בואו נתחיל!' : 'הבא'}
-                  {!isLast && <ArrowLeft className="w-4 h-4 mr-1" />}
+                  {isLast ? "Let's go!" : 'Next'}
+                  {!isLast && <ArrowRight className="w-4 h-4 ml-1" />}
                 </Button>
               </div>
 
@@ -150,7 +150,7 @@ export default function OnboardingTour({ onComplete, onSkip }) {
                   onClick={onSkip}
                   className="w-full mt-3 text-sm text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  דלג על ההיכרות
+                  Skip tour
                 </button>
               )}
             </div>
