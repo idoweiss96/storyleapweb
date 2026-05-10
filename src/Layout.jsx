@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail } from 'lucide-react';
+import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import OnboardingTour from './components/onboarding/OnboardingTour';
@@ -107,9 +107,10 @@ function LayoutInner({ children, currentPageName }) {
               {/* Language Toggle */}
               <button
                 onClick={toggleLang}
-                className="px-3 py-1.5 text-sm font-semibold rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+                className="p-2 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors"
+                title={lang === 'he' ? 'English' : 'עברית'}
               >
-                {lang === 'he' ? 'EN' : 'עב'}
+                <Globe className="w-5 h-5" />
               </button>
 
               {user && (
