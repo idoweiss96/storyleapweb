@@ -107,7 +107,7 @@ export default function Home() {
               </span>
             </h1>
             <p className="text-lg md:text-xl text-slate-500 mb-8 leading-relaxed whitespace-pre-line">
-              {t('hero_subtitle')}
+              Helping children grow emotionally through science-based personalized storytelling.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={createPageUrl('CreateStory')}>
