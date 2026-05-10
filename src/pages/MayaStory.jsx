@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, RotateCcw, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -44,6 +44,7 @@ const variants = {
 export default function MayaStory() {
   const [currentPage, setCurrentPage] = useState(0);
   const [direction, setDirection] = useState(1);
+  const touchStartX = useRef(null);
 
   const goNext = () => {
     if (currentPage < PAGES.length - 1) {setDirection(1);setCurrentPage((p) => p + 1);}
@@ -53,6 +54,18 @@ export default function MayaStory() {
   };
   const restart = () => {setDirection(-1);setCurrentPage(0);};
 
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? goNext() : goPrev();
+    }
+    touchStartX.current = null;
+  };
+
   const page = PAGES[currentPage];
 
   return (
@@ -61,7 +74,8 @@ export default function MayaStory() {
       <div className="w-full max-w-5xl">
 
         {/* Book */}
-        <div className="rounded-2xl shadow-2xl overflow-hidden" style={{ background: '#fff8ed' }}>
+        <div className="rounded-2xl shadow-2xl overflow-hidden" style={{ background: '#fff8ed' }}
+          onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
           <AnimatePresence custom={direction} mode="wait">
             <motion.div
               key={currentPage}
