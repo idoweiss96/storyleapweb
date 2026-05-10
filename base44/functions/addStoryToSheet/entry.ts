@@ -41,17 +41,19 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
 
-    const story = body.data;
-    if (!story) {
+    // entity automation sends { data: {...}, event: {...} }
+    const storyData = body.data || body;
+    if (!storyData) {
       return Response.json({ error: 'No story data provided' }, { status: 400 });
     }
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
-    const lang = detectLanguage(story);
+    // storyData here is already the flat fields from automation payload
+    const lang = detectLanguage(storyData);
     const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
 
-    const row = storyToRow(story);
+    const row = storyToRow(storyData);
 
     const response = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${SHEET_NAME}:append?valueInputOption=USER_ENTERED`,
