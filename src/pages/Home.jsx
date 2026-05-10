@@ -103,7 +103,7 @@ export default function Home() {
               {t('hero_title1')}
               <br />
               <span className="bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
-                {t('hero_title2')}
+                support that feels personal
               </span>
             </h1>
             <p className="text-lg md:text-xl text-slate-500 mb-8 leading-relaxed whitespace-pre-line">
