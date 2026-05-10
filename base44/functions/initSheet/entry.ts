@@ -36,10 +36,15 @@ const HEADERS_EN = [
   'Story Link',
 ];
 
-const genderMap = { boy: 'בן', girl: 'בת', other: 'אחר' };
-const settingMap = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' };
-const challengeMap = { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' };
-const reactionMap = { outburst: 'התפרצות', withdrawal: 'הסתגרות', attention_seeking: 'חיפוש תשומת לב', crying: 'בכי', aggression: 'תוקפנות', avoidance: 'הימנעות' };
+const genderMapHE = { boy: 'בן', girl: 'בת', other: 'אחר' };
+const settingMapHE = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' };
+const challengeMapHE = { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' };
+const reactionMapHE = { outburst: 'התפרצות', withdrawal: 'הסתגרות', attention_seeking: 'חיפוש תשומת לב', crying: 'בכי', aggression: 'תוקפנות', avoidance: 'הימנעות' };
+
+const genderMapEN = { boy: 'Boy', girl: 'Girl', other: 'Other' };
+const settingMapEN = { space: 'Space', forest: 'Enchanted Forest', castle: 'Castle', sports: 'Sports', real_life: 'Real Life' };
+const challengeMapEN = { fears: 'Fears', social_difficulty: 'Social Difficulty', changes: 'Changes', emotional_regulation: 'Emotional Regulation', separation_anxiety: 'Separation Anxiety', self_confidence: 'Self Confidence', sleep_issues: 'Sleep Issues' };
+const reactionMapEN = { outburst: 'Outburst', withdrawal: 'Withdrawal', attention_seeking: 'Attention Seeking', crying: 'Crying', aggression: 'Aggression', avoidance: 'Avoidance' };
 
 function isHebrew(text) {
   return /[\u0590-\u05FF]/.test(text || '');
@@ -55,9 +60,13 @@ function detectLanguage(story) {
   return isHebrew(d.child_name) || isHebrew(d.trigger_desc) || isHebrew(d.hobbies) ? 'he' : 'en';
 }
 
-function storyToRow(story) {
+function storyToRow(story, lang) {
   const d = getFields(story);
   const createdDate = story.created_date ? new Date(story.created_date).toLocaleDateString('he-IL') : '';
+  const genderMap = lang === 'he' ? genderMapHE : genderMapEN;
+  const settingMap = lang === 'he' ? settingMapHE : settingMapEN;
+  const challengeMap = lang === 'he' ? challengeMapHE : challengeMapEN;
+  const reactionMap = lang === 'he' ? reactionMapHE : reactionMapEN;
   return [
     createdDate,
     d.child_name || '',
@@ -117,8 +126,8 @@ Deno.serve(async (req) => {
     const enStories = stories.filter(s => detectLanguage(s) === 'en');
 
     await Promise.all([
-      writeToSheet(SPREADSHEET_ID_HE, heStories.map(storyToRow), HEADERS_HE, accessToken),
-      writeToSheet(SPREADSHEET_ID_EN, enStories.map(storyToRow), HEADERS_EN, accessToken),
+      writeToSheet(SPREADSHEET_ID_HE, heStories.map(s => storyToRow(s, 'he')), HEADERS_HE, accessToken),
+      writeToSheet(SPREADSHEET_ID_EN, enStories.map(s => storyToRow(s, 'en')), HEADERS_EN, accessToken),
     ]);
 
     return Response.json({ success: true, hebrew: heStories.length, english: enStories.length });
