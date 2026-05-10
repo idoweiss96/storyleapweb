@@ -9,7 +9,7 @@ import OnboardingTour from './components/onboarding/OnboardingTour';
 import { LanguageProvider, useLanguage } from './components/LanguageContext';
 
 // New brand logo URL
-const LOGO_URL = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/88f64289d_Group5.png';
+const LOGO_URL = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg';
 
 function LayoutInner({ children, currentPageName }) {
   const { t, lang, toggleLang, isRTL } = useLanguage();
