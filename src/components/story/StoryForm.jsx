@@ -197,7 +197,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
         </div>
       </div>
 
-      <Button type="submit" disabled={isLoading}
+      <Button type="submit" disabled={isLoading || uploading}
         className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all">
         {isLoading ? (
           <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
