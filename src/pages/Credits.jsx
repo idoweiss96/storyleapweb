@@ -111,7 +111,7 @@ export default function Credits() {
                     </div>
                     <h3 className="text-xl font-bold text-gray-800 mb-1">{pkg.name}</h3>
                     <p className="text-3xl font-bold text-gray-900">₪{pkg.price}</p>
-                    <p className="text-sm text-gray-500">{pkg.credits} {pkg.credits === 1 ? 'סיפור' : t('pkg_stories_unit')}</p>
+                    <p className="text-sm text-gray-500">{pkg.credits} {pkg.credits === 1 ? 'story' : t('pkg_stories_unit')}</p>
                   </div>
                   <ul className="space-y-3 mb-6 flex-grow">
                     {pkg.features.map((feature, i) => (
@@ -121,14 +121,9 @@ export default function Credits() {
                       </li>
                     ))}
                   </ul>
-                  <Button onClick={() => handlePurchase(pkg)} disabled={!!isProcessing}
-                    className={`w-full h-12 rounded-xl ${pkg.isPopular ? 'bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white' : 'bg-slate-800 hover:bg-slate-700 text-white'}`}>
-                    {isProcessingThis ? (
-                      <span className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        {t('pkg_processing')}
-                      </span>
-                    ) : t('pkg_buy')}
+                  <Button disabled
+                    className="w-full h-12 rounded-xl bg-slate-200 text-slate-500 cursor-not-allowed">
+                    🚀 Purchase Coming Soon
                   </Button>
                 </CardContent>
               </Card>
