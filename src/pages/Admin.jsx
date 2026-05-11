@@ -119,8 +119,8 @@ export default function Admin() {
       if (editingStory.contact_email) {
         await base44.integrations.Core.SendEmail({
           to: editingStory.contact_email,
-          subject: `הסיפור של ${editingStory.child_name} מוכן! ✨`,
-          body: `שלום,\n\nיש לנו חדשות מרגשות! הסיפור המותאם אישית של ${editingStory.child_name} מוכן!\n\nלחצו על הקישור הבא כדי לצפות בסיפור:\n${storyLink.trim()}\n\nתודה שבחרתם ב-StoryLeap!\nבברכה,\nצוות StoryLeap ✨`
+          subject: `${editingStory.child_name}'s Story is Ready! ✨`,
+          body: `Hi there!\n\nThe Story is ready enjoy :)\n\nClick the link below to read ${editingStory.child_name}'s personalized story:\n${storyLink.trim()}\n\nThank you for choosing StoryLeap!\n\nWarm regards,\nThe StoryLeap Team ✨`
         });
       }
       setStories(stories.map(s => s.id === editingStory.id ? { ...s, story_link: storyLink.trim() } : s));
