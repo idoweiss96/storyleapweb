@@ -67,7 +67,8 @@ Deno.serve(async (req) => {
           await base44.asServiceRole.integrations.Core.SendEmail({
             to: email,
             subject: `${childName}'s Story is Ready! ✨`,
-            body: `Hi there! ✨<br><br>${childName} personalized story is ready.<br><br>You can read it here: ${sheetLink}<br><br>Please open this in a landscape mode.<br><br>Thanks for choosing StoryLeap 💛<br><br>The StoryLeap Team`
+            body: `Hi there! ✨<br><br>${childName} personalized story is ready.<br><br>You can read it here: ${sheetLink}<br><br>Please open this in a landscape mode.<br><br>Thanks for choosing StoryLeap 💛<br><br>The StoryLeap Team
+`
           });
         }
       }
