@@ -128,7 +128,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12">
+      <section className="py-12 hidden md:block">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature, index) => {
             const Icon = feature.icon;
