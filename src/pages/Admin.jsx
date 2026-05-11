@@ -120,7 +120,7 @@ export default function Admin() {
         await base44.integrations.Core.SendEmail({
           to: editingStory.contact_email,
           subject: `${editingStory.child_name}'s Story is Ready! ✨`,
-          body: `Hi there! ✨\n\n${editingStory.child_name} personalized story is ready.\n\nYou can read it here: ${storyLink.trim()}\n\nPlease open this in a landscape mode.\n\nThanks for choosing StoryLeap 💛\n\nThe StoryLeap Team`
+          body: `Hi there! ✨<br><br>${editingStory.child_name} personalized story is ready.<br><br>You can read it here: ${storyLink.trim()}<br><br>Please open this in a landscape mode.<br><br>Thanks for choosing StoryLeap 💛<br><br>The StoryLeap Team`
         });
       }
       setStories(stories.map(s => s.id === editingStory.id ? { ...s, story_link: storyLink.trim() } : s));
