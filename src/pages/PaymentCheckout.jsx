@@ -109,6 +109,9 @@ export default function PaymentCheckout() {
           </div>
           <h1 className="text-2xl font-bold text-slate-800 mb-1">השלמת הסיפור</h1>
           <p className="text-slate-500">תשלום עבור הסיפור המותאם אישית של <strong>{childName}</strong></p>
+          <div className="mt-3 px-4 py-2 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-700 inline-block">
+            💡 אין מספיק קרדיטים — ניתן לרכוש את הסיפור ישירות בתשלום חד פעמי
+          </div>
         </motion.div>
       </div>
 

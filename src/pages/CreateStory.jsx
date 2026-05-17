@@ -48,7 +48,7 @@ export default function CreateStory() {
     }
     setIsLoading(true);
     try {
-      // Save story as draft first (payment_status: 'draft')
+      // Save story as draft first
       const savedStory = await base44.entities.Story.create({
         child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
         child_image_url: formData.childImage || null, setting: formData.setting,
@@ -80,8 +80,22 @@ export default function CreateStory() {
         });
       } catch (_) {}
 
-      // Redirect to payment
-      navigate(`/PaymentCheckout?story_id=${savedStory.id}&child_name=${encodeURIComponent(formData.childName)}`);
+      const currentCredits = user.credits || 0;
+
+      // If user has enough credits — deduct and go directly to success
+      if (currentCredits >= 20) {
+        await base44.auth.updateMe({ credits: currentCredits - 20 });
+        setUser(prev => ({ ...prev, credits: currentCredits - 20 }));
+        window.dispatchEvent(new Event('credits-updated'));
+        // Mark story as paid (credits used)
+        await base44.entities.Story.update(savedStory.id, { payment_status: 'paid' });
+        base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id, credits_before: currentCredits } });
+        setGeneratedStory(savedStory);
+      } else {
+        // Not enough credits — go to PayPal payment
+        base44.analytics.track({ eventName: 'insufficient_credits_redirected', properties: { story_id: savedStory.id, credits: currentCredits } });
+        navigate(`/PaymentCheckout?story_id=${savedStory.id}&child_name=${encodeURIComponent(formData.childName)}`);
+      }
     } catch (err) {
       setError(t('create_error_save'));
     } finally {
