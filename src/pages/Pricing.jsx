@@ -33,7 +33,10 @@ export default function Pricing() {
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-6">
                 <Sparkles className="w-12 h-12 text-amber-600" />
               </div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-2">{t('pricing_title')}</h2>
+              <h2 className="text-3xl font-bold text-slate-800 mb-2 flex items-center justify-center gap-2">
+                <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
+                Purchase Credits
+              </h2>
               <p className="text-slate-500 mb-6">{t('pricing_subtitle')}</p>
 
               {/* Price */}
