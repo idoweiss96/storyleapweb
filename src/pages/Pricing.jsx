@@ -101,7 +101,8 @@ export default function Pricing() {
       {/* Header */}
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-4xl font-bold text-slate-800 mb-3">סיפור מותאם אישית </h1>
+          <h1 className="text-4xl font-bold text-slate-800 mb-3">סיפור מותאם אישית 
+</h1>
           <p className="text-sm text-slate-500 mb-6">סיפור טיפולי מותאם לילד/ה שלכם, נשלח תוך 24 שעות</p>
         </motion.div>
       </div>
@@ -129,8 +130,7 @@ export default function Pricing() {
 
               {/* Promo Code */}
               <div className="mb-6 max-w-xs mx-auto">
-                {promoApplied ?
-                <p className="text-green-600 text-sm font-medium">{t('pricing_promo_valid')}</p> :
+                {promoApplied ? <p className="text-green-600 text-sm font-medium">{t('pricing_promo_valid')}</p> :
 
                 <div className="flex gap-2">
                     <Input
