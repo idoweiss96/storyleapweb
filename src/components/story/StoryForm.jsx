@@ -8,8 +8,31 @@ import { Button } from '@/components/ui/button';
 import { Sparkles, Loader2, Upload, X } from 'lucide-react';
 import { useLanguage } from '../LanguageContext';
 
+async function convertHeicToJpeg(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        canvas.toBlob((blob) => {
+          if (blob) resolve(new File([blob], file.name.replace(/\.(heic|heif)$/i, '.jpg'), { type: 'image/jpeg' }));
+          else reject(new Error('Conversion failed'));
+        }, 'image/jpeg', 0.92);
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function StoryForm({ formData, setFormData, onSubmit, isLoading }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [uploading, setUploading] = useState(false);
 
   const genders = [
@@ -50,10 +73,14 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
   };
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
     try {
+      // Convert HEIC/HEIF to JPEG automatically
+      if (/\.(heic|heif)$/i.test(file.name) || file.type === 'image/heic' || file.type === 'image/heif') {
+        file = await convertHeicToJpeg(file);
+      }
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       handleChange('childImage', file_url);
     } catch (err) {
@@ -95,7 +122,9 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
         </div>
 
         <div className="space-y-2">
-          <Label className="text-gray-700 font-medium">{t('form_image')}</Label>
+          <Label className="text-gray-700 font-medium">
+            {t('form_image')} <span className="text-red-500">*</span>
+          </Label>
           {formData.childImage ? (
             <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 border-violet-200">
               <img src={formData.childImage} alt="Child" className="w-full h-full object-cover" />
@@ -104,13 +133,18 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               </button>
             </div>
           ) : (
-            <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-slate-200 rounded-xl cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors">
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+            <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-red-200 rounded-xl cursor-pointer hover:border-red-400 hover:bg-red-50 transition-colors">
+              <input type="file" accept="image/jpeg,image/png,image/jpg,.heic,.heif" onChange={handleImageUpload} className="hidden" />
               {uploading ? <Loader2 className="w-6 h-6 text-slate-400 animate-spin" /> : (
-                <><Upload className="w-6 h-6 text-slate-400 mb-1" /><span className="text-xs text-slate-500">{t('form_upload')}</span></>
+                <><Upload className="w-6 h-6 text-red-400 mb-1" /><span className="text-xs text-red-500 font-medium">{t('form_upload')}</span></>
               )}
             </label>
           )}
+          <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
+            {lang === 'he'
+              ? 'חובה להעלות תמונה 📸 (אל דאגה, כדי לשמור על הפרטיות שלכם, התמונה נמחקת לחלוטין מהמאגר שלנו מיד עם סיום יצירת הסיפור!)'
+              : "Photo is required 📸 (Don't worry, to protect your privacy, the photo is permanently deleted from our database as soon as the story is created!)"}
+          </p>
         </div>
       </div>
 

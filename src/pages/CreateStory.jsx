@@ -12,7 +12,7 @@ import { useLanguage } from '../components/LanguageContext';
 
 export default function CreateStory() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -54,6 +54,10 @@ export default function CreateStory() {
     setError('');
     if (!formData.childName || !formData.childAge || !formData.gender || !formData.setting || !formData.challengeType) {
       setError(t('create_error_required'));
+      return;
+    }
+    if (!formData.childImage) {
+      setError(lang === 'he' ? 'חובה להעלות תמונה של הילד/ה לפני שליחת הטופס 📸' : 'Please upload a photo of your child before submitting 📸');
       return;
     }
     setIsLoading(true);
