@@ -42,42 +42,38 @@ export default function Pricing() {
   }, []);
 
   useEffect(() => {
-    // Each time buttonId changes, clear container and re-render
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
 
-    if (containerRef.current) {
-      containerRef.current.innerHTML = '';
-    }
-
     const renderButton = () => {
-      if (renderKeyRef.current !== currentKey) return; // stale render, skip
+      if (renderKeyRef.current !== currentKey) return;
       if (!window.paypal?.HostedButtons || !containerRef.current) return;
       containerRef.current.innerHTML = '';
       window.paypal.HostedButtons({ hostedButtonId: buttonId }).render(containerRef.current);
     };
 
-    // If correct SDK already loaded
-    if (window.paypal?.HostedButtons && sdkLoadedRef.current === currency) {
+    if (window.paypal?.HostedButtons) {
+      // SDK already loaded — just re-render with new buttonId
       renderButton();
       return;
     }
 
-    // Remove old SDK script if currency changed
-    const oldScript = document.querySelector('script[data-paypal-sdk]');
-    if (oldScript) {
-      oldScript.remove();
-      // Reset paypal global so it reloads fresh
-      delete window.paypal;
+    // Load SDK only once (for the initial currency)
+    if (document.querySelector('script[data-paypal-sdk]')) {
+      // Script tag exists but paypal not ready yet — wait
+      const interval = setInterval(() => {
+        if (window.paypal?.HostedButtons) {
+          clearInterval(interval);
+          renderButton();
+        }
+      }, 100);
+      return;
     }
 
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', 'true');
     script.src = `https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=${currency}`;
-    script.onload = () => {
-      sdkLoadedRef.current = currency;
-      renderButton();
-    };
+    script.onload = () => renderButton();
     document.body.appendChild(script);
   }, [buttonId, currency]);
 
