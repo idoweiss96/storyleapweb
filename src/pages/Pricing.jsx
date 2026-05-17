@@ -21,27 +21,37 @@ export default function Pricing() {
   }, []);
 
   useEffect(() => {
-    if (paypalRendered.current) return;
-    paypalRendered.current = true;
-
     const containerId = `paypal-container-${HOSTED_BUTTON_ID}`;
     if (paypalContainerRef.current) {
       paypalContainerRef.current.id = containerId;
     }
 
-    const script = document.createElement('script');
-    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=ILS`;
-    script.onload = () => {
-      if (window.paypal?.HostedButtons && paypalContainerRef.current) {
+    const renderButton = () => {
+      if (window.paypal?.HostedButtons && paypalContainerRef.current && !paypalRendered.current) {
+        paypalRendered.current = true;
         window.paypal.HostedButtons({
           hostedButtonId: HOSTED_BUTTON_ID,
         }).render(`#${containerId}`);
       }
     };
+
+    // If PayPal SDK already loaded (e.g. from a previous render), use it directly
+    if (window.paypal?.HostedButtons) {
+      renderButton();
+      return;
+    }
+
+    // Check if script already added to DOM
+    const existingScript = document.querySelector(`script[src*="${PAYPAL_CLIENT_ID}"]`);
+    if (existingScript) {
+      existingScript.addEventListener('load', renderButton);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=ILS`;
+    script.onload = renderButton;
     document.body.appendChild(script);
-    return () => {
-      if (document.body.contains(script)) document.body.removeChild(script);
-    };
   }, []);
 
   return (
