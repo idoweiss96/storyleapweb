@@ -46,15 +46,9 @@ export default function CreateStory() {
       setError(t('create_error_required'));
       return;
     }
-    if ((user.credits || 0) < 20) {
-      setError('אין מספיק קרדיטים. רכשו חבילה כדי ליצור סיפור נוסף.');
-      return;
-    }
     setIsLoading(true);
     try {
-      await base44.auth.updateMe({ credits: (user.credits || 0) - 20 });
-      setUser(prev => ({ ...prev, credits: (prev.credits || 0) - 20 }));
-      window.dispatchEvent(new Event('credits-updated'));
+      // Save story as draft first (payment_status: 'draft')
       const savedStory = await base44.entities.Story.create({
         child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
         child_image_url: formData.childImage || null, setting: formData.setting,
@@ -64,7 +58,9 @@ export default function CreateStory() {
         content: null, story_link: null,
       });
 
-      // Send notification email
+      base44.analytics.track({ eventName: 'questionnaire_submitted', properties: { story_id: savedStory.id } });
+
+      // Notify admin
       try {
         await base44.functions.invoke('sendFormEmail', {
           formType: 'בקשת סיפור חדש',
@@ -82,9 +78,10 @@ export default function CreateStory() {
             'תגובה': formData.reactionType || '',
           },
         });
-      } catch (_) { /* email failure should not block the user */ }
+      } catch (_) {}
 
-      setGeneratedStory(savedStory);
+      // Redirect to payment
+      navigate(`/PaymentCheckout?story_id=${savedStory.id}&child_name=${encodeURIComponent(formData.childName)}`);
     } catch (err) {
       setError(t('create_error_save'));
     } finally {

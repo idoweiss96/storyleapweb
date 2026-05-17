@@ -1,0 +1,85 @@
+{
+  "name": "Order",
+  "type": "object",
+  "properties": {
+    "story_id": {
+      "type": "string",
+      "description": "ID of the related Story entity"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who created the order"
+    },
+    "paypal_order_id": {
+      "type": "string",
+      "description": "PayPal order ID from PayPal API"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_payment",
+        "paid",
+        "failed",
+        "story_generating",
+        "story_ready"
+      ],
+      "default": "draft",
+      "description": "Order status"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Payment amount in ILS"
+    },
+    "currency": {
+      "type": "string",
+      "default": "ILS",
+      "description": "Currency code"
+    },
+    "paypal_capture_id": {
+      "type": "string",
+      "description": "PayPal capture ID after successful payment"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error message if payment failed"
+    }
+  },
+  "required": [
+    "story_id",
+    "user_email",
+    "amount"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
