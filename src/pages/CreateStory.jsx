@@ -70,26 +70,6 @@ export default function CreateStory() {
 
       base44.analytics.track({ eventName: 'questionnaire_submitted', properties: { story_id: savedStory.id } });
 
-      // Notify admin
-      try {
-        await base44.functions.invoke('sendFormEmail', {
-          formType: 'בקשת סיפור חדש',
-          name: formData.childName,
-          email: formData.contactEmail || '',
-          phone: formData.contactPhone || '',
-          childName: formData.childName,
-          childAge: formData.childAge,
-          gender: formData.gender,
-          setting: formData.setting,
-          challengeType: formData.challengeType,
-          hobbies: formData.hobbies || '',
-          additionalFields: {
-            'טריגר': formData.triggerDesc || '',
-            'תגובה': formData.reactionType || '',
-          },
-        });
-      } catch (_) {}
-
       // Server-side credit check + deduction (secure)
       const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: savedStory.id });
 
@@ -100,6 +80,25 @@ export default function CreateStory() {
         setUser(prev => ({ ...prev, credits: newCredits }));
         window.dispatchEvent(new Event('credits-updated'));
         base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id } });
+        // Notify admin only after successful payment/credits
+        try {
+          await base44.functions.invoke('sendFormEmail', {
+            formType: 'בקשת סיפור חדש',
+            name: formData.childName,
+            email: formData.contactEmail || '',
+            phone: formData.contactPhone || '',
+            childName: formData.childName,
+            childAge: formData.childAge,
+            gender: formData.gender,
+            setting: formData.setting,
+            challengeType: formData.challengeType,
+            hobbies: formData.hobbies || '',
+            additionalFields: {
+              'טריגר': formData.triggerDesc || '',
+              'תגובה': formData.reactionType || '',
+            },
+          });
+        } catch (_) {}
         setGeneratedStory(savedStory);
       } else {
         // Insufficient credits — save story_id for post-payment auto-trigger
