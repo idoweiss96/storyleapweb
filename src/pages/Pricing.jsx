@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 
-const CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
 const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30'];
 
 // Price config (must match what's set on PayPal hosted buttons)
@@ -35,13 +34,19 @@ export default function Pricing() {
   const isHe = lang === 'he';
   const mode = promoApplied ? 'discount' : 'full';
   const priceConfig = PRICES[isHe ? 'he' : 'en'][mode];
+  const [clientId, setClientId] = useState(null);
 
   useEffect(() => {
     setHasPendingStory(!!localStorage.getItem('pendingStoryId'));
+    // Fetch the real PayPal client ID from backend
+    base44.functions.invoke('getPaypalClientId', {})
+      .then(res => { if (res.data?.client_id) setClientId(res.data.client_id); })
+      .catch(() => {});
   }, []);
 
   // Render PayPal buttons using JS SDK (not Hosted Buttons)
   useEffect(() => {
+    if (!clientId) return;
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
 
@@ -125,28 +130,26 @@ export default function Pricing() {
       }).render(containerRef.current);
     };
 
-    // Load SDK with correct currency
+    // Load SDK with correct currency and real client ID
     const currency = priceConfig.currency;
-    const existingScript = document.querySelector('script[data-paypal-sdk]');
+    const existingScript = document.querySelector(`script[data-paypal-sdk="${clientId}"]`);
 
-    if (window.paypal?.Buttons) {
+    if (window.paypal?.Buttons && existingScript) {
       renderButton();
       return;
     }
 
-    if (existingScript) {
-      const interval = setInterval(() => {
-        if (window.paypal?.Buttons) { clearInterval(interval); renderButton(); }
-      }, 100);
-      return () => clearInterval(interval);
-    }
+    // Remove old script if client changed
+    document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
+    delete window.paypal;
 
     const script = document.createElement('script');
-    script.setAttribute('data-paypal-sdk', 'true');
-    script.src = `https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}&currency=${currency}&intent=capture`;
+    script.setAttribute('data-paypal-sdk', clientId);
+    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currency}&intent=capture`;
     script.onload = () => renderButton();
     document.body.appendChild(script);
-  }, [priceConfig.currency, isHe]);
+    return () => {};
+  }, [clientId, priceConfig.currency, isHe]);
 
   const handleApplyPromo = () => {
     setPromoError('');
