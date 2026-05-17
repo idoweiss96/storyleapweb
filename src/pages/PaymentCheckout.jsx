@@ -166,7 +166,7 @@ export default function PaymentCheckout() {
                 <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
                   <div>
                     <p className="font-semibold text-slate-800">סיפור טיפולי מותאם אישית</p>
-                    <p className="text-sm text-slate-500">Personalized Therapeutic Story by StoryLeap</p>
+                    <p className="text-sm text-slate-500">סיפור טיפולי מותאם אישית של StoryLeap</p>
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-slate-800">₪{STORY_PRICE}</p>
