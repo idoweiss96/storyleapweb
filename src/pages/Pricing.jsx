@@ -115,6 +115,7 @@ export default function Pricing() {
               <h2 className="text-3xl font-bold text-slate-800 mb-2 flex items-center justify-center gap-2">
                 <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
                 {t('pricing_title')}
+                <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
               </h2>
               <p className="text-slate-500 mb-6">{t('pricing_subtitle')}</p>
 
