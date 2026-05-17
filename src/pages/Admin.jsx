@@ -224,47 +224,6 @@ export default function Admin() {
 
       <Card className="border-0 shadow-xl shadow-slate-100 mb-8">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Users className="w-5 h-5" /> ניהול קרדיטים למשתמשים
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-right">שם</TableHead>
-                  <TableHead className="text-right">אימייל</TableHead>
-                  <TableHead className="text-right">קרדיטים</TableHead>
-                  <TableHead className="text-right">פעולות</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users.map((u) => (
-                  <TableRow key={u.id}>
-                    <TableCell className="font-medium">{u.full_name || '-'}</TableCell>
-                    <TableCell className="text-sm text-gray-500">{u.email}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
-                        <span className="font-semibold">{u.credits ?? 0}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" onClick={() => { setEditingUser(u); setCreditsToAdd(''); }}>
-                        <Star className="w-3 h-3 ml-1" /> הוסף קרדיטים
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="border-0 shadow-xl shadow-slate-100">
-        <CardHeader>
           <CardTitle className="text-lg">{t('admin_table_title')}</CardTitle>
         </CardHeader>
         <CardContent>
@@ -319,6 +278,47 @@ export default function Admin() {
               </Table>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="border-0 shadow-xl shadow-slate-100 mt-8">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Users className="w-5 h-5" /> ניהול קרדיטים למשתמשים
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-right">שם</TableHead>
+                  <TableHead className="text-right">אימייל</TableHead>
+                  <TableHead className="text-right">קרדיטים</TableHead>
+                  <TableHead className="text-right">פעולות</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {users.map((u) => (
+                  <TableRow key={u.id}>
+                    <TableCell className="font-medium">{u.full_name || '-'}</TableCell>
+                    <TableCell className="text-sm text-gray-500">{u.email}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
+                        <span className="font-semibold">{u.credits ?? 0}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm" onClick={() => { setEditingUser(u); setCreditsToAdd(''); }}>
+                        <Star className="w-3 h-3 ml-1" /> הוסף קרדיטים
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
