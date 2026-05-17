@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, ShieldCheck, AlertCircle, ArrowRight } from 'lucide-react';
+import { Sparkles, ShieldCheck, AlertCircle, ArrowRight, Star } from 'lucide-react';
 
 const STORY_PRICE = 99;
 
@@ -40,7 +40,7 @@ export default function PaymentCheckout() {
       base44.analytics.track({ eventName: 'redirected_to_payment', properties: { story_id: sid, order_id } });
       waitForPaypalAndRender(paypal_order_id, order_id, sid);
     } catch (err) {
-      setError('שגיאה ביצירת הזמנה. אנא נסו שוב.');
+      setError('שגיאה ביצירת הזמנה עם PayPal.');
       setStatus('failed');
     }
   };
@@ -130,6 +130,32 @@ export default function PaymentCheckout() {
             </div>
             <p className="text-green-700 font-bold text-xl">התשלום הצליח! ✨</p>
             <p className="text-slate-500 mt-2">מעביר אותך לדף האישור...</p>
+          </motion.div>
+        )}
+
+        {status === 'failed' && (
+          <motion.div key="failed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="w-8 h-8 text-red-500" />
+            </div>
+            <p className="text-slate-700 font-semibold text-lg mb-2">לא ניתן לעבד תשלום כרגע</p>
+            <p className="text-slate-500 text-sm mb-6">{error || 'אירעה שגיאה. ניתן לרכוש קרדיטים ולנסות שוב.'}</p>
+            <div className="flex flex-col gap-3 max-w-xs mx-auto">
+              <Button
+                onClick={() => navigate('/Pricing')}
+                className="w-full h-12 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl shadow-lg"
+              >
+                <Star className="w-4 h-4 ml-2" />
+                רכישת קרדיטים
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => { setStatus('loading'); setError(''); rendered.current = false; initOrder(storyId); }}
+                className="w-full h-12 rounded-xl"
+              >
+                נסה שוב
+              </Button>
+            </div>
           </motion.div>
         )}
 
