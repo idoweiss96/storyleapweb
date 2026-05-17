@@ -26,6 +26,7 @@ export default function Pricing() {
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError] = useState('');
+  const [promoLoading, setPromoLoading] = useState(false);
   const [paypalError, setPaypalError] = useState('');
   const [processing, setProcessing] = useState(false);
   const containerRef = useRef(null);
@@ -158,14 +159,21 @@ export default function Pricing() {
 
     if (FREE_CREDIT_CODES[code] !== undefined) {
       // Free credits coupon — add credits directly
+      setPromoLoading(true);
       try {
         const credits = FREE_CREDIT_CODES[code];
-        await base44.functions.invoke('captureCreditsOrder', { paypal_order_id: `COUPON_${code}`, credits, coupon: true });
-        window.dispatchEvent(new Event('credits-updated'));
-        toast.success(isHe ? `🎉 ${credits} קרדיטים התווספו לחשבונך!` : `🎉 ${credits} credits added to your account!`, { duration: 5000 });
-        setPromoCode('');
+        const res = await base44.functions.invoke('captureCreditsOrder', { paypal_order_id: `COUPON_${code}`, credits, coupon: true });
+        if (res.data?.success) {
+          window.dispatchEvent(new Event('credits-updated'));
+          toast.success(isHe ? `🎉 ${credits} קרדיטים התווספו לחשבונך!` : `🎉 ${credits} credits added to your account!`, { duration: 5000 });
+          setPromoCode('');
+        } else {
+          setPromoError(isHe ? 'שגיאה בהפעלת הקוד' : 'Error applying code');
+        }
       } catch (err) {
         setPromoError(isHe ? 'שגיאה בהפעלת הקוד' : 'Error applying code');
+      } finally {
+        setPromoLoading(false);
       }
       return;
     }
@@ -232,9 +240,9 @@ export default function Pricing() {
                       onChange={(e) => { setPromoCode(e.target.value); setPromoError(''); }}
                       className="text-sm"
                     />
-                    <Button variant="outline" size="sm" onClick={handleApplyPromo} className="shrink-0">
+                    <Button variant="outline" size="sm" onClick={handleApplyPromo} disabled={promoLoading} className="shrink-0">
                       <Tag className="w-3 h-3 mr-1" />
-                      {isHe ? 'החל' : 'Apply'}
+                      {promoLoading ? (isHe ? '...' : '...') : (isHe ? 'החל' : 'Apply')}
                     </Button>
                   </div>
                 ) : (
