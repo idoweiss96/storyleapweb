@@ -4,7 +4,6 @@ const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID');
 const PAYPAL_CLIENT_SECRET = Deno.env.get('PAYPAL_CLIENT_SECRET');
 const PAYPAL_BASE = 'https://api-m.paypal.com';
 
-const CREDITS_PRICE = 99; // ILS
 const CREDITS_AMOUNT = 20;
 
 async function getPaypalAccessToken() {
@@ -27,6 +26,8 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const { currency = 'ILS', amount = '45.00' } = await req.json().catch(() => ({}));
+
     const accessToken = await getPaypalAccessToken();
     const ppRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders`, {
       method: 'POST',
@@ -40,8 +41,8 @@ Deno.serve(async (req) => {
         purchase_units: [{
           description: `StoryLeap - ${CREDITS_AMOUNT} Credits`,
           amount: {
-            currency_code: 'ILS',
-            value: CREDITS_PRICE.toFixed(2),
+            currency_code: currency,
+            value: amount,
           },
         }],
         application_context: {

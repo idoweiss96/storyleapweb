@@ -64,7 +64,10 @@ export default function Pricing() {
               return res.data.paypal_order_id;
             } else {
               // No questionnaire — create credits-only order
-              const res = await base44.functions.invoke('createCreditsOrder', {});
+              const res = await base44.functions.invoke('createCreditsOrder', {
+                currency: priceConfig.currency,
+                amount: priceConfig.amount,
+              });
               return res.data.paypal_order_id;
             }
           } catch (err) {
