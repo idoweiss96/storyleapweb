@@ -2,7 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID');
 const PAYPAL_CLIENT_SECRET = Deno.env.get('PAYPAL_CLIENT_SECRET');
-const PAYPAL_BASE = 'https://api-m.sandbox.paypal.com';
+const PAYPAL_BASE = 'https://api-m.paypal.com';
 const CREDITS_AMOUNT = 20;
 
 async function getPaypalAccessToken() {
