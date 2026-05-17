@@ -4,63 +4,102 @@ import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Star, CheckCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Sparkles, Star, CheckCircle, Tag } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 
-const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
-const HOSTED_BUTTON_ID = 'L5DBB2XDQ7QFC';
+const CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
+
+const BUTTONS = {
+  he: {
+    full:     { buttonId: 'L5DBB2XDQ7QFC',   price: '₪45', currency: 'ILS' },
+    discount: { buttonId: 'Q84GCTNCHU63A',   price: '₪15', currency: 'ILS' },
+  },
+  en: {
+    full:     { buttonId: '2DYQ8YVVY86D6',   price: '$15', currency: 'USD' },
+    discount: { buttonId: 'J9LB6MKVFTFFW',   price: '$5',  currency: 'USD' },
+  },
+};
+
+const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30'];
 
 export default function Pricing() {
-  const { t, lang } = useLanguage();
+  const { lang } = useLanguage();
   const [hasDraft, setHasDraft] = useState(false);
-  const paypalContainerRef = useRef(null);
-  const paypalRendered = useRef(false);
+  const [promoCode, setPromoCode] = useState('');
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [promoError, setPromoError] = useState('');
+  const containerRef = useRef(null);
+  const sdkLoadedRef = useRef(null); // tracks which currency SDK is loaded
+  const renderKeyRef = useRef(0);
+
+  const isHe = lang === 'he';
+  const mode = promoApplied ? 'discount' : 'full';
+  const { buttonId, price, currency } = BUTTONS[isHe ? 'he' : 'en'][mode];
 
   useEffect(() => {
     setHasDraft(!!localStorage.getItem('storyFormDraft'));
   }, []);
 
   useEffect(() => {
-    const containerId = `paypal-container-${HOSTED_BUTTON_ID}`;
-    if (paypalContainerRef.current) {
-      paypalContainerRef.current.id = containerId;
+    // Each time buttonId changes, clear container and re-render
+    renderKeyRef.current += 1;
+    const currentKey = renderKeyRef.current;
+
+    if (containerRef.current) {
+      containerRef.current.innerHTML = '';
     }
 
     const renderButton = () => {
-      if (window.paypal?.HostedButtons && paypalContainerRef.current && !paypalRendered.current) {
-        paypalRendered.current = true;
-        window.paypal.HostedButtons({
-          hostedButtonId: HOSTED_BUTTON_ID,
-        }).render(`#${containerId}`);
-      }
+      if (renderKeyRef.current !== currentKey) return; // stale render, skip
+      if (!window.paypal?.HostedButtons || !containerRef.current) return;
+      containerRef.current.innerHTML = '';
+      window.paypal.HostedButtons({ hostedButtonId: buttonId }).render(containerRef.current);
     };
 
-    // If PayPal SDK already loaded (e.g. from a previous render), use it directly
-    if (window.paypal?.HostedButtons) {
+    // If correct SDK already loaded
+    if (window.paypal?.HostedButtons && sdkLoadedRef.current === currency) {
       renderButton();
       return;
     }
 
-    // Check if script already added to DOM
-    const existingScript = document.querySelector(`script[src*="${PAYPAL_CLIENT_ID}"]`);
-    if (existingScript) {
-      existingScript.addEventListener('load', renderButton);
-      return;
+    // Remove old SDK script if currency changed
+    const oldScript = document.querySelector('script[data-paypal-sdk]');
+    if (oldScript) {
+      oldScript.remove();
+      // Reset paypal global so it reloads fresh
+      delete window.paypal;
     }
 
     const script = document.createElement('script');
-    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=ILS`;
-    script.onload = renderButton;
+    script.setAttribute('data-paypal-sdk', 'true');
+    script.src = `https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=${currency}`;
+    script.onload = () => {
+      sdkLoadedRef.current = currency;
+      renderButton();
+    };
     document.body.appendChild(script);
-  }, []);
+  }, [buttonId, currency]);
+
+  const handleApplyPromo = () => {
+    setPromoError('');
+    if (VALID_CODES.includes(promoCode.trim().toUpperCase())) {
+      setPromoApplied(true);
+    } else {
+      setPromoError(isHe ? 'קוד פרומו לא תקין' : 'Invalid promo code');
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto pb-16">
-      {/* Header */}
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-4xl font-bold text-slate-800 mb-3">סיפור מותאם אישית</h1>
-          <p className="text-sm text-slate-500 mb-6">סיפור טיפולי מותאם לילד/ה שלכם, נשלח תוך 24 שעות</p>
+          <h1 className="text-4xl font-bold text-slate-800 mb-3">
+            {isHe ? 'סיפור מותאם אישית' : 'Personalized Story'}
+          </h1>
+          <p className="text-sm text-slate-500 mb-6">
+            {isHe ? 'סיפור טיפולי מותאם לילד/ה שלכם, נשלח תוך 24 שעות' : 'A therapeutic story tailored for your child, delivered within 24 hours'}
+          </p>
         </motion.div>
       </div>
 
@@ -71,35 +110,67 @@ export default function Pricing() {
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-6">
                 <Sparkles className="w-12 h-12 text-amber-600" />
               </div>
+
               <h2 className="text-3xl font-bold text-slate-800 mb-2 flex items-center justify-center gap-2">
                 <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
-                רכישת קרדיטים
+                {isHe ? 'רכישת קרדיטים' : 'Purchase Credits'}
                 <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
               </h2>
 
-              {/* Price Display */}
+              {/* Price */}
               <div className="text-center mb-6 mt-4">
-                <p className="text-3xl font-bold text-slate-800">₪45</p>
+                <p className="text-3xl font-bold text-slate-800">{price}</p>
+                {promoApplied && (
+                  <p className="text-green-600 text-sm font-medium mt-1">
+                    {isHe ? '🎉 קוד הנחה הופעל!' : '🎉 Discount applied!'}
+                  </p>
+                )}
               </div>
 
-              {hasDraft &&
+              {/* Promo Code */}
+              <div className="mb-6 max-w-xs mx-auto">
+                {!promoApplied ? (
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder={isHe ? 'קוד פרומו (אופציונלי)' : 'Promo code (optional)'}
+                      value={promoCode}
+                      onChange={(e) => { setPromoCode(e.target.value); setPromoError(''); }}
+                      className="text-sm"
+                    />
+                    <Button variant="outline" size="sm" onClick={handleApplyPromo} className="shrink-0">
+                      <Tag className="w-3 h-3 mr-1" />
+                      {isHe ? 'החל' : 'Apply'}
+                    </Button>
+                  </div>
+                ) : (
+                  <button
+                    className="text-xs text-slate-400 underline"
+                    onClick={() => { setPromoApplied(false); setPromoCode(''); }}
+                  >
+                    {isHe ? 'הסר קוד' : 'Remove code'}
+                  </button>
+                )}
+                {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
+              </div>
+
+              {hasDraft && (
                 <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-amber-50 rounded-xl border border-amber-200">
                   <CheckCircle className="w-5 h-5 text-amber-600 shrink-0" />
                   <p className="text-sm text-amber-700 font-medium">
-                    {lang === 'he' ? 'השאלון שמילאת שמור — אחרי הרכישה תחזור אליו ישירות' : 'Your questionnaire is saved — you\'ll return to it right after purchase'}
+                    {isHe ? 'השאלון שמילאת שמור — אחרי הרכישה תחזור אליו ישירות' : "Your questionnaire is saved — you'll return to it right after purchase"}
                   </p>
                 </div>
-              }
+              )}
 
-              {/* PayPal Hosted Button */}
+              {/* PayPal Button */}
               <div className="max-w-xs mx-auto mt-4">
-                <div ref={paypalContainerRef} />
+                <div ref={containerRef} />
               </div>
 
               <div className="mt-6 border-t border-slate-100 pt-6">
                 <Link to={createPageUrl('Contact')}>
                   <Button variant="ghost" className="text-slate-500 hover:text-slate-700">
-                    {t('pricing_contact_us')}
+                    {isHe ? 'צרו איתנו קשר' : 'Contact us'}
                   </Button>
                 </Link>
               </div>
