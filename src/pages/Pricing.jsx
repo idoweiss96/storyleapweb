@@ -102,7 +102,6 @@ export default function Pricing() {
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-4xl font-bold text-slate-800 mb-3">רכישת קרדיטים</h1>
-          <p className="text-slate-500 text-lg">{t('pricing_subtitle')}</p>
         </motion.div>
       </div>
 
