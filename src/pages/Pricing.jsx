@@ -1,80 +1,128 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Star, CheckCircle, Tag } from 'lucide-react';
+import { Sparkles, Star, CheckCircle, Tag, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
+import { base44 } from '@/api/base44Client';
 
 const CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
-
-const BUTTONS = {
-  he: {
-    full:     { buttonId: 'L5DBB2XDQ7QFC',   price: '₪45', currency: 'ILS' },
-    discount: { buttonId: 'Q84GCTNCHU63A',   price: '₪15', currency: 'ILS' },
-  },
-  en: {
-    full:     { buttonId: '2DYQ8YVVY86D6',   price: '$15', currency: 'USD' },
-    discount: { buttonId: 'J9LB6MKVFTFFW',   price: '$5',  currency: 'USD' },
-  },
-};
-
 const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30'];
 
+// Price config (must match what's set on PayPal hosted buttons)
+const PRICES = {
+  he: { full: { amount: '45.00', currency: 'ILS', display: '₪45' }, discount: { amount: '15.00', currency: 'ILS', display: '₪15' } },
+  en: { full: { amount: '15.00', currency: 'USD', display: '$15' }, discount: { amount: '5.00',  currency: 'USD', display: '$5'  } },
+};
+
 export default function Pricing() {
-  const { lang } = useLanguage();
+  const { lang, isHe: langIsHe } = useLanguage();
+  const navigate = useNavigate();
   const [hasPendingStory, setHasPendingStory] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError] = useState('');
+  const [paypalError, setPaypalError] = useState('');
+  const [processing, setProcessing] = useState(false);
   const containerRef = useRef(null);
-    const renderKeyRef = useRef(0);
+  const renderKeyRef = useRef(0);
+  const pendingOrderIdRef = useRef(null);
 
   const isHe = lang === 'he';
   const mode = promoApplied ? 'discount' : 'full';
-  const { buttonId, price, currency } = BUTTONS[isHe ? 'he' : 'en'][mode];
+  const priceConfig = PRICES[isHe ? 'he' : 'en'][mode];
 
   useEffect(() => {
     setHasPendingStory(!!localStorage.getItem('pendingStoryId'));
   }, []);
 
+  // Render PayPal buttons using JS SDK (not Hosted Buttons)
   useEffect(() => {
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
 
     const renderButton = () => {
       if (renderKeyRef.current !== currentKey) return;
-      if (!window.paypal?.HostedButtons || !containerRef.current) return;
+      if (!window.paypal?.Buttons || !containerRef.current) return;
       containerRef.current.innerHTML = '';
-      window.paypal.HostedButtons({ hostedButtonId: buttonId }).render(containerRef.current);
+
+      window.paypal.Buttons({
+        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
+
+        createOrder: async () => {
+          setPaypalError('');
+          const pendingStoryId = localStorage.getItem('pendingStoryId');
+          if (!pendingStoryId) {
+            setPaypalError(isHe ? 'לא נמצא שאלון — אנא מלאו שאלון תחילה' : 'No questionnaire found — please fill the form first');
+            return null;
+          }
+          try {
+            const res = await base44.functions.invoke('createPaypalOrder', { story_id: pendingStoryId });
+            pendingOrderIdRef.current = res.data.order_id;
+            return res.data.paypal_order_id;
+          } catch (err) {
+            setPaypalError(isHe ? 'שגיאה ביצירת הזמנה' : 'Error creating order');
+            return null;
+          }
+        },
+
+        onApprove: async (data) => {
+          setProcessing(true);
+          setPaypalError('');
+          try {
+            const pendingStoryId = localStorage.getItem('pendingStoryId');
+            const orderId = pendingOrderIdRef.current;
+            const res = await base44.functions.invoke('capturePaypalOrder', {
+              paypal_order_id: data.orderID,
+              order_id: orderId,
+            });
+            if (res.data?.success) {
+              localStorage.removeItem('pendingStoryId');
+              window.dispatchEvent(new Event('credits-updated'));
+              navigate('/PaymentSuccess?story_id=' + (pendingStoryId || ''));
+            }
+          } catch (err) {
+            setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
+          } finally {
+            setProcessing(false);
+          }
+        },
+
+        onError: () => {
+          setPaypalError(isHe ? 'שגיאה בתשלום, אנא נסו שוב' : 'Payment error, please try again');
+        },
+
+        onCancel: () => {
+          setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled');
+        },
+      }).render(containerRef.current);
     };
 
-    // SDK already loaded — just re-render
-    if (window.paypal?.HostedButtons) {
+    // Load SDK with correct currency
+    const currency = priceConfig.currency;
+    const existingScript = document.querySelector('script[data-paypal-sdk]');
+
+    if (window.paypal?.Buttons) {
       renderButton();
       return;
     }
 
-    // Already loading — wait for it
-    if (document.querySelector('script[data-paypal-sdk]')) {
+    if (existingScript) {
       const interval = setInterval(() => {
-        if (window.paypal?.HostedButtons) {
-          clearInterval(interval);
-          renderButton();
-        }
+        if (window.paypal?.Buttons) { clearInterval(interval); renderButton(); }
       }, 100);
       return () => clearInterval(interval);
     }
 
-    // First load — use ILS always (single SDK instance)
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', 'true');
-    script.src = `https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=ILS`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}&currency=${currency}&intent=capture`;
     script.onload = () => renderButton();
     document.body.appendChild(script);
-  }, [buttonId]);
+  }, [priceConfig.currency, isHe]);
 
   const handleApplyPromo = () => {
     setPromoError('');
@@ -112,7 +160,6 @@ export default function Pricing() {
                 <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
               </h2>
 
-              {/* Package Info */}
               <div className="bg-amber-50 border border-amber-200 rounded-xl px-6 py-4 mb-6 mt-2">
                 <p className="text-lg font-bold text-amber-800">
                   {isHe ? '⭐ חבילת 20 קרדיטים' : '⭐ 20 Credits Package'}
@@ -122,9 +169,8 @@ export default function Pricing() {
                 </p>
               </div>
 
-              {/* Price */}
               <div className="text-center mb-6">
-                <p className="text-3xl font-bold text-slate-800">{price}</p>
+                <p className="text-3xl font-bold text-slate-800">{priceConfig.display}</p>
                 {promoApplied && (
                   <p className="text-green-600 text-sm font-medium mt-1">
                     {isHe ? '🎉 קוד הנחה הופעל!' : '🎉 Discount applied!'}
@@ -148,10 +194,7 @@ export default function Pricing() {
                     </Button>
                   </div>
                 ) : (
-                  <button
-                    className="text-xs text-slate-400 underline"
-                    onClick={() => { setPromoApplied(false); setPromoCode(''); }}
-                  >
+                  <button className="text-xs text-slate-400 underline" onClick={() => { setPromoApplied(false); setPromoCode(''); }}>
                     {isHe ? 'הסר קוד' : 'Remove code'}
                   </button>
                 )}
@@ -165,6 +208,31 @@ export default function Pricing() {
                     {isHe
                       ? '✅ השאלון שלך שמור — אחרי הרכישה הסיפור ייווצר אוטומטית!'
                       : '✅ Your questionnaire is saved — story will be created automatically after purchase!'}
+                  </p>
+                </div>
+              )}
+
+              {!hasPendingStory && (
+                <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-blue-50 rounded-xl border border-blue-200">
+                  <AlertCircle className="w-5 h-5 text-blue-500 shrink-0" />
+                  <p className="text-sm text-blue-700">
+                    {isHe
+                      ? 'יש למלא שאלון תחילה לפני התשלום'
+                      : 'Please fill the questionnaire before paying'}
+                  </p>
+                </div>
+              )}
+
+              {paypalError && (
+                <div className="mb-4 p-3 bg-red-50 rounded-xl border border-red-200">
+                  <p className="text-sm text-red-600">{paypalError}</p>
+                </div>
+              )}
+
+              {processing && (
+                <div className="mb-4 p-3 bg-slate-50 rounded-xl">
+                  <p className="text-sm text-slate-600">
+                    {isHe ? 'מעבד תשלום...' : 'Processing payment...'}
                   </p>
                 </div>
               )}

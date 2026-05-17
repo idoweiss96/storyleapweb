@@ -22,20 +22,10 @@ export default function PaymentSuccess() {
       base44.entities.Story.get(targetStoryId).then(s => {
         if (s) setChildName(s.child_name);
       }).catch(() => {});
-
-      // Auto-trigger story creation after payment (credits just purchased)
-      if (pendingStoryId) {
-        localStorage.removeItem('pendingStoryId');
-        // Add 20 credits then immediately submit
-        base44.auth.me().then(async (user) => {
-          const newCredits = (user.credits || 0) + 20;
-          await base44.auth.updateMe({ credits: newCredits });
-          window.dispatchEvent(new Event('credits-updated'));
-          // Now trigger server-side submit
-          await base44.functions.invoke('submitStoryWithCredits', { story_id: pendingStoryId });
-          window.dispatchEvent(new Event('credits-updated'));
-        }).catch(() => {});
-      }
+    }
+    // Clean up pending story (payment was already processed by backend)
+    if (pendingStoryId) {
+      localStorage.removeItem('pendingStoryId');
     }
 
     base44.analytics.track({ eventName: 'payment_completed_view', properties: { story_id: targetStoryId } });
