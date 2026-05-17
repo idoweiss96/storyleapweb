@@ -123,7 +123,7 @@ export default function Pricing() {
                   {isHe ? '⭐ חבילת 20 קרדיטים' : '⭐ 20 Credits Package'}
                 </p>
                 <p className="text-sm text-amber-600 mt-1">
-                  {isHe ? 'שווה ל-20 סיפורים מותאמים אישית' : 'Equivalent to 20 personalized stories'}
+                  {isHe ? '20 קרדיטים = יצירת סיפור אחד מותאם אישית' : '20 credits = 1 personalized story'}
                 </p>
               </div>
 
