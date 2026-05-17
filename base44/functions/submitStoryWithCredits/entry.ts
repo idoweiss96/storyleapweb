@@ -34,6 +34,33 @@ Requirements:
   return storyContent;
 }
 
+async function sendStoryInProgressEmail(email, childName, isHebrew) {
+  if (!email || !RESEND_API_KEY) return;
+  const subject = isHebrew
+    ? 'הקסם מתחיל! אנחנו כבר עובדים על הסיפור שלך 📝✨'
+    : "The magic begins! We're working on your story 📝✨";
+  const html = isHebrew
+    ? `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
+        <h2>היי,</h2>
+        <p style="font-size:16px;line-height:1.7;">איזה כיף! קיבלנו את הפרטים בהצלחה.</p>
+        <p style="font-size:16px;line-height:1.7;">אנחנו כבר עובדים על יצירת הסיפור המיוחד שלכם.</p>
+        <p style="font-size:16px;line-height:1.7;">ברגע שהסיפור יהיה מוכן, נשלח לך מייל עדכון נוסף עם קישור ישיר לקריאה.</p>
+        <p style="margin-top:24px;font-size:15px;">תודה,<br/>צוות StoryLeap</p>
+      </div>`
+    : `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
+        <h2>Hi there,</h2>
+        <p style="font-size:16px;line-height:1.7;">Exciting news! We have successfully received your details.</p>
+        <p style="font-size:16px;line-height:1.7;">We are already working on creating your special story.</p>
+        <p style="font-size:16px;line-height:1.7;">As soon as the story is ready, we will send you another email with a direct link to read it.</p>
+        <p style="margin-top:24px;font-size:15px;">Best regards,<br/>StoryLeap</p>
+      </div>`;
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: 'StoryLeap AI <stories@storyleapai.com>', to: email, subject, html }),
+  });
+}
+
 async function sendReadyEmail(email, childName) {
   if (!email || !RESEND_API_KEY) return;
   await fetch('https://api.resend.com/emails', {
@@ -78,6 +105,13 @@ Deno.serve(async (req) => {
 
     // Mark story as paid
     await base44.asServiceRole.entities.Story.update(story_id, { payment_status: 'paid' });
+
+    // Send "story in progress" email immediately after credit deduction
+    const storyForEmail = await base44.asServiceRole.entities.Story.get(story_id);
+    const isHebrew = /[\u0590-\u05FF]/.test(storyForEmail.child_name || '');
+    if (storyForEmail.contact_email) {
+      await sendStoryInProgressEmail(storyForEmail.contact_email, storyForEmail.child_name, isHebrew).catch(() => {});
+    }
 
     // Generate story async (don't block response)
     (async () => {
