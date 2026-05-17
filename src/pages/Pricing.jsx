@@ -117,8 +117,18 @@ export default function Pricing() {
                 <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
               </h2>
 
+              {/* Package Info */}
+              <div className="bg-amber-50 border border-amber-200 rounded-xl px-6 py-4 mb-6 mt-2">
+                <p className="text-lg font-bold text-amber-800">
+                  {isHe ? '⭐ חבילת 20 קרדיטים' : '⭐ 20 Credits Package'}
+                </p>
+                <p className="text-sm text-amber-600 mt-1">
+                  {isHe ? 'שווה ל-20 סיפורים מותאמים אישית' : 'Equivalent to 20 personalized stories'}
+                </p>
+              </div>
+
               {/* Price */}
-              <div className="text-center mb-6 mt-4">
+              <div className="text-center mb-6">
                 <p className="text-3xl font-bold text-slate-800">{price}</p>
                 {promoApplied && (
                   <p className="text-green-600 text-sm font-medium mt-1">
