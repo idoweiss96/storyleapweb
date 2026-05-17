@@ -4,9 +4,12 @@ import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Star, CheckCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Sparkles, Star, CheckCircle, Tag } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
+
+const VALID_PROMO_CODES = ['STORYLEAP', 'MAGIC2024', 'WELCOME'];
 
 export default function Pricing() {
   const { t, lang } = useLanguage();
@@ -16,8 +19,25 @@ export default function Pricing() {
   const [error, setError] = useState('');
   const [paypalOrderId, setPaypalOrderId] = useState(null);
   const [paypalClientId, setPaypalClientId] = useState(null);
+  const [promoCode, setPromoCode] = useState('');
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [promoError, setPromoError] = useState('');
   const paypalButtonRef = useRef(null);
   const paypalRendered = useRef(false);
+
+  const isHebrew = lang === 'he';
+  const currentPrice = isHebrew ? '₪15' : (promoApplied ? '$3' : '$15');
+  const oldPrice = isHebrew ? '₪45' : '$15';
+  const discount = isHebrew ? '67% הנחה' : (promoApplied ? '80% OFF' : null);
+
+  const handleApplyPromo = () => {
+    setPromoError('');
+    if (VALID_PROMO_CODES.includes(promoCode.trim().toUpperCase())) {
+      setPromoApplied(true);
+    } else {
+      setPromoError(t('pricing_promo_invalid'));
+    }
+  };
 
   useEffect(() => {
     setHasDraft(!!localStorage.getItem('storyFormDraft'));
@@ -99,11 +119,34 @@ export default function Pricing() {
               <p className="text-slate-500 mb-6">{t('pricing_subtitle')}</p>
 
               {/* Price */}
-              <div className="flex items-center justify-center gap-3 mb-8">
-                <span className="text-2xl text-slate-400 line-through">{t('pricing_old_price')}</span>
-                <span className="text-5xl font-bold text-slate-800">{t('pricing_new_price')}</span>
-                <span className="px-2 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">{t('pricing_discount')}</span>
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <span className="text-2xl text-slate-400 line-through">{oldPrice}</span>
+                <span className="text-5xl font-bold text-slate-800">{currentPrice}</span>
+                {discount && <span className="px-2 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">{discount}</span>}
               </div>
+
+              {/* Promo Code - only show in English */}
+              {!isHebrew && (
+                <div className="mb-6 max-w-xs mx-auto">
+                  {promoApplied ? (
+                    <p className="text-green-600 text-sm font-medium">{t('pricing_promo_valid')}</p>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder={t('pricing_promo_placeholder')}
+                        value={promoCode}
+                        onChange={(e) => { setPromoCode(e.target.value); setPromoError(''); }}
+                        className="text-sm"
+                      />
+                      <Button variant="outline" size="sm" onClick={handleApplyPromo} className="shrink-0">
+                        <Tag className="w-3 h-3 mr-1" />
+                        {t('pricing_promo_apply')}
+                      </Button>
+                    </div>
+                  )}
+                  {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
+                </div>
+              )}
 
               {hasDraft && (
                 <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-amber-50 rounded-xl border border-amber-200">
