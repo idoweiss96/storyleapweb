@@ -121,6 +121,28 @@ export default function Pricing() {
 
 
 
+              {/* Price and Buy Button */}
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <div className="flex items-center gap-1">
+                  <Sparkles className="w-5 h-5 text-amber-500" />
+                  <Button
+                    onClick={handleBuyNow}
+                    disabled={loading}
+                    className="px-8 h-12 text-base rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-200 transition-all"
+                  >
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        {lang === 'he' ? 'טוען...' : 'Loading...'}
+                      </span>
+                    ) : (
+                      t('pricing_buy_now')
+                    )}
+                  </Button>
+                  <Sparkles className="w-5 h-5 text-amber-500" />
+                </div>
+              </div>
+
               {/* Promo Code */}
               <div className="mb-6 max-w-xs mx-auto">
                 {promoApplied ? (
@@ -153,22 +175,7 @@ export default function Pricing() {
 
               {/* Buy / PayPal */}
               <div className="max-w-xs mx-auto space-y-3">
-                {!paypalOrderId ? (
-                    <Button
-                      onClick={handleBuyNow}
-                      disabled={loading}
-                      className="w-full h-14 text-lg rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-200 transition-all"
-                    >
-                      {loading ? (
-                        <span className="flex items-center gap-2">
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          {lang === 'he' ? 'טוען...' : 'Loading...'}
-                        </span>
-                      ) : (
-                        t('pricing_buy_now')
-                      )}
-                    </Button>
-                  ) : (
+                {paypalOrderId && (
                     <div>
                       {loading ? (
                         <div className="flex items-center justify-center gap-2 py-4">
