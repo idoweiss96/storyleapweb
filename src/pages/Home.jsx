@@ -149,8 +149,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Maya Story CTA - Hebrew Only */}
-      {lang === 'he' && (
+      {/* Maya Story CTA - English Only */}
+      {lang !== 'he' && (
         <section className="py-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <Card className="border-0 shadow-lg shadow-amber-100 overflow-hidden">
