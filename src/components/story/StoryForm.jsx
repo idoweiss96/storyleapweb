@@ -197,14 +197,19 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
         </div>
       </div>
 
-      <Button type="submit" disabled={isLoading || uploading}
-        className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all">
-        {isLoading ? (
-          <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
-        ) : (
-          <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" />{t('form_submit')}</span>
-        )}
-      </Button>
+      <div className="space-y-3">
+        <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl">
+          <p className="text-sm text-amber-700 text-center">💫 <strong>עלות יצירה:</strong> 20 קרדיטים</p>
+        </div>
+        <Button type="submit" disabled={isLoading || uploading}
+          className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all">
+          {isLoading ? (
+            <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
+          ) : (
+            <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" />{t('form_submit')}</span>
+          )}
+        </Button>
+      </div>
     </form>
   );
 }
