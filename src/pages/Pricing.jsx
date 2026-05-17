@@ -28,7 +28,8 @@ export default function Pricing() {
   const isHebrew = lang === 'he';
   const currentPrice = isHebrew ? '₪15' : (promoApplied ? '$3' : '$15');
   const oldPrice = isHebrew ? '₪45' : '$15';
-  const discount = isHebrew ? '67% הנחה' : (promoApplied ? '80% OFF' : null);
+  const discountPercent = isHebrew ? '67%' : '80%';
+  const discount = `${discountPercent} ${isHebrew ? 'הנחה' : 'OFF'}`;
 
   const handleApplyPromo = () => {
     setPromoError('');
@@ -125,28 +126,26 @@ export default function Pricing() {
                 {discount && <span className="px-2 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">{discount}</span>}
               </div>
 
-              {/* Promo Code - only show in English */}
-              {!isHebrew && (
-                <div className="mb-6 max-w-xs mx-auto">
-                  {promoApplied ? (
-                    <p className="text-green-600 text-sm font-medium">{t('pricing_promo_valid')}</p>
-                  ) : (
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder={t('pricing_promo_placeholder')}
-                        value={promoCode}
-                        onChange={(e) => { setPromoCode(e.target.value); setPromoError(''); }}
-                        className="text-sm"
-                      />
-                      <Button variant="outline" size="sm" onClick={handleApplyPromo} className="shrink-0">
-                        <Tag className="w-3 h-3 mr-1" />
-                        {t('pricing_promo_apply')}
-                      </Button>
-                    </div>
-                  )}
-                  {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
-                </div>
-              )}
+              {/* Promo Code */}
+              <div className="mb-6 max-w-xs mx-auto">
+                {promoApplied ? (
+                  <p className="text-green-600 text-sm font-medium">{t('pricing_promo_valid')}</p>
+                ) : (
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder={t('pricing_promo_placeholder')}
+                      value={promoCode}
+                      onChange={(e) => { setPromoCode(e.target.value); setPromoError(''); }}
+                      className="text-sm"
+                    />
+                    <Button variant="outline" size="sm" onClick={handleApplyPromo} className="shrink-0">
+                      <Tag className="w-3 h-3 mr-1" />
+                      {t('pricing_promo_apply')}
+                    </Button>
+                  </div>
+                )}
+                {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
+              </div>
 
               {hasDraft && (
                 <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-amber-50 rounded-xl border border-amber-200">
