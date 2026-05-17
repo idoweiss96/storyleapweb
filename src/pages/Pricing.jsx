@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Sparkles, Star, Crown, Zap } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
+import PayPalButton from '../components/PayPalButton';
 
 export default function Pricing() {
   const { t } = useLanguage();
@@ -44,6 +45,9 @@ export default function Pricing() {
                   {t('pricing_contact_us')}
                 </Button>
               </Link>
+              <div className="mt-8 border-t border-slate-100 pt-8">
+                <PayPalButton />
+              </div>
             </CardContent>
           </Card>
         </motion.div>
