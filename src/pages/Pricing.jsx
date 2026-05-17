@@ -121,7 +121,6 @@ export default function Pricing() {
 
               {/* Price */}
               <div className="flex items-center justify-center gap-3 mb-4">
-                <span className="text-2xl text-slate-400 line-through">{oldPrice}</span>
                 <span className="text-5xl font-bold text-slate-800">{currentPrice}</span>
                 {discount && <span className="px-2 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">{discount}</span>}
               </div>
