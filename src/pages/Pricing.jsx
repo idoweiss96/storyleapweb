@@ -36,17 +36,27 @@ export default function Pricing() {
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-6">
                 <Sparkles className="w-12 h-12 text-amber-600" />
               </div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-4">Coming Soon 🚀</h2>
-              <p className="text-lg text-slate-600 mb-8">
-                We're working on bringing you amazing new pricing plans. Stay tuned!
-              </p>
-              <Link to={createPageUrl('Contact')}>
-                <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl h-12 px-8">
-                  {t('pricing_contact_us')}
-                </Button>
-              </Link>
-              <div className="mt-8 border-t border-slate-100 pt-8">
+              <h2 className="text-3xl font-bold text-slate-800 mb-2">סיפור מותאם אישית ✨</h2>
+              <p className="text-slate-500 mb-6">סיפור טיפולי מותאם לילד/ה שלכם, נשלח תוך 24 שעות</p>
+
+              {/* Price */}
+              <div className="flex items-center justify-center gap-3 mb-8">
+                <span className="text-2xl text-slate-400 line-through">₪45</span>
+                <span className="text-5xl font-bold text-slate-800">₪15</span>
+                <span className="px-2 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">67% הנחה</span>
+              </div>
+
+              {/* PayPal */}
+              <div className="max-w-xs mx-auto">
                 <PayPalButton />
+              </div>
+
+              <div className="mt-6 border-t border-slate-100 pt-6">
+                <Link to={createPageUrl('Contact')}>
+                  <Button variant="ghost" className="text-slate-500 hover:text-slate-700">
+                    {t('pricing_contact_us')}
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

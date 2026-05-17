@@ -21,5 +21,5 @@ export default function PayPalButton() {
     tryRender();
   }, []);
 
-  return null;
+  return <div ref={containerRef} />;
 }
