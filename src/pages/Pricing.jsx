@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
@@ -12,6 +12,7 @@ import PayPalButton from '../components/PayPalButton';
 
 export default function Pricing() {
   const { t } = useLanguage();
+  const [showPaypal, setShowPaypal] = useState(false);
 
   return (
     <div className="max-w-4xl mx-auto pb-16">
@@ -46,9 +47,22 @@ export default function Pricing() {
                 <span className="px-2 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">67% הנחה</span>
               </div>
 
-              {/* PayPal */}
-              <div className="max-w-xs mx-auto">
-                <PayPalButton />
+              {/* Buy Button + PayPal */}
+              <div className="max-w-xs mx-auto space-y-3">
+                {!showPaypal ? (
+                  <Button
+                    onClick={() => setShowPaypal(true)}
+                    className="w-full h-14 text-lg rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-200 transition-all"
+                  >
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    רכישה עכשיו — ₪15
+                  </Button>
+                ) : (
+                  <div>
+                    <p className="text-sm text-slate-500 mb-3">בחרו אמצעי תשלום:</p>
+                    <PayPalButton />
+                  </div>
+                )}
               </div>
 
               <div className="mt-6 border-t border-slate-100 pt-6">
