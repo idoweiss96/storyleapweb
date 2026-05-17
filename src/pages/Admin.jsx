@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw, Star, Users, Search, Image } from 'lucide-react';
+import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw, Star, Users, Search, Image, Download } from 'lucide-react';
 import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageContext';
 
@@ -157,6 +157,15 @@ export default function Admin() {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const downloadImage = (url, name) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${name}-${Date.now()}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (isLoading) {
@@ -367,8 +376,16 @@ export default function Admin() {
 
       <Dialog open={!!viewingImage} onOpenChange={() => setViewingImage(null)}>
         <DialogContent className="max-w-md">
-          <DialogHeader>
+          <DialogHeader className="flex items-center justify-between">
             <DialogTitle>תמונת {viewingImage?.name}</DialogTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => downloadImage(viewingImage.url, viewingImage.name)}
+              className="h-8 w-8 p-0"
+            >
+              <Download className="w-4 h-4" />
+            </Button>
           </DialogHeader>
           <div className="py-2 flex justify-center">
             {viewingImage && (
