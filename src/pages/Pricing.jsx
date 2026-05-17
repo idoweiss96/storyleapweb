@@ -153,6 +153,9 @@ export default function Pricing() {
 
               {/* Buy / PayPal */}
               <div className="max-w-xs mx-auto space-y-3">
+                <div className="text-center mb-2">
+                  <p className="text-3xl font-bold text-slate-800">{currentPrice}</p>
+                </div>
                 {!paypalOrderId ? (
                   <Button
                     onClick={handleBuyNow}
