@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw, Star, Users, Search } from 'lucide-react';
+import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw, Star, Users, Search, Image } from 'lucide-react';
 import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageContext';
 
@@ -32,6 +32,7 @@ export default function Admin() {
   const [isSavingCredits, setIsSavingCredits] = useState(false);
   const [searchStories, setSearchStories] = useState('');
   const [searchUsers, setSearchUsers] = useState('');
+  const [viewingImage, setViewingImage] = useState(null);
 
   const settingLabels = { space: t('setting_space'), forest: t('setting_forest'), castle: t('setting_castle'), sports: t('setting_sports'), real_life: t('setting_real_life') };
   const challengeLabels = { fears: t('ch_fears'), social_difficulty: t('ch_social'), changes: t('ch_changes'), emotional_regulation: t('ch_emotional'), separation_anxiety: t('ch_separation'), self_confidence: t('ch_confidence'), sleep_issues: t('ch_sleep') };
@@ -249,6 +250,7 @@ export default function Admin() {
                     <TableHead className="text-right">{t('admin_col_date')}</TableHead>
                     <TableHead className="text-right">{t('admin_col_name')}</TableHead>
                     <TableHead className="text-right">{t('admin_col_age')}</TableHead>
+                    <TableHead className="text-right">תמונה</TableHead>
                     <TableHead className="text-right">{t('admin_col_setting')}</TableHead>
                     <TableHead className="text-right">{t('admin_col_challenge')}</TableHead>
                     <TableHead className="text-right">{t('admin_col_email')}</TableHead>
@@ -265,6 +267,19 @@ export default function Admin() {
                       <TableCell className="text-sm">{story.created_date ? format(new Date(story.created_date), 'dd/MM/yyyy') : '-'}</TableCell>
                       <TableCell className="font-medium">{story.child_name}</TableCell>
                       <TableCell>{story.child_age}</TableCell>
+                      <TableCell>
+                        {story.child_image_url ? (
+                          <button onClick={() => setViewingImage({ url: story.child_image_url, name: story.child_name })}
+                            className="hover:opacity-80 transition-opacity">
+                            <img src={story.child_image_url} alt={story.child_name}
+                              className="w-10 h-10 rounded-lg object-cover border border-gray-200" />
+                          </button>
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                            <Image className="w-4 h-4 text-gray-300" />
+                          </div>
+                        )}
+                      </TableCell>
                       <TableCell>{settingLabels[story.setting] || story.setting}</TableCell>
                       <TableCell>{challengeLabels[story.challenge_type] || story.challenge_type}</TableCell>
                       <TableCell className="text-sm text-gray-500">{story.contact_email || '-'}</TableCell>
@@ -349,6 +364,20 @@ export default function Admin() {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={!!viewingImage} onOpenChange={() => setViewingImage(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>תמונת {viewingImage?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="py-2 flex justify-center">
+            {viewingImage && (
+              <img src={viewingImage.url} alt={viewingImage.name}
+                className="max-w-full max-h-96 rounded-xl object-contain" />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={!!editingUser} onOpenChange={() => setEditingUser(null)}>
         <DialogContent className="max-w-sm">
