@@ -24,13 +24,18 @@ export default function Pricing() {
     if (paypalRendered.current) return;
     paypalRendered.current = true;
 
+    const containerId = `paypal-container-${HOSTED_BUTTON_ID}`;
+    if (paypalContainerRef.current) {
+      paypalContainerRef.current.id = containerId;
+    }
+
     const script = document.createElement('script');
     script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=ILS`;
     script.onload = () => {
-      if (window.paypal && paypalContainerRef.current) {
+      if (window.paypal?.HostedButtons && paypalContainerRef.current) {
         window.paypal.HostedButtons({
           hostedButtonId: HOSTED_BUTTON_ID,
-        }).render(paypalContainerRef.current);
+        }).render(`#${containerId}`);
       }
     };
     document.body.appendChild(script);
