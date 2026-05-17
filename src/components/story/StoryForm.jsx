@@ -199,7 +199,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
 
       <div className="space-y-3">
         <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl">
-          <p className="text-sm text-amber-700 text-center">💫 <strong>עלות יצירה:</strong> 20 קרדיטים</p>
+          <p className="text-sm text-amber-700 text-center">💫 <strong>{t('form_creation_cost')}</strong></p>
         </div>
         <Button type="submit" disabled={isLoading || uploading}
           className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all">
