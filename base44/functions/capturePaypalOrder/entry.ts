@@ -149,11 +149,11 @@ Deno.serve(async (req) => {
     // Update story status to indicate payment done
     await base44.asServiceRole.entities.Story.update(order.story_id, { payment_status: 'paid' });
 
-    // Deduct 20 credits from user if they have any (best-effort, don't block)
+    // Add 20 credits to user after successful payment
     try {
       const users = await base44.asServiceRole.entities.User.filter({ email: order.user_email });
-      if (users[0] && (users[0].credits || 0) > 0) {
-        const newCredits = Math.max(0, (users[0].credits || 0) - 20);
+      if (users[0]) {
+        const newCredits = (users[0].credits || 0) + 20;
         await base44.asServiceRole.entities.User.update(users[0].id, { credits: newCredits });
       }
     } catch (_) {}
