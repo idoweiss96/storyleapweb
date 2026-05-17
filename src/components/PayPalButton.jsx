@@ -21,5 +21,5 @@ export default function PayPalButton() {
     tryRender();
   }, []);
 
-  return <div ref={containerRef} className="flex justify-center mt-6 hidden" />;
+  return null;
 }
