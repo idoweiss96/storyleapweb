@@ -19,11 +19,7 @@ export default function Pricing() {
       {/* Header */}
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 border border-amber-200 text-amber-700 text-sm font-medium"
-          style={{ background: 'linear-gradient(135deg, #fff8ed, #fde8d0)' }}>
-            <Sparkles className="w-4 h-4" />
-            {t('pricing_badge')}
-          </div>
+
           <h1 className="text-4xl font-bold text-slate-800 mb-3">{t('pricing_title')}</h1>
           <p className="text-slate-500 text-lg">{t('pricing_subtitle')}</p>
         </motion.div>
