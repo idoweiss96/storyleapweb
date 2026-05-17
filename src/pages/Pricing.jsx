@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Star, CheckCircle, Tag, AlertCircle } from 'lucide-react';
+import { Sparkles, Star, CheckCircle, Tag } from 'lucide-react';
+import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 
@@ -55,14 +56,17 @@ export default function Pricing() {
         createOrder: async () => {
           setPaypalError('');
           const pendingStoryId = localStorage.getItem('pendingStoryId');
-          if (!pendingStoryId) {
-            setPaypalError(isHe ? 'לא נמצא שאלון — אנא מלאו שאלון תחילה' : 'No questionnaire found — please fill the form first');
-            return null;
-          }
           try {
-            const res = await base44.functions.invoke('createPaypalOrder', { story_id: pendingStoryId });
-            pendingOrderIdRef.current = res.data.order_id;
-            return res.data.paypal_order_id;
+            if (pendingStoryId) {
+              // Has questionnaire — create story order
+              const res = await base44.functions.invoke('createPaypalOrder', { story_id: pendingStoryId });
+              pendingOrderIdRef.current = res.data.order_id;
+              return res.data.paypal_order_id;
+            } else {
+              // No questionnaire — create credits-only order
+              const res = await base44.functions.invoke('createCreditsOrder', {});
+              return res.data.paypal_order_id;
+            }
           } catch (err) {
             setPaypalError(isHe ? 'שגיאה ביצירת הזמנה' : 'Error creating order');
             return null;
@@ -75,14 +79,31 @@ export default function Pricing() {
           try {
             const pendingStoryId = localStorage.getItem('pendingStoryId');
             const orderId = pendingOrderIdRef.current;
-            const res = await base44.functions.invoke('capturePaypalOrder', {
-              paypal_order_id: data.orderID,
-              order_id: orderId,
-            });
-            if (res.data?.success) {
-              localStorage.removeItem('pendingStoryId');
-              window.dispatchEvent(new Event('credits-updated'));
-              navigate('/PaymentSuccess?story_id=' + (pendingStoryId || ''));
+
+            if (pendingStoryId) {
+              // Has questionnaire — capture story order
+              const res = await base44.functions.invoke('capturePaypalOrder', {
+                paypal_order_id: data.orderID,
+                order_id: orderId,
+              });
+              if (res.data?.success) {
+                localStorage.removeItem('pendingStoryId');
+                window.dispatchEvent(new Event('credits-updated'));
+                navigate('/PaymentSuccess?story_id=' + pendingStoryId);
+              }
+            } else {
+              // No questionnaire — capture credits order
+              const res = await base44.functions.invoke('captureCreditsOrder', {
+                paypal_order_id: data.orderID,
+                credits: 20,
+              });
+              if (res.data?.success) {
+                window.dispatchEvent(new Event('credits-updated'));
+                toast.success(isHe
+                  ? '🎉 הקרדיטים התווספו לחשבונך! כעת תוכלו למלא שאלון וליצור את הסיפור שלכם.'
+                  : '🎉 Credits added to your account! You can now fill the questionnaire and create your story.'
+                , { duration: 6000 });
+              }
             }
           } catch (err) {
             setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
@@ -214,11 +235,11 @@ export default function Pricing() {
 
               {!hasPendingStory && (
                 <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-blue-50 rounded-xl border border-blue-200">
-                  <AlertCircle className="w-5 h-5 text-blue-500 shrink-0" />
+                  <Sparkles className="w-5 h-5 text-blue-500 shrink-0" />
                   <p className="text-sm text-blue-700">
                     {isHe
-                      ? 'יש למלא שאלון תחילה לפני התשלום'
-                      : 'Please fill the questionnaire before paying'}
+                      ? 'תוכלו לרכוש קרדיטים עכשיו ולמלא את השאלון מאוחר יותר'
+                      : 'You can purchase credits now and fill the questionnaire later'}
                   </p>
                 </div>
               )}
