@@ -101,7 +101,8 @@ export default function Pricing() {
       {/* Header */}
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-4xl font-bold text-slate-800 mb-3">סיפור טיפולי מותאם לילד/ה שלכם, נשלח תוך 24 שעות</h1>
+          <h1 className="text-4xl font-bold text-slate-800 mb-3">רכישת קרדיטים</h1>
+          <p className="text-sm text-slate-500 mb-6">סיפור טיפולי מותאם לילד/ה שלכם, נשלח תוך 24 שעות</p>
         </motion.div>
       </div>
 
