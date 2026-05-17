@@ -1,18 +1,21 @@
-import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Check, Sparkles, Star, Crown, Zap } from 'lucide-react';
+import { Sparkles, Star } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
-import PayPalButton from '../components/PayPalButton';
 
 export default function Pricing() {
   const { t } = useLanguage();
-  const [showPaypal, setShowPaypal] = useState(false);
+  const navigate = useNavigate();
+  const [hasDraft, setHasDraft] = useState(false);
+
+  useEffect(() => {
+    setHasDraft(!!localStorage.getItem('storyFormDraft'));
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto pb-16">
@@ -46,21 +49,19 @@ export default function Pricing() {
                 <span className="px-2 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">{t('pricing_discount')}</span>
               </div>
 
-              {/* Buy Button + PayPal */}
+              {/* Buy Button */}
               <div className="max-w-xs mx-auto space-y-3">
-                {!showPaypal ? (
-                  <Button
-                    onClick={() => setShowPaypal(true)}
-                    className="w-full h-14 text-lg rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-200 transition-all"
-                  >
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    {t('pricing_buy_now')}
-                  </Button>
-                ) : (
-                  <div>
-                    <p className="text-sm text-slate-500 mb-3">{t('pricing_choose_payment')}</p>
-                    <PayPalButton />
-                  </div>
+                <Button
+                  onClick={() => navigate('/Contact')}
+                  className="w-full h-14 text-lg rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-200 transition-all"
+                >
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  {t('pricing_buy_now')}
+                </Button>
+                {hasDraft && (
+                  <p className="text-sm text-slate-500 text-center">
+                    {t('lang') === 'he' ? 'השאלון שמילאת שמור ויחכה לך אחרי הרכישה' : 'Your questionnaire is saved and will be waiting after purchase'}
+                  </p>
                 )}
               </div>
 

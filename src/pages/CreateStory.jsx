@@ -23,7 +23,17 @@ export default function CreateStory() {
     reactionType: '', hobbies: '', contactEmail: '', contactPhone: '',
   });
 
-  useEffect(() => { loadUser(); }, []);
+  useEffect(() => {
+    loadUser();
+    // Restore saved form data if returning from Pricing
+    const saved = localStorage.getItem('storyFormDraft');
+    if (saved) {
+      try {
+        setFormData(JSON.parse(saved));
+        localStorage.removeItem('storyFormDraft');
+      } catch (_) {}
+    }
+  }, []);
 
   const loadUser = async () => {
     try {
@@ -92,8 +102,9 @@ export default function CreateStory() {
         base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id, credits_before: currentCredits } });
         setGeneratedStory(savedStory);
       } else {
-        // Not enough credits — go to Pricing page
+        // Not enough credits — save form data and go to Pricing page
         base44.analytics.track({ eventName: 'insufficient_credits_redirected', properties: { story_id: savedStory.id, credits: currentCredits } });
+        localStorage.setItem('storyFormDraft', JSON.stringify(formData));
         navigate('/Pricing');
       }
     } catch (err) {
