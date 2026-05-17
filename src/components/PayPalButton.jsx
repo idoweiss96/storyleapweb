@@ -2,18 +2,20 @@ import { useEffect, useRef } from 'react';
 
 export default function PayPalButton() {
   const containerRef = useRef(null);
-  const rendered = useRef(false);
 
   useEffect(() => {
-    if (rendered.current) return;
+    let attempts = 0;
+    const maxAttempts = 30;
 
     const tryRender = () => {
+      attempts++;
       if (window.paypal && containerRef.current) {
-        rendered.current = true;
+        // Clear container before rendering (in case of re-mount)
+        containerRef.current.innerHTML = '';
         window.paypal.HostedButtons({
           hostedButtonId: "Q84GCTNCHU63A"
         }).render(containerRef.current);
-      } else {
+      } else if (attempts < maxAttempts) {
         setTimeout(tryRender, 300);
       }
     };
