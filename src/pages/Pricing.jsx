@@ -25,7 +25,7 @@ const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30'];
 
 export default function Pricing() {
   const { lang } = useLanguage();
-  const [hasDraft, setHasDraft] = useState(false);
+  const [hasPendingStory, setHasPendingStory] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError] = useState('');
@@ -38,7 +38,7 @@ export default function Pricing() {
   const { buttonId, price, currency } = BUTTONS[isHe ? 'he' : 'en'][mode];
 
   useEffect(() => {
-    setHasDraft(!!localStorage.getItem('storyFormDraft'));
+    setHasPendingStory(!!localStorage.getItem('pendingStoryId'));
   }, []);
 
   useEffect(() => {
@@ -163,11 +163,13 @@ export default function Pricing() {
                 {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
               </div>
 
-              {hasDraft && (
-                <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-amber-50 rounded-xl border border-amber-200">
-                  <CheckCircle className="w-5 h-5 text-amber-600 shrink-0" />
-                  <p className="text-sm text-amber-700 font-medium">
-                    {isHe ? 'השאלון שמילאת שמור — אחרי הרכישה תחזור אליו ישירות' : "Your questionnaire is saved — you'll return to it right after purchase"}
+              {hasPendingStory && (
+                <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-green-50 rounded-xl border border-green-200">
+                  <CheckCircle className="w-5 h-5 text-green-600 shrink-0" />
+                  <p className="text-sm text-green-700 font-medium">
+                    {isHe
+                      ? '✅ השאלון שלך שמור — אחרי הרכישה הסיפור ייווצר אוטומטית!'
+                      : '✅ Your questionnaire is saved — story will be created automatically after purchase!'}
                   </p>
                 </div>
               )}

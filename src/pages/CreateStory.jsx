@@ -90,21 +90,21 @@ export default function CreateStory() {
         });
       } catch (_) {}
 
-      const currentCredits = user.credits || 0;
+      // Server-side credit check + deduction (secure)
+      const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: savedStory.id });
 
-      // If user has enough credits — deduct and go directly to success
-      if (currentCredits >= 20) {
-        await base44.auth.updateMe({ credits: currentCredits - 20 });
-        setUser(prev => ({ ...prev, credits: currentCredits - 20 }));
+      if (result.data?.success) {
+        // Credits deducted, story generation started
+        const newCredits = result.data.credits_remaining;
+        await base44.auth.updateMe({ credits: newCredits });
+        setUser(prev => ({ ...prev, credits: newCredits }));
         window.dispatchEvent(new Event('credits-updated'));
-        // Mark story as paid (credits used)
-        await base44.entities.Story.update(savedStory.id, { payment_status: 'paid' });
-        base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id, credits_before: currentCredits } });
+        base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id } });
         setGeneratedStory(savedStory);
       } else {
-        // Not enough credits — save form data and go to Pricing page
-        base44.analytics.track({ eventName: 'insufficient_credits_redirected', properties: { story_id: savedStory.id, credits: currentCredits } });
-        localStorage.setItem('storyFormDraft', JSON.stringify(formData));
+        // Insufficient credits — save story_id for post-payment auto-trigger
+        base44.analytics.track({ eventName: 'insufficient_credits_redirected', properties: { story_id: savedStory.id } });
+        localStorage.setItem('pendingStoryId', savedStory.id);
         navigate('/Pricing');
       }
     } catch (err) {
