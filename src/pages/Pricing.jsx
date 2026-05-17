@@ -26,7 +26,7 @@ export default function Pricing() {
   const paypalRendered = useRef(false);
 
   const isHebrew = lang === 'he';
-  const currentPrice = isHebrew ? '₪45' : (promoApplied ? '$3' : '$15');
+  const currentPrice = isHebrew ? '₪45' : promoApplied ? '$3' : '$15';
   const oldPrice = isHebrew ? '₪45' : '$15';
   const discountPercent = isHebrew ? '67%' : '80%';
   const discount = `${discountPercent} ${isHebrew ? 'הנחה' : 'OFF'}`;
@@ -74,12 +74,12 @@ export default function Pricing() {
           onError: () => {
             setError(lang === 'he' ? 'שגיאה בתשלום PayPal' : 'PayPal payment error');
           },
-          style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
+          style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' }
         }).render(paypalButtonRef.current);
       }
     };
     document.body.appendChild(script);
-    return () => { document.body.removeChild(script); };
+    return () => {document.body.removeChild(script);};
   }, [paypalOrderId, paypalClientId]);
 
   const handleBuyNow = async () => {
@@ -118,7 +118,7 @@ export default function Pricing() {
                 רכישת קרדיטים
                 <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
               </h2>
-              <p className="text-slate-500 mb-6">{t('pricing_subtitle')}</p>
+              <p className="text-slate-500 mb-6 hidden">{t('pricing_subtitle')}</p>
 
 
 
@@ -129,67 +129,67 @@ export default function Pricing() {
 
               {/* Promo Code */}
               <div className="mb-6 max-w-xs mx-auto">
-                {promoApplied ? (
-                  <p className="text-green-600 text-sm font-medium">{t('pricing_promo_valid')}</p>
-                ) : (
-                  <div className="flex gap-2">
+                {promoApplied ?
+                <p className="text-green-600 text-sm font-medium">{t('pricing_promo_valid')}</p> :
+
+                <div className="flex gap-2">
                     <Input
-                      placeholder={t('pricing_promo_placeholder')}
-                      value={promoCode}
-                      onChange={(e) => { setPromoCode(e.target.value); setPromoError(''); }}
-                      className="text-sm"
-                    />
+                    placeholder={t('pricing_promo_placeholder')}
+                    value={promoCode}
+                    onChange={(e) => {setPromoCode(e.target.value);setPromoError('');}}
+                    className="text-sm" />
+                  
                     <Button variant="outline" size="sm" onClick={handleApplyPromo} className="shrink-0">
                       <Tag className="w-3 h-3 mr-1" />
                       {t('pricing_promo_apply')}
                     </Button>
                   </div>
-                )}
+                }
                 {promoError && <p className="text-red-500 text-xs mt-1">{promoError}</p>}
               </div>
 
-              {hasDraft && (
-                <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-amber-50 rounded-xl border border-amber-200">
+              {hasDraft &&
+              <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-amber-50 rounded-xl border border-amber-200">
                   <CheckCircle className="w-5 h-5 text-amber-600 shrink-0" />
                   <p className="text-sm text-amber-700 font-medium">
                     {lang === 'he' ? 'השאלון שמילאת שמור — אחרי הרכישה תחזור אליו ישירות' : 'Your questionnaire is saved — you\'ll return to it right after purchase'}
                   </p>
                 </div>
-              )}
+              }
 
               {/* Buy / PayPal */}
               <div className="max-w-xs mx-auto space-y-3">
-                {!paypalOrderId ? (
-                  <Button
-                    onClick={handleBuyNow}
-                    disabled={loading}
-                    className="w-full h-14 text-lg rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-200 transition-all"
-                  >
-                    {loading ? (
-                      <span className="flex items-center gap-2">
+                {!paypalOrderId ?
+                <Button
+                  onClick={handleBuyNow}
+                  disabled={loading}
+                  className="w-full h-14 text-lg rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-200 transition-all">
+                  
+                    {loading ?
+                  <span className="flex items-center gap-2">
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         {lang === 'he' ? 'טוען...' : 'Loading...'}
-                      </span>
-                    ) : (
-                      t('pricing_buy_now')
-                    )}
-                  </Button>
-                ) : (
-                  <div>
-                    {loading ? (
-                      <div className="flex items-center justify-center gap-2 py-4">
+                      </span> :
+
+                  t('pricing_buy_now')
+                  }
+                  </Button> :
+
+                <div>
+                    {loading ?
+                  <div className="flex items-center justify-center gap-2 py-4">
                         <div className="w-5 h-5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
                         <span className="text-slate-600">{lang === 'he' ? 'מעבד תשלום...' : 'Processing payment...'}</span>
-                      </div>
-                    ) : (
-                      <div ref={paypalButtonRef} />
-                    )}
-                  </div>
-                )}
+                      </div> :
 
-                {error && (
-                  <p className="text-sm text-red-600 text-center">{error}</p>
-                )}
+                  <div ref={paypalButtonRef} />
+                  }
+                  </div>
+                }
+
+                {error &&
+                <p className="text-sm text-red-600 text-center">{error}</p>
+                }
               </div>
 
               <div className="mt-6 border-t border-slate-100 pt-6">
@@ -203,6 +203,6 @@ export default function Pricing() {
           </Card>
         </motion.div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
