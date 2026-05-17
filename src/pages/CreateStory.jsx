@@ -92,9 +92,9 @@ export default function CreateStory() {
         base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id, credits_before: currentCredits } });
         setGeneratedStory(savedStory);
       } else {
-        // Not enough credits — go to PayPal payment
+        // Not enough credits — go to Pricing page
         base44.analytics.track({ eventName: 'insufficient_credits_redirected', properties: { story_id: savedStory.id, credits: currentCredits } });
-        navigate(`/PaymentCheckout?story_id=${savedStory.id}&child_name=${encodeURIComponent(formData.childName)}`);
+        navigate('/Pricing');
       }
     } catch (err) {
       setError(t('create_error_save'));
