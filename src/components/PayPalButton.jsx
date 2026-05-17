@@ -1,51 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-
 export default function PayPalButton() {
-  const containerRef = useRef(null);
-  const [status, setStatus] = useState('loading'); // loading | ready | error
-
-  useEffect(() => {
-    let cancelled = false;
-    let attempts = 0;
-    const maxAttempts = 40; // up to 12 seconds
-
-    const tryRender = () => {
-      if (cancelled) return;
-      attempts++;
-
-      if (window.paypal?.HostedButtons && containerRef.current) {
-        containerRef.current.innerHTML = '';
-        window.paypal.HostedButtons({
-          hostedButtonId: "Q84GCTNCHU63A"
-        }).render(containerRef.current)
-          .then(() => { if (!cancelled) setStatus('ready'); })
-          .catch(() => { if (!cancelled) setStatus('error'); });
-      } else if (attempts < maxAttempts) {
-        setTimeout(tryRender, 300);
-      } else {
-        if (!cancelled) setStatus('error');
-      }
-    };
-
-    tryRender();
-
-    return () => { cancelled = true; };
-  }, []);
-
   return (
-    <div>
-      {status === 'loading' && (
-        <div className="flex items-center justify-center py-6">
-          <div className="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
-          <span className="mr-2 text-sm text-slate-400">טוען...</span>
-        </div>
-      )}
-      {status === 'error' && (
-        <p className="text-sm text-red-500 text-center py-2">
-          לא ניתן לטעון את PayPal. רענן את הדף ונסה שוב.
-        </p>
-      )}
-      <div ref={containerRef} />
+    <div className="flex justify-center">
+      <form action="https://www.paypal.com/ncp/payment/Q84GCTNCHU63A" method="post" target="_blank" style={{display:'inline-grid', justifyItems:'center', alignContent:'start', gap:'0.5rem'}}>
+        <input className="pp-Q84GCTNCHU63A" type="submit" value="שלם עכשיו עם PayPal" style={{textAlign:'center', border:'none', borderRadius:'0.25rem', minWidth:'11.625rem', padding:'0 2rem', height:'2.625rem', fontWeight:'bold', backgroundColor:'#FFD140', color:'#000', fontFamily:'\"Helvetica Neue\",Arial,sans-serif', fontSize:'1rem', lineHeight:'1.25rem', cursor:'pointer'}} />
+        <img src="https://www.paypalobjects.com/images/Transparent.gif" alt="" width="1" height="1" />
+      </form>
     </div>
   );
 }
