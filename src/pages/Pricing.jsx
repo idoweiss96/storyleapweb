@@ -30,8 +30,7 @@ export default function Pricing() {
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError] = useState('');
   const containerRef = useRef(null);
-  const sdkLoadedRef = useRef(null); // tracks which currency SDK is loaded
-  const renderKeyRef = useRef(0);
+    const renderKeyRef = useRef(0);
 
   const isHe = lang === 'he';
   const mode = promoApplied ? 'discount' : 'full';
@@ -52,41 +51,30 @@ export default function Pricing() {
       window.paypal.HostedButtons({ hostedButtonId: buttonId }).render(containerRef.current);
     };
 
-    // If SDK already loaded for this currency, just re-render
-    if (window.paypal?.HostedButtons && sdkLoadedRef.current === currency) {
+    // SDK already loaded — just re-render
+    if (window.paypal?.HostedButtons) {
       renderButton();
       return;
     }
 
-    // If currency changed, we need to reload SDK — remove old script and global
-    const oldScript = document.querySelector('script[data-paypal-sdk]');
-    if (oldScript && sdkLoadedRef.current !== currency) {
-      oldScript.remove();
-      delete window.paypal;
-    }
-
-    // If script tag exists but not yet loaded, wait for it
+    // Already loading — wait for it
     if (document.querySelector('script[data-paypal-sdk]')) {
       const interval = setInterval(() => {
         if (window.paypal?.HostedButtons) {
           clearInterval(interval);
-          sdkLoadedRef.current = currency;
           renderButton();
         }
       }, 100);
-      return;
+      return () => clearInterval(interval);
     }
 
-    // Load fresh SDK
+    // First load — use ILS always (single SDK instance)
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', 'true');
-    script.src = `https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=${currency}`;
-    script.onload = () => {
-      sdkLoadedRef.current = currency;
-      renderButton();
-    };
+    script.src = `https://www.paypal.com/sdk/js?client-id=${CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=ILS`;
+    script.onload = () => renderButton();
     document.body.appendChild(script);
-  }, [buttonId, currency]);
+  }, [buttonId]);
 
   const handleApplyPromo = () => {
     setPromoError('');
