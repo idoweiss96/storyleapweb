@@ -1,34 +1,90 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Star } from 'lucide-react';
+import { Sparkles, Star, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 
 export default function Pricing() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const [hasDraft, setHasDraft] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [paypalOrderId, setPaypalOrderId] = useState(null);
+  const [paypalClientId, setPaypalClientId] = useState(null);
+  const paypalButtonRef = useRef(null);
+  const paypalRendered = useRef(false);
 
   useEffect(() => {
     setHasDraft(!!localStorage.getItem('storyFormDraft'));
   }, []);
+
+  useEffect(() => {
+    if (!paypalOrderId || !paypalClientId || paypalRendered.current) return;
+    paypalRendered.current = true;
+
+    // Load PayPal SDK
+    const script = document.createElement('script');
+    script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&currency=ILS&components=buttons`;
+    script.setAttribute('data-namespace', 'paypal_sdk');
+    script.onload = () => {
+      if (window.paypal_sdk && paypalButtonRef.current) {
+        window.paypal_sdk.Buttons({
+          createOrder: () => paypalOrderId,
+          onApprove: async () => {
+            setLoading(true);
+            try {
+              await base44.functions.invoke('captureCreditsOrder', { paypal_order_id: paypalOrderId });
+              window.dispatchEvent(new Event('credits-updated'));
+              if (hasDraft) {
+                navigate('/CreateStory');
+              } else {
+                navigate('/CreateStory?credits_purchased=true');
+              }
+            } catch (err) {
+              setError(lang === 'he' ? 'שגיאה בעיבוד התשלום, אנא נסה שנית' : 'Payment error, please try again');
+              setLoading(false);
+            }
+          },
+          onError: () => {
+            setError(lang === 'he' ? 'שגיאה בתשלום PayPal' : 'PayPal payment error');
+          },
+          style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
+        }).render(paypalButtonRef.current);
+      }
+    };
+    document.body.appendChild(script);
+    return () => { document.body.removeChild(script); };
+  }, [paypalOrderId, paypalClientId]);
+
+  const handleBuyNow = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const res = await base44.functions.invoke('createCreditsOrder', {});
+      setPaypalOrderId(res.data.paypal_order_id);
+      setPaypalClientId(res.data.client_id);
+    } catch (err) {
+      setError(lang === 'he' ? 'שגיאה ביצירת הזמנה, אנא נסה שנית' : 'Error creating order, please try again');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto pb-16">
       {/* Header */}
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-
           <h1 className="text-4xl font-bold text-slate-800 mb-3">{t('pricing_title')}</h1>
           <p className="text-slate-500 text-lg">{t('pricing_subtitle')}</p>
         </motion.div>
       </div>
 
-      {/* Coming Soon */}
       <div className="max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
           <Card className="border-0 shadow-2xl shadow-slate-200">
@@ -49,19 +105,50 @@ export default function Pricing() {
                 <span className="px-2 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">{t('pricing_discount')}</span>
               </div>
 
-              {/* Buy Button */}
-              <div className="max-w-xs mx-auto space-y-3">
-                <Button
-                  onClick={() => navigate('/Contact')}
-                  className="w-full h-14 text-lg rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-200 transition-all"
-                >
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  {t('pricing_buy_now')}
-                </Button>
-                {hasDraft && (
-                  <p className="text-sm text-slate-500 text-center">
-                    {t('lang') === 'he' ? 'השאלון שמילאת שמור ויחכה לך אחרי הרכישה' : 'Your questionnaire is saved and will be waiting after purchase'}
+              {hasDraft && (
+                <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-amber-50 rounded-xl border border-amber-200">
+                  <CheckCircle className="w-5 h-5 text-amber-600 shrink-0" />
+                  <p className="text-sm text-amber-700 font-medium">
+                    {lang === 'he' ? 'השאלון שמילאת שמור — אחרי הרכישה תחזור אליו ישירות' : 'Your questionnaire is saved — you\'ll return to it right after purchase'}
                   </p>
+                </div>
+              )}
+
+              {/* Buy / PayPal */}
+              <div className="max-w-xs mx-auto space-y-3">
+                {!paypalOrderId ? (
+                  <Button
+                    onClick={handleBuyNow}
+                    disabled={loading}
+                    className="w-full h-14 text-lg rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-200 transition-all"
+                  >
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        {lang === 'he' ? 'טוען...' : 'Loading...'}
+                      </span>
+                    ) : (
+                      <>
+                        <Sparkles className="w-5 h-5 mr-2" />
+                        {t('pricing_buy_now')}
+                      </>
+                    )}
+                  </Button>
+                ) : (
+                  <div>
+                    {loading ? (
+                      <div className="flex items-center justify-center gap-2 py-4">
+                        <div className="w-5 h-5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                        <span className="text-slate-600">{lang === 'he' ? 'מעבד תשלום...' : 'Processing payment...'}</span>
+                      </div>
+                    ) : (
+                      <div ref={paypalButtonRef} />
+                    )}
+                  </div>
+                )}
+
+                {error && (
+                  <p className="text-sm text-red-600 text-center">{error}</p>
                 )}
               </div>
 
@@ -76,6 +163,6 @@ export default function Pricing() {
           </Card>
         </motion.div>
       </div>
-    </div>);
-
+    </div>
+  );
 }
