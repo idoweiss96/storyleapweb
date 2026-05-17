@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw, Star, Users } from 'lucide-react';
+import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw, Star, Users, Search } from 'lucide-react';
 import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageContext';
 
@@ -30,6 +30,8 @@ export default function Admin() {
   const [editingUser, setEditingUser] = useState(null);
   const [creditsToAdd, setCreditsToAdd] = useState('');
   const [isSavingCredits, setIsSavingCredits] = useState(false);
+  const [searchStories, setSearchStories] = useState('');
+  const [searchUsers, setSearchUsers] = useState('');
 
   const settingLabels = { space: t('setting_space'), forest: t('setting_forest'), castle: t('setting_castle'), sports: t('setting_sports'), real_life: t('setting_real_life') };
   const challengeLabels = { fears: t('ch_fears'), social_difficulty: t('ch_social'), changes: t('ch_changes'), emotional_regulation: t('ch_emotional'), separation_anxiety: t('ch_separation'), self_confidence: t('ch_confidence'), sleep_issues: t('ch_sleep') };
@@ -225,6 +227,16 @@ export default function Admin() {
       <Card className="border-0 shadow-xl shadow-slate-100 mb-8">
         <CardHeader>
           <CardTitle className="text-lg">{t('admin_table_title')}</CardTitle>
+          <div className="mt-4 relative">
+            <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+            <Input
+              placeholder="חפש לפי שם ילד או אימייל..."
+              value={searchStories}
+              onChange={(e) => setSearchStories(e.target.value)}
+              className="pl-4 pr-10"
+              dir="rtl"
+            />
+          </div>
         </CardHeader>
         <CardContent>
           {stories.length === 0 ? (
@@ -245,7 +257,10 @@ export default function Admin() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {stories.map((story) => (
+                  {stories.filter(story => 
+                    story.child_name.toLowerCase().includes(searchStories.toLowerCase()) ||
+                    (story.contact_email || '').toLowerCase().includes(searchStories.toLowerCase())
+                  ).map((story) => (
                     <TableRow key={story.id}>
                       <TableCell className="text-sm">{story.created_date ? format(new Date(story.created_date), 'dd/MM/yyyy') : '-'}</TableCell>
                       <TableCell className="font-medium">{story.child_name}</TableCell>
@@ -286,6 +301,16 @@ export default function Admin() {
           <CardTitle className="text-lg flex items-center gap-2">
             <Users className="w-5 h-5" /> ניהול קרדיטים למשתמשים
           </CardTitle>
+          <div className="mt-4 relative">
+            <Search className="absolute right-3 top-3 w-4 h-4 text-gray-400" />
+            <Input
+              placeholder="חפש לפי שם או אימייל..."
+              value={searchUsers}
+              onChange={(e) => setSearchUsers(e.target.value)}
+              className="pl-4 pr-10"
+              dir="rtl"
+            />
+          </div>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -299,7 +324,10 @@ export default function Admin() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.map((u) => (
+                {users.filter(u =>
+                  (u.full_name || '').toLowerCase().includes(searchUsers.toLowerCase()) ||
+                  u.email.toLowerCase().includes(searchUsers.toLowerCase())
+                ).map((u) => (
                   <TableRow key={u.id}>
                     <TableCell className="font-medium">{u.full_name || '-'}</TableCell>
                     <TableCell className="text-sm text-gray-500">{u.email}</TableCell>
