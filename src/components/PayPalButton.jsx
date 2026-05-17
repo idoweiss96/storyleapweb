@@ -11,7 +11,7 @@ export default function PayPalButton() {
       if (window.paypal && containerRef.current) {
         rendered.current = true;
         window.paypal.HostedButtons({
-          hostedButtonId: "Q84GCTNCHU63A",
+          hostedButtonId: "Q84GCTNCHU63A"
         }).render(containerRef.current);
       } else {
         setTimeout(tryRender, 300);
@@ -21,5 +21,5 @@ export default function PayPalButton() {
     tryRender();
   }, []);
 
-  return <div ref={containerRef} className="flex justify-center mt-6" />;
+  return <div ref={containerRef} className="flex justify-center mt-6 hidden" />;
 }
