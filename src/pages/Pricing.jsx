@@ -11,6 +11,7 @@ import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 
 const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30'];
+const FREE_CREDIT_CODES = { 'STORY20': 20 };
 
 // Price config (must match what's set on PayPal hosted buttons)
 const PRICES = {
@@ -151,9 +152,25 @@ export default function Pricing() {
     return () => {};
   }, [clientId, priceConfig.currency, isHe]);
 
-  const handleApplyPromo = () => {
+  const handleApplyPromo = async () => {
     setPromoError('');
-    if (VALID_CODES.includes(promoCode.trim().toUpperCase())) {
+    const code = promoCode.trim().toUpperCase();
+
+    if (FREE_CREDIT_CODES[code] !== undefined) {
+      // Free credits coupon — add credits directly
+      try {
+        const credits = FREE_CREDIT_CODES[code];
+        await base44.functions.invoke('captureCreditsOrder', { paypal_order_id: `COUPON_${code}`, credits, coupon: true });
+        window.dispatchEvent(new Event('credits-updated'));
+        toast.success(isHe ? `🎉 ${credits} קרדיטים התווספו לחשבונך!` : `🎉 ${credits} credits added to your account!`, { duration: 5000 });
+        setPromoCode('');
+      } catch (err) {
+        setPromoError(isHe ? 'שגיאה בהפעלת הקוד' : 'Error applying code');
+      }
+      return;
+    }
+
+    if (VALID_CODES.includes(code)) {
       setPromoApplied(true);
     } else {
       setPromoError(isHe ? 'קוד פרומו לא תקין' : 'Invalid promo code');

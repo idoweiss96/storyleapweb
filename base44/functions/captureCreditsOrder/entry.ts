@@ -25,24 +25,28 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { paypal_order_id } = await req.json();
+    const { paypal_order_id, credits, coupon } = await req.json();
     if (!paypal_order_id) return Response.json({ error: 'paypal_order_id required' }, { status: 400 });
 
-    // Capture payment with PayPal
-    const accessToken = await getPaypalAccessToken();
-    const captureRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}/capture`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-        'PayPal-Request-Id': `capture-credits-${paypal_order_id}`,
-      },
-    });
+    const creditsToAdd = credits || CREDITS_AMOUNT;
 
-    const captureData = await captureRes.json();
+    if (!coupon) {
+      // Capture payment with PayPal
+      const accessToken = await getPaypalAccessToken();
+      const captureRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}/capture`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          'PayPal-Request-Id': `capture-credits-${paypal_order_id}`,
+        },
+      });
 
-    if (!captureRes.ok || captureData.status !== 'COMPLETED') {
-      return Response.json({ error: 'Payment capture failed', details: captureData }, { status: 400 });
+      const captureData = await captureRes.json();
+
+      if (!captureRes.ok || captureData.status !== 'COMPLETED') {
+        return Response.json({ error: 'Payment capture failed', details: captureData }, { status: 400 });
+      }
     }
 
     // Add credits to user
@@ -50,10 +54,10 @@ Deno.serve(async (req) => {
     const currentUser = users[0];
     if (!currentUser) return Response.json({ error: 'User not found' }, { status: 404 });
 
-    const newCredits = (currentUser.credits || 0) + CREDITS_AMOUNT;
+    const newCredits = (currentUser.credits || 0) + creditsToAdd;
     await base44.asServiceRole.entities.User.update(currentUser.id, { credits: newCredits });
 
-    return Response.json({ success: true, credits_added: CREDITS_AMOUNT, new_total: newCredits });
+    return Response.json({ success: true, credits_added: creditsToAdd, new_total: newCredits });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
