@@ -26,7 +26,7 @@ export default function Pricing() {
   const paypalRendered = useRef(false);
 
   const isHebrew = lang === 'he';
-  const currentPrice = isHebrew ? '₪15' : (promoApplied ? '$3' : '$15');
+  const currentPrice = isHebrew ? '₪45' : (promoApplied ? '$3' : '$15');
   const oldPrice = isHebrew ? '₪45' : '$15';
   const discountPercent = isHebrew ? '67%' : '80%';
   const discount = `${discountPercent} ${isHebrew ? 'הנחה' : 'OFF'}`;
