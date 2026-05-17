@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw } from 'lucide-react';
+import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw, Star, Users } from 'lucide-react';
 import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageContext';
 
@@ -26,6 +26,10 @@ export default function Admin() {
   const [syncMsg, setSyncMsg] = useState('');
   const [isSyncingLinks, setIsSyncingLinks] = useState(false);
   const [syncLinksMsg, setSyncLinksMsg] = useState('');
+  const [users, setUsers] = useState([]);
+  const [editingUser, setEditingUser] = useState(null);
+  const [creditsToAdd, setCreditsToAdd] = useState('');
+  const [isSavingCredits, setIsSavingCredits] = useState(false);
 
   const settingLabels = { space: t('setting_space'), forest: t('setting_forest'), castle: t('setting_castle'), sports: t('setting_sports'), real_life: t('setting_real_life') };
   const challengeLabels = { fears: t('ch_fears'), social_difficulty: t('ch_social'), changes: t('ch_changes'), emotional_regulation: t('ch_emotional'), separation_anxiety: t('ch_separation'), self_confidence: t('ch_confidence'), sleep_issues: t('ch_sleep') };
@@ -40,8 +44,12 @@ export default function Admin() {
       setUser(currentUser);
       if (currentUser.role === 'admin') {
         setIsAdmin(true);
-        const allStories = await base44.entities.Story.list('-created_date');
+        const [allStories, allUsers] = await Promise.all([
+          base44.entities.Story.list('-created_date'),
+          base44.entities.User.list('-created_date')
+        ]);
         setStories(allStories);
+        setUsers(allUsers);
       }
     } catch (e) {
       base44.auth.redirectToLogin(window.location.href);
@@ -110,6 +118,21 @@ export default function Admin() {
   };
 
   const handleEditStory = (story) => { setEditingStory(story); setStoryLink(story.story_link || ''); };
+
+  const handleSaveCredits = async () => {
+    if (!editingUser || creditsToAdd === '') return;
+    setIsSavingCredits(true);
+    try {
+      const amount = parseInt(creditsToAdd);
+      const newCredits = (editingUser.credits || 0) + amount;
+      await base44.entities.User.update(editingUser.id, { credits: newCredits });
+      setUsers(users.map(u => u.id === editingUser.id ? { ...u, credits: newCredits } : u));
+      setEditingUser(null);
+      setCreditsToAdd('');
+    } finally {
+      setIsSavingCredits(false);
+    }
+  };
 
   const handleSaveStoryLink = async () => {
     if (!editingStory || !storyLink.trim()) return;
@@ -199,6 +222,47 @@ export default function Admin() {
         </Card>
       </div>
 
+      <Card className="border-0 shadow-xl shadow-slate-100 mb-8">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Users className="w-5 h-5" /> ניהול קרדיטים למשתמשים
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-right">שם</TableHead>
+                  <TableHead className="text-right">אימייל</TableHead>
+                  <TableHead className="text-right">קרדיטים</TableHead>
+                  <TableHead className="text-right">פעולות</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {users.map((u) => (
+                  <TableRow key={u.id}>
+                    <TableCell className="font-medium">{u.full_name || '-'}</TableCell>
+                    <TableCell className="text-sm text-gray-500">{u.email}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
+                        <span className="font-semibold">{u.credits ?? 0}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm" onClick={() => { setEditingUser(u); setCreditsToAdd(''); }}>
+                        <Star className="w-3 h-3 ml-1" /> הוסף קרדיטים
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card className="border-0 shadow-xl shadow-slate-100">
         <CardHeader>
           <CardTitle className="text-lg">{t('admin_table_title')}</CardTitle>
@@ -257,6 +321,44 @@ export default function Admin() {
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={!!editingUser} onOpenChange={() => setEditingUser(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>הוסף קרדיטים ל-{editingUser?.full_name || editingUser?.email}</DialogTitle>
+          </DialogHeader>
+          <div className="py-4 space-y-3">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
+              קרדיטים נוכחיים: <span className="font-bold">{editingUser?.credits ?? 0}</span>
+            </div>
+            <div>
+              <Label htmlFor="creditsToAdd">כמות קרדיטים להוסיף</Label>
+              <Input
+                id="creditsToAdd"
+                type="number"
+                value={creditsToAdd}
+                onChange={(e) => setCreditsToAdd(e.target.value)}
+                placeholder="לדוגמה: 10"
+                className="mt-2"
+                dir="ltr"
+              />
+            </div>
+            {creditsToAdd !== '' && !isNaN(parseInt(creditsToAdd)) && (
+              <p className="text-sm text-gray-500">
+                לאחר הוספה: <span className="font-bold text-green-600">{(editingUser?.credits ?? 0) + parseInt(creditsToAdd)}</span> קרדיטים
+              </p>
+            )}
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setEditingUser(null)}>ביטול</Button>
+            <Button onClick={handleSaveCredits} disabled={isSavingCredits || creditsToAdd === ''} className="bg-amber-500 hover:bg-amber-600 text-white">
+              {isSavingCredits ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Star className="w-4 h-4 ml-2" />}
+              שמור
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={!!editingStory} onOpenChange={() => setEditingStory(null)}>
         <DialogContent className="max-w-md">
