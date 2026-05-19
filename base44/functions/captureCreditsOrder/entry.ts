@@ -87,7 +87,6 @@ async function addStoryToSheet(story, accessToken) {
 }
 
 async function processPendingStories(base44, userEmail, userCredits) {
-  // Find all pending_payment stories for this user
   const pendingStories = await base44.asServiceRole.entities.Story.filter({
     created_by: userEmail,
     payment_status: 'pending_payment',
@@ -96,7 +95,6 @@ async function processPendingStories(base44, userEmail, userCredits) {
   let remainingCredits = userCredits;
   let processed = 0;
 
-  // Get Google Sheets access token
   let sheetsToken = null;
   try {
     const conn = await base44.asServiceRole.connectors.getConnection('googlesheets');
@@ -105,25 +103,19 @@ async function processPendingStories(base44, userEmail, userCredits) {
 
   for (const story of pendingStories) {
     if (remainingCredits < 20) break;
-
-    // Deduct 20 credits and mark story as paid
     remainingCredits -= 20;
     await base44.asServiceRole.entities.Story.update(story.id, { payment_status: 'paid' });
 
-    // Add to Google Sheets
     if (sheetsToken) {
       try { await addStoryToSheet(story, sheetsToken); } catch (_) {}
     }
 
-    // Send "in progress" email
     const isHebrewName = /[\u0590-\u05FF]/.test(story.child_name || '');
     if (story.contact_email) {
       try { await sendStoryInProgressEmail(story.contact_email, story.child_name, isHebrewName); } catch (_) {}
     }
 
-    // Trigger async story generation
     base44.asServiceRole.functions.invoke('processStoryGeneration', { story_id: story.id }).catch(() => {});
-
     processed++;
   }
 
@@ -144,28 +136,45 @@ Deno.serve(async (req) => {
     if (!coupon) {
       // Capture payment with PayPal
       const accessToken = await getPaypalAccessToken();
-      const captureRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}/capture`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-          'PayPal-Request-Id': `capture-credits-${paypal_order_id}`,
-        },
-      });
 
-      const captureData = await captureRes.json();
-      if (!captureRes.ok || captureData.status !== 'COMPLETED') {
-        return Response.json({ error: 'Payment capture failed', details: captureData }, { status: 400 });
+      // First check order status to prevent double-capture
+      const orderCheckRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+      const orderData = await orderCheckRes.json();
+      console.log('[captureCreditsOrder] Order status:', orderData.status);
+
+      if (orderData.status === 'COMPLETED') {
+        // Already captured — idempotent: just ensure credits are added
+        console.log('[captureCreditsOrder] Order already completed, skipping capture');
+      } else if (orderData.status === 'APPROVED' || orderData.status === 'CREATED') {
+        // Proceed with capture
+        const captureRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}/capture`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'PayPal-Request-Id': `capture-credits-${paypal_order_id}`,
+          },
+        });
+        const captureData = await captureRes.json();
+        console.log('[captureCreditsOrder] Capture result:', JSON.stringify(captureData));
+        if (!captureRes.ok || captureData.status !== 'COMPLETED') {
+          return Response.json({ error: 'Payment capture failed', details: captureData }, { status: 400 });
+        }
+      } else {
+        return Response.json({ error: `Invalid order status: ${orderData.status}`, details: orderData }, { status: 400 });
       }
     }
 
-    // Add credits to user
+    // Add credits to user (using service role for reliability)
     const users = await base44.asServiceRole.entities.User.filter({ email: user.email });
     const currentUser = users[0];
     if (!currentUser) return Response.json({ error: 'User not found' }, { status: 404 });
 
     const newCredits = (currentUser.credits || 0) + creditsToAdd;
     await base44.asServiceRole.entities.User.update(currentUser.id, { credits: newCredits });
+    console.log(`[captureCreditsOrder] Credits updated for ${user.email}: ${currentUser.credits || 0} -> ${newCredits}`);
 
     return Response.json({
       success: true,
@@ -174,6 +183,7 @@ Deno.serve(async (req) => {
       stories_activated: 0,
     });
   } catch (error) {
+    console.error('[captureCreditsOrder] Error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });

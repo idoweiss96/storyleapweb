@@ -56,13 +56,12 @@ export default function Pricing() {
 
   // Handle PayPal redirect return on mobile
   useEffect(() => {
-    console.log('[PayPal] Current URL on load:', window.location.href);
     const urlParams = new URLSearchParams(window.location.search);
     const paypalToken = urlParams.get('token');
     const payerID = urlParams.get('PayerID');
-    console.log('[PayPal] URL params - token:', paypalToken, 'PayerID:', payerID);
-    if (!paypalToken || !payerID) return;
+    if (!paypalToken) return;
 
+    // Clean URL immediately
     window.history.replaceState({}, '', window.location.pathname);
     setProcessing(true);
 
@@ -78,6 +77,8 @@ export default function Pricing() {
             localStorage.removeItem('pendingStoryId');
             window.dispatchEvent(new Event('credits-updated'));
             navigate('/PaymentSuccess?story_id=' + pendingStoryId);
+          } else {
+            setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
           }
         } else {
           const res = await base44.functions.invoke('captureCreditsOrder', {
@@ -86,9 +87,13 @@ export default function Pricing() {
             coupon: false,
           });
           if (res.data?.success) {
-            await base44.auth.updateMe({ credits: res.data.new_total });
+            // Sync credits to session
+            try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
             window.dispatchEvent(new Event('credits-updated'));
+            toast.success(isHe ? '🎉 הקרדיטים התווספו לחשבונך!' : '🎉 Credits added to your account!', { duration: 5000 });
             navigate('/CreateStory?payment=success');
+          } else {
+            setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
           }
         }
       } catch (err) {
