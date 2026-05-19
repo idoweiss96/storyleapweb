@@ -22,8 +22,8 @@ const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8f
 // Price configs by language and promo
 const PRICE_CONFIG = {
   he: {
-    full:     { amount: '45', currency: 'ILS', display: '₪45' },
-    discount: { amount: '15', currency: 'ILS', display: '₪15' },
+    full:     { amount: '12', currency: 'USD', display: '$12' },
+    discount: { amount: '4',  currency: 'USD', display: '$4'  },
   },
   en: {
     full:     { amount: '15', currency: 'USD', display: '$15' },
