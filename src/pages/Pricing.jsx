@@ -122,8 +122,9 @@ export default function Pricing() {
           }
         },
 
-        onError: () => {
-          setPaypalError(isHe ? 'שגיאה בתשלום, אנא נסו שוב' : 'Payment error, please try again');
+        onError: (err) => {
+          console.error('PayPal onError:', err);
+          setPaypalError(isHe ? `שגיאה בתשלום: ${err?.message || JSON.stringify(err)}` : `Payment error: ${err?.message || JSON.stringify(err)}`);
         },
 
         onCancel: () => {
