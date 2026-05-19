@@ -6,7 +6,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, ShieldCheck, AlertCircle, ArrowRight, Star } from 'lucide-react';
 
-const STORY_PRICE = 99;
+const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
+// ₪45 ILS hosted button for direct story purchase
+const HOSTED_BUTTON_ID = 'L5DBB2XDQ7QFC';
+const STORY_PRICE = '₪45';
 
 export default function PaymentCheckout() {
   const navigate = useNavigate();
@@ -14,11 +17,9 @@ export default function PaymentCheckout() {
   const rendered = useRef(false);
 
   const [storyId, setStoryId] = useState(null);
-  const [orderId, setOrderId] = useState(null);
   const [childName, setChildName] = useState('');
-  const [isCreatingOrder, setIsCreatingOrder] = useState(true);
   const [error, setError] = useState('');
-  const [status, setStatus] = useState('loading'); // loading | ready | processing | success | failed
+  const [status, setStatus] = useState('ready'); // ready | processing | success | failed
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -27,58 +28,51 @@ export default function PaymentCheckout() {
     if (!sid) { navigate('/CreateStory'); return; }
     setStoryId(sid);
     setChildName(name);
-    initOrder(sid);
+    base44.analytics.track({ eventName: 'redirected_to_payment', properties: { story_id: sid } });
+    loadPaypalAndRender(sid);
   }, []);
 
-  const initOrder = async (sid) => {
-    try {
-      const res = await base44.functions.invoke('createPaypalOrder', { story_id: sid });
-      const { paypal_order_id, order_id } = res.data;
-      setOrderId(order_id);
-      setIsCreatingOrder(false);
-      setStatus('ready');
-      base44.analytics.track({ eventName: 'redirected_to_payment', properties: { story_id: sid, order_id } });
-      waitForPaypalAndRender(paypal_order_id, order_id, sid);
-    } catch (err) {
-      setError('שגיאה ביצירת הזמנה עם PayPal.');
-      setStatus('failed');
-    }
-  };
-
-  const waitForPaypalAndRender = (paypalOrderId, localOrderId, sid) => {
+  const loadPaypalAndRender = (sid) => {
     const tryRender = () => {
-      if (window.paypal && paypalContainerRef.current && !rendered.current) {
+      if (window.paypal?.HostedButtons && paypalContainerRef.current && !rendered.current) {
         rendered.current = true;
-        renderPaypalButtons(paypalOrderId, localOrderId, sid);
+        renderHostedButton(sid);
       } else if (!rendered.current) {
         setTimeout(tryRender, 300);
       }
     };
-    tryRender();
+
+    const existingScript = document.querySelector(`script[data-paypal-checkout]`);
+    if (window.paypal?.HostedButtons && existingScript) {
+      tryRender();
+      return;
+    }
+
+    document.querySelectorAll('script[data-paypal-checkout]').forEach(s => s.remove());
+    delete window.paypal;
+
+    const script = document.createElement('script');
+    script.setAttribute('data-paypal-checkout', 'true');
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=ILS`;
+    script.onload = () => tryRender();
+    script.onerror = () => { setError('שגיאה בטעינת PayPal, נסו לרענן את הדף'); setStatus('failed'); };
+    document.body.appendChild(script);
   };
 
-  const renderPaypalButtons = (paypalOrderId, localOrderId, sid) => {
-    window.paypal.Buttons({
-      style: {
-        layout: 'vertical',
-        color: 'gold',
-        shape: 'rect',
-        label: 'pay',
-        height: 50,
-      },
-      createOrder: () => paypalOrderId,
+  const renderHostedButton = (sid) => {
+    window.paypal.HostedButtons({
+      hostedButtonId: HOSTED_BUTTON_ID,
       onApprove: async (data) => {
         setStatus('processing');
         try {
           const res = await base44.functions.invoke('capturePaypalOrder', {
-            paypal_order_id: paypalOrderId,
-            order_id: localOrderId,
+            paypal_order_id: data.orderID,
+            story_id: sid,
           });
           if (res.data?.success) {
-            base44.analytics.track({ eventName: 'payment_completed', properties: { story_id: sid, order_id: localOrderId } });
-            base44.analytics.track({ eventName: 'story_generation_started', properties: { story_id: sid } });
+            base44.analytics.track({ eventName: 'payment_completed', properties: { story_id: sid } });
             setStatus('success');
-            setTimeout(() => navigate(`/PaymentSuccess?story_id=${sid}&order_id=${localOrderId}`), 1500);
+            setTimeout(() => navigate(`/PaymentSuccess?story_id=${sid}`), 1500);
           } else {
             throw new Error(res.data?.error || 'Capture failed');
           }
@@ -92,7 +86,7 @@ export default function PaymentCheckout() {
         base44.analytics.track({ eventName: 'payment_failed', properties: { story_id: sid, reason: 'user_cancelled' } });
         navigate(`/PaymentCancel?story_id=${sid}`);
       },
-      onError: (err) => {
+      onError: () => {
         base44.analytics.track({ eventName: 'payment_failed', properties: { story_id: sid, error: 'paypal_error' } });
         setError('שגיאת PayPal. אנא נסו שנית.');
         setStatus('failed');
@@ -150,7 +144,7 @@ export default function PaymentCheckout() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => { setStatus('loading'); setError(''); rendered.current = false; initOrder(storyId); }}
+                onClick={() => { setStatus('ready'); setError(''); rendered.current = false; loadPaypalAndRender(storyId); }}
                 className="w-full h-12 rounded-xl"
               >
                 נסה שוב
@@ -169,7 +163,7 @@ export default function PaymentCheckout() {
                     <p className="text-sm text-slate-500">סיפור טיפולי מותאם אישית של StoryLeap</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-slate-800">₪{STORY_PRICE}</p>
+                    <p className="text-2xl font-bold text-slate-800">{STORY_PRICE}</p>
                     <p className="text-xs text-slate-400">חד פעמי</p>
                   </div>
                 </div>
@@ -183,13 +177,7 @@ export default function PaymentCheckout() {
                   ))}
                 </ul>
 
-                {isCreatingOrder ? (
-                  <div className="flex justify-center py-8">
-                    <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-600 rounded-full animate-spin" />
-                  </div>
-                ) : (
-                  <div ref={paypalContainerRef} className="min-h-[50px]" />
-                )}
+                <div ref={paypalContainerRef} className="min-h-[50px]" />
 
                 {error && (
                   <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2">

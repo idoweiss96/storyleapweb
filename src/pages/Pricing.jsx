@@ -13,10 +13,18 @@ import { base44 } from '@/api/base44Client';
 const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30'];
 const FREE_CREDIT_CODES = { 'STORY20': 20 };
 
-// Price config (must match what's set on PayPal hosted buttons)
-const PRICES = {
-  he: { full: { amount: '45.00', currency: 'ILS', display: '₪45' }, discount: { amount: '15.00', currency: 'ILS', display: '₪15' } },
-  en: { full: { amount: '15.00', currency: 'USD', display: '$15' }, discount: { amount: '5.00',  currency: 'USD', display: '$5'  } },
+const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
+
+// Hosted Button IDs
+const HOSTED_BUTTONS = {
+  he: {
+    full:     { hostedButtonId: 'L5DBB2XDQ7QFC', currency: 'ILS', display: '₪45' },
+    discount: { hostedButtonId: 'Q84GCTNCHU63A', currency: 'ILS', display: '₪15' },
+  },
+  en: {
+    full:     { hostedButtonId: '2DYQ8YVVY86D6', currency: 'USD', display: '$15' },
+    discount: { hostedButtonId: 'J9LB6MKVFTFFW', currency: 'USD', display: '$5'  },
+  },
 };
 
 export default function Pricing() {
@@ -31,16 +39,13 @@ export default function Pricing() {
   const [processing, setProcessing] = useState(false);
   const containerRef = useRef(null);
   const renderKeyRef = useRef(0);
-  const pendingOrderIdRef = useRef(null);
 
   const isHe = lang === 'he';
   const mode = promoApplied ? 'discount' : 'full';
-  const priceConfig = PRICES[isHe ? 'he' : 'en'][mode];
-  const [clientId, setClientId] = useState(null);
+  const btnConfig = HOSTED_BUTTONS[isHe ? 'he' : 'en'][mode];
 
   useEffect(() => {
     const init = async () => {
-      // Make sure user is logged in
       const authed = await base44.auth.isAuthenticated();
       if (!authed) {
         base44.auth.redirectToLogin(window.location.pathname);
@@ -49,11 +54,9 @@ export default function Pricing() {
 
       const pendingId = localStorage.getItem('pendingStoryId');
       if (pendingId) {
-        // Validate that the story still exists
         try {
-          const { base44: sdk } = await import('@/api/base44Client');
-          const story = await sdk.entities.Story.list();
-          const exists = story.some(s => s.id === pendingId);
+          const stories = await base44.entities.Story.list();
+          const exists = stories.some(s => s.id === pendingId);
           if (!exists) localStorage.removeItem('pendingStoryId');
           setHasPendingStory(exists);
         } catch {
@@ -61,64 +64,32 @@ export default function Pricing() {
           setHasPendingStory(false);
         }
       }
-
-      // Fetch the real PayPal client ID from backend
-      base44.functions.invoke('getPaypalClientId', {})
-        .then(res => { if (res.data?.client_id) setClientId(res.data.client_id); })
-        .catch(() => {});
     };
     init();
   }, []);
 
-  // Render PayPal buttons using JS SDK (not Hosted Buttons)
+  // Render PayPal Hosted Button
   useEffect(() => {
-    if (!clientId) return;
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
 
     const renderButton = () => {
       if (renderKeyRef.current !== currentKey) return;
-      if (!window.paypal?.Buttons || !containerRef.current) return;
+      if (!window.paypal?.HostedButtons || !containerRef.current) return;
       containerRef.current.innerHTML = '';
 
-      window.paypal.Buttons({
-        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
-
-        createOrder: async () => {
-          setPaypalError('');
-          const pendingStoryId = localStorage.getItem('pendingStoryId');
-          try {
-            if (pendingStoryId) {
-              // Has questionnaire — create story order
-              const res = await base44.functions.invoke('createPaypalOrder', { story_id: pendingStoryId });
-              pendingOrderIdRef.current = res.data.order_id;
-              return res.data.paypal_order_id;
-            } else {
-              // No questionnaire — create credits-only order
-              const res = await base44.functions.invoke('createCreditsOrder', {
-                currency: priceConfig.currency,
-                amount: priceConfig.amount,
-              });
-              return res.data.paypal_order_id;
-            }
-          } catch (err) {
-            setPaypalError(isHe ? 'שגיאה ביצירת הזמנה' : 'Error creating order');
-            return null;
-          }
-        },
-
+      window.paypal.HostedButtons({
+        hostedButtonId: btnConfig.hostedButtonId,
         onApprove: async (data) => {
           setProcessing(true);
           setPaypalError('');
           try {
             const pendingStoryId = localStorage.getItem('pendingStoryId');
-            const orderId = pendingOrderIdRef.current;
-
-            if (pendingStoryId && orderId) {
-              // Has questionnaire — capture story order
+            if (pendingStoryId) {
+              // Capture story order
               const res = await base44.functions.invoke('capturePaypalOrder', {
                 paypal_order_id: data.orderID,
-                order_id: orderId,
+                story_id: pendingStoryId,
               });
               if (res.data?.success) {
                 localStorage.removeItem('pendingStoryId');
@@ -126,21 +97,17 @@ export default function Pricing() {
                 navigate('/PaymentSuccess?story_id=' + pendingStoryId);
               }
             } else {
-              // No questionnaire — capture credits order
-              try {
-                const res = await base44.functions.invoke('captureCreditsOrder', {
-                  paypal_order_id: data.orderID,
-                  credits: 20,
-                });
-                if (res.data?.success) {
-                  window.dispatchEvent(new Event('credits-updated'));
-                  toast.success(isHe
-                    ? '🎉 הקרדיטים התווספו לחשבונך! כעת תוכלו למלא שאלון וליצור את הסיפור שלכם.'
-                    : '🎉 Credits added to your account! You can now fill the questionnaire and create your story.'
-                  , { duration: 6000 });
-                }
-              } catch (err) {
-                setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
+              // Capture credits order
+              const res = await base44.functions.invoke('captureCreditsOrder', {
+                paypal_order_id: data.orderID,
+                credits: 20,
+              });
+              if (res.data?.success) {
+                window.dispatchEvent(new Event('credits-updated'));
+                toast.success(isHe
+                  ? '🎉 הקרדיטים התווספו לחשבונך! כעת תוכלו למלא שאלון וליצור את הסיפור שלכם.'
+                  : '🎉 Credits added to your account! You can now fill the questionnaire and create your story.'
+                , { duration: 6000 });
               }
             }
           } catch (err) {
@@ -149,39 +116,35 @@ export default function Pricing() {
             setProcessing(false);
           }
         },
-
         onError: (err) => {
-          console.error('PayPal onError:', err);
-          setPaypalError(isHe ? `שגיאה בתשלום: ${err?.message || JSON.stringify(err)}` : `Payment error: ${err?.message || JSON.stringify(err)}`);
+          setPaypalError(isHe ? 'שגיאה בתשלום, נסו שנית' : 'Payment error, please try again');
         },
-
         onCancel: () => {
           setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled');
         },
       }).render(containerRef.current);
     };
 
-    // Load SDK with correct currency and real client ID
-    const currency = priceConfig.currency;
-    const existingScript = document.querySelector(`script[data-paypal-sdk="${clientId}-${currency}"]`);
+    // Load SDK with hosted-buttons component
+    const scriptKey = `${PAYPAL_CLIENT_ID}-${btnConfig.currency}`;
+    const existingScript = document.querySelector(`script[data-paypal-hosted="${scriptKey}"]`);
 
-    if (window.paypal?.Buttons && existingScript) {
+    if (window.paypal?.HostedButtons && existingScript) {
       renderButton();
       return;
     }
 
-    // Remove old script to ensure correct currency is loaded
-    document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
+    document.querySelectorAll('script[data-paypal-hosted]').forEach(s => s.remove());
     delete window.paypal;
 
     const script = document.createElement('script');
-    script.setAttribute('data-paypal-sdk', `${clientId}-${currency}`);
-    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currency}&intent=capture`;
+    script.setAttribute('data-paypal-hosted', scriptKey);
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=${btnConfig.currency}`;
     script.onload = () => renderButton();
-    script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh the page');
+    script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh');
     document.body.appendChild(script);
     return () => {};
-  }, [clientId, priceConfig.currency, isHe]);
+  }, [btnConfig.hostedButtonId, btnConfig.currency, isHe]);
 
   const handleApplyPromo = async () => {
     setPromoError('');
@@ -252,7 +215,7 @@ export default function Pricing() {
               </div>
 
               <div className="text-center mb-6">
-                <p className="text-3xl font-bold text-slate-800">{priceConfig.display}</p>
+                <p className="text-3xl font-bold text-slate-800">{btnConfig.display}</p>
                 {promoApplied && (
                   <p className="text-green-600 text-sm font-medium mt-1">
                     {isHe ? '🎉 קוד הנחה הופעל!' : '🎉 Discount applied!'}

@@ -127,12 +127,33 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { paypal_order_id, order_id } = await req.json();
-    if (!paypal_order_id || !order_id) return Response.json({ error: 'paypal_order_id and order_id required' }, { status: 400 });
+    const { paypal_order_id, order_id, story_id } = await req.json();
+    if (!paypal_order_id) return Response.json({ error: 'paypal_order_id required' }, { status: 400 });
 
-    // Get our order record
-    const orders = await base44.asServiceRole.entities.Order.filter({ id: order_id });
-    const order = orders[0];
+    // Get our order record — either by order_id or by story_id (for Hosted Buttons flow)
+    let order;
+    if (order_id) {
+      const orders = await base44.asServiceRole.entities.Order.filter({ id: order_id });
+      order = orders[0];
+    } else if (story_id) {
+      // Hosted Button flow: create or find order for this story
+      const existingOrders = await base44.asServiceRole.entities.Order.filter({ story_id, status: 'pending_payment' });
+      if (existingOrders.length > 0) {
+        order = existingOrders[0];
+      } else {
+        // Create a new order record
+        const story = await base44.asServiceRole.entities.Story.get(story_id);
+        if (!story) return Response.json({ error: 'Story not found' }, { status: 404 });
+        order = await base44.asServiceRole.entities.Order.create({
+          story_id,
+          user_email: user.email,
+          paypal_order_id,
+          status: 'pending_payment',
+          amount: 45,
+          currency: 'ILS',
+        });
+      }
+    }
     if (!order) return Response.json({ error: 'Order not found' }, { status: 404 });
 
     // Idempotency: already paid
@@ -147,14 +168,14 @@ Deno.serve(async (req) => {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
-        'PayPal-Request-Id': `capture-${order_id}`,
+        'PayPal-Request-Id': `capture-${order.id}`,
       },
     });
 
     const captureData = await captureRes.json();
 
     if (!captureRes.ok || captureData.status !== 'COMPLETED') {
-      await base44.asServiceRole.entities.Order.update(order_id, {
+      await base44.asServiceRole.entities.Order.update(order.id, {
         status: 'failed',
         error_message: captureData.message || 'Capture failed',
       });
@@ -164,7 +185,7 @@ Deno.serve(async (req) => {
     const captureId = captureData.purchase_units?.[0]?.payments?.captures?.[0]?.id;
 
     // Mark order as paid
-    await base44.asServiceRole.entities.Order.update(order_id, {
+    await base44.asServiceRole.entities.Order.update(order.id, {
       status: 'story_generating',
       paypal_capture_id: captureId,
     });
@@ -198,7 +219,7 @@ Deno.serve(async (req) => {
         await base44.asServiceRole.entities.Story.update(order.story_id, {
           content: storyContent,
         });
-        await base44.asServiceRole.entities.Order.update(order_id, { status: 'story_ready' });
+        await base44.asServiceRole.entities.Order.update(order.id, { status: 'story_ready' });
 
         // Send email notification
         if (story.contact_email) {
@@ -210,12 +231,12 @@ Deno.serve(async (req) => {
           await base44.asServiceRole.integrations.Core.SendEmail({
             to: 'storyleapai@gmail.com',
             subject: `✅ סיפור נוצר אוטומטית: ${story.child_name}`,
-            body: `סיפור חדש נוצר בהצלחה ל-${story.child_name}!\n\nOrder ID: ${order_id}\nPayPal Capture: ${captureId}`,
+            body: `סיפור חדש נוצר בהצלחה ל-${story.child_name}!\n\nOrder ID: ${order.id}\nPayPal Capture: ${captureId}`,
           });
         } catch (_) {}
       } catch (genErr) {
         console.error('Story generation failed:', genErr.message);
-        await base44.asServiceRole.entities.Order.update(order_id, {
+        await base44.asServiceRole.entities.Order.update(order.id, {
           status: 'paid',
           error_message: `Story generation failed: ${genErr.message}`,
         });
