@@ -112,17 +112,7 @@ export default function Pricing() {
           if (res.data?.success) {
             await base44.auth.updateMe({ credits: res.data.new_total });
             window.dispatchEvent(new Event('credits-updated'));
-            if (res.data.stories_activated > 0) {
-              toast.success(
-                isHe
-                  ? `✅ התשלום עבר! ${res.data.credits_added} קרדיטים נוספו וסיפור ${res.data.stories_activated} הופעל אוטומטית 🎉`
-                  : `✅ Payment successful! ${res.data.credits_added} credits added and ${res.data.stories_activated} story activated 🎉`,
-                { duration: 6000 }
-              );
-              navigate('/MyStories');
-            } else {
-              navigate('/CreateStory?payment=success');
-            }
+            navigate('/CreateStory?payment=success');
           }
         }
       } catch (err) {
@@ -185,22 +175,21 @@ export default function Pricing() {
     const tryRender = () => isHosted ? renderHosted() : renderRegular();
     const sdkReady = isHosted ? window.paypal?.HostedButtons : window.paypal?.Buttons;
 
+    // Always remove old scripts and reset paypal when btnConfig changes
+    document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
+    if (window.paypal) delete window.paypal;
+    if (containerRef.current) containerRef.current.innerHTML = '';
+    isRenderedRef.current = false;
+
     if (sdkReady && existingScript) {
       tryRender();
       return;
     }
 
-    // Only remove scripts and reset paypal if the currency or components changed
-    const wrongScript = document.querySelector(`script[data-paypal-sdk]:not([data-paypal-sdk="${scriptKey}"])`);
-    if (wrongScript) {
-      document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
-      delete window.paypal;
-    }
-
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', scriptKey);
     script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=${components}&currency=${sdkCurrency}&disable-funding=venmo,credit&enable-funding=paylater`;
-    script.onload = () => setTimeout(() => tryRender(), 100);
+    script.onload = () => setTimeout(() => tryRender(), 300);
     script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh');
     document.body.appendChild(script);
     return () => {};
