@@ -158,20 +158,22 @@ export default function Pricing() {
       return;
     }
 
-    document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
-    delete window.paypal;
+    // Only remove scripts and reset paypal if the currency or components changed
+    const wrongScript = document.querySelector(`script[data-paypal-sdk]:not([data-paypal-sdk="${scriptKey}"])`);
+    if (wrongScript) {
+      document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
+      delete window.paypal;
+    }
 
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', scriptKey);
     script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=${components}&currency=${btnConfig.currency}&disable-funding=venmo,credit&enable-funding=paylater`;
-    script.onload = () => {
-      // Small delay to ensure PayPal SDK is fully initialized
-      setTimeout(() => tryRender(), 100);
-    };
+    script.onload = () => setTimeout(() => tryRender(), 100);
     script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh');
     document.body.appendChild(script);
     return () => {};
-  }, [btnConfig, isHe]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [btnConfig]);
 
   const handleApplyPromo = async () => {
     setPromoError('');
