@@ -12,6 +12,7 @@ import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star } from 
 import { format } from 'date-fns';
 import StoryReadyNotification from '../components/story/StoryReadyNotification';
 import { useLanguage } from '../components/LanguageContext';
+import { toast } from 'sonner';
 
 export default function MyStories() {
   const navigate = useNavigate();
@@ -22,6 +23,39 @@ export default function MyStories() {
   const [selectedStory, setSelectedStory] = useState(null);
   const [readyNotification, setReadyNotification] = useState(null);
   const [activatingStoryId, setActivatingStoryId] = useState(null);
+
+  // Handle PayPal redirect return (mobile hosted button flow)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paypalToken = urlParams.get('token');
+    if (!paypalToken) return;
+
+    // Clean URL immediately
+    window.history.replaceState({}, '', window.location.pathname);
+
+    const capture = async () => {
+      try {
+        const res = await base44.functions.invoke('captureCreditsOrder', {
+          paypal_order_id: paypalToken,
+          credits: 20,
+          coupon: false,
+        });
+        if (res.data?.success) {
+          try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
+          window.dispatchEvent(new Event('credits-updated'));
+          toast.success(lang === 'he' ? '🎉 הקרדיטים התווספו לחשבונך!' : '🎉 Credits added to your account!', { duration: 5000 });
+          loadStories(); // refresh to show updated credits & stories
+        } else {
+          toast.error(lang === 'he' ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
+        }
+      } catch (err) {
+        console.error('[PayPal] capture error:', err);
+        toast.error(lang === 'he' ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
+      }
+    };
+    capture();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => { loadStories(); }, []);
 
