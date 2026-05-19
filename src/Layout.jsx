@@ -30,8 +30,8 @@ function LayoutInner({ children, currentPageName }) {
     try {
       const currentUser = await base44.auth.me();
       if (currentUser.credits === undefined || currentUser.credits === null) {
-        await base44.auth.updateMe({ credits: 10 });
-        currentUser.credits = 10;
+        await base44.auth.updateMe({ credits: 0 });
+        currentUser.credits = 0;
       }
       setUser(currentUser);
       setCredits(currentUser.credits || 0);

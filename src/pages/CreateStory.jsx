@@ -38,10 +38,9 @@ export default function CreateStory() {
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
-      // Give 20 credits to new users on first visit
       if (currentUser.credits === undefined || currentUser.credits === null) {
-        await base44.auth.updateMe({ credits: 20 });
-        currentUser.credits = 20;
+        await base44.auth.updateMe({ credits: 0 });
+        currentUser.credits = 0;
       }
       setUser(currentUser);
     } catch (e) {
