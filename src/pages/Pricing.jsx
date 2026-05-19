@@ -112,8 +112,10 @@ export default function Pricing() {
             coupon: isHostedButton, // hosted buttons auto-capture, skip manual capture
           });
           if (res.data?.success) {
+            // Update session with new credits from server response (source of truth)
             await base44.auth.updateMe({ credits: res.data.new_total });
-            window.dispatchEvent(new Event('credits-updated'));
+            // Small delay to ensure session is updated before layout re-reads it
+            setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
             navigate('/CreateStory?payment=success');
           }
         }

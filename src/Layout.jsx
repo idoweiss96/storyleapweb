@@ -29,22 +29,20 @@ function LayoutInner({ children, currentPageName }) {
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
-      // Always sync credits from DB (source of truth) to session
+      // Always read credits from DB (source of truth) — never rely on session for credits
+      let displayCredits = currentUser.credits || 0;
       try {
         const users = await base44.entities.User.filter({ email: currentUser.email });
         if (users[0] && users[0].credits !== undefined) {
+          displayCredits = users[0].credits;
+          // Sync session only if different
           if (users[0].credits !== currentUser.credits) {
             await base44.auth.updateMe({ credits: users[0].credits });
-            currentUser.credits = users[0].credits;
           }
         }
       } catch (_) {}
-      if (currentUser.credits === undefined || currentUser.credits === null) {
-        await base44.auth.updateMe({ credits: 0 });
-        currentUser.credits = 0;
-      }
       setUser(currentUser);
-      setCredits(currentUser.credits || 0);
+      setCredits(displayCredits);
       if (!currentUser.onboarding_completed) {
         setShowOnboarding(true);
       }
