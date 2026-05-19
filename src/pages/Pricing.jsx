@@ -170,8 +170,7 @@ export default function Pricing() {
 
     const isHosted = !!btnConfig.hostedButtonId;
     const components = isHosted ? 'hosted-buttons' : 'buttons';
-    // Always load SDK with USD to avoid PayPal SDK currency restrictions
-    const sdkCurrency = isHosted ? btnConfig.currency : 'USD';
+    const sdkCurrency = btnConfig.currency;
     const scriptKey = `${PAYPAL_CLIENT_ID}-${sdkCurrency}-${components}`;
     const existingScript = document.querySelector(`script[data-paypal-sdk="${scriptKey}"]`);
 
