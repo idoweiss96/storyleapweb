@@ -121,14 +121,8 @@ async function processPendingStories(base44, userEmail, userCredits) {
       try { await sendStoryInProgressEmail(story.contact_email, story.child_name, isHebrewName); } catch (_) {}
     }
 
-    // Notify admin
-    try {
-      await base44.asServiceRole.integrations.Core.SendEmail({
-        to: 'storyleapai@gmail.com',
-        subject: `📖 סיפור חדש ממתין לעיבוד: ${story.child_name}`,
-        body: `סיפור חדש שולם ומחכה לעיבוד!\n\nשם: ${story.child_name}\nגיל: ${story.child_age}\nמייל: ${story.contact_email || '-'}\nטלפון: ${story.contact_phone || '-'}\nStory ID: ${story.id}`,
-      });
-    } catch (_) {}
+    // Trigger async story generation
+    base44.asServiceRole.functions.invoke('processStoryGeneration', { story_id: story.id }).catch(() => {});
 
     processed++;
   }
