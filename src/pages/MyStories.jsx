@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Plus, Sparkles, ExternalLink, Clock } from 'lucide-react';
+import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard } from 'lucide-react';
 import { format } from 'date-fns';
 import StoryReadyNotification from '../components/story/StoryReadyNotification';
 import { useLanguage } from '../components/LanguageContext';
@@ -107,6 +107,10 @@ export default function MyStories() {
                     <p className="text-sm text-gray-500 mb-2">{t('my_story_age')} {story.child_age}</p>
                     {story.story_link ? (
                       <Badge className="bg-green-100 text-green-700">{t('my_story_ready')}</Badge>
+                    ) : story.payment_status === 'pending_payment' ? (
+                      <Badge className="bg-red-100 text-red-700">
+                        <CreditCard className="w-3 h-3 ml-1" />ממתין לתשלום
+                      </Badge>
                     ) : (
                       <Badge className="bg-amber-100 text-amber-700">
                         <Clock className="w-3 h-3 ml-1" />{t('my_story_pending')}
@@ -154,6 +158,10 @@ export default function MyStories() {
                         <a href={selectedStory.story_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet-600 hover:text-violet-800 font-medium">
                           <ExternalLink className="w-4 h-4" />{t('view_story')}
                         </a>
+                      ) : selectedStory.payment_status === 'pending_payment' ? (
+                        <span className="text-red-600 flex items-center gap-1">
+                          <CreditCard className="w-4 h-4" />ממתין לתשלום — רכשו קרדיטים להמשך
+                        </span>
                       ) : (
                         <span className="text-amber-600 flex items-center gap-1">
                           <Clock className="w-4 h-4" />{t('story_in_progress')}

@@ -61,7 +61,12 @@ export default function CreateStory() {
     }
     setIsLoading(true);
     try {
-      // Save story as draft first
+      // Check credits first before saving anything
+      const currentUser = await base44.auth.me();
+      const currentCredits = currentUser.credits || 0;
+
+      // Save story — status depends on whether user has enough credits
+      const hasCredits = currentCredits >= 20;
       const savedStory = await base44.entities.Story.create({
         child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
         child_image_url: formData.childImage || null, setting: formData.setting,
@@ -69,44 +74,30 @@ export default function CreateStory() {
         reaction_type: formData.reactionType || null, hobbies: formData.hobbies || null,
         contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
         content: null, story_link: null,
+        payment_status: hasCredits ? 'draft' : 'pending_payment',
       });
 
       base44.analytics.track({ eventName: 'questionnaire_submitted', properties: { story_id: savedStory.id } });
 
-      // Server-side credit check + deduction (secure)
+      if (!hasCredits) {
+        // No credits — redirect to Pricing, story saved as pending_payment
+        base44.analytics.track({ eventName: 'insufficient_credits_redirected', properties: { story_id: savedStory.id } });
+        navigate('/Pricing');
+        return;
+      }
+
+      // Has credits — process immediately via server-side function
       const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: savedStory.id });
 
       if (result.data?.success) {
-        // Credits deducted, story generation started
         const newCredits = result.data.credits_remaining;
         await base44.auth.updateMe({ credits: newCredits });
         setUser(prev => ({ ...prev, credits: newCredits }));
         window.dispatchEvent(new Event('credits-updated'));
         base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id } });
-        // Notify admin only after successful payment/credits
-        try {
-          await base44.functions.invoke('sendFormEmail', {
-            formType: 'בקשת סיפור חדש',
-            name: formData.childName,
-            email: formData.contactEmail || '',
-            phone: formData.contactPhone || '',
-            childName: formData.childName,
-            childAge: formData.childAge,
-            gender: formData.gender,
-            setting: formData.setting,
-            challengeType: formData.challengeType,
-            hobbies: formData.hobbies || '',
-            additionalFields: {
-              'טריגר': formData.triggerDesc || '',
-              'תגובה': formData.reactionType || '',
-            },
-          });
-        } catch (_) {}
         setGeneratedStory(savedStory);
       } else {
-        // Insufficient credits — save story_id for post-payment auto-trigger
-        base44.analytics.track({ eventName: 'insufficient_credits_redirected', properties: { story_id: savedStory.id } });
-        localStorage.setItem('pendingStoryId', savedStory.id);
+        // Edge case: credits changed between check and submit
         navigate('/Pricing');
       }
     } catch (err) {
