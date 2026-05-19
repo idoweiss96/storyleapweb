@@ -113,11 +113,14 @@ Deno.serve(async (req) => {
 
     const isHebrew = /[\u0590-\u05FF]/.test(story.child_name || '');
 
+    // Mark as generating
+    await base44.asServiceRole.entities.Story.update(story_id, { payment_status: 'story_generating' });
+
     // 1. Generate story content with AI
     const storyContent = await generateStoryWithAI(story, base44.asServiceRole);
 
     // 2. Save content + mark story ready
-    await base44.asServiceRole.entities.Story.update(story_id, { content: storyContent });
+    await base44.asServiceRole.entities.Story.update(story_id, { content: storyContent, payment_status: 'story_ready' });
 
     // 3. Update order status to story_ready
     if (order_id) {
