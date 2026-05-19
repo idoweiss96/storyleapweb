@@ -94,9 +94,9 @@ export default function CreateStory() {
       base44.analytics.track({ eventName: 'questionnaire_submitted', properties: { story_id: savedStory.id } });
 
       if (!hasCredits) {
-        // No credits — save as pending_payment and navigate to MyStories
+        // No credits — save as pending_payment and navigate to Pricing
         base44.analytics.track({ eventName: 'story_saved_pending_payment', properties: { story_id: savedStory.id } });
-        navigate(createPageUrl('MyStories'));
+        navigate('/Pricing');
         return;
       }
 
