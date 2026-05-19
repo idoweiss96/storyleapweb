@@ -127,7 +127,7 @@ export default function Admin() {
     setIsSavingCredits(true);
     try {
       const amount = parseInt(creditsToAdd);
-      const newCredits = (editingUser.credits || 0) + amount;
+      const newCredits = Math.max(0, (editingUser.credits || 0) + amount);
       await base44.entities.User.update(editingUser.id, { credits: newCredits });
       setUsers(users.map(u => u.id === editingUser.id ? { ...u, credits: newCredits } : u));
       setEditingUser(null);
@@ -363,7 +363,7 @@ export default function Admin() {
                     </TableCell>
                     <TableCell>
                       <Button variant="outline" size="sm" onClick={() => { setEditingUser(u); setCreditsToAdd(''); }}>
-                        <Star className="w-3 h-3 ml-1" /> הוסף קרדיטים
+                        <Star className="w-3 h-3 ml-1" /> ערוך קרדיטים
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -399,28 +399,30 @@ export default function Admin() {
       <Dialog open={!!editingUser} onOpenChange={() => setEditingUser(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>הוסף קרדיטים ל-{editingUser?.full_name || editingUser?.email}</DialogTitle>
+            <DialogTitle>עריכת קרדיטים — {editingUser?.full_name || editingUser?.email}</DialogTitle>
           </DialogHeader>
-          <div className="py-4 space-y-3">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="py-4 space-y-4">
+            <div className="flex items-center gap-2 text-sm text-gray-600 bg-amber-50 rounded-lg px-3 py-2">
               <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
-              קרדיטים נוכחיים: <span className="font-bold">{editingUser?.credits ?? 0}</span>
+              קרדיטים נוכחיים: <span className="font-bold text-amber-700">{editingUser?.credits ?? 0}</span>
             </div>
             <div>
-              <Label htmlFor="creditsToAdd">כמות קרדיטים להוסיף</Label>
+              <Label htmlFor="creditsToAdd">שינוי כמות קרדיטים (מספר חיובי להוספה, שלילי להורדה)</Label>
               <Input
                 id="creditsToAdd"
                 type="number"
                 value={creditsToAdd}
                 onChange={(e) => setCreditsToAdd(e.target.value)}
-                placeholder="לדוגמה: 10"
+                placeholder="לדוגמה: 20 או -10"
                 className="mt-2"
                 dir="ltr"
               />
             </div>
             {creditsToAdd !== '' && !isNaN(parseInt(creditsToAdd)) && (
               <p className="text-sm text-gray-500">
-                לאחר הוספה: <span className="font-bold text-green-600">{(editingUser?.credits ?? 0) + parseInt(creditsToAdd)}</span> קרדיטים
+                לאחר שינוי: <span className={`font-bold ${Math.max(0, (editingUser?.credits ?? 0) + parseInt(creditsToAdd)) < (editingUser?.credits ?? 0) ? 'text-red-600' : 'text-green-600'}`}>
+                  {Math.max(0, (editingUser?.credits ?? 0) + parseInt(creditsToAdd))}
+                </span> קרדיטים
               </p>
             )}
           </div>
