@@ -8,30 +8,59 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard } from 'lucide-react';
+import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star } from 'lucide-react';
 import { format } from 'date-fns';
 import StoryReadyNotification from '../components/story/StoryReadyNotification';
 import { useLanguage } from '../components/LanguageContext';
 
 export default function MyStories() {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [stories, setStories] = useState([]);
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStory, setSelectedStory] = useState(null);
   const [readyNotification, setReadyNotification] = useState(null);
+  const [activatingStoryId, setActivatingStoryId] = useState(null);
 
   useEffect(() => { loadStories(); }, []);
 
   const loadStories = async () => {
     try {
-      const user = await base44.auth.me();
-      const userStories = await base44.entities.Story.filter({ created_by: user.email }, '-created_date');
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+      const userStories = await base44.entities.Story.filter({ created_by: currentUser.email }, '-created_date');
       setStories(userStories);
     } catch (e) {
       base44.auth.redirectToLogin(window.location.href);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleActivateStory = async (story, e) => {
+    e.stopPropagation();
+    const credits = user?.credits || 0;
+    if (credits < 20) {
+      navigate('/Pricing');
+      return;
+    }
+    setActivatingStoryId(story.id);
+    try {
+      const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: story.id });
+      if (result.data?.success) {
+        const newCredits = result.data.credits_remaining;
+        await base44.auth.updateMe({ credits: newCredits });
+        setUser(prev => ({ ...prev, credits: newCredits }));
+        window.dispatchEvent(new Event('credits-updated'));
+        setStories(prev => prev.map(s => s.id === story.id ? { ...s, payment_status: 'paid' } : s));
+      } else {
+        navigate('/Pricing');
+      }
+    } catch (err) {
+      navigate('/Pricing');
+    } finally {
+      setActivatingStoryId(null);
     }
   };
 
@@ -108,9 +137,26 @@ export default function MyStories() {
                     {story.story_link ? (
                       <Badge className="bg-green-100 text-green-700">{t('my_story_ready')}</Badge>
                     ) : story.payment_status === 'pending_payment' ? (
-                      <Badge className="bg-red-100 text-red-700">
-                        <CreditCard className="w-3 h-3 ml-1" />ממתין לתשלום
-                      </Badge>
+                      <div className="space-y-2">
+                        <Badge className="bg-red-100 text-red-700">
+                          <CreditCard className="w-3 h-3 ml-1" />{lang === 'he' ? 'ממתין לתשלום' : 'Pending payment'}
+                        </Badge>
+                        <Button
+                          size="sm"
+                          disabled={activatingStoryId === story.id}
+                          onClick={(e) => handleActivateStory(story, e)}
+                          className="w-full text-xs h-8 rounded-lg bg-amber-500 hover:bg-amber-600 text-white"
+                        >
+                          {activatingStoryId === story.id ? (
+                            <Clock className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <span className="flex items-center gap-1">
+                              <Sparkles className="w-3 h-3" />
+                              {lang === 'he' ? 'צור סיפור (20 ⭐)' : 'Create Story (20 ⭐)'}
+                            </span>
+                          )}
+                        </Button>
+                      </div>
                     ) : (
                       <Badge className="bg-amber-100 text-amber-700">
                         <Clock className="w-3 h-3 ml-1" />{t('my_story_pending')}
@@ -159,9 +205,18 @@ export default function MyStories() {
                           <ExternalLink className="w-4 h-4" />{t('view_story')}
                         </a>
                       ) : selectedStory.payment_status === 'pending_payment' ? (
-                        <span className="text-red-600 flex items-center gap-1">
-                          <CreditCard className="w-4 h-4" />ממתין לתשלום — רכשו קרדיטים להמשך
-                        </span>
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className="text-red-600 flex items-center gap-1">
+                            <CreditCard className="w-4 h-4" />{lang === 'he' ? 'ממתין לתשלום' : 'Pending payment'}
+                          </span>
+                          <Button size="sm" disabled={activatingStoryId === selectedStory.id}
+                            onClick={(e) => { handleActivateStory(selectedStory, e); setSelectedStory(null); }}
+                            className="h-8 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs">
+                            {activatingStoryId === selectedStory.id ? <Clock className="w-3 h-3 animate-spin" /> : (
+                              <span className="flex items-center gap-1"><Sparkles className="w-3 h-3" />{lang === 'he' ? 'צור סיפור (20 ⭐)' : 'Create Story (20 ⭐)'}</span>
+                            )}
+                          </Button>
+                        </div>
                       ) : (
                         <span className="text-amber-600 flex items-center gap-1">
                           <Clock className="w-4 h-4" />{t('story_in_progress')}

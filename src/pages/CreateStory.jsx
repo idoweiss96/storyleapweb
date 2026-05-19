@@ -25,14 +25,6 @@ export default function CreateStory() {
 
   useEffect(() => {
     loadUser();
-    // Restore saved form data if returning from Pricing
-    const saved = localStorage.getItem('storyFormDraft');
-    if (saved) {
-      try {
-        setFormData(JSON.parse(saved));
-        localStorage.removeItem('storyFormDraft');
-      } catch (_) {}
-    }
   }, []);
 
   const loadUser = async () => {
@@ -48,17 +40,47 @@ export default function CreateStory() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+  const validateForm = () => {
     if (!formData.childName || !formData.childAge || !formData.gender || !formData.setting || !formData.challengeType) {
       setError(t('create_error_required'));
-      return;
+      return false;
     }
     if (!formData.childImage) {
       setError(lang === 'he' ? 'חובה להעלות תמונה של הילד/ה לפני שליחת הטופס 📸' : 'Please upload a photo of your child before submitting 📸');
-      return;
+      return false;
     }
+    return true;
+  };
+
+  const buildStoryData = (paymentStatus) => ({
+    child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
+    child_image_url: formData.childImage || null, setting: formData.setting,
+    challenge_type: formData.challengeType, trigger_desc: formData.triggerDesc || null,
+    reaction_type: formData.reactionType || null, hobbies: formData.hobbies || null,
+    contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
+    content: null, story_link: null, payment_status: paymentStatus,
+  });
+
+  // Save story as pending_payment and go to Pricing to buy credits
+  const handleSaveAndPay = async () => {
+    setError('');
+    if (!validateForm()) return;
+    setIsLoading(true);
+    try {
+      const savedStory = await base44.entities.Story.create(buildStoryData('pending_payment'));
+      base44.analytics.track({ eventName: 'story_saved_pending_payment', properties: { story_id: savedStory.id } });
+      navigate('/Pricing');
+    } catch (err) {
+      setError(t('create_error_save'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    if (!validateForm()) return;
     setIsLoading(true);
     try {
       // Check credits first before saving anything
@@ -67,22 +89,14 @@ export default function CreateStory() {
 
       // Save story — status depends on whether user has enough credits
       const hasCredits = currentCredits >= 20;
-      const savedStory = await base44.entities.Story.create({
-        child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
-        child_image_url: formData.childImage || null, setting: formData.setting,
-        challenge_type: formData.challengeType, trigger_desc: formData.triggerDesc || null,
-        reaction_type: formData.reactionType || null, hobbies: formData.hobbies || null,
-        contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
-        content: null, story_link: null,
-        payment_status: hasCredits ? 'draft' : 'pending_payment',
-      });
+      const savedStory = await base44.entities.Story.create(buildStoryData(hasCredits ? 'draft' : 'pending_payment'));
 
       base44.analytics.track({ eventName: 'questionnaire_submitted', properties: { story_id: savedStory.id } });
 
       if (!hasCredits) {
-        // No credits — redirect to Pricing, story saved as pending_payment
-        base44.analytics.track({ eventName: 'insufficient_credits_redirected', properties: { story_id: savedStory.id } });
-        navigate('/Pricing');
+        // No credits — save as pending_payment and navigate to MyStories
+        base44.analytics.track({ eventName: 'story_saved_pending_payment', properties: { story_id: savedStory.id } });
+        navigate(createPageUrl('MyStories'));
         return;
       }
 
@@ -97,7 +111,6 @@ export default function CreateStory() {
         base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id } });
         setGeneratedStory(savedStory);
       } else {
-        // Edge case: credits changed between check and submit
         navigate('/Pricing');
       }
     } catch (err) {
@@ -174,7 +187,7 @@ export default function CreateStory() {
                     <AlertDescription className="text-red-800">{error}</AlertDescription>
                   </Alert>
                 )}
-                <StoryForm formData={formData} setFormData={setFormData} onSubmit={handleSubmit} isLoading={isLoading} />
+                <StoryForm formData={formData} setFormData={setFormData} onSubmit={handleSubmit} onSaveAndPay={handleSaveAndPay} isLoading={isLoading} userCredits={user?.credits || 0} />
               </CardContent>
             </Card>
           </motion.div>
