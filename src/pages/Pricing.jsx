@@ -112,7 +112,17 @@ export default function Pricing() {
           if (res.data?.success) {
             await base44.auth.updateMe({ credits: res.data.new_total });
             window.dispatchEvent(new Event('credits-updated'));
-            navigate('/CreateStory?payment=success');
+            if (res.data.stories_activated > 0) {
+              toast.success(
+                isHe
+                  ? `✅ התשלום עבר! ${res.data.credits_added} קרדיטים נוספו וסיפור ${res.data.stories_activated} הופעל אוטומטית 🎉`
+                  : `✅ Payment successful! ${res.data.credits_added} credits added and ${res.data.stories_activated} story activated 🎉`,
+                { duration: 6000 }
+              );
+              navigate('/MyStories');
+            } else {
+              navigate('/CreateStory?payment=success');
+            }
           }
         }
       } catch (err) {
