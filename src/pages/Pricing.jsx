@@ -170,7 +170,9 @@ export default function Pricing() {
 
     const isHosted = !!btnConfig.hostedButtonId;
     const components = isHosted ? 'hosted-buttons' : 'buttons';
-    const scriptKey = `${PAYPAL_CLIENT_ID}-${btnConfig.currency}-${components}`;
+    // Always load SDK with USD to avoid PayPal SDK currency restrictions
+    const sdkCurrency = isHosted ? btnConfig.currency : 'USD';
+    const scriptKey = `${PAYPAL_CLIENT_ID}-${sdkCurrency}-${components}`;
     const existingScript = document.querySelector(`script[data-paypal-sdk="${scriptKey}"]`);
 
     const tryRender = () => isHosted ? renderHosted() : renderRegular();
@@ -190,7 +192,7 @@ export default function Pricing() {
 
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', scriptKey);
-    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=${components}&currency=${btnConfig.currency}&disable-funding=venmo,credit&enable-funding=paylater`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=${components}&currency=${sdkCurrency}&disable-funding=venmo,credit&enable-funding=paylater`;
     script.onload = () => setTimeout(() => tryRender(), 100);
     script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh');
     document.body.appendChild(script);
