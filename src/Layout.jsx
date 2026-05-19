@@ -29,6 +29,16 @@ function LayoutInner({ children, currentPageName }) {
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
+      // Always sync credits from DB (source of truth) to session
+      try {
+        const users = await base44.entities.User.filter({ email: currentUser.email });
+        if (users[0] && users[0].credits !== undefined) {
+          if (users[0].credits !== currentUser.credits) {
+            await base44.auth.updateMe({ credits: users[0].credits });
+            currentUser.credits = users[0].credits;
+          }
+        }
+      } catch (_) {}
       if (currentUser.credits === undefined || currentUser.credits === null) {
         await base44.auth.updateMe({ credits: 0 });
         currentUser.credits = 0;
