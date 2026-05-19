@@ -134,21 +134,22 @@ export default function Pricing() {
 
     // Load SDK with correct currency and real client ID
     const currency = priceConfig.currency;
-    const existingScript = document.querySelector(`script[data-paypal-sdk="${clientId}"]`);
+    const existingScript = document.querySelector(`script[data-paypal-sdk="${clientId}-${currency}"]`);
 
     if (window.paypal?.Buttons && existingScript) {
       renderButton();
       return;
     }
 
-    // Remove old script if client changed
+    // Remove old script to ensure correct currency is loaded
     document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
     delete window.paypal;
 
     const script = document.createElement('script');
-    script.setAttribute('data-paypal-sdk', clientId);
+    script.setAttribute('data-paypal-sdk', `${clientId}-${currency}`);
     script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currency}&intent=capture`;
     script.onload = () => renderButton();
+    script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh the page');
     document.body.appendChild(script);
     return () => {};
   }, [clientId, priceConfig.currency, isHe]);
