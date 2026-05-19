@@ -195,7 +195,7 @@ export default function Pricing() {
       return;
     }
 
-    if (HOSTED_BUTTON_CODES[code]) {
+    if (Object.prototype.hasOwnProperty.call(HOSTED_BUTTON_CODES, code)) {
       setHostedButtonCode(code);
       setPromoApplied(true);
     } else if (VALID_CODES.includes(code)) {
