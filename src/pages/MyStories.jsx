@@ -27,7 +27,8 @@ export default function MyStories() {
   // Handle PayPal redirect return (mobile hosted button flow)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const paypalToken = urlParams.get('token');
+    // PayPal hosted buttons return 'tx' (transaction ID), regular orders return 'token'
+    const paypalToken = urlParams.get('token') || urlParams.get('tx');
     if (!paypalToken) return;
 
     // Clean URL immediately
