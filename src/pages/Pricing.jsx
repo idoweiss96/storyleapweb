@@ -110,6 +110,7 @@ export default function Pricing() {
             credits: 20,
           });
           if (res.data?.success) {
+            await base44.auth.updateMe({ credits: res.data.new_total });
             window.dispatchEvent(new Event('credits-updated'));
             toast.success(isHe
               ? '🎉 הקרדיטים התווספו לחשבונך! כעת תוכלו למלא שאלון וליצור את הסיפור שלכם.'
