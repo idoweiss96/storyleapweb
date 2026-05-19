@@ -144,18 +144,29 @@ export default function Pricing() {
       if (isRenderedRef.current) return;
       isRenderedRef.current = true;
       containerRef.current.innerHTML = '';
-      window.paypal.Buttons({
+      const buttons = window.paypal.Buttons({
         style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
-        createOrder: (data, actions) => actions.order.create({
-          purchase_units: [{
-            amount: { value: btnConfig.amount, currency_code: btnConfig.currency },
-            description: isHe ? 'חבילת 20 קרדיטים - StoryLeap' : '20 Credits Package - StoryLeap',
-          }],
-        }),
+        createOrder: (_data, actions) => {
+          return actions.order.create({
+            purchase_units: [{
+              amount: { value: btnConfig.amount, currency_code: btnConfig.currency },
+              description: isHe ? 'חבילת 20 קרדיטים - StoryLeap' : '20 Credits Package - StoryLeap',
+            }],
+          });
+        },
         onApprove: onApproveHandler,
-        onError: () => setPaypalError(isHe ? 'שגיאה בתשלום, נסו שנית' : 'Payment error, please try again'),
+        onError: (err) => {
+          console.error('[PayPal] error:', err);
+          setPaypalError(isHe ? 'שגיאה בתשלום, נסו שנית' : 'Payment error, please try again');
+        },
         onCancel: () => setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled'),
-      }).render(containerRef.current);
+      });
+      if (buttons.isEligible()) {
+        buttons.render(containerRef.current);
+      } else {
+        console.warn('[PayPal] buttons not eligible');
+        isRenderedRef.current = false;
+      }
     };
 
     const isHosted = !!btnConfig.hostedButtonId;
