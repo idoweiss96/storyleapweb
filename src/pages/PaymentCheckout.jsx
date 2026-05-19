@@ -7,8 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Sparkles, ShieldCheck, AlertCircle, ArrowRight, Star } from 'lucide-react';
 
 const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
-// ₪45 ILS hosted button for direct story purchase
-const HOSTED_BUTTON_ID = 'L5DBB2XDQ7QFC';
+const STORY_PRICE_ILS = 45;
 const STORY_PRICE = '₪45';
 
 export default function PaymentCheckout() {
@@ -34,16 +33,16 @@ export default function PaymentCheckout() {
 
   const loadPaypalAndRender = (sid) => {
     const tryRender = () => {
-      if (window.paypal?.HostedButtons && paypalContainerRef.current && !rendered.current) {
+      if (window.paypal?.Buttons && paypalContainerRef.current && !rendered.current) {
         rendered.current = true;
-        renderHostedButton(sid);
+        renderButtons(sid);
       } else if (!rendered.current) {
         setTimeout(tryRender, 300);
       }
     };
 
     const existingScript = document.querySelector(`script[data-paypal-checkout]`);
-    if (window.paypal?.HostedButtons && existingScript) {
+    if (window.paypal?.Buttons && existingScript) {
       tryRender();
       return;
     }
@@ -53,16 +52,24 @@ export default function PaymentCheckout() {
 
     const script = document.createElement('script');
     script.setAttribute('data-paypal-checkout', 'true');
-    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=hosted-buttons&disable-funding=venmo&currency=ILS`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=ILS&disable-funding=venmo,credit`;
     script.onload = () => tryRender();
     script.onerror = () => { setError('שגיאה בטעינת PayPal, נסו לרענן את הדף'); setStatus('failed'); };
     document.body.appendChild(script);
   };
 
-  const renderHostedButton = (sid) => {
-    window.paypal.HostedButtons({
-      hostedButtonId: HOSTED_BUTTON_ID,
-      onApprove: async (data) => {
+  const renderButtons = (sid) => {
+    window.paypal.Buttons({
+      style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          purchase_units: [{
+            amount: { value: String(STORY_PRICE_ILS), currency_code: 'ILS' },
+            description: 'סיפור טיפולי מותאם אישית - StoryLeap',
+          }],
+        });
+      },
+      onApprove: async (data, actions) => {
         setStatus('processing');
         try {
           const res = await base44.functions.invoke('capturePaypalOrder', {
