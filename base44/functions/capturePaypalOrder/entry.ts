@@ -135,15 +135,6 @@ Deno.serve(async (req) => {
       }
     } catch (_) {}
 
-    // Send "story in progress" email immediately after payment confirmed
-    const isHebrew = /[\u0590-\u05FF]/.test(story.child_name || '');
-    if (story.contact_email) {
-      await sendStoryInProgressEmail(story.contact_email, story.child_name, isHebrew).catch(() => {});
-    }
-
-    // Trigger story generation asynchronously
-    base44.asServiceRole.functions.invoke('processStoryGeneration', { story_id: order.story_id, order_id: order.id }).catch(() => {});
-
     return Response.json({ success: true, status: 'story_generating', capture_id: captureId });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
