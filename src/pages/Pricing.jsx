@@ -114,7 +114,7 @@ export default function Pricing() {
             const pendingStoryId = localStorage.getItem('pendingStoryId');
             const orderId = pendingOrderIdRef.current;
 
-            if (pendingStoryId) {
+            if (pendingStoryId && orderId) {
               // Has questionnaire — capture story order
               const res = await base44.functions.invoke('capturePaypalOrder', {
                 paypal_order_id: data.orderID,
@@ -127,16 +127,20 @@ export default function Pricing() {
               }
             } else {
               // No questionnaire — capture credits order
-              const res = await base44.functions.invoke('captureCreditsOrder', {
-                paypal_order_id: data.orderID,
-                credits: 20,
-              });
-              if (res.data?.success) {
-                window.dispatchEvent(new Event('credits-updated'));
-                toast.success(isHe
-                  ? '🎉 הקרדיטים התווספו לחשבונך! כעת תוכלו למלא שאלון וליצור את הסיפור שלכם.'
-                  : '🎉 Credits added to your account! You can now fill the questionnaire and create your story.'
-                , { duration: 6000 });
+              try {
+                const res = await base44.functions.invoke('captureCreditsOrder', {
+                  paypal_order_id: data.orderID,
+                  credits: 20,
+                });
+                if (res.data?.success) {
+                  window.dispatchEvent(new Event('credits-updated'));
+                  toast.success(isHe
+                    ? '🎉 הקרדיטים התווספו לחשבונך! כעת תוכלו למלא שאלון וליצור את הסיפור שלכם.'
+                    : '🎉 Credits added to your account! You can now fill the questionnaire and create your story.'
+                  , { duration: 6000 });
+                }
+              } catch (err) {
+                setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
               }
             }
           } catch (err) {
