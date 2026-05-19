@@ -30,7 +30,7 @@ const translations = {
     form_image: 'תמונת הילד/ה', form_upload: 'העלו תמונה',
     form_story_world: 'עולם הסיפור', form_setting: 'נושא / תפאורה *', form_setting_ph: 'בחרו תפאורה לסיפור',
     form_challenge_section: 'האתגר הרגשי', form_challenge: 'האתגר שהילד/ה חווה *', form_challenge_ph: 'בחרו את סוג האתגר',
-    form_trigger: 'מתי זה קורה? (תיאור הטריגר)', form_trigger_ph: 'למשל: כשצריך להיפרד ממאמא בבוקר בגן...',
+    form_trigger: 'מתי זה קורה? (תיאור הטריגר)', form_trigger_ph: 'למשל: כשצריך להיפרד מאמא בבוקר בגן...',
     form_reaction: 'איך הילד/ה מגיב/ה?', form_reaction_ph: 'בחרו סוג תגובה',
     form_personal: 'חיבור אישי', form_hobbies: 'מה הילד/ה אוהב/ת? (תחביבים, צעצועים, דמויות)', form_hobbies_ph: 'למשל: דינוזאורים, לגו, כדורגל, ציור...',
     form_contact: 'פרטי התקשרות', form_email: 'מייל', form_phone: 'טלפון',
