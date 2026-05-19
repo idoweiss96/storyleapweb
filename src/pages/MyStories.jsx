@@ -35,10 +35,11 @@ export default function MyStories() {
 
     const capture = async () => {
       try {
+        // Hosted buttons auto-capture on PayPal's side — skip manual capture
         const res = await base44.functions.invoke('captureCreditsOrder', {
           paypal_order_id: paypalToken,
           credits: 20,
-          coupon: false,
+          coupon: true,
         });
         if (res.data?.success) {
           try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
