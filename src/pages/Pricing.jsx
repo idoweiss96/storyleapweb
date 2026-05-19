@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
@@ -48,9 +48,11 @@ export default function Pricing() {
   const isHe = lang === 'he';
   const [hostedButtonCode, setHostedButtonCode] = useState(null); // e.g. 'IDO10'
   const mode = promoApplied ? 'discount' : 'full';
-  const btnConfig = hostedButtonCode
-    ? HOSTED_BUTTON_CODES[hostedButtonCode]
-    : PRICE_CONFIG[isHe ? 'he' : 'en'][mode];
+  const btnConfig = useMemo(() => (
+    hostedButtonCode
+      ? HOSTED_BUTTON_CODES[hostedButtonCode]
+      : PRICE_CONFIG[isHe ? 'he' : 'en'][mode]
+  ), [hostedButtonCode, isHe, mode]);
 
   useEffect(() => {
     const init = async () => {
@@ -83,6 +85,11 @@ export default function Pricing() {
     isRenderedRef.current = false;
 
     const onApproveHandler = async (data) => {
+      console.log('[PayPal] onApprove called with:', JSON.stringify(data));
+      if (!data?.orderID) {
+        console.warn('[PayPal] onApprove called without orderID, ignoring');
+        return;
+      }
       setProcessing(true);
       setPaypalError('');
       try {
