@@ -259,6 +259,7 @@ export default function Pricing() {
                       placeholder={isHe ? 'קוד פרומו (אופציונלי)' : 'Promo code (optional)'}
                       value={promoCode}
                       onChange={(e) => { setPromoCode(e.target.value); setPromoError(''); }}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleApplyPromo(); }}
                       className="text-sm"
                     />
                     <Button variant="outline" size="sm" onClick={handleApplyPromo} disabled={promoLoading} className="shrink-0">
