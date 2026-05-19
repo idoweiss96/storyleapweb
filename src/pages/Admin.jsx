@@ -129,7 +129,9 @@ export default function Admin() {
       const amount = parseInt(creditsToAdd);
       const newCredits = Math.max(0, (editingUser.credits || 0) + amount);
       await base44.entities.User.update(editingUser.id, { credits: newCredits });
-      setUsers(users.map(u => u.id === editingUser.id ? { ...u, credits: newCredits } : u));
+      // Refresh users list from DB to ensure table shows latest data
+      const allUsers = await base44.entities.User.list('-created_date');
+      setUsers(allUsers);
       setEditingUser(null);
       setCreditsToAdd('');
     } finally {
