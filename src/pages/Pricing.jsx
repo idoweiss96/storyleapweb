@@ -81,10 +81,11 @@ export default function Pricing() {
             setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
           }
         } else {
-          const res = await base44.functions.invoke('captureCreditsOrder', {
+          // Hosted buttons auto-capture on PayPal's side — skip manual capture
+        const res = await base44.functions.invoke('captureCreditsOrder', {
             paypal_order_id: paypalToken,
             credits: 20,
-            coupon: false,
+            coupon: true,
           });
           if (res.data?.success) {
             // Sync credits to session
