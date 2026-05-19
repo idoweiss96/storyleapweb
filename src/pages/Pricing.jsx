@@ -86,6 +86,7 @@ export default function Pricing() {
 
     const onApproveHandler = async (data) => {
       console.log('[PayPal] onApprove called with:', JSON.stringify(data));
+      alert('[PayPal] תשלום אושר! מעבד...');
       if (!data?.orderID) {
         console.warn('[PayPal] onApprove called without orderID, ignoring');
         return;
