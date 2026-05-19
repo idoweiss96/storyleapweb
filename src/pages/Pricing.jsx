@@ -12,6 +12,10 @@ import { base44 } from '@/api/base44Client';
 
 const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30'];
 const FREE_CREDIT_CODES = { 'STORY20': 20 };
+// Special test codes with hosted button override
+const HOSTED_BUTTON_CODES = {
+  'IDO10': { hostedButtonId: 'AMAMAC5GTGJUG', currency: 'ILS', display: '₪0.10' },
+};
 
 const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
 
@@ -41,8 +45,11 @@ export default function Pricing() {
   const renderKeyRef = useRef(0);
 
   const isHe = lang === 'he';
+  const [hostedButtonCode, setHostedButtonCode] = useState(null); // e.g. 'IDO10'
   const mode = promoApplied ? 'discount' : 'full';
-  const btnConfig = PRICE_CONFIG[isHe ? 'he' : 'en'][mode];
+  const btnConfig = hostedButtonCode
+    ? HOSTED_BUTTON_CODES[hostedButtonCode]
+    : PRICE_CONFIG[isHe ? 'he' : 'en'][mode];
 
   useEffect(() => {
     const init = async () => {
@@ -73,69 +80,81 @@ export default function Pricing() {
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
 
-    const renderButton = () => {
-      if (renderKeyRef.current !== currentKey) return;
-      if (!window.paypal?.Buttons || !containerRef.current) return;
-      containerRef.current.innerHTML = '';
-
-      window.paypal.Buttons({
-        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
-        createOrder: (data, actions) => {
-          return actions.order.create({
-            purchase_units: [{
-              amount: { value: btnConfig.amount, currency_code: btnConfig.currency },
-              description: isHe ? 'חבילת 20 קרדיטים - StoryLeap' : '20 Credits Package - StoryLeap',
-            }],
+    const onApproveHandler = async (data) => {
+      setProcessing(true);
+      setPaypalError('');
+      try {
+        const pendingStoryId = localStorage.getItem('pendingStoryId');
+        if (pendingStoryId) {
+          const res = await base44.functions.invoke('capturePaypalOrder', {
+            paypal_order_id: data.orderID,
+            story_id: pendingStoryId,
           });
-        },
-        onApprove: async (data) => {
-          setProcessing(true);
-          setPaypalError('');
-          try {
-            const pendingStoryId = localStorage.getItem('pendingStoryId');
-            if (pendingStoryId) {
-              const res = await base44.functions.invoke('capturePaypalOrder', {
-                paypal_order_id: data.orderID,
-                story_id: pendingStoryId,
-              });
-              if (res.data?.success) {
-                localStorage.removeItem('pendingStoryId');
-                window.dispatchEvent(new Event('credits-updated'));
-                navigate('/PaymentSuccess?story_id=' + pendingStoryId);
-              }
-            } else {
-              const res = await base44.functions.invoke('captureCreditsOrder', {
-                paypal_order_id: data.orderID,
-                credits: 20,
-              });
-              if (res.data?.success) {
-                window.dispatchEvent(new Event('credits-updated'));
-                toast.success(isHe
-                  ? '🎉 הקרדיטים התווספו לחשבונך! כעת תוכלו למלא שאלון וליצור את הסיפור שלכם.'
-                  : '🎉 Credits added to your account! You can now fill the questionnaire and create your story.'
-                , { duration: 6000 });
-              }
-            }
-          } catch (err) {
-            setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
-          } finally {
-            setProcessing(false);
+          if (res.data?.success) {
+            localStorage.removeItem('pendingStoryId');
+            window.dispatchEvent(new Event('credits-updated'));
+            navigate('/PaymentSuccess?story_id=' + pendingStoryId);
           }
-        },
-        onError: () => {
-          setPaypalError(isHe ? 'שגיאה בתשלום, נסו שנית' : 'Payment error, please try again');
-        },
-        onCancel: () => {
-          setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled');
-        },
+        } else {
+          const res = await base44.functions.invoke('captureCreditsOrder', {
+            paypal_order_id: data.orderID,
+            credits: 20,
+          });
+          if (res.data?.success) {
+            window.dispatchEvent(new Event('credits-updated'));
+            toast.success(isHe
+              ? '🎉 הקרדיטים התווספו לחשבונך! כעת תוכלו למלא שאלון וליצור את הסיפור שלכם.'
+              : '🎉 Credits added to your account! You can now fill the questionnaire and create your story.'
+            , { duration: 6000 });
+          }
+        }
+      } catch (err) {
+        setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
+      } finally {
+        setProcessing(false);
+      }
+    };
+
+    const renderHosted = () => {
+      if (renderKeyRef.current !== currentKey) return;
+      if (!window.paypal?.HostedButtons || !containerRef.current) return;
+      containerRef.current.innerHTML = '';
+      window.paypal.HostedButtons({
+        hostedButtonId: btnConfig.hostedButtonId,
+        onApprove: onApproveHandler,
+        onCancel: () => setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled'),
+        onError: () => setPaypalError(isHe ? 'שגיאה בתשלום, נסו שנית' : 'Payment error, please try again'),
       }).render(containerRef.current);
     };
 
-    const scriptKey = `${PAYPAL_CLIENT_ID}-${btnConfig.currency}`;
+    const renderRegular = () => {
+      if (renderKeyRef.current !== currentKey) return;
+      if (!window.paypal?.Buttons || !containerRef.current) return;
+      containerRef.current.innerHTML = '';
+      window.paypal.Buttons({
+        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
+        createOrder: (data, actions) => actions.order.create({
+          purchase_units: [{
+            amount: { value: btnConfig.amount, currency_code: btnConfig.currency },
+            description: isHe ? 'חבילת 20 קרדיטים - StoryLeap' : '20 Credits Package - StoryLeap',
+          }],
+        }),
+        onApprove: onApproveHandler,
+        onError: () => setPaypalError(isHe ? 'שגיאה בתשלום, נסו שנית' : 'Payment error, please try again'),
+        onCancel: () => setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled'),
+      }).render(containerRef.current);
+    };
+
+    const isHosted = !!btnConfig.hostedButtonId;
+    const components = isHosted ? 'hosted-buttons' : 'buttons';
+    const scriptKey = `${PAYPAL_CLIENT_ID}-${btnConfig.currency}-${components}`;
     const existingScript = document.querySelector(`script[data-paypal-sdk="${scriptKey}"]`);
 
-    if (window.paypal?.Buttons && existingScript) {
-      renderButton();
+    const tryRender = () => isHosted ? renderHosted() : renderRegular();
+    const sdkReady = isHosted ? window.paypal?.HostedButtons : window.paypal?.Buttons;
+
+    if (sdkReady && existingScript) {
+      tryRender();
       return;
     }
 
@@ -144,12 +163,12 @@ export default function Pricing() {
 
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', scriptKey);
-    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=${btnConfig.currency}&disable-funding=venmo,credit`;
-    script.onload = () => renderButton();
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=${components}&currency=${btnConfig.currency}&disable-funding=venmo,credit`;
+    script.onload = () => tryRender();
     script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh');
     document.body.appendChild(script);
     return () => {};
-  }, [btnConfig.amount, btnConfig.currency, isHe]);
+  }, [btnConfig, isHe]);
 
   const handleApplyPromo = async () => {
     setPromoError('');
@@ -176,7 +195,11 @@ export default function Pricing() {
       return;
     }
 
-    if (VALID_CODES.includes(code)) {
+    if (HOSTED_BUTTON_CODES[code]) {
+      setHostedButtonCode(code);
+      setPromoApplied(true);
+    } else if (VALID_CODES.includes(code)) {
+      setHostedButtonCode(null);
       setPromoApplied(true);
     } else {
       setPromoError(isHe ? 'קוד פרומו לא תקין' : 'Invalid promo code');
@@ -244,7 +267,7 @@ export default function Pricing() {
                     </Button>
                   </div>
                 ) : (
-                  <button className="text-xs text-slate-400 underline" onClick={() => { setPromoApplied(false); setPromoCode(''); }}>
+                  <button className="text-xs text-slate-400 underline" onClick={() => { setPromoApplied(false); setPromoCode(''); setHostedButtonCode(null); }}>
                     {isHe ? 'הסר קוד' : 'Remove code'}
                   </button>
                 )}
