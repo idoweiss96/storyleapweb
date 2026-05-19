@@ -62,6 +62,46 @@ export default function Pricing() {
         return;
       }
 
+      // Handle PayPal redirect return (token = PayPal order ID in redirect flow)
+      const urlParams = new URLSearchParams(window.location.search);
+      const paypalToken = urlParams.get('token');
+      const paypalOrderId = urlParams.get('PayerID') ? paypalToken : null; // PayerID present = approved
+      if (paypalOrderId) {
+        console.log('[PayPal] Detected redirect return with orderID:', paypalOrderId);
+        setProcessing(true);
+        try {
+          const pendingStoryId = localStorage.getItem('pendingStoryId');
+          if (pendingStoryId) {
+            const res = await base44.functions.invoke('capturePaypalOrder', {
+              paypal_order_id: paypalOrderId,
+              story_id: pendingStoryId,
+            });
+            if (res.data?.success) {
+              localStorage.removeItem('pendingStoryId');
+              window.dispatchEvent(new Event('credits-updated'));
+              navigate('/PaymentSuccess?story_id=' + pendingStoryId);
+              return;
+            }
+          } else {
+            const res = await base44.functions.invoke('captureCreditsOrder', {
+              paypal_order_id: paypalOrderId,
+              credits: 20,
+              coupon: false,
+            });
+            if (res.data?.success) {
+              await base44.auth.updateMe({ credits: res.data.new_total });
+              setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
+              navigate('/CreateStory?payment=success');
+              return;
+            }
+          }
+        } catch (err) {
+          console.error('[PayPal] redirect capture error:', err);
+        } finally {
+          setProcessing(false);
+        }
+      }
+
       const pendingId = localStorage.getItem('pendingStoryId');
       if (pendingId) {
         try {
@@ -86,7 +126,6 @@ export default function Pricing() {
 
     const onApproveHandler = async (data) => {
       console.log('[PayPal] onApprove called with:', JSON.stringify(data));
-      alert('[PayPal] תשלום אושר! מעבד...');
       if (!data?.orderID) {
         console.warn('[PayPal] onApprove called without orderID, ignoring');
         return;
@@ -153,6 +192,8 @@ export default function Pricing() {
           const res = await base44.functions.invoke('createCreditsOrder', {
             currency: btnConfig.currency,
             amount: btnConfig.amount,
+            return_url: window.location.href,
+            cancel_url: window.location.href,
           });
           return res.data.paypal_order_id;
         },
