@@ -43,6 +43,7 @@ export default function Pricing() {
   const [processing, setProcessing] = useState(false);
   const containerRef = useRef(null);
   const renderKeyRef = useRef(0);
+  const isRenderedRef = useRef(false);
 
   const isHe = lang === 'he';
   const [hostedButtonCode, setHostedButtonCode] = useState(null); // e.g. 'IDO10'
@@ -79,6 +80,7 @@ export default function Pricing() {
   useEffect(() => {
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
+    isRenderedRef.current = false;
 
     const onApproveHandler = async (data) => {
       setProcessing(true);
@@ -118,6 +120,8 @@ export default function Pricing() {
     const renderHosted = () => {
       if (renderKeyRef.current !== currentKey) return;
       if (!window.paypal?.HostedButtons || !containerRef.current) return;
+      if (isRenderedRef.current) return;
+      isRenderedRef.current = true;
       containerRef.current.innerHTML = '';
       window.paypal.HostedButtons({
         hostedButtonId: btnConfig.hostedButtonId,
@@ -130,6 +134,8 @@ export default function Pricing() {
     const renderRegular = () => {
       if (renderKeyRef.current !== currentKey) return;
       if (!window.paypal?.Buttons || !containerRef.current) return;
+      if (isRenderedRef.current) return;
+      isRenderedRef.current = true;
       containerRef.current.innerHTML = '';
       window.paypal.Buttons({
         style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
