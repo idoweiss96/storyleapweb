@@ -110,12 +110,13 @@ export default function Pricing() {
             credits: 20,
           });
           if (res.data?.success) {
-            await base44.auth.updateMe({ credits: res.data.new_total });
+            // Sync credits from DB to session (source of truth)
+            const users = await base44.entities.User.list();
+            const me = await base44.auth.me();
+            const dbUser = users.find(u => u.email === me.email);
+            if (dbUser) await base44.auth.updateMe({ credits: dbUser.credits });
             window.dispatchEvent(new Event('credits-updated'));
-            toast.success(isHe
-              ? '🎉 הקרדיטים התווספו לחשבונך! כעת תוכלו למלא שאלון וליצור את הסיפור שלכם.'
-              : '🎉 Credits added to your account! You can now fill the questionnaire and create your story.'
-            , { duration: 6000 });
+            navigate('/CreateStory?payment=success');
           }
         }
       } catch (err) {

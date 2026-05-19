@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Sparkles, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import StoryForm from '../components/story/StoryForm';
 import { useLanguage } from '../components/LanguageContext';
 
@@ -25,11 +26,29 @@ export default function CreateStory() {
 
   useEffect(() => {
     loadUser();
+    // Show success toast if coming back from payment
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+      const isHe = lang === 'he';
+      toast.success(isHe
+        ? '🎉 הקרדיטים התווספו! כעת תוכלו למלא את השאלון וליצור את הסיפור שלכם.'
+        : '🎉 Credits added! You can now fill the questionnaire and create your story.',
+        { duration: 7000 }
+      );
+    }
   }, []);
 
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
+      // Sync credits from DB (source of truth)
+      try {
+        const users = await base44.entities.User.filter({ email: currentUser.email });
+        if (users[0]?.credits !== undefined) {
+          currentUser.credits = users[0].credits;
+          await base44.auth.updateMe({ credits: users[0].credits });
+        }
+      } catch (_) {}
       if (currentUser.credits === undefined || currentUser.credits === null) {
         await base44.auth.updateMe({ credits: 0 });
         currentUser.credits = 0;
