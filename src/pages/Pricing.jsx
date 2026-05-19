@@ -91,7 +91,7 @@ export default function Pricing() {
             try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
             window.dispatchEvent(new Event('credits-updated'));
             toast.success(isHe ? '🎉 הקרדיטים התווספו לחשבונך!' : '🎉 Credits added to your account!', { duration: 5000 });
-            navigate('/CreateStory?payment=success');
+            navigate('/MyStories?payment=success');
           } else {
             setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
           }
@@ -169,7 +169,7 @@ export default function Pricing() {
             await base44.auth.updateMe({ credits: res.data.new_total });
             // Small delay to ensure session is updated before layout re-reads it
             setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
-            navigate('/CreateStory?payment=success');
+            navigate('/MyStories?payment=success');
           }
         }
       } catch (err) {
