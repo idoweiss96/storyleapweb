@@ -174,19 +174,21 @@ export default function Pricing() {
     const scriptKey = `${PAYPAL_CLIENT_ID}-${sdkCurrency}-${components}`;
     const existingScript = document.querySelector(`script[data-paypal-sdk="${scriptKey}"]`);
 
-    const tryRender = () => isHosted ? renderHosted() : renderRegular();
-    const sdkReady = isHosted ? window.paypal?.HostedButtons : window.paypal?.Buttons;
-
-    // Always remove old scripts and reset paypal when btnConfig changes
-    document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
-    if (window.paypal) delete window.paypal;
     if (containerRef.current) containerRef.current.innerHTML = '';
     isRenderedRef.current = false;
 
+    const tryRender = () => isHosted ? renderHosted() : renderRegular();
+    const sdkReady = isHosted ? window.paypal?.HostedButtons : window.paypal?.Buttons;
+
+    // If the right SDK is already loaded, just re-render
     if (sdkReady && existingScript) {
-      tryRender();
+      setTimeout(() => tryRender(), 50);
       return;
     }
+
+    // Need to reload SDK — remove old scripts and window.paypal
+    document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
+    try { delete window.paypal; } catch (_) {}
 
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', scriptKey);
