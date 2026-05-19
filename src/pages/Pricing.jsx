@@ -163,8 +163,11 @@ export default function Pricing() {
 
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', scriptKey);
-    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=${components}&currency=${btnConfig.currency}&disable-funding=venmo,credit`;
-    script.onload = () => tryRender();
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=${components}&currency=${btnConfig.currency}&disable-funding=venmo,credit&enable-funding=paylater`;
+    script.onload = () => {
+      // Small delay to ensure PayPal SDK is fully initialized
+      setTimeout(() => tryRender(), 100);
+    };
     script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh');
     document.body.appendChild(script);
     return () => {};
