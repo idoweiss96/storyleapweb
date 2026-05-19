@@ -140,11 +140,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               )}
             </label>
           )}
-          <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
-            {lang === 'he'
-              ? 'העלו תמונה של הילד/ה כדי שהסיפור יהיה אישי ומיוחד 📸 התמונה נמחקת לחלוטין מיד עם סיום יצירת הסיפור.'
-              : "Upload a photo to make the story personal and unique 📸 The photo is permanently deleted as soon as the story is created."}
-          </p>
+
         </div>
       </div>
 
