@@ -128,12 +128,17 @@ export default function Admin() {
     try {
       const amount = parseInt(creditsToAdd);
       const newCredits = Math.max(0, (editingUser.credits || 0) + amount);
-      await base44.entities.User.update(editingUser.id, { credits: newCredits });
+      console.log('Updating user:', editingUser.id, 'credits:', editingUser.credits, '->', newCredits);
+      const updated = await base44.entities.User.update(editingUser.id, { credits: newCredits });
+      console.log('Update result:', updated);
       // Refresh users list from DB to ensure table shows latest data
       const allUsers = await base44.entities.User.list('-created_date');
       setUsers(allUsers);
       setEditingUser(null);
       setCreditsToAdd('');
+    } catch (err) {
+      console.error('Failed to update credits:', err);
+      alert('שגיאה בעדכון קרדיטים: ' + err.message);
     } finally {
       setIsSavingCredits(false);
     }
