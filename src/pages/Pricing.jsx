@@ -22,8 +22,8 @@ const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8f
 // Price configs by language and promo
 const PRICE_CONFIG = {
   he: {
-    full:     { amount: '12', currency: 'USD', display: '$12' },
-    discount: { amount: '4',  currency: 'USD', display: '$4'  },
+    full:     { amount: '45', currency: 'ILS', display: '₪45' },
+    discount: { amount: '15', currency: 'ILS', display: '₪15' },
   },
   en: {
     full:     { amount: '15', currency: 'USD', display: '$15' },
@@ -146,13 +146,12 @@ export default function Pricing() {
       containerRef.current.innerHTML = '';
       const buttons = window.paypal.Buttons({
         style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
-        createOrder: (_data, actions) => {
-          return actions.order.create({
-            purchase_units: [{
-              amount: { value: btnConfig.amount, currency_code: btnConfig.currency },
-              description: isHe ? 'חבילת 20 קרדיטים - StoryLeap' : '20 Credits Package - StoryLeap',
-            }],
+        createOrder: async () => {
+          const res = await base44.functions.invoke('createCreditsOrder', {
+            currency: btnConfig.currency,
+            amount: btnConfig.amount,
           });
+          return res.data.paypal_order_id;
         },
         onApprove: onApproveHandler,
         onError: (err) => {
