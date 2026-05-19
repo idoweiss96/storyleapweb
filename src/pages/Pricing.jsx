@@ -105,9 +105,11 @@ export default function Pricing() {
             navigate('/PaymentSuccess?story_id=' + pendingStoryId);
           }
         } else {
+          const isHostedButton = !!btnConfig.hostedButtonId;
           const res = await base44.functions.invoke('captureCreditsOrder', {
             paypal_order_id: data.orderID,
             credits: 20,
+            coupon: isHostedButton, // hosted buttons auto-capture, skip manual capture
           });
           if (res.data?.success) {
             await base44.auth.updateMe({ credits: res.data.new_total });
