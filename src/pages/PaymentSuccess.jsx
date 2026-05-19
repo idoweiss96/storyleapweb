@@ -46,7 +46,7 @@ export default function PaymentSuccess() {
             </motion.div>
 
             <h1 className="text-3xl font-bold text-slate-800 mb-2">
-              🎉 התשלום הצליח! 🎉
+              🎉 התשלום התקבל! 🎉
             </h1>
             <p className="text-slate-500 mb-8 text-lg">
               הסיפור המותאם אישית שלכם נמצא כעת ביצירה ויישלח אליכם בקרוב.
