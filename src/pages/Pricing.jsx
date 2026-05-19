@@ -367,8 +367,8 @@ export default function Pricing() {
                   <CheckCircle className="w-5 h-5 text-green-600 shrink-0" />
                   <p className="text-sm text-green-700 font-medium">
                     {isHe
-                      ? '✅ השאלון שלך שמור — אחרי הרכישה הסיפור ייווצר אוטומטית!'
-                      : '✅ Your questionnaire is saved — story will be created automatically after purchase!'}
+                      ? 'לאחר התשלום תועברו לדף הסיפורים שם תוכלו להשלים את יצירת הסיפור'
+                      : 'After payment you\'ll be taken to your stories page to complete the story creation'}
                   </p>
                 </div>
               )}
