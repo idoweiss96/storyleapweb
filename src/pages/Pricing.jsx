@@ -54,52 +54,58 @@ export default function Pricing() {
       : PRICE_CONFIG[isHe ? 'he' : 'en'][mode]
   ), [hostedButtonCode, isHe, mode]);
 
+  // Handle PayPal redirect return on mobile
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paypalToken = urlParams.get('token');
+    const payerID = urlParams.get('PayerID');
+    if (!paypalToken || !payerID) return;
+
+    window.history.replaceState({}, '', window.location.pathname);
+    setProcessing(true);
+
+    const capture = async () => {
+      try {
+        const pendingStoryId = localStorage.getItem('pendingStoryId');
+        if (pendingStoryId) {
+          const res = await base44.functions.invoke('capturePaypalOrder', {
+            paypal_order_id: paypalToken,
+            story_id: pendingStoryId,
+          });
+          if (res.data?.success) {
+            localStorage.removeItem('pendingStoryId');
+            window.dispatchEvent(new Event('credits-updated'));
+            navigate('/PaymentSuccess?story_id=' + pendingStoryId);
+          }
+        } else {
+          const res = await base44.functions.invoke('captureCreditsOrder', {
+            paypal_order_id: paypalToken,
+            credits: 20,
+            coupon: false,
+          });
+          if (res.data?.success) {
+            await base44.auth.updateMe({ credits: res.data.new_total });
+            window.dispatchEvent(new Event('credits-updated'));
+            navigate('/CreateStory?payment=success');
+          }
+        }
+      } catch (err) {
+        console.error('[PayPal] redirect capture error:', err);
+        setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
+      } finally {
+        setProcessing(false);
+      }
+    };
+    capture();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const init = async () => {
       const authed = await base44.auth.isAuthenticated();
       if (!authed) {
         base44.auth.redirectToLogin(window.location.pathname);
         return;
-      }
-
-      // Handle PayPal redirect return (token = PayPal order ID in redirect flow)
-      const urlParams = new URLSearchParams(window.location.search);
-      const paypalToken = urlParams.get('token');
-      const paypalOrderId = urlParams.get('PayerID') ? paypalToken : null; // PayerID present = approved
-      if (paypalOrderId) {
-        console.log('[PayPal] Detected redirect return with orderID:', paypalOrderId);
-        setProcessing(true);
-        try {
-          const pendingStoryId = localStorage.getItem('pendingStoryId');
-          if (pendingStoryId) {
-            const res = await base44.functions.invoke('capturePaypalOrder', {
-              paypal_order_id: paypalOrderId,
-              story_id: pendingStoryId,
-            });
-            if (res.data?.success) {
-              localStorage.removeItem('pendingStoryId');
-              window.dispatchEvent(new Event('credits-updated'));
-              navigate('/PaymentSuccess?story_id=' + pendingStoryId);
-              return;
-            }
-          } else {
-            const res = await base44.functions.invoke('captureCreditsOrder', {
-              paypal_order_id: paypalOrderId,
-              credits: 20,
-              coupon: false,
-            });
-            if (res.data?.success) {
-              await base44.auth.updateMe({ credits: res.data.new_total });
-              setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
-              navigate('/CreateStory?payment=success');
-              return;
-            }
-          }
-        } catch (err) {
-          console.error('[PayPal] redirect capture error:', err);
-        } finally {
-          setProcessing(false);
-        }
       }
 
       const pendingId = localStorage.getItem('pendingStoryId');
