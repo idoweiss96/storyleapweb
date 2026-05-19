@@ -65,6 +65,8 @@ Deno.serve(async (req) => {
         application_context: {
           brand_name: 'StoryLeap AI',
           user_action: 'PAY_NOW',
+          return_url: `${req.headers.get('origin')}/PaymentSuccess?story_id=${story_id}`,
+          cancel_url: `${req.headers.get('origin')}/PaymentCancel`,
         },
       }),
     });
