@@ -167,19 +167,11 @@ Deno.serve(async (req) => {
     const newCredits = (currentUser.credits || 0) + creditsToAdd;
     await base44.asServiceRole.entities.User.update(currentUser.id, { credits: newCredits });
 
-    // Process any pending_payment stories automatically
-    const { processed, remainingCredits } = await processPendingStories(base44, user.email, newCredits);
-
-    // Save final credits after story deductions
-    if (processed > 0) {
-      await base44.asServiceRole.entities.User.update(currentUser.id, { credits: remainingCredits });
-    }
-
     return Response.json({
       success: true,
       credits_added: creditsToAdd,
-      new_total: remainingCredits,
-      stories_activated: processed,
+      new_total: newCredits,
+      stories_activated: 0,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
