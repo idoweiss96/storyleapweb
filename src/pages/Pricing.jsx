@@ -39,11 +39,35 @@ export default function Pricing() {
   const [clientId, setClientId] = useState(null);
 
   useEffect(() => {
-    setHasPendingStory(!!localStorage.getItem('pendingStoryId'));
-    // Fetch the real PayPal client ID from backend
-    base44.functions.invoke('getPaypalClientId', {})
-      .then(res => { if (res.data?.client_id) setClientId(res.data.client_id); })
-      .catch(() => {});
+    const init = async () => {
+      // Make sure user is logged in
+      const authed = await base44.auth.isAuthenticated();
+      if (!authed) {
+        base44.auth.redirectToLogin(window.location.pathname);
+        return;
+      }
+
+      const pendingId = localStorage.getItem('pendingStoryId');
+      if (pendingId) {
+        // Validate that the story still exists
+        try {
+          const { base44: sdk } = await import('@/api/base44Client');
+          const story = await sdk.entities.Story.list();
+          const exists = story.some(s => s.id === pendingId);
+          if (!exists) localStorage.removeItem('pendingStoryId');
+          setHasPendingStory(exists);
+        } catch {
+          localStorage.removeItem('pendingStoryId');
+          setHasPendingStory(false);
+        }
+      }
+
+      // Fetch the real PayPal client ID from backend
+      base44.functions.invoke('getPaypalClientId', {})
+        .then(res => { if (res.data?.client_id) setClientId(res.data.client_id); })
+        .catch(() => {});
+    };
+    init();
   }, []);
 
   // Render PayPal buttons using JS SDK (not Hosted Buttons)
