@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { currency = 'ILS', amount = '45.00' } = await req.json().catch(() => ({}));
+    const { currency = 'ILS', amount = '45.00', return_url, cancel_url } = await req.json().catch(() => ({}));
 
     const accessToken = await getPaypalAccessToken();
     const ppRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders`, {
@@ -48,6 +48,8 @@ Deno.serve(async (req) => {
         application_context: {
           brand_name: 'StoryLeap AI',
           user_action: 'PAY_NOW',
+          return_url: return_url || 'https://storyleap-ai.base44.app/Pricing',
+          cancel_url: cancel_url || 'https://storyleap-ai.base44.app/Pricing',
         },
       }),
     });

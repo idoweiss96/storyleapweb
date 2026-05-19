@@ -56,9 +56,11 @@ export default function Pricing() {
 
   // Handle PayPal redirect return on mobile
   useEffect(() => {
+    console.log('[PayPal] Current URL on load:', window.location.href);
     const urlParams = new URLSearchParams(window.location.search);
     const paypalToken = urlParams.get('token');
     const payerID = urlParams.get('PayerID');
+    console.log('[PayPal] URL params - token:', paypalToken, 'PayerID:', payerID);
     if (!paypalToken || !payerID) return;
 
     window.history.replaceState({}, '', window.location.pathname);
