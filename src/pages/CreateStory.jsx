@@ -6,9 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Sparkles, AlertCircle, LogIn } from 'lucide-react';
+import { Sparkles, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import StoryForm from '../components/story/StoryForm';
+import LoginPromptModal from '../components/story/LoginPromptModal';
 import { useLanguage } from '../components/LanguageContext';
 
 const PENDING_FORM_KEY = 'storyLeap_pendingFormData';
@@ -16,35 +17,20 @@ const PENDING_FORM_KEY = 'storyLeap_pendingFormData';
 export default function CreateStory() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
-  const isHe = lang === 'he';
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [generatedStory, setGeneratedStory] = useState(null);
-  const [formData, setFormData] = useState(() => {
-    // Restore saved form data if returning from Pricing
-    try {
-      const saved = sessionStorage.getItem(PENDING_FORM_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (_) {}
-    return {
-      childName: '', childAge: '', gender: '', childImage: '',
-      setting: '', challengeType: '', triggerDesc: '',
-      reactionType: '', hobbies: '', contactEmail: '', contactPhone: '',
-    };
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [formData, setFormData] = useState({
+    childName: '', childAge: '', gender: '', childImage: '',
+    setting: '', challengeType: '', triggerDesc: '',
+    reactionType: '', hobbies: '', contactEmail: '', contactPhone: '',
   });
 
   useEffect(() => {
     initPage();
   }, []);
-
-  // Persist form data to sessionStorage whenever it changes (so it survives Pricing redirect)
-  useEffect(() => {
-    const hasData = formData.childName || formData.childAge || formData.childImage;
-    if (hasData) {
-      sessionStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
-    }
-  }, [formData]);
 
   const initPage = async () => {
     setIsLoading(true);
@@ -64,82 +50,111 @@ export default function CreateStory() {
       }
       setUser(currentUser);
 
+      // Check if returning from login with pending form data
       const urlParams = new URLSearchParams(window.location.search);
-
-      // Returning after login — proceed automatically
       if (urlParams.get('resume') === '1') {
         window.history.replaceState({}, '', window.location.pathname);
-        // Form data already restored from sessionStorage in useState initializer
-        // Just load the user and show the form (already logged in)
+        const saved = sessionStorage.getItem(PENDING_FORM_KEY);
+        if (saved) {
+          const savedForm = JSON.parse(saved);
+          sessionStorage.removeItem(PENDING_FORM_KEY);
+          setFormData(savedForm);
+          // Auto-save and proceed to payment
+          await saveAndProceed(currentUser, savedForm);
+          return;
+        }
       }
 
-      // Returning from Pricing after buying credits
+      // Show success toast if coming back from payment
       if (urlParams.get('payment') === 'success') {
-        window.history.replaceState({}, '', window.location.pathname);
-        toast.success(isHe
-          ? '🎉 הקרדיטים התווספו! כעת תוכלו ליצור את הסיפור.'
-          : '🎉 Credits added! You can now create your story.',
-          { duration: 5000 }
+        toast.success(lang === 'he'
+          ? '🎉 הקרדיטים התווספו! כעת תוכלו למלא את השאלון וליצור את הסיפור שלכם.'
+          : '🎉 Credits added! You can now fill the questionnaire and create your story.',
+          { duration: 7000 }
         );
       }
     } catch (e) {
-      // Not logged in
+      // User not logged in — that's OK, allow filling the form
       setUser(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleLogin = () => {
-    // Save form before redirecting to login
-    sessionStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
-    const returnUrl = window.location.href.split('?')[0] + '?resume=1';
-    base44.auth.redirectToLogin(returnUrl);
-  };
-
-  const validateForm = () => {
-    if (!formData.childName || !formData.childAge || !formData.gender || !formData.setting || !formData.challengeType) {
+  const validateForm = (data) => {
+    const fd = data || formData;
+    if (!fd.childName || !fd.childAge || !fd.gender || !fd.setting || !fd.challengeType) {
       setError(t('create_error_required'));
       return false;
     }
-    if (!formData.childImage) {
-      setError(isHe ? 'חובה להעלות תמונה של הילד/ה לפני שליחת הטופס 📸' : 'Please upload a photo of your child before submitting 📸');
+    if (!fd.childImage) {
+      setError(lang === 'he' ? 'חובה להעלות תמונה של הילד/ה לפני שליחת הטופס 📸' : 'Please upload a photo of your child before submitting 📸');
       return false;
     }
     return true;
   };
 
-  const buildStoryData = (paymentStatus) => ({
-    child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
-    child_image_url: formData.childImage || null, setting: formData.setting,
-    challenge_type: formData.challengeType, trigger_desc: formData.triggerDesc || null,
-    reaction_type: formData.reactionType || null, hobbies: formData.hobbies || null,
-    contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
+  const buildStoryData = (data, paymentStatus) => ({
+    child_name: data.childName, child_age: parseInt(data.childAge), gender: data.gender,
+    child_image_url: data.childImage || null, setting: data.setting,
+    challenge_type: data.challengeType, trigger_desc: data.triggerDesc || null,
+    reaction_type: data.reactionType || null, hobbies: data.hobbies || null,
+    contact_email: data.contactEmail || null, contact_phone: data.contactPhone || null,
     content: null, story_link: null, payment_status: paymentStatus,
   });
+
+  // Called after login resume — user is guaranteed to be logged in
+  const saveAndProceed = async (currentUser, savedFormData) => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const credits = currentUser.credits || 0;
+      const hasCredits = credits >= 20;
+      const savedStory = await base44.entities.Story.create(buildStoryData(savedFormData, hasCredits ? 'draft' : 'pending_payment'));
+      base44.analytics.track({ eventName: 'questionnaire_submitted_after_login', properties: { story_id: savedStory.id } });
+
+      if (hasCredits) {
+        const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: savedStory.id });
+        if (result.data?.success) {
+          const newCredits = result.data.credits_remaining;
+          await base44.auth.updateMe({ credits: newCredits });
+          window.dispatchEvent(new Event('credits-updated'));
+          setGeneratedStory(savedStory);
+          return;
+        }
+      }
+      // No credits — go to pricing
+      navigate('/Pricing');
+    } catch (err) {
+      setError(t('create_error_save'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     if (!validateForm()) return;
 
-    // Not logged in → redirect to login (form is saved in sessionStorage)
+    // Not logged in — save form to sessionStorage and show login modal
     if (!user) {
-      handleLogin();
-      return;
-    }
-
-    const currentCredits = user.credits || 0;
-    if (currentCredits < 20) {
-      // Save and go buy credits
-      handleSaveAndPay();
+      sessionStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
+      setShowLoginModal(true);
       return;
     }
 
     setIsLoading(true);
     try {
-      const savedStory = await base44.entities.Story.create(buildStoryData('draft'));
+      const currentCredits = user.credits || 0;
+      const hasCredits = currentCredits >= 20;
+      const savedStory = await base44.entities.Story.create(buildStoryData(formData, hasCredits ? 'draft' : 'pending_payment'));
       base44.analytics.track({ eventName: 'questionnaire_submitted', properties: { story_id: savedStory.id } });
+
+      if (!hasCredits) {
+        navigate('/Pricing');
+        return;
+      }
 
       const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: savedStory.id });
       if (result.data?.success) {
@@ -147,11 +162,10 @@ export default function CreateStory() {
         await base44.auth.updateMe({ credits: newCredits });
         setUser(prev => ({ ...prev, credits: newCredits }));
         window.dispatchEvent(new Event('credits-updated'));
-        sessionStorage.removeItem(PENDING_FORM_KEY);
         base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id } });
         setGeneratedStory(savedStory);
       } else {
-        handleSaveAndPay();
+        navigate('/Pricing');
       }
     } catch (err) {
       setError(t('create_error_save'));
@@ -163,13 +177,18 @@ export default function CreateStory() {
   const handleSaveAndPay = async () => {
     setError('');
     if (!validateForm()) return;
-    if (!user) { handleLogin(); return; }
+
+    // Not logged in — save form and show login modal
+    if (!user) {
+      sessionStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
+      setShowLoginModal(true);
+      return;
+    }
 
     setIsLoading(true);
     try {
-      const savedStory = await base44.entities.Story.create(buildStoryData('pending_payment'));
+      const savedStory = await base44.entities.Story.create(buildStoryData(formData, 'pending_payment'));
       base44.analytics.track({ eventName: 'story_saved_pending_payment', properties: { story_id: savedStory.id } });
-      // Keep form data in sessionStorage so it's available if user returns
       navigate('/Pricing');
     } catch (err) {
       setError(t('create_error_save'));
@@ -179,7 +198,6 @@ export default function CreateStory() {
   };
 
   const resetForm = () => {
-    sessionStorage.removeItem(PENDING_FORM_KEY);
     setGeneratedStory(null);
     setFormData({ childName: '', childAge: '', gender: '', childImage: '', setting: '', challengeType: '', triggerDesc: '', reactionType: '', hobbies: '', contactEmail: '', contactPhone: '' });
   };
@@ -205,7 +223,16 @@ export default function CreateStory() {
       </div>
 
       <AnimatePresence mode="wait">
-        {generatedStory ? (
+        {isLoading ? (
+          <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <Card className="border-0 shadow-xl shadow-slate-100">
+              <CardContent className="p-8 text-center">
+                <div className="animate-spin w-12 h-12 border-4 border-slate-200 border-t-slate-700 rounded-full mx-auto mb-4" />
+                <p className="text-gray-600">{t('create_saving')}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ) : generatedStory ? (
           <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
             <Card className="border-0 shadow-xl shadow-slate-100">
               <CardContent className="p-8 text-center">
@@ -227,36 +254,7 @@ export default function CreateStory() {
               </CardContent>
             </Card>
           </motion.div>
-
-        ) : !user ? (
-          /* Not logged in — show login prompt inline */
-          <motion.div key="login" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <Card className="border-0 shadow-xl shadow-slate-100">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center mx-auto mb-5">
-                  <LogIn className="w-8 h-8 text-white" />
-                </div>
-                <h2 className="text-2xl font-bold text-slate-800 mb-3">
-                  {isHe ? 'כניסה / הרשמה' : 'Sign in / Register'}
-                </h2>
-                <p className="text-slate-500 mb-6 leading-relaxed">
-                  {isHe
-                    ? 'כדי ליצור סיפור אישי לילד/ה שלך, יש להתחבר או להירשם תחילה.'
-                    : 'To create a personalized story, please sign in or register first.'}
-                </p>
-                <Button
-                  onClick={handleLogin}
-                  className="w-full h-12 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-base"
-                >
-                  <LogIn className="w-5 h-5 ml-2" />
-                  {isHe ? 'התחבר / הירשם עם מייל' : 'Sign in / Register with email'}
-                </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
-
         ) : (
-          /* Logged in — show form */
           <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Card className="border-0 shadow-xl shadow-slate-100">
               <CardContent className="p-6 md:p-8">
@@ -272,11 +270,17 @@ export default function CreateStory() {
                   onSubmit={handleSubmit}
                   onSaveAndPay={handleSaveAndPay}
                   isLoading={isLoading}
-                  userCredits={user.credits || 0}
+                  userCredits={user?.credits || 0}
                 />
               </CardContent>
             </Card>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showLoginModal && (
+          <LoginPromptModal onClose={() => setShowLoginModal(false)} />
         )}
       </AnimatePresence>
     </div>
