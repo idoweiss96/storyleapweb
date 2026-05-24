@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Sparkles, AlertCircle } from 'lucide-react';
+import { Sparkles, AlertCircle, Loader2, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import StoryForm from '../components/story/StoryForm';
 import LoginPromptModal from '../components/story/LoginPromptModal';
@@ -14,14 +14,18 @@ import { useLanguage } from '../components/LanguageContext';
 
 const PENDING_FORM_KEY = 'storyLeap_pendingFormData';
 
+// Steps: 'form' | 'credits_check' | 'success'
 export default function CreateStory() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const isHe = lang === 'he';
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [step, setStep] = useState('form'); // 'form' | 'credits_check' | 'success'
   const [generatedStory, setGeneratedStory] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState({
     childName: '', childAge: '', gender: '', childImage: '',
     setting: '', challengeType: '', triggerDesc: '',
@@ -50,111 +54,71 @@ export default function CreateStory() {
       }
       setUser(currentUser);
 
-      // Check if returning from login with pending form data
       const urlParams = new URLSearchParams(window.location.search);
+
+      // Returning after login — restore form and go to credits check
       if (urlParams.get('resume') === '1') {
         window.history.replaceState({}, '', window.location.pathname);
         const saved = sessionStorage.getItem(PENDING_FORM_KEY);
         if (saved) {
           const savedForm = JSON.parse(saved);
-          sessionStorage.removeItem(PENDING_FORM_KEY);
           setFormData(savedForm);
-          // Auto-save and proceed to payment
-          await saveAndProceed(currentUser, savedForm);
-          return;
+          // Don't remove from sessionStorage yet — will remove after story created
+          setStep('credits_check');
         }
       }
-
-      // Show success toast if coming back from payment
-      if (urlParams.get('payment') === 'success') {
-        toast.success(lang === 'he'
-          ? '🎉 הקרדיטים התווספו! כעת תוכלו למלא את השאלון וליצור את הסיפור שלכם.'
-          : '🎉 Credits added! You can now fill the questionnaire and create your story.',
-          { duration: 7000 }
-        );
-      }
     } catch (e) {
-      // User not logged in — that's OK, allow filling the form
       setUser(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const validateForm = (data) => {
-    const fd = data || formData;
-    if (!fd.childName || !fd.childAge || !fd.gender || !fd.setting || !fd.challengeType) {
+  const validateForm = () => {
+    if (!formData.childName || !formData.childAge || !formData.gender || !formData.setting || !formData.challengeType) {
       setError(t('create_error_required'));
       return false;
     }
-    if (!fd.childImage) {
-      setError(lang === 'he' ? 'חובה להעלות תמונה של הילד/ה לפני שליחת הטופס 📸' : 'Please upload a photo of your child before submitting 📸');
+    if (!formData.childImage) {
+      setError(isHe ? 'חובה להעלות תמונה של הילד/ה לפני שליחת הטופס 📸' : 'Please upload a photo of your child before submitting 📸');
       return false;
     }
     return true;
   };
 
-  const buildStoryData = (data, paymentStatus) => ({
-    child_name: data.childName, child_age: parseInt(data.childAge), gender: data.gender,
-    child_image_url: data.childImage || null, setting: data.setting,
-    challenge_type: data.challengeType, trigger_desc: data.triggerDesc || null,
-    reaction_type: data.reactionType || null, hobbies: data.hobbies || null,
-    contact_email: data.contactEmail || null, contact_phone: data.contactPhone || null,
+  const buildStoryData = (paymentStatus) => ({
+    child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
+    child_image_url: formData.childImage || null, setting: formData.setting,
+    challenge_type: formData.challengeType, trigger_desc: formData.triggerDesc || null,
+    reaction_type: formData.reactionType || null, hobbies: formData.hobbies || null,
+    contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
     content: null, story_link: null, payment_status: paymentStatus,
   });
 
-  // Called after login resume — user is guaranteed to be logged in
-  const saveAndProceed = async (currentUser, savedFormData) => {
-    setIsLoading(true);
-    setError('');
-    try {
-      const credits = currentUser.credits || 0;
-      const hasCredits = credits >= 20;
-      const savedStory = await base44.entities.Story.create(buildStoryData(savedFormData, hasCredits ? 'draft' : 'pending_payment'));
-      base44.analytics.track({ eventName: 'questionnaire_submitted_after_login', properties: { story_id: savedStory.id } });
-
-      if (hasCredits) {
-        const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: savedStory.id });
-        if (result.data?.success) {
-          const newCredits = result.data.credits_remaining;
-          await base44.auth.updateMe({ credits: newCredits });
-          window.dispatchEvent(new Event('credits-updated'));
-          setGeneratedStory(savedStory);
-          return;
-        }
-      }
-      // No credits — go to pricing
-      navigate('/Pricing');
-    } catch (err) {
-      setError(t('create_error_save'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  // Step 1: User clicks "המשך ליצירת הספר"
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     setError('');
     if (!validateForm()) return;
 
-    // Not logged in — save form to sessionStorage and show login modal
     if (!user) {
+      // Save form data and prompt login
       sessionStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
       setShowLoginModal(true);
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const currentCredits = user.credits || 0;
-      const hasCredits = currentCredits >= 20;
-      const savedStory = await base44.entities.Story.create(buildStoryData(formData, hasCredits ? 'draft' : 'pending_payment'));
-      base44.analytics.track({ eventName: 'questionnaire_submitted', properties: { story_id: savedStory.id } });
+    // Logged in → go to credits check step
+    setStep('credits_check');
+  };
 
-      if (!hasCredits) {
-        navigate('/Pricing');
-        return;
-      }
+  // Step 2: User clicks "צור ספר" (has credits)
+  const handleCreateStory = async () => {
+    setError('');
+    setIsCreating(true);
+    try {
+      const savedStory = await base44.entities.Story.create(buildStoryData('draft'));
+      base44.analytics.track({ eventName: 'questionnaire_submitted', properties: { story_id: savedStory.id } });
 
       const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: savedStory.id });
       if (result.data?.success) {
@@ -162,43 +126,41 @@ export default function CreateStory() {
         await base44.auth.updateMe({ credits: newCredits });
         setUser(prev => ({ ...prev, credits: newCredits }));
         window.dispatchEvent(new Event('credits-updated'));
+        sessionStorage.removeItem(PENDING_FORM_KEY);
         base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id } });
         setGeneratedStory(savedStory);
+        setStep('success');
       } else {
-        navigate('/Pricing');
+        setError(t('create_error_save'));
       }
     } catch (err) {
       setError(t('create_error_save'));
     } finally {
-      setIsLoading(false);
+      setIsCreating(false);
     }
   };
 
-  const handleSaveAndPay = async () => {
+  // Step 2 alt: User clicks "רכישת קרדיטים" (no credits)
+  const handleBuyCredits = async () => {
     setError('');
-    if (!validateForm()) return;
-
-    // Not logged in — save form and show login modal
-    if (!user) {
-      sessionStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
-      setShowLoginModal(true);
-      return;
-    }
-
-    setIsLoading(true);
+    setIsCreating(true);
     try {
-      const savedStory = await base44.entities.Story.create(buildStoryData(formData, 'pending_payment'));
+      // Save story as pending_payment so it appears in MyStories after purchase
+      const savedStory = await base44.entities.Story.create(buildStoryData('pending_payment'));
       base44.analytics.track({ eventName: 'story_saved_pending_payment', properties: { story_id: savedStory.id } });
+      sessionStorage.removeItem(PENDING_FORM_KEY);
       navigate('/Pricing');
     } catch (err) {
       setError(t('create_error_save'));
     } finally {
-      setIsLoading(false);
+      setIsCreating(false);
     }
   };
 
   const resetForm = () => {
+    sessionStorage.removeItem(PENDING_FORM_KEY);
     setGeneratedStory(null);
+    setStep('form');
     setFormData({ childName: '', childAge: '', gender: '', childImage: '', setting: '', challengeType: '', triggerDesc: '', reactionType: '', hobbies: '', contactEmail: '', contactPhone: '' });
   };
 
@@ -209,6 +171,9 @@ export default function CreateStory() {
       </div>
     );
   }
+
+  const userCredits = user?.credits || 0;
+  const hasCredits = userCredits >= 20;
 
   return (
     <div className="max-w-2xl mx-auto pb-12">
@@ -223,16 +188,9 @@ export default function CreateStory() {
       </div>
 
       <AnimatePresence mode="wait">
-        {isLoading ? (
-          <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <Card className="border-0 shadow-xl shadow-slate-100">
-              <CardContent className="p-8 text-center">
-                <div className="animate-spin w-12 h-12 border-4 border-slate-200 border-t-slate-700 rounded-full mx-auto mb-4" />
-                <p className="text-gray-600">{t('create_saving')}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ) : generatedStory ? (
+
+        {/* SUCCESS */}
+        {step === 'success' && generatedStory && (
           <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
             <Card className="border-0 shadow-xl shadow-slate-100">
               <CardContent className="p-8 text-center">
@@ -254,7 +212,86 @@ export default function CreateStory() {
               </CardContent>
             </Card>
           </motion.div>
-        ) : (
+        )}
+
+        {/* CREDITS CHECK — shown after login/form, user is logged in */}
+        {step === 'credits_check' && user && (
+          <motion.div key="credits" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <Card className="border-0 shadow-xl shadow-slate-100">
+              <CardContent className="p-8">
+                {error && (
+                  <Alert className="mb-6 border-red-200 bg-red-50">
+                    <AlertCircle className="w-4 h-4 text-red-600" />
+                    <AlertDescription className="text-red-800">{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Summary of what they filled */}
+                <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <h3 className="font-semibold text-slate-700 mb-2 text-sm">
+                    {isHe ? '✅ השאלון מולא עבור:' : '✅ Questionnaire filled for:'}
+                  </h3>
+                  <p className="text-slate-800 font-bold text-lg">{formData.childName}</p>
+                  <p className="text-slate-500 text-sm">{isHe ? `גיל ${formData.childAge}` : `Age ${formData.childAge}`}</p>
+                </div>
+
+                {hasCredits ? (
+                  <div className="space-y-4">
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-xl text-center">
+                      <p className="text-sm text-green-700 font-medium">
+                        ⭐ {isHe ? `יש לך ${userCredits} קרדיטים — מספיק ליצירת הספר!` : `You have ${userCredits} credits — enough to create the book!`}
+                      </p>
+                    </div>
+                    <Button
+                      onClick={handleCreateStory}
+                      disabled={isCreating}
+                      className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg transition-all"
+                    >
+                      {isCreating ? (
+                        <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
+                      ) : (
+                        <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" />{isHe ? 'צור ספר (20 ⭐)' : 'Create Book (20 ⭐)'}</span>
+                      )}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
+                      <p className="text-amber-800 font-semibold mb-1">
+                        {isHe ? '⚠️ נדרשים 20 קרדיטים ליצירת ספר' : '⚠️ 20 credits required to create a book'}
+                      </p>
+                      <p className="text-amber-600 text-sm">
+                        {isHe ? `יש לך כרגע ${userCredits} קרדיטים` : `You currently have ${userCredits} credits`}
+                      </p>
+                    </div>
+                    <Button
+                      onClick={handleBuyCredits}
+                      disabled={isCreating}
+                      className="w-full h-12 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-base"
+                    >
+                      {isCreating ? <Loader2 className="w-5 h-5 animate-spin" /> : (
+                        <span className="flex items-center gap-2">
+                          <ShoppingCart className="w-5 h-5" />
+                          {isHe ? 'רכישת קרדיטים והמשך' : 'Buy Credits & Continue'}
+                        </span>
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => { setStep('form'); setError(''); }}
+                  className="w-full text-sm text-slate-400 hover:text-slate-600 pt-4 mt-2 border-t border-slate-100"
+                >
+                  {isHe ? '← חזרה לעריכת השאלון' : '← Back to edit questionnaire'}
+                </button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* FORM — always shown to guests + logged-in users who haven't submitted yet */}
+        {step === 'form' && (
           <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Card className="border-0 shadow-xl shadow-slate-100">
               <CardContent className="p-6 md:p-8">
@@ -267,15 +304,14 @@ export default function CreateStory() {
                 <StoryForm
                   formData={formData}
                   setFormData={setFormData}
-                  onSubmit={handleSubmit}
-                  onSaveAndPay={handleSaveAndPay}
-                  isLoading={isLoading}
-                  userCredits={user?.credits || 0}
+                  onSubmit={handleFormSubmit}
+                  isLoading={false}
                 />
               </CardContent>
             </Card>
           </motion.div>
         )}
+
       </AnimatePresence>
 
       <AnimatePresence>

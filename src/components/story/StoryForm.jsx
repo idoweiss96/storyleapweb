@@ -31,10 +31,9 @@ async function convertHeicToJpeg(file) {
   });
 }
 
-export default function StoryForm({ formData, setFormData, onSubmit, onSaveAndPay, isLoading, userCredits }) {
+export default function StoryForm({ formData, setFormData, onSubmit, isLoading }) {
   const { t, lang } = useLanguage();
   const [uploading, setUploading] = useState(false);
-  const hasCredits = (userCredits || 0) >= 20;
 
   const genders = [
     { value: 'boy', label: t('gender_boy') },
@@ -233,39 +232,17 @@ export default function StoryForm({ formData, setFormData, onSubmit, onSaveAndPa
       </div>
 
       <div className="space-y-3">
-        <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl">
-          <p className="text-sm text-amber-700 text-center">💫 <strong>{t('form_creation_cost')}</strong></p>
-        </div>
-        {hasCredits ? (
-          <Button type="submit" disabled={isLoading || uploading}
-            className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all">
-            {isLoading ? (
-              <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
-            ) : (
-              <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" />{lang === 'he' ? 'צור סיפור (20 ⭐)' : 'Create Story (20 ⭐)'}</span>
-            )}
-          </Button>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-center text-sm text-red-600 font-medium">
-              {lang === 'he' ? '⚠️ אין לך מספיק קרדיטים (נדרשים 20 ⭐)' : '⚠️ Not enough credits (20 ⭐ required)'}
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              <Button type="button" disabled={isLoading || uploading} onClick={onSaveAndPay}
-                className="h-12 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold">
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-                  <span className="flex items-center gap-2 text-sm">🛒 {lang === 'he' ? 'רכישת קרדיטים' : 'Buy Credits'}</span>
-                )}
-              </Button>
-              <Button type="submit" disabled={isLoading || uploading} variant="outline"
-                className="h-12 rounded-xl border-2 border-slate-300 text-slate-700 font-semibold">
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-                  <span className="flex items-center gap-2 text-sm">💾 {lang === 'he' ? 'שמור וגמור מאוחר' : 'Save for later'}</span>
-                )}
-              </Button>
-            </div>
-          </div>
-        )}
+        <Button type="submit" disabled={isLoading || uploading}
+          className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all">
+          {isLoading ? (
+            <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
+          ) : (
+            <span className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5" />
+              {lang === 'he' ? 'המשך ליצירת הספר ←' : 'Continue to Create Book →'}
+            </span>
+          )}
+        </Button>
       </div>
     </form>
   );

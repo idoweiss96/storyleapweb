@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -24,6 +24,8 @@ export default function MyStories() {
   const [readyNotification, setReadyNotification] = useState(null);
   const [activatingStoryId, setActivatingStoryId] = useState(null);
 
+  const [creditsAddedPopup, setCreditsAddedPopup] = useState(null); // { added, total, pendingStory }
+
   // Handle PayPal redirect return (mobile hosted button flow)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -36,7 +38,6 @@ export default function MyStories() {
 
     const capture = async () => {
       try {
-        // Hosted buttons auto-capture on PayPal's side — skip manual capture
         const res = await base44.functions.invoke('captureCreditsOrder', {
           paypal_order_id: paypalToken,
           credits: 20,
@@ -45,8 +46,11 @@ export default function MyStories() {
         if (res.data?.success) {
           try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
           window.dispatchEvent(new Event('credits-updated'));
-          toast.success(lang === 'he' ? '🎉 הקרדיטים התווספו לחשבונך!' : '🎉 Credits added to your account!', { duration: 5000 });
-          loadStories(); // refresh to show updated credits & stories
+          // After refresh, find pending story and show popup
+          const refreshedStories = await base44.entities.Story.filter({ created_by: (await base44.auth.me()).email }, '-created_date');
+          setStories(refreshedStories);
+          const pendingStory = refreshedStories.find(s => s.payment_status === 'pending_payment');
+          setCreditsAddedPopup({ added: 20, total: res.data.new_total, pendingStory });
         } else {
           toast.error(lang === 'he' ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
         }
@@ -270,6 +274,87 @@ export default function MyStories() {
       {readyNotification && (
         <StoryReadyNotification story={readyNotification} onClose={() => setReadyNotification(null)} />
       )}
+
+      {/* Credits added popup after purchase */}
+      <AnimatePresence>
+        {creditsAddedPopup && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setCreditsAddedPopup(null)} />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 z-10 text-center"
+            >
+              <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
+                <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
+              </div>
+              <h2 className="text-xl font-bold text-slate-800 mb-2">
+                {lang === 'he' ? '🎉 הקרדיטים נוספו!' : '🎉 Credits Added!'}
+              </h2>
+              <p className="text-slate-600 text-sm mb-1">
+                {lang === 'he'
+                  ? `נוספו לך ${creditsAddedPopup.added} קרדיטים לחשבון.`
+                  : `${creditsAddedPopup.added} credits were added to your account.`}
+              </p>
+              <p className="text-slate-500 text-sm mb-4">
+                {lang === 'he'
+                  ? `סה"כ יש לך כעת ${creditsAddedPopup.total} קרדיטים.`
+                  : `You now have ${creditsAddedPopup.total} credits total.`}
+              </p>
+
+              {creditsAddedPopup.pendingStory ? (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-right">
+                  <p className="text-amber-800 text-sm font-medium">
+                    {lang === 'he'
+                      ? `יש לך סיפור ממתין עבור ${creditsAddedPopup.pendingStory.child_name} — לחץ ליצירה עכשיו!`
+                      : `You have a pending story for ${creditsAddedPopup.pendingStory.child_name} — click to create now!`}
+                  </p>
+                </div>
+              ) : null}
+
+              <div className="space-y-2">
+                {creditsAddedPopup.pendingStory && (
+                  <Button
+                    onClick={async () => {
+                      const story = creditsAddedPopup.pendingStory;
+                      setCreditsAddedPopup(null);
+                      setActivatingStoryId(story.id);
+                      try {
+                        const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: story.id });
+                        if (result.data?.success) {
+                          const newCredits = result.data.credits_remaining;
+                          await base44.auth.updateMe({ credits: newCredits });
+                          setUser(prev => ({ ...prev, credits: newCredits }));
+                          window.dispatchEvent(new Event('credits-updated'));
+                          setStories(prev => prev.map(s => s.id === story.id ? { ...s, payment_status: 'paid' } : s));
+                          toast.success(lang === 'he' ? '✨ הסיפור נשלח ליצירה!' : '✨ Story sent for creation!');
+                        }
+                      } catch (_) {
+                        toast.error(lang === 'he' ? 'שגיאה ביצירת הסיפור' : 'Error creating story');
+                      } finally {
+                        setActivatingStoryId(null);
+                      }
+                    }}
+                    className="w-full h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <Sparkles className="w-4 h-4" />
+                      {lang === 'he' ? 'צור את הסיפור עכשיו!' : 'Create Story Now!'}
+                    </span>
+                  </Button>
+                )}
+                <button
+                  onClick={() => setCreditsAddedPopup(null)}
+                  className="w-full text-sm text-slate-400 hover:text-slate-600 py-2"
+                >
+                  {lang === 'he' ? 'סגור' : 'Close'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
