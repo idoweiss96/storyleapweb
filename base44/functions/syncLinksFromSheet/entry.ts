@@ -60,16 +60,17 @@ Deno.serve(async (req) => {
       if (sheetLink && sheetLink !== currentLink) {
         await base44.asServiceRole.entities.Story.update(story.id, { story_link: sheetLink });
         updated++;
-        // Send email notification to customer
+        // Send email notification to customer using the rich template
         const email = fields.contact_email || '';
         const childName = fields.child_name || '';
+        const isHebrew = /[\u0590-\u05FF]/.test(childName);
         if (email) {
-          await base44.asServiceRole.integrations.Core.SendEmail({
+          await base44.asServiceRole.functions.invoke('sendStoryReadyEmail', {
             to: email,
-            subject: `${childName}'s Story is Ready! ✨`,
-            body: `Hi there! ✨<br><br>${childName} personalized story is ready.<br><br>You can read it here: ${sheetLink}<br><br>Please open this in a landscape mode.<br><br>Thanks for choosing StoryLeap 💛<br><br>The StoryLeap Team
-`
-          });
+            childName,
+            storyLink: sheetLink,
+            isHebrew,
+          }).catch(() => {});
         }
       }
     }
