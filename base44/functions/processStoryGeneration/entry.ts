@@ -1,6 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
 async function generateStoryWithAI(story, base44ServiceRole) {
   const settingMap = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'אצטדיון הספורט', real_life: 'עולם אמיתי' };
@@ -35,71 +34,6 @@ Requirements:
   return storyContent;
 }
 
-async function addStoryToSheet(story, accessToken) {
-  const SPREADSHEET_ID_EN = '1-LZ-ai2LdJ4BoTTdSacDRl-L0LpcIEg5JrCKK6txLxg';
-  const SPREADSHEET_ID_HE = '1yT2WdAlyjpp8gciT4iZYEL122FyrliTin3MEcTvvr20';
-  const isHebrewText = /[\u0590-\u05FF]/.test(story.child_name || '');
-  const lang = isHebrewText ? 'he' : 'en';
-  const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
-
-  const genderMap = lang === 'he' ? { boy: 'בן', girl: 'בת', other: 'אחר' } : { boy: 'Boy', girl: 'Girl', other: 'Other' };
-  const settingMap = lang === 'he' ? { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' } : { space: 'Space', forest: 'Enchanted Forest', castle: 'Castle', sports: 'Sports', real_life: 'Real Life' };
-  const challengeMap = lang === 'he' ? { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' } : { fears: 'Fears', social_difficulty: 'Social Difficulty', changes: 'Changes', emotional_regulation: 'Emotional Regulation', separation_anxiety: 'Separation Anxiety', self_confidence: 'Self Confidence', sleep_issues: 'Sleep Issues' };
-  const reactionMap = lang === 'he' ? { outburst: 'התפרצות', withdrawal: 'הסתגרות', attention_seeking: 'חיפוש תשומת לב', crying: 'בכי', aggression: 'תוקפנות', avoidance: 'הימנעות' } : { outburst: 'Outburst', withdrawal: 'Withdrawal', attention_seeking: 'Attention Seeking', crying: 'Crying', aggression: 'Aggression', avoidance: 'Avoidance' };
-
-  const createdDate = story.created_date ? new Date(story.created_date).toLocaleDateString('he-IL') : '';
-  const row = [
-    createdDate,
-    story.child_name || '',
-    story.child_age || '',
-    genderMap[story.gender] || story.gender || '',
-    settingMap[story.setting] || story.setting || '',
-    challengeMap[story.challenge_type] || story.challenge_type || '',
-    story.trigger_desc || '',
-    reactionMap[story.reaction_type] || story.reaction_type || '',
-    story.hobbies || '',
-    story.contact_email || '',
-    story.contact_phone || '',
-    story.child_image_url || '',
-    story.story_link || '',
-  ];
-
-  await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:append?valueInputOption=USER_ENTERED`,
-    {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ values: [row] }),
-    }
-  );
-}
-
-async function sendStoryReadyEmail(email, childName, isHebrew) {
-  if (!email || !RESEND_API_KEY) return;
-  const subject = isHebrew
-    ? `✨ הסיפור של ${childName} מוכן!`
-    : `✨ ${childName}'s Story is Ready!`;
-  const html = isHebrew
-    ? `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;">
-        <h1 style="color:#1e293b;">הסיפור של ${childName} מוכן! ✨</h1>
-        <p style="color:#475569;font-size:16px;">שלום! הסיפור המותאם אישית של ${childName} נוצר בהצלחה.</p>
-        <p style="color:#475569;font-size:16px;">תוכלו לצפות בסיפור המלא באזור הסיפורים שלכם באתר.</p>
-        <a href="https://storyleapai.com/MyStories" style="display:inline-block;background:#1e293b;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:16px;">לצפייה בסיפור →</a>
-        <p style="color:#94a3b8;font-size:14px;margin-top:24px;">תודה שבחרתם StoryLeap 💛</p>
-      </div>`
-    : `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
-        <h1 style="color:#1e293b;">${childName}'s Story is Ready! ✨</h1>
-        <p style="color:#475569;font-size:16px;">Hi there! ${childName}'s personalized story has been successfully created.</p>
-        <p style="color:#475569;font-size:16px;">You can read the full story in your stories area on the website.</p>
-        <a href="https://storyleapai.com/MyStories" style="display:inline-block;background:#1e293b;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;margin-top:16px;">View Story →</a>
-        <p style="color:#94a3b8;font-size:14px;margin-top:24px;">Thank you for choosing StoryLeap 💛</p>
-      </div>`;
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: 'StoryLeap AI <stories@storyleapai.com>', to: email, subject, html }),
-  });
-}
 
 // Main handler: receives story_id and order_id, generates story, updates DB, sends emails, adds to sheet
 Deno.serve(async (req) => {
@@ -127,15 +61,14 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.entities.Order.update(order_id, { status: 'story_ready' });
     }
 
-    // 4. Add to Google Sheets
-    try {
-      const conn = await base44.asServiceRole.connectors.getConnection('googlesheets');
-      await addStoryToSheet(story, conn.accessToken);
-    } catch (_) {}
-
-    // 5. Send "story ready" email
+    // 4. Send "story ready" email (story_link may be set later by admin, send without it for now)
     if (story.contact_email) {
-      await sendStoryReadyEmail(story.contact_email, story.child_name, isHebrew).catch(() => {});
+      await base44.asServiceRole.functions.invoke('sendStoryReadyEmail', {
+        to: story.contact_email,
+        childName: story.child_name,
+        storyLink: story.story_link || '',
+        isHebrew,
+      }).catch(() => {});
     }
 
     // 6. Notify admin
