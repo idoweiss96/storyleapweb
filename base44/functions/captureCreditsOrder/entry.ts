@@ -47,44 +47,6 @@ async function sendStoryInProgressEmail(email, childName, isHebrew) {
   });
 }
 
-async function addStoryToSheet(story, accessToken) {
-  const SPREADSHEET_ID_EN = '1-LZ-ai2LdJ4BoTTdSacDRl-L0LpcIEg5JrCKK6txLxg';
-  const SPREADSHEET_ID_HE = '1yT2WdAlyjpp8gciT4iZYEL122FyrliTin3MEcTvvr20';
-  const isHebrewText = /[\u0590-\u05FF]/.test(story.child_name || '');
-  const lang = isHebrewText ? 'he' : 'en';
-  const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
-
-  const genderMap = lang === 'he' ? { boy: 'בן', girl: 'בת', other: 'אחר' } : { boy: 'Boy', girl: 'Girl', other: 'Other' };
-  const settingMap = lang === 'he' ? { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' } : { space: 'Space', forest: 'Enchanted Forest', castle: 'Castle', sports: 'Sports', real_life: 'Real Life' };
-  const challengeMap = lang === 'he' ? { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' } : { fears: 'Fears', social_difficulty: 'Social Difficulty', changes: 'Changes', emotional_regulation: 'Emotional Regulation', separation_anxiety: 'Separation Anxiety', self_confidence: 'Self Confidence', sleep_issues: 'Sleep Issues' };
-  const reactionMap = lang === 'he' ? { outburst: 'התפרצות', withdrawal: 'הסתגרות', attention_seeking: 'חיפוש תשומת לב', crying: 'בכי', aggression: 'תוקפנות', avoidance: 'הימנעות' } : { outburst: 'Outburst', withdrawal: 'Withdrawal', attention_seeking: 'Attention Seeking', crying: 'Crying', aggression: 'Aggression', avoidance: 'Avoidance' };
-
-  const createdDate = story.created_date ? new Date(story.created_date).toLocaleDateString('he-IL') : '';
-  const row = [
-    createdDate,
-    story.child_name || '',
-    story.child_age || '',
-    genderMap[story.gender] || story.gender || '',
-    settingMap[story.setting] || story.setting || '',
-    challengeMap[story.challenge_type] || story.challenge_type || '',
-    story.trigger_desc || '',
-    reactionMap[story.reaction_type] || story.reaction_type || '',
-    story.hobbies || '',
-    story.contact_email || '',
-    story.contact_phone || '',
-    story.child_image_url || '',
-    story.story_link || '',
-  ];
-
-  await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:append?valueInputOption=USER_ENTERED`,
-    {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ values: [row] }),
-    }
-  );
-}
 
 async function processPendingStories(base44, userEmail, userCredits) {
   const pendingStories = await base44.asServiceRole.entities.Story.filter({
@@ -95,20 +57,10 @@ async function processPendingStories(base44, userEmail, userCredits) {
   let remainingCredits = userCredits;
   let processed = 0;
 
-  let sheetsToken = null;
-  try {
-    const conn = await base44.asServiceRole.connectors.getConnection('googlesheets');
-    sheetsToken = conn.accessToken;
-  } catch (_) {}
-
   for (const story of pendingStories) {
     if (remainingCredits < 20) break;
     remainingCredits -= 20;
     await base44.asServiceRole.entities.Story.update(story.id, { payment_status: 'paid' });
-
-    if (sheetsToken) {
-      try { await addStoryToSheet(story, sheetsToken); } catch (_) {}
-    }
 
     const isHebrewName = /[\u0590-\u05FF]/.test(story.child_name || '');
     if (story.contact_email) {
