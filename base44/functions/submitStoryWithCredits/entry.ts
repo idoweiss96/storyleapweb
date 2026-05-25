@@ -1,13 +1,11 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
-
-async function sendStoryInProgressEmail(email, childName, isHebrew) {
-  if (!email || !RESEND_API_KEY) return;
+async function sendStoryInProgressEmail(base44ServiceRole, email, childName, isHebrew) {
+  if (!email) return;
   const subject = isHebrew
     ? 'הקסם מתחיל! אנחנו כבר עובדים על הסיפור שלך 📝✨'
     : "The magic begins! We're working on your story 📝✨";
-  const html = isHebrew
+  const body = isHebrew
     ? `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
         <h2>היי,</h2>
         <p style="font-size:16px;line-height:1.7;">איזה כיף! קיבלנו את הפרטים בהצלחה.</p>
@@ -22,11 +20,7 @@ async function sendStoryInProgressEmail(email, childName, isHebrew) {
         <p style="font-size:16px;line-height:1.7;">As soon as the story is ready, we will send you another email with a direct link to read it.</p>
         <p style="margin-top:24px;font-size:15px;">Best regards,<br/>StoryLeap</p>
       </div>`;
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: 'StoryLeap AI <stories@storyleapai.com>', to: email, subject, html }),
-  });
+  await base44ServiceRole.integrations.Core.SendEmail({ to: email, subject, body, from_name: 'StoryLeap' });
 }
 
 Deno.serve(async (req) => {
@@ -60,7 +54,7 @@ Deno.serve(async (req) => {
     const storyForEmail = await base44.asServiceRole.entities.Story.get(story_id);
     const isHebrew = /[\u0590-\u05FF]/.test(storyForEmail.child_name || '');
     if (storyForEmail.contact_email) {
-      await sendStoryInProgressEmail(storyForEmail.contact_email, storyForEmail.child_name, isHebrew).catch(() => {});
+      await sendStoryInProgressEmail(base44.asServiceRole, storyForEmail.contact_email, storyForEmail.child_name, isHebrew).catch(() => {});
     }
 
     // Trigger story generation asynchronously

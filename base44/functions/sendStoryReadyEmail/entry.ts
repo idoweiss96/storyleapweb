@@ -1,22 +1,22 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
-
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const { to, childName, storyLink, isHebrew } = await req.json();
-    if (!to || !RESEND_API_KEY) return Response.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!to) return Response.json({ error: 'Missing required fields' }, { status: 400 });
 
     const subject = isHebrew
       ? `✨ הסיפור האישי של ${childName} מוכן!`
       : `✨ ${childName}'s personalized story is ready!`;
 
-    const linkHtml = storyLink
-      ? `<a href="${storyLink}" style="display:inline-block;background:#1e293b;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;margin:8px 0;">${isHebrew ? 'לקריאת הסיפור ←' : 'Read the story here →'}</a>`
+    const linkSection = storyLink
+      ? (isHebrew
+          ? `<p style="font-size:15px;font-weight:bold;">לקריאת הסיפור:</p><p><a href="${storyLink}" style="display:inline-block;background:#1e293b;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">לקריאת הסיפור ←</a></p><p style="font-size:14px;color:#64748b;">מומלץ לפתוח את הסיפור במצב אופקי 📖</p>`
+          : `<p style="font-size:15px;font-weight:bold;">Read the story here:</p><p><a href="${storyLink}" style="display:inline-block;background:#1e293b;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">Read the story here →</a></p><p style="font-size:14px;color:#64748b;">For the best experience, please open the story in landscape mode 📖</p>`)
       : '';
 
-    const html = isHebrew
+    const body = isHebrew
       ? `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;line-height:1.8;">
           <p style="font-size:18px;">היי ✨</p>
           <p style="font-size:18px;font-weight:bold;">הסיפור האישי של ${childName} מוכן 💛</p>
@@ -50,9 +50,7 @@ Deno.serve(async (req) => {
             <li>"מותר להרגיש ככה."</li>
           </ul>
 
-          <p style="font-size:15px;font-weight:bold;">לקריאת הסיפור:</p>
-          ${linkHtml}
-          <p style="font-size:14px;color:#64748b;">מומלץ לפתוח את הסיפור במצב אופקי 📖</p>
+          ${linkSection}
 
           <p style="font-size:15px;margin-top:24px;">תודה שבחרתם ב-StoryLeap 💛<br/><br/>צוות StoryLeap</p>
         </div>`
@@ -89,23 +87,12 @@ Deno.serve(async (req) => {
             <li>"It's okay to feel this way."</li>
           </ul>
 
-          <p style="font-size:15px;font-weight:bold;">Read the story here:</p>
-          ${linkHtml}
-          <p style="font-size:14px;color:#64748b;">For the best experience, please open the story in landscape mode 📖</p>
+          ${linkSection}
 
           <p style="font-size:15px;margin-top:24px;">Thank you for choosing StoryLeap 💛<br/><br/>The StoryLeap Team</p>
         </div>`;
 
-    const resendRes = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: 'StoryLeap AI <onboarding@resend.dev>', to, subject, html }),
-    });
-
-    if (!resendRes.ok) {
-      const err = await resendRes.text();
-      return Response.json({ error: err }, { status: 500 });
-    }
+    await base44.asServiceRole.integrations.Core.SendEmail({ to, subject, body, from_name: 'StoryLeap' });
 
     return Response.json({ success: true });
   } catch (error) {
