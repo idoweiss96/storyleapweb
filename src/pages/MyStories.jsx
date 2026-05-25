@@ -198,10 +198,10 @@ export default function MyStories() {
                         </Button>
                       </div>
                     ) : (
-                      <Badge className="bg-amber-100 text-amber-700">
-                        <Clock className="w-3 h-3 ml-1" />{t('my_story_pending')}
-                      </Badge>
-                    )}
+                       <Badge className="bg-amber-100 text-amber-700">
+                         <Clock className="w-3 h-3 ml-1" />{lang === 'he' ? `הסיפור של ${story.child_name} בהכנה` : t('my_story_pending')}
+                       </Badge>
+                     )}
                   </CardContent>
                 </Card>
               </motion.div>
