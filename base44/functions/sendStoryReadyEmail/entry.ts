@@ -96,11 +96,16 @@ Deno.serve(async (req) => {
           <p style="font-size:15px;margin-top:24px;">Thank you for choosing StoryLeap 💛<br/><br/>The StoryLeap Team</p>
         </div>`;
 
-    await fetch('https://api.resend.com/emails', {
+    const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ from: 'StoryLeap AI <stories@storyleapai.com>', to, subject, html }),
     });
+
+    if (!resendRes.ok) {
+      const err = await resendRes.text();
+      return Response.json({ error: err }, { status: 500 });
+    }
 
     return Response.json({ success: true });
   } catch (error) {
