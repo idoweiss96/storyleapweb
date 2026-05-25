@@ -197,9 +197,9 @@ export default function CreateStory() {
                 <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
                   <Sparkles className="w-10 h-10 text-green-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('create_success_title')}</h2>
-                <p className="text-gray-600 mb-6 whitespace-pre-line">
-                  {generatedStory.child_name} {t('create_success_msg_suffix')}
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">{isHe ? `✨ הספר של ${generatedStory.child_name} בהכנה 🎬` : `✨ ${generatedStory.child_name}'s story is being created 🎬`}</h2>
+                <p className="text-gray-600 mb-6">
+                  {isHe ? `אנחנו יוצרים עכשיו את הסיפור של ${generatedStory.child_name}. אתה תקבל מייל כשהסיפור יהיה מוכן לקריאה!` : `We're creating ${generatedStory.child_name}'s story now. You'll receive an email when the story is ready to read!`}
                 </p>
                 <div className="flex gap-3 justify-center">
                   <Button variant="outline" onClick={() => navigate(createPageUrl('MyStories'))} className="rounded-xl">
