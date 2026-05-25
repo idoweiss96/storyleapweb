@@ -61,15 +61,7 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.entities.Order.update(order_id, { status: 'story_ready' });
     }
 
-    // 4. Send "story ready" email (story_link may be set later by admin, send without it for now)
-    if (story.contact_email) {
-      await base44.asServiceRole.functions.invoke('sendStoryReadyEmail', {
-        to: story.contact_email,
-        childName: story.child_name,
-        storyLink: story.story_link || '',
-        isHebrew,
-      }).catch(() => {});
-    }
+    // 4. "story ready" email is sent by automation when admin sets story_link
 
     // 6. Notify admin
     try {
