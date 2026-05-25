@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: 'StoryLeap AI <stories@storyleapai.com>', to, subject, html }),
+      body: JSON.stringify({ from: 'StoryLeap AI <onboarding@resend.dev>', to, subject, html }),
     });
 
     if (!resendRes.ok) {
