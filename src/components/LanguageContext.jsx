@@ -22,7 +22,7 @@ const translations = {
     t6_name: 'שרה ב.', t6_text: 'הסיפור עזר לנו לפתוח שיחה על קשיים חברתיים בצורה טבעית ולא מאיימת. הילד שלי פשוט נפתח!',
     create_title: 'יצירת סיפור לגיבור/ה', create_subtitle: 'מלאו את הפרטים והקסם יעשה את השאר ✨',
     create_saving: 'שומר את הבקשה...', create_success_title: 'הבקשה נשלחה בהצלחה! 🎉',
-    create_success_msg_suffix: 'נמצא בהכנה.\nתקבלו עדכון כשהסיפור יהיה מוכן.',
+    create_success_msg_suffix: 'הסיפור שלו/שלה נמצא בהכנה.\nתקבלו עדכון כשהסיפור יהיה מוכן.',
     create_to_stories: 'לסיפורים שלי', create_another: 'סיפור נוסף',
     create_error_required: 'נא למלא את כל השדות הנדרשים', create_error_save: 'אירעה שגיאה בשמירת הבקשה. נסו שוב.',
     form_child_info: 'פרטי הילד/ה', form_child_name: 'שם הילד/ה *', form_child_name_ph: 'למשל: יובל',
