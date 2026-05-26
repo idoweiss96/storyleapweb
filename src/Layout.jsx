@@ -81,13 +81,13 @@ function LayoutInner({ children, currentPageName }) {
       <style>{`
         @media (max-width: 768px) {
           #root { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/7ac22fbf1_generated_image.png) !important;
+            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
             background-attachment: scroll !important;
             background-size: cover !important;
             background-position: top center !important;
           }
           #root > div { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/7ac22fbf1_generated_image.png) !important;
+            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
             background-attachment: scroll !important;
             background-size: cover !important;
             background-position: top center !important;
