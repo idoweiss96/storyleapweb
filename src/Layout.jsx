@@ -81,7 +81,7 @@ function LayoutInner({ children, currentPageName }) {
       <style>{`
         @media (max-width: 768px) {
           #root > div { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/92afd557a_generated_image.png) !important;
+            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/d269f668f_generated_image.png) !important;
             background-attachment: scroll !important;
             background-size: cover !important;
             background-position: top center !important;
