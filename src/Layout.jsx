@@ -77,7 +77,7 @@ function LayoutInner({ children, currentPageName }) {
   const navItems = user ? authNavItems : publicNavItems;
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen" style={{background: 'linear-gradient(135deg, #c5d8f5 0%, #e8f0fb 15%, #ffffff 35%, #fff8ed 55%, #fde8d0 70%, #fad4e0 83%, #e8c8ee 100%)'}}>
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen" style={{background: 'linear-gradient(135deg, #c5d8f5 0%, #e8f0fb 15%, #ffffff 35%, #fff8ed 50%, #fdd4dc 65%, #f5c4d8 80%, #edb5d0 100%)'}}>
       <style>{`
         @keyframes twinkle {
           0%, 100% { opacity: 0.3; transform: scale(0.8); }
