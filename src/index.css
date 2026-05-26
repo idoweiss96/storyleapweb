@@ -94,9 +94,18 @@
 
 @media (max-width: 768px) {
   html, body {
-    background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/d35c9cfab_generated_image.png) !important;
+    background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/33c3d57eb_generated_image.png) !important;
     background-size: cover !important;
     background-position: top center !important;
+    background-repeat: no-repeat !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  html, body {
+    background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/340cb9e35_generated_image.png) !important;
+    background-size: cover !important;
+    background-position: center !important;
     background-repeat: no-repeat !important;
   }
 }
