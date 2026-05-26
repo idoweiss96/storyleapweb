@@ -81,22 +81,22 @@ function LayoutInner({ children, currentPageName }) {
       <style>{`
         @media (max-width: 768px) {
           #root { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/ad2a40d8d_generated_image.png) !important;
-            background-attachment: scroll !important;
+            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
+            background-attachment: fixed !important;
             background-size: cover !important;
-            background-position: top center !important;
+            background-position: center !important;
           }
           #root > div { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/ad2a40d8d_generated_image.png) !important;
-            background-attachment: scroll !important;
+            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
+            background-attachment: fixed !important;
             background-size: cover !important;
-            background-position: top center !important;
+            background-position: center !important;
           }
         }
         @media (min-width: 769px) and (max-width: 1024px) {
           #root > div { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/ad2a40d8d_generated_image.png) !important;
-            background-attachment: scroll !important;
+            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
+            background-attachment: fixed !important;
             background-size: cover !important;
             background-position: center !important;
           }
