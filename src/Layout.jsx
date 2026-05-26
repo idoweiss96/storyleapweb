@@ -77,28 +77,31 @@ function LayoutInner({ children, currentPageName }) {
   const navItems = user ? authNavItems : publicNavItems;
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-white" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat'}}>
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-white" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat', backgroundOrigin: 'border-box'}}>
       <style>{`
         @media (max-width: 768px) {
           #root { 
             background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
-            background-attachment: fixed !important;
+            background-attachment: scroll !important;
             background-size: cover !important;
-            background-position: center !important;
+            background-position: center top !important;
+            background-repeat: no-repeat !important;
+            min-height: 100vh !important;
           }
           #root > div { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
-            background-attachment: fixed !important;
-            background-size: cover !important;
-            background-position: center !important;
+            background-image: none !important;
           }
         }
         @media (min-width: 769px) and (max-width: 1024px) {
-          #root > div { 
+          #root { 
             background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
-            background-attachment: fixed !important;
+            background-attachment: scroll !important;
             background-size: cover !important;
-            background-position: center !important;
+            background-position: center top !important;
+            background-repeat: no-repeat !important;
+          }
+          #root > div { 
+            background-image: none !important;
           }
         }
         @keyframes twinkle {
