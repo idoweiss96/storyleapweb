@@ -80,13 +80,60 @@ function LayoutInner({ children, currentPageName }) {
     <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/f7f81b5a7_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'}}>
       <style>{`
         @keyframes twinkle {
-          0%, 100% { opacity: 0.3; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1); }
+          0%, 100% { opacity: 0.2; transform: scale(0.7); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+        @keyframes float-star {
+          0% { transform: translateY(0px) rotate(0deg); opacity: 0.4; }
+          50% { transform: translateY(-18px) rotate(180deg); opacity: 1; }
+          100% { transform: translateY(0px) rotate(360deg); opacity: 0.4; }
+        }
+        @keyframes drift {
+          0% { transform: translateX(0px) translateY(0px); opacity: 0.3; }
+          33% { transform: translateX(10px) translateY(-12px); opacity: 0.9; }
+          66% { transform: translateX(-8px) translateY(-6px); opacity: 0.5; }
+          100% { transform: translateX(0px) translateY(0px); opacity: 0.3; }
         }
         .star-twinkle { animation: twinkle 2s ease-in-out infinite; }
         .star-twinkle-delay { animation: twinkle 2s ease-in-out infinite 0.5s; }
         .star-twinkle-delay-2 { animation: twinkle 2s ease-in-out infinite 1s; }
+        .star-float-1 { animation: float-star 3.5s ease-in-out infinite; }
+        .star-float-2 { animation: float-star 4.2s ease-in-out infinite 0.7s; }
+        .star-float-3 { animation: float-star 5s ease-in-out infinite 1.3s; }
+        .star-float-4 { animation: float-star 3.8s ease-in-out infinite 2s; }
+        .star-float-5 { animation: float-star 4.6s ease-in-out infinite 0.4s; }
+        .star-drift-1 { animation: drift 6s ease-in-out infinite; }
+        .star-drift-2 { animation: drift 7s ease-in-out infinite 1s; }
+        .star-drift-3 { animation: drift 5.5s ease-in-out infinite 2.5s; }
+        .star-drift-4 { animation: drift 8s ease-in-out infinite 0.8s; }
+        .star-drift-5 { animation: drift 6.5s ease-in-out infinite 1.8s; }
+        .star-drift-6 { animation: drift 7.5s ease-in-out infinite 3s; }
       `}</style>
+
+      {/* Floating Stars Layer */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Float stars */}
+        <div className="star-float-1 absolute text-yellow-300" style={{top:'8%', left:'12%', fontSize:'14px'}}>✦</div>
+        <div className="star-float-2 absolute text-pink-300" style={{top:'15%', right:'18%', fontSize:'10px'}}>★</div>
+        <div className="star-float-3 absolute text-purple-300" style={{top:'30%', left:'5%', fontSize:'8px'}}>✦</div>
+        <div className="star-float-4 absolute text-blue-200" style={{top:'22%', right:'8%', fontSize:'12px'}}>✦</div>
+        <div className="star-float-5 absolute text-rose-300" style={{top:'45%', left:'20%', fontSize:'9px'}}>★</div>
+
+        {/* Drift stars */}
+        <div className="star-drift-1 absolute text-yellow-200" style={{top:'60%', right:'15%', fontSize:'11px'}}>✦</div>
+        <div className="star-drift-2 absolute text-pink-200" style={{top:'70%', left:'8%', fontSize:'8px'}}>★</div>
+        <div className="star-drift-3 absolute text-violet-300" style={{top:'12%', left:'40%', fontSize:'7px'}}>✦</div>
+        <div className="star-drift-4 absolute text-sky-300" style={{top:'80%', right:'30%', fontSize:'10px'}}>✦</div>
+        <div className="star-drift-5 absolute text-fuchsia-200" style={{top:'35%', right:'35%', fontSize:'8px'}}>★</div>
+        <div className="star-drift-6 absolute text-amber-200" style={{top:'55%', left:'50%', fontSize:'6px'}}>✦</div>
+
+        {/* Extra small twinklers */}
+        <div className="star-twinkle absolute text-pink-300" style={{top:'5%', left:'60%', fontSize:'9px'}}>✦</div>
+        <div className="star-twinkle-delay absolute text-purple-200" style={{top:'88%', left:'25%', fontSize:'7px'}}>★</div>
+        <div className="star-twinkle-delay-2 absolute text-yellow-300" style={{top:'75%', right:'10%', fontSize:'8px'}}>✦</div>
+        <div className="star-twinkle absolute text-blue-300" style={{top:'42%', right:'5%', fontSize:'6px'}}>★</div>
+        <div className="star-twinkle-delay absolute text-rose-200" style={{top:'92%', right:'45%', fontSize:'9px'}}>✦</div>
+      </div>
 
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-slate-200/60">
         <div className="max-w-6xl mx-auto px-4 py-3">
