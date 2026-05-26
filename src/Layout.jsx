@@ -193,7 +193,7 @@ function LayoutInner({ children, currentPageName }) {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-xl">
+              className="md:hidden border-t border-pink-200 bg-gradient-to-b from-pink-50/80 to-white/95 backdrop-blur-xl">
               <nav className="flex flex-col p-4 gap-1">
                 {navItems.map((item) => {
                   const Icon = item.icon;
