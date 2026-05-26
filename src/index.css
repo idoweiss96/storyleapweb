@@ -91,9 +91,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-@media (max-width: 1024px) {
-  html, body {
-    background: none !important;
-  }
-}

@@ -77,33 +77,8 @@ function LayoutInner({ children, currentPageName }) {
   const navItems = user ? authNavItems : publicNavItems;
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-white" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/9fbe5235c_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat', backgroundOrigin: 'border-box'}}>
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/9fbe5235c_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center top', backgroundAttachment: 'scroll', backgroundRepeat: 'no-repeat'}}>
       <style>{`
-        @media (max-width: 768px) {
-          #root { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
-            background-attachment: scroll !important;
-            background-size: cover !important;
-            background-position: center top !important;
-            background-repeat: no-repeat !important;
-            min-height: 100vh !important;
-          }
-          #root > div { 
-            background-image: none !important;
-          }
-        }
-        @media (min-width: 769px) and (max-width: 1024px) {
-          #root { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png) !important;
-            background-attachment: scroll !important;
-            background-size: cover !important;
-            background-position: center top !important;
-            background-repeat: no-repeat !important;
-          }
-          #root > div { 
-            background-image: none !important;
-          }
-        }
         @keyframes twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.7); }
           50% { opacity: 1; transform: scale(1.2); }
