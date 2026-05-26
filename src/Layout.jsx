@@ -136,6 +136,26 @@ function LayoutInner({ children, currentPageName }) {
         <div className="star-twinkle-delay-2 absolute text-yellow-300" style={{top:'75%', right:'10%', fontSize:'8px'}}>✦</div>
         <div className="star-twinkle absolute text-blue-300" style={{top:'42%', right:'5%', fontSize:'6px'}}>★</div>
         <div className="star-twinkle-delay absolute text-rose-200" style={{top:'92%', right:'45%', fontSize:'9px'}}>✦</div>
+
+        {/* Extra purple/blue/pink stars */}
+        <div className="star-float-1 absolute text-purple-400" style={{top:'3%', left:'25%', fontSize:'13px'}}>✦</div>
+        <div className="star-float-2 absolute text-blue-400" style={{top:'7%', right:'35%', fontSize:'10px'}}>★</div>
+        <div className="star-float-3 absolute text-pink-400" style={{top:'18%', left:'55%', fontSize:'12px'}}>✦</div>
+        <div className="star-float-4 absolute text-violet-300" style={{top:'10%', left:'80%', fontSize:'9px'}}>★</div>
+        <div className="star-float-5 absolute text-indigo-300" style={{top:'25%', right:'25%', fontSize:'11px'}}>✦</div>
+
+        <div className="star-drift-1 absolute text-purple-300" style={{top:'40%', left:'30%', fontSize:'10px'}}>★</div>
+        <div className="star-drift-2 absolute text-blue-300" style={{top:'50%', right:'40%', fontSize:'8px'}}>✦</div>
+        <div className="star-drift-3 absolute text-pink-300" style={{top:'65%', left:'65%', fontSize:'9px'}}>★</div>
+        <div className="star-drift-4 absolute text-violet-400" style={{top:'20%', left:'45%', fontSize:'7px'}}>✦</div>
+        <div className="star-drift-5 absolute text-fuchsia-400" style={{top:'78%', left:'40%', fontSize:'11px'}}>★</div>
+        <div className="star-drift-6 absolute text-blue-400" style={{top:'33%', right:'55%', fontSize:'8px'}}>✦</div>
+
+        <div className="star-twinkle absolute text-purple-400" style={{top:'13%', left:'35%', fontSize:'8px'}}>✦</div>
+        <div className="star-twinkle-delay absolute text-pink-400" style={{top:'48%', left:'15%', fontSize:'10px'}}>★</div>
+        <div className="star-twinkle-delay-2 absolute text-indigo-400" style={{top:'58%', right:'20%', fontSize:'7px'}}>✦</div>
+        <div className="star-twinkle absolute text-violet-300" style={{top:'85%', right:'60%', fontSize:'9px'}}>★</div>
+        <div className="star-twinkle-delay absolute text-blue-300" style={{top:'96%', left:'70%', fontSize:'8px'}}>✦</div>
       </div>
 
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-slate-200/60">
