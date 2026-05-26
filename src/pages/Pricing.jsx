@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 
-const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30'];
+const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30', 'MATANA30'];
 const FREE_CREDIT_CODES = { 'STORY20': 20 };
 // Special test codes with hosted button override
 const HOSTED_BUTTON_CODES = {
