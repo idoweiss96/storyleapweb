@@ -80,6 +80,12 @@ function LayoutInner({ children, currentPageName }) {
     <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-white" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/87b0343d2_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat'}}>
       <style>{`
         @media (max-width: 768px) {
+          #root { 
+            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/d35c9cfab_generated_image.png) !important;
+            background-attachment: scroll !important;
+            background-size: cover !important;
+            background-position: top center !important;
+          }
           #root > div { 
             background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/d35c9cfab_generated_image.png) !important;
             background-attachment: scroll !important;
