@@ -77,7 +77,7 @@ function LayoutInner({ children, currentPageName }) {
   const navItems = user ? authNavItems : publicNavItems;
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-white" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/12056f3d1_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat'}}>
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-white" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/17c540fb7_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat'}}>
       <style>{`
         @media (max-width: 768px) {
           #root { 
