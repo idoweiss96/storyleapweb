@@ -110,6 +110,9 @@ function LayoutInner({ children, currentPageName }) {
         .star-drift-6 { animation: drift 7.5s ease-in-out infinite 3s; }
       `}</style>
 
+      {/* Mobile pink top overlay */}
+      <div className="md:hidden fixed inset-x-0 top-0 h-64 pointer-events-none z-0" style={{background: 'linear-gradient(to bottom, rgba(255,182,213,0.45) 0%, rgba(255,209,230,0.25) 50%, transparent 100%)'}}></div>
+
       {/* Floating Stars Layer */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {/* Float stars */}
