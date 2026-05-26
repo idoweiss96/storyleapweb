@@ -77,11 +77,11 @@ function LayoutInner({ children, currentPageName }) {
   const navItems = user ? authNavItems : publicNavItems;
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-white" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/cfcba3933_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat'}}>
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-white" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/3fc5fc36a_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat'}}>
       <style>{`
         @media (max-width: 768px) {
           #root > div { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/19ba92e51_generated_image.png) !important;
+            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/92afd557a_generated_image.png) !important;
             background-attachment: scroll !important;
             background-size: cover !important;
             background-position: top center !important;
@@ -89,7 +89,7 @@ function LayoutInner({ children, currentPageName }) {
         }
         @media (min-width: 769px) and (max-width: 1024px) {
           #root > div { 
-            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/0307dcedd_generated_image.png) !important;
+            background-image: url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/044cd5c5c_generated_image.png) !important;
             background-attachment: scroll !important;
             background-size: cover !important;
             background-position: center !important;
