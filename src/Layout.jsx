@@ -80,7 +80,7 @@ function LayoutInner({ children, currentPageName }) {
     <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen bg-white" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/1652fe292_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundRepeat: 'no-repeat'}}>
       <style>{`
         @media (max-width: 768px) {
-          body { background-attachment: scroll !important; }
+          #root > div { background-attachment: scroll !important; }
         }
         @keyframes twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.7); }
