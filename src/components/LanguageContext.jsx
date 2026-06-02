@@ -151,7 +151,7 @@ export const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
   const [lang, setLang] = React.useState(() => {
-    try { return localStorage.getItem('sl_lang') || 'en'; } catch { return 'en'; }
+    try { return localStorage.getItem('sl_lang') || 'he'; } catch { return 'he'; }
   });
 
   const toggleLang = () => {
