@@ -131,7 +131,7 @@ const translations = {
     admin_cancel: 'Cancel', admin_save: 'Save & Send Notification',
     nav_pricing: 'Purchase Credits', nav_contact: 'Contact',
     maya_sample: 'Sample Story', maya_title: 'Princess Maya and the Cloud of Confusion', maya_btn: 'Read the Story',
-    cta_desc: 'Join now and get your first personalized book free with 20 starter credits',
+    cta_desc: 'Create now a personalized story tailored to your child\'s world!',
     pricing_badge: 'Special Offer', pricing_title: 'Personalized Story ✨', pricing_subtitle: 'A therapeutic story tailored for your child, delivered within 24 hours',
     pricing_old_price: '$15', pricing_new_price: '$3', pricing_discount: '80% OFF',
     pricing_buy_now: 'Buy Now', pricing_choose_payment: 'Choose payment method:',
