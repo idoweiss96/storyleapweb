@@ -67,7 +67,7 @@ const AuthenticatedApp = () => {
       ))}
       <Route path="/Pricing" element={<LayoutWrapper currentPageName="Pricing"><Pricing /></LayoutWrapper>} />
       <Route path="/Contact" element={<LayoutWrapper currentPageName="Contact"><Contact /></LayoutWrapper>} />
-      <Route path="/MayaStory" element={<LanguageProvider><MayaStory /></LanguageProvider>} />
+      <Route path="/MayaStory" element={<LayoutWrapper currentPageName="MayaStory"><MayaStory /></LayoutWrapper>} />
       <Route path="/PaymentCheckout" element={<LayoutWrapper currentPageName="PaymentCheckout"><PaymentCheckout /></LayoutWrapper>} />
       <Route path="/PaymentSuccess" element={<LayoutWrapper currentPageName="PaymentSuccess"><PaymentSuccess /></LayoutWrapper>} />
       <Route path="/PaymentCancel" element={<LayoutWrapper currentPageName="PaymentCancel"><PaymentCancel /></LayoutWrapper>} />
