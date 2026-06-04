@@ -106,7 +106,7 @@ export default function MayaStory() {
   const coverTitle = lang === 'he' ? 'הנסיכה מאיה\nוענן הבלבול' : 'Princess Maya and\nthe Cloud of Confusion';
   const startBtn = lang === 'he' ? 'התחילי ›' : 'Start ›';
   const endTitle = lang === 'he' ? 'סוף' : 'The End';
-  const readAgain = lang === 'he' ? 'קראי שוב' : 'Read Again';
+  const readAgain = lang === 'he' ? 'קראו שוב' : 'Read Again';
   const pageLabel = lang === 'he' ? 'עמוד' : 'Page';
   const prevLabel = lang === 'he' ? 'הקודם' : 'Previous';
   const nextLabel = lang === 'he' ? 'הבא' : 'Next';
