@@ -58,7 +58,7 @@ const translations = {
     admin_edit_title_prefix: 'עדכון קישור לסיפור של', admin_link_label: 'קישור לסיפור', admin_email_note_prefix: '📧 לאחר השמירה, תישלח הודעה למייל:',
     admin_cancel: 'ביטול', admin_save: 'שמור ושלח הודעה',
     nav_pricing: 'רכישת קרדיטים', nav_contact: 'צור קשר',
-    maya_sample: 'סיפור לדוגמה', maya_title: 'הנסיכה מיה והעננת הבלבול', maya_btn: 'קרא את הסיפור',
+    maya_sample: 'סיפור לדוגמה', maya_title: 'הנסיכה מאיה וענן הבלבול', maya_btn: 'קרא את הסיפור',
     cta_desc: 'צרו עכשיו סיפור אישי המותאם לעולם של הילד שלכם!',
     pricing_badge: 'הצעה מיוחדת', pricing_title: 'סיפור מותאם אישית ✨', pricing_subtitle: 'סיפור טיפולי מותאם לילד/ה שלכם, נשלח תוך 24 שעות',
     pricing_old_price: '₪45', pricing_new_price: '₪15', pricing_discount: '67% הנחה',
