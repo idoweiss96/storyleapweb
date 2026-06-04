@@ -148,7 +148,7 @@ export default function MayaStory() {
               {page.type === 'story' &&
                 <div className="flex flex-col md:flex-row min-h-[500px]">
                   {/* Image */}
-                  <div className={`md:w-1/2 w-full overflow-hidden flex-shrink-0 ${isRTL ? 'md:order-last' : ''}`} style={{ minHeight: '300px' }}>
+                  <div className="md:w-1/2 w-full overflow-hidden flex-shrink-0" style={{ minHeight: '300px' }}>
                     <img src={page.image} alt={`${pageLabel} ${page.pageNum}`}
                       className="w-full h-full object-cover" style={{ minHeight: '300px' }} />
                   </div>
