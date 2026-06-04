@@ -81,10 +81,10 @@ export default function MayaStory() {
   const PAGES = lang === 'he' ? PAGES_HE : PAGES_EN;
 
   const goNext = () => {
-    if (currentPage < PAGES.length - 1) { setDirection(1); setCurrentPage((p) => p + 1); }
+    if (currentPage < PAGES.length - 1) { setDirection(isRTL ? -1 : 1); setCurrentPage((p) => p + 1); }
   };
   const goPrev = () => {
-    if (currentPage > 0) { setDirection(-1); setCurrentPage((p) => p - 1); }
+    if (currentPage > 0) { setDirection(isRTL ? 1 : -1); setCurrentPage((p) => p - 1); }
   };
   const restart = () => { setDirection(-1); setCurrentPage(0); };
 
@@ -95,7 +95,8 @@ export default function MayaStory() {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
-      diff > 0 ? goNext() : goPrev();
+      const swipeForward = isRTL ? diff < 0 : diff > 0;
+      swipeForward ? goNext() : goPrev();
     }
     touchStartX.current = null;
   };
@@ -189,22 +190,23 @@ export default function MayaStory() {
           </Link>
         </div>
         <div className="flex items-center justify-between mt-2 px-1">
-          <button onClick={goPrev} disabled={currentPage === 0}
+          {/* "Previous" button — in RTL this is on the right side and goes forward visually */}
+          <button onClick={isRTL ? goNext : goPrev} disabled={isRTL ? currentPage === PAGES.length - 1 : currentPage === 0}
             className="flex items-center gap-1 px-4 py-2 rounded-xl bg-white/80 shadow text-slate-600 hover:bg-white disabled:opacity-30 transition-all text-sm">
-            <ChevronLeft className="w-4 h-4" /> {prevLabel}
+            <ChevronLeft className="w-4 h-4" /> {isRTL ? nextLabel : prevLabel}
           </button>
 
           <div className="flex gap-2 items-center">
             {PAGES.map((_, i) =>
               <button key={i}
-                onClick={() => { setDirection(i > currentPage ? 1 : -1); setCurrentPage(i); }}
+                onClick={() => { setDirection(i > currentPage ? (isRTL ? -1 : 1) : (isRTL ? 1 : -1)); setCurrentPage(i); }}
                 className={`h-2 rounded-full transition-all ${i === currentPage ? 'bg-amber-600 w-5' : 'bg-slate-300 w-2'}`} />
             )}
           </div>
 
-          <button onClick={goNext} disabled={currentPage === PAGES.length - 1}
+          <button onClick={isRTL ? goPrev : goNext} disabled={isRTL ? currentPage === 0 : currentPage === PAGES.length - 1}
             className="flex items-center gap-1 px-4 py-2 rounded-xl bg-white/80 shadow text-slate-600 hover:bg-white disabled:opacity-30 transition-all text-sm">
-            {nextLabel} <ChevronRight className="w-4 h-4" />
+            {isRTL ? prevLabel : nextLabel} <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
