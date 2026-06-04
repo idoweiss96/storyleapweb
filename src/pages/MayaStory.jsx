@@ -192,7 +192,7 @@ export default function MayaStory() {
         <div className="flex items-center justify-between mt-2 px-1">
           <button onClick={goPrev} disabled={currentPage === 0}
             className="flex items-center gap-1 px-4 py-2 rounded-xl bg-white/80 shadow text-slate-600 hover:bg-white disabled:opacity-30 transition-all text-sm">
-            <ChevronLeft className="w-4 h-4" /> {prevLabel}
+            {isRTL ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />} {prevLabel}
           </button>
 
           <div className="flex gap-2 items-center">
@@ -205,7 +205,7 @@ export default function MayaStory() {
 
           <button onClick={goNext} disabled={currentPage === PAGES.length - 1}
             className="flex items-center gap-1 px-4 py-2 rounded-xl bg-white/80 shadow text-slate-600 hover:bg-white disabled:opacity-30 transition-all text-sm">
-            {nextLabel} <ChevronRight className="w-4 h-4" />
+            {nextLabel} {isRTL ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
           </button>
         </div>
       </div>
