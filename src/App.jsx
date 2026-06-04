@@ -8,6 +8,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Pricing from './pages/Pricing';
+import { LanguageProvider } from './components/LanguageContext';
 import Contact from './pages/Contact';
 import MayaStory from './pages/MayaStory';
 import PaymentCheckout from './pages/PaymentCheckout';
@@ -66,7 +67,7 @@ const AuthenticatedApp = () => {
       ))}
       <Route path="/Pricing" element={<LayoutWrapper currentPageName="Pricing"><Pricing /></LayoutWrapper>} />
       <Route path="/Contact" element={<LayoutWrapper currentPageName="Contact"><Contact /></LayoutWrapper>} />
-      <Route path="/MayaStory" element={<MayaStory />} />
+      <Route path="/MayaStory" element={<LanguageProvider><MayaStory /></LanguageProvider>} />
       <Route path="/PaymentCheckout" element={<LayoutWrapper currentPageName="PaymentCheckout"><PaymentCheckout /></LayoutWrapper>} />
       <Route path="/PaymentSuccess" element={<LayoutWrapper currentPageName="PaymentSuccess"><PaymentSuccess /></LayoutWrapper>} />
       <Route path="/PaymentCancel" element={<LayoutWrapper currentPageName="PaymentCancel"><PaymentCancel /></LayoutWrapper>} />
