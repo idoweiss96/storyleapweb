@@ -364,10 +364,10 @@ export default function Admin() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-h-[360px] overflow-y-auto">
             <Table>
               <TableHeader>
-                <TableRow>
+                <TableRow className="sticky top-0 bg-white z-10">
                   <TableHead className="text-right">שם</TableHead>
                   <TableHead className="text-right">אימייל</TableHead>
                   <TableHead className="text-right">קרדיטים</TableHead>
