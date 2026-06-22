@@ -109,7 +109,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
       if (formData.challengeType === 'other') return !!formData.customChallenge && formData.customChallenge.trim().length > 0;
       return true;
     }
-    if (step === 3) return true; // hobbies/email/phone are optional
+    if (step === 3) return !!formData.contactEmail && /\S+@\S+\.\S+/.test(formData.contactEmail);
     return false;
   };
 
@@ -467,14 +467,15 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="font-medium" style={{ color: DARK }}>{t('form_email')}</Label>
+                  <Label className="font-medium" style={{ color: DARK }}>{t('form_email')} <span className="text-red-500">*</span></Label>
                   <Input
                   type="email"
                   value={formData.contactEmail}
                   onChange={(e) => handleChange('contactEmail', e.target.value)}
                   placeholder="your@email.com"
                   className="h-11 rounded-xl"
-                  style={{ borderColor: `${PURPLE}30` }} />
+                  style={{ borderColor: `${PURPLE}30` }}
+                  required />
                 
                 </div>
                 <div className="space-y-2">
