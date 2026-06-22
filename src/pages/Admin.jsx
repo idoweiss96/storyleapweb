@@ -34,6 +34,7 @@ export default function Admin() {
   const [searchStories, setSearchStories] = useState('');
   const [searchUsers, setSearchUsers] = useState('');
   const [viewingImage, setViewingImage] = useState(null);
+  const [showAllStories, setShowAllStories] = useState(false);
 
   const settingLabels = { space: t('setting_space'), forest: t('setting_forest'), castle: t('setting_castle'), sports: t('setting_sports'), real_life: t('setting_real_life') };
   const challengeLabels = { fears: t('ch_fears'), social_difficulty: t('ch_social'), changes: t('ch_changes'), emotional_regulation: t('ch_emotional'), separation_anxiety: t('ch_separation'), self_confidence: t('ch_confidence'), sleep_issues: t('ch_sleep') };
@@ -276,10 +277,13 @@ export default function Admin() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {stories.filter(story => 
-                    story.child_name.toLowerCase().includes(searchStories.toLowerCase()) ||
-                    (story.contact_email || '').toLowerCase().includes(searchStories.toLowerCase())
-                  ).map((story) => (
+                  {(() => {
+                    const filtered = stories.filter(story =>
+                      story.child_name.toLowerCase().includes(searchStories.toLowerCase()) ||
+                      (story.contact_email || '').toLowerCase().includes(searchStories.toLowerCase())
+                    );
+                    const visible = showAllStories ? filtered : filtered.slice(0, 10);
+                    return visible.map((story) => (
                     <TableRow key={story.id}>
                       <TableCell className="text-sm">{story.created_date ? format(new Date(story.created_date), 'dd/MM/yyyy') : '-'}</TableCell>
                       <TableCell className="font-medium">{story.child_name}</TableCell>
@@ -320,11 +324,26 @@ export default function Admin() {
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
+                    ));
+                  })()}
                 </TableBody>
               </Table>
             </div>
           )}
+          {(() => {
+            const filteredCount = stories.filter(story =>
+              story.child_name.toLowerCase().includes(searchStories.toLowerCase()) ||
+              (story.contact_email || '').toLowerCase().includes(searchStories.toLowerCase())
+            ).length;
+            if (filteredCount <= 10) return null;
+            return (
+              <div className="flex justify-center mt-4">
+                <Button variant="outline" onClick={() => setShowAllStories(!showAllStories)} className="rounded-xl">
+                  {showAllStories ? 'הצג פחות' : `הצג את כל הסיפורים (${filteredCount})`}
+                </Button>
+              </div>
+            );
+          })()}
         </CardContent>
       </Card>
 
