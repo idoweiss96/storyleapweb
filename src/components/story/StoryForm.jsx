@@ -540,7 +540,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
             type="submit"
             disabled={isLoading || uploading}
             className="h-14 px-8 text-lg rounded-xl text-white font-bold shadow-lg transition-all"
-            style={{ background: `linear-gradient(135deg, ${PURPLE}, ${GOLD})`, boxShadow: `0 8px 24px ${PURPLE}30` }}
+            style={{ background: `linear-gradient(135deg, ${LIGHT_PURPLE}, ${GOLD})`, boxShadow: `0 8px 24px ${LIGHT_PURPLE}30` }}
           >
             {isLoading ? (
               <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
