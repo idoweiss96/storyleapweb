@@ -170,7 +170,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               <div
                 className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all"
                 style={{
-                  background: i < formStep ? PURPLE : i === formStep ? GOLD : '#e2e8f0',
+                  background: i < formStep ? LIGHT_PURPLE : i === formStep ? GOLD : '#e2e8f0',
                   color: i < formStep ? '#fff' : i === formStep ? DARK : '#94a3b8',
                 }}
               >
