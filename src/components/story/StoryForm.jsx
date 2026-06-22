@@ -492,17 +492,17 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
             </div>
 
             {/* Summary */}
-            <div className="rounded-2xl p-5 mt-4 hidden" style={{ background: `linear-gradient(135deg, ${PURPLE}08, ${GOLD}10)`, border: `1px solid ${PURPLE}20` }}>
-              <h4 className="font-bold text-sm mb-3" style={{ color: PURPLE }}>
-                {isHe ? '✅ סיכום הסיפור' : '✅ Story Summary'}
-              </h4>
-              <div className="space-y-1.5 text-sm" style={{ color: DARK }}>
-                <p><strong>{isHe ? 'ילד/ה:' : 'Child:'}</strong> {formData.childName} ({formData.childAge}, {genders.find((g) => g.value === formData.gender)?.label || '-'})</p>
-                <p><strong>{isHe ? 'עולם:' : 'Setting:'}</strong> {settings.find((s) => s.value === formData.setting)?.emoji} {settings.find((s) => s.value === formData.setting)?.label}</p>
-                <p><strong>{isHe ? 'אתגר:' : 'Challenge:'}</strong> {challengeTypes.find((c) => c.value === formData.challengeType)?.emoji} {formData.challengeType === 'other' ? formData.customChallenge || (isHe ? 'אחר' : 'Other') : challengeTypes.find((c) => c.value === formData.challengeType)?.label}</p>
-                {formData.hobbies && <p><strong>{isHe ? 'תחביבים:' : 'Hobbies:'}</strong> {formData.hobbies}</p>}
-              </div>
-            </div>
+            
+
+
+
+
+
+
+
+
+
+          
           </motion.div>
         }
       </AnimatePresence>
