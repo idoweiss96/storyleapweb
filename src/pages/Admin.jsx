@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, ExternalLink, RefreshCw, Star, Users, Search, Image, Download } from 'lucide-react';
 import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageContext';
+import CouponManager from '../components/admin/CouponManager';
 
 export default function Admin() {
   const { t } = useLanguage();
@@ -380,6 +381,8 @@ export default function Admin() {
           </div>
         </CardContent>
       </Card>
+
+      <CouponManager />
 
       <Dialog open={!!viewingImage} onOpenChange={() => setViewingImage(null)}>
         <DialogContent className="max-w-md">
