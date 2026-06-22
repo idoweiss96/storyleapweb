@@ -33,6 +33,7 @@ async function convertHeicToJpeg(file) {
 
 // Brand colors
 const PURPLE = '#4A3FB5';
+const LIGHT_PURPLE = '#9B8FE0';
 const GOLD = '#FAC775';
 const DARK = '#1E293B';
 
@@ -155,7 +156,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
             <div className="w-full h-2 rounded-full overflow-hidden bg-slate-100">
               <motion.div
                 className="h-full rounded-full"
-                style={{ background: `linear-gradient(90deg, ${PURPLE}, ${GOLD})` }}
+                style={{ background: `linear-gradient(90deg, ${LIGHT_PURPLE}, ${GOLD})` }}
                 initial={{ width: 0 }}
                 animate={{ width: i <= formStep ? '100%' : '0%' }}
                 transition={{ duration: 0.4 }}
