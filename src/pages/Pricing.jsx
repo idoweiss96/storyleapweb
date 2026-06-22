@@ -9,6 +9,7 @@ import { Sparkles, Star, CheckCircle, Tag } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
+import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
 
 const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30', 'MATANA30'];
 const FREE_CREDIT_CODES = { 'STORY20': 20 };
@@ -39,6 +40,7 @@ export default function Pricing() {
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError] = useState('');
   const [promoLoading, setPromoLoading] = useState(false);
+  const [creditsPopup, setCreditsPopup] = useState(null);
   const [paypalError, setPaypalError] = useState('');
   const [processing, setProcessing] = useState(false);
   const containerRef = useRef(null);
@@ -91,8 +93,7 @@ export default function Pricing() {
             // Sync credits to session
             try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
             window.dispatchEvent(new Event('credits-updated'));
-            toast.success(isHe ? '🎉 הקרדיטים התווספו לחשבונך!' : '🎉 Credits added to your account!', { duration: 5000 });
-            navigate('/MyStories?payment=success');
+            setCreditsPopup({ added: 20, total: res.data.new_total, navigateOnClose: true });
           } else {
             setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
           }
@@ -170,7 +171,7 @@ export default function Pricing() {
             await base44.auth.updateMe({ credits: res.data.new_total });
             // Small delay to ensure session is updated before layout re-reads it
             setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
-            navigate('/MyStories?payment=success');
+            setCreditsPopup({ added: 20, total: res.data.new_total, navigateOnClose: true });
           }
         }
       } catch (err) {
@@ -270,7 +271,7 @@ export default function Pricing() {
         const res = await base44.functions.invoke('captureCreditsOrder', { paypal_order_id: `COUPON_${code}`, credits, coupon: true });
         if (res.data?.success) {
           window.dispatchEvent(new Event('credits-updated'));
-          toast.success(isHe ? `🎉 ${credits} קרדיטים התווספו לחשבונך!` : `🎉 ${credits} credits added to your account!`, { duration: 5000 });
+          setCreditsPopup({ added: credits, total: res.data.new_total });
           setPromoCode('');
         } else {
           setPromoError(isHe ? 'שגיאה בהפעלת הקוד' : 'Error applying code');
@@ -415,6 +416,18 @@ export default function Pricing() {
           </Card>
         </motion.div>
       </div>
+
+      {creditsPopup && (
+        <CreditsAddedPopup
+          added={creditsPopup.added}
+          total={creditsPopup.total}
+          onClose={() => {
+            const shouldNavigate = creditsPopup.navigateOnClose;
+            setCreditsPopup(null);
+            if (shouldNavigate) navigate('/MyStories');
+          }}
+        />
+      )}
     </div>
   );
 }
