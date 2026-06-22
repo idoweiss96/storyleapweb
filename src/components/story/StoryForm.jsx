@@ -64,6 +64,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
     { value: 'separation_anxiety', label: t('ch_separation'), emoji: '🤗' },
     { value: 'self_confidence', label: t('ch_confidence'), emoji: '💪' },
     { value: 'sleep_issues', label: t('ch_sleep'), emoji: '🌙' },
+    { value: 'other', label: isHe ? 'אחר' : 'Other', emoji: '✏️' },
   ];
 
   const reactionTypes = [
@@ -102,7 +103,11 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
   const isStepValid = (step) => {
     if (step === 0) return formData.childName && formData.childAge && formData.gender && formData.childImage;
     if (step === 1) return !!formData.setting;
-    if (step === 2) return !!formData.challengeType;
+    if (step === 2) {
+      if (!formData.challengeType) return false;
+      if (formData.challengeType === 'other') return !!formData.customChallenge && formData.customChallenge.trim().length > 0;
+      return true;
+    }
     if (step === 3) return true; // hobbies/email/phone are optional
     return false;
   };
@@ -360,6 +365,35 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               </div>
             </div>
 
+            {/* Custom challenge input when "Other" is selected */}
+            {formData.challengeType === 'other' && (
+              <div className="space-y-2">
+                <Label className="font-medium" style={{ color: DARK }}>
+                  {isHe ? 'תארו את האתגר (עד 4 מילים)' : 'Describe the challenge (up to 4 words)'} <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  value={formData.customChallenge || ''}
+                  onChange={(e) => {
+                    const words = e.target.value.trim().split(/\s+/).filter(Boolean);
+                    if (words.length <= 4) {
+                      handleChange('customChallenge', e.target.value);
+                    } else {
+                      // Allow only first 4 words
+                      handleChange('customChallenge', words.slice(0, 4).join(' '));
+                    }
+                  }}
+                  placeholder={isHe ? 'למשל: קנאה באח, מעבר גן...' : 'e.g.: sibling rivalry, new school...'}
+                  className="h-12 rounded-xl"
+                  style={{ borderColor: `${PURPLE}40` }}
+                />
+                <p className="text-xs text-slate-400">
+                  {isHe
+                    ? `${(formData.customChallenge || '').trim().split(/\s+/).filter(Boolean).length}/4 מילים`
+                    : `${(formData.customChallenge || '').trim().split(/\s+/).filter(Boolean).length}/4 words`}
+                </p>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label className="font-medium" style={{ color: DARK }}>{t('form_trigger')}</Label>
               <Textarea
@@ -464,7 +498,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               <div className="space-y-1.5 text-sm" style={{ color: DARK }}>
                 <p><strong>{isHe ? 'ילד/ה:' : 'Child:'}</strong> {formData.childName} ({formData.childAge}, {genders.find(g => g.value === formData.gender)?.label || '-'})</p>
                 <p><strong>{isHe ? 'עולם:' : 'Setting:'}</strong> {settings.find(s => s.value === formData.setting)?.emoji} {settings.find(s => s.value === formData.setting)?.label}</p>
-                <p><strong>{isHe ? 'אתגר:' : 'Challenge:'}</strong> {challengeTypes.find(c => c.value === formData.challengeType)?.emoji} {challengeTypes.find(c => c.value === formData.challengeType)?.label}</p>
+                <p><strong>{isHe ? 'אתגר:' : 'Challenge:'}</strong> {challengeTypes.find(c => c.value === formData.challengeType)?.emoji} {formData.challengeType === 'other' ? (formData.customChallenge || (isHe ? 'אחר' : 'Other')) : challengeTypes.find(c => c.value === formData.challengeType)?.label}</p>
                 {formData.hobbies && <p><strong>{isHe ? 'תחביבים:' : 'Hobbies:'}</strong> {formData.hobbies}</p>}
               </div>
             </div>
