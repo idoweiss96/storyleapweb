@@ -3,9 +3,9 @@ import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Loader2, Upload, X } from 'lucide-react';
+import { Sparkles, Loader2, Upload, X, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../LanguageContext';
 
 async function convertHeicToJpeg(file) {
@@ -31,14 +31,21 @@ async function convertHeicToJpeg(file) {
   });
 }
 
+// Brand colors
+const PURPLE = '#4A3FB5';
+const GOLD = '#FAC775';
+const DARK = '#1E293B';
+
 export default function StoryForm({ formData, setFormData, onSubmit, isLoading }) {
   const { t, lang } = useLanguage();
+  const isHe = lang === 'he';
   const [uploading, setUploading] = useState(false);
+  const [formStep, setFormStep] = useState(0); // 0-3 for 4 steps
 
   const genders = [
-    { value: 'boy', label: t('gender_boy') },
-    { value: 'girl', label: t('gender_girl') },
-    { value: 'other', label: t('gender_other') },
+    { value: 'boy', label: t('gender_boy'), emoji: '👦' },
+    { value: 'girl', label: t('gender_girl'), emoji: '👧' },
+    { value: 'other', label: t('gender_other'), emoji: '🧒' },
   ];
 
   const settings = [
@@ -77,7 +84,6 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
     if (!file) return;
     setUploading(true);
     try {
-      // Convert HEIC/HEIF to JPEG automatically
       if (/\.(heic|heif)$/i.test(file.name) || file.type === 'image/heic' || file.type === 'image/heif') {
         file = await convertHeicToJpeg(file);
       }
@@ -92,157 +98,425 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
 
   const removeImage = () => handleChange('childImage', '');
 
+  // Validation per step
+  const isStepValid = (step) => {
+    if (step === 0) return formData.childName && formData.childAge && formData.gender && formData.childImage;
+    if (step === 1) return !!formData.setting;
+    if (step === 2) return !!formData.challengeType;
+    if (step === 3) return true; // hobbies/email/phone are optional
+    return false;
+  };
+
+  const nextStep = () => {
+    if (formStep < 3) setFormStep(formStep + 1);
+  };
+  const prevStep = () => {
+    if (formStep > 0) setFormStep(formStep - 1);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formStep < 3) {
+      nextStep();
+      return;
+    }
+    onSubmit(e);
+  };
+
+  const stepLabels = isHe
+    ? ['פרטי הילד/ה', 'עולם הסיפור', 'האתגר הרגשי', 'סיכום ופרטים']
+    : ['Child Details', 'Story World', 'Emotional Challenge', 'Summary & Contact'];
+
+  // Slide direction
+  const slideVariants = {
+    enter: (direction) => ({ opacity: 0, x: direction > 0 ? (isHe ? -40 : 40) : (isHe ? 40 : -40) }),
+    center: { opacity: 1, x: 0 },
+    exit: (direction) => ({ opacity: 0, x: direction > 0 ? (isHe ? 40 : -40) : (isHe ? -40 : 40) }),
+  };
+  const [direction, setDirection] = useState(1);
+  const goToStep = (newStep) => {
+    setDirection(newStep > formStep ? 1 : -1);
+    setFormStep(newStep);
+  };
+  const handleNext = () => { setDirection(1); nextStep(); };
+  const handlePrev = () => { setDirection(-1); prevStep(); };
+
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
-      {/* Section 1: Child Info */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_child_info')}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="childName" className="text-gray-700 font-medium">{t('form_child_name')}</Label>
-            <Input id="childName" value={formData.childName} onChange={(e) => handleChange('childName', e.target.value)}
-              placeholder={t('form_child_name_ph')} className="h-11 rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="childAge" className="text-gray-700 font-medium">{t('form_age')}</Label>
-            <Input id="childAge" type="number" min="1" max="12" value={formData.childAge} onChange={(e) => handleChange('childAge', e.target.value)}
-              placeholder={t('form_age_ph')} className="h-11 rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="gender" className="text-gray-700 font-medium">{t('form_gender')}</Label>
-            <Select value={formData.gender} onValueChange={(value) => handleChange('gender', value)} required>
-              <SelectTrigger className="h-11 rounded-xl border-violet-200 focus:border-violet-400 focus:ring-violet-400">
-                <SelectValue placeholder={t('form_gender_ph')} />
-              </SelectTrigger>
-              <SelectContent>
-                {genders.map((g) => <SelectItem key={g.value} value={g.value}>{g.label}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-gray-700 font-medium">
-            {t('form_image')} <span className="text-red-500">*</span>
-          </Label>
-          {formData.childImage ? (
-            <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 border-violet-200">
-              <img src={formData.childImage} alt="Child" className="w-full h-full object-cover" />
-              <button type="button" onClick={removeImage} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600">
-                <X className="w-4 h-4" />
-              </button>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Progress Bar */}
+      <div className="flex items-center justify-between gap-2 mb-2">
+        {stepLabels.map((label, i) => (
+          <div key={i} className="flex-1 flex flex-col items-center gap-2">
+            <div className="w-full h-2 rounded-full overflow-hidden bg-slate-100">
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: `linear-gradient(90deg, ${PURPLE}, ${GOLD})` }}
+                initial={{ width: 0 }}
+                animate={{ width: i <= formStep ? '100%' : '0%' }}
+                transition={{ duration: 0.4 }}
+              />
             </div>
-          ) : (
-            <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-red-200 rounded-xl cursor-pointer hover:border-red-400 hover:bg-red-50 transition-colors">
-              <input type="file" accept="image/jpeg,image/png,image/jpg,.heic,.heif" onChange={handleImageUpload} className="hidden" />
-              {uploading ? <Loader2 className="w-6 h-6 text-slate-400 animate-spin" /> : (
-                <><Upload className="w-6 h-6 text-red-400 mb-1" /><span className="text-xs text-red-500 font-medium">{t('form_upload')}</span></>
+            <button
+              type="button"
+              onClick={() => goToStep(i)}
+              className="flex items-center gap-1.5"
+            >
+              <div
+                className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+                style={{
+                  background: i < formStep ? PURPLE : i === formStep ? GOLD : '#e2e8f0',
+                  color: i < formStep ? '#fff' : i === formStep ? DARK : '#94a3b8',
+                }}
+              >
+                {i < formStep ? <Check className="w-3.5 h-3.5" /> : i + 1}
+              </div>
+              <span
+                className="text-xs font-medium hidden sm:block transition-colors"
+                style={{ color: i === formStep ? PURPLE : '#94a3b8' }}
+              >
+                {label}
+              </span>
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <AnimatePresence mode="wait" custom={direction}>
+        {/* STEP 1: Child Info */}
+        {formStep === 0 && (
+          <motion.div
+            key="step1"
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+            className="space-y-5"
+          >
+            <h3 className="text-lg font-bold pb-2" style={{ color: DARK, borderBottom: `2px solid ${GOLD}40` }}>
+              {t('form_child_info')}
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label className="font-medium" style={{ color: DARK }}>{t('form_child_name')}</Label>
+                <Input
+                  value={formData.childName}
+                  onChange={(e) => handleChange('childName', e.target.value)}
+                  placeholder={t('form_child_name_ph')}
+                  className="h-12 rounded-xl"
+                  style={{ borderColor: `${PURPLE}40` }}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-medium" style={{ color: DARK }}>{t('form_age')}</Label>
+                <Input
+                  type="number" min="1" max="12"
+                  value={formData.childAge}
+                  onChange={(e) => handleChange('childAge', e.target.value)}
+                  placeholder={t('form_age_ph')}
+                  className="h-12 rounded-xl"
+                  style={{ borderColor: `${PURPLE}40` }}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-medium" style={{ color: DARK }}>{t('form_gender')}</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {genders.map((g) => (
+                    <button
+                      key={g.value}
+                      type="button"
+                      onClick={() => handleChange('gender', g.value)}
+                      className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl border-2 transition-all"
+                      style={{
+                        borderColor: formData.gender === g.value ? PURPLE : '#e2e8f0',
+                        background: formData.gender === g.value ? `${PURPLE}10` : '#fff',
+                      }}
+                    >
+                      <span className="text-2xl">{g.emoji}</span>
+                      <span className="text-xs font-medium" style={{ color: formData.gender === g.value ? PURPLE : '#64748b' }}>{g.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-medium" style={{ color: DARK }}>
+                {t('form_image')} <span className="text-red-500">*</span>
+              </Label>
+              {formData.childImage ? (
+                <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2" style={{ borderColor: PURPLE }}>
+                  <img src={formData.childImage} alt="Child" className="w-full h-full object-cover" />
+                  <button type="button" onClick={removeImage} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed rounded-xl cursor-pointer transition-colors"
+                  style={{ borderColor: uploading ? '#cbd5e1' : `${PURPLE}60`, background: uploading ? '#f8fafc' : `${PURPLE}05` }}
+                >
+                  <input type="file" accept="image/jpeg,image/png,image/jpg,.heic,.heif" onChange={handleImageUpload} className="hidden" />
+                  {uploading ? (
+                    <Loader2 className="w-6 h-6 animate-spin" style={{ color: PURPLE }} />
+                  ) : (
+                    <>
+                      <Upload className="w-6 h-6 mb-1" style={{ color: PURPLE }} />
+                      <span className="text-xs font-medium" style={{ color: PURPLE }}>{t('form_upload')}</span>
+                    </>
+                  )}
+                </label>
               )}
-            </label>
-          )}
-          <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
-            {lang === 'he'
-              ? 'העלו תמונה של הילד/ה כדי שהסיפור יהיה אישי ומיוחד 📸 התמונה נמחקת מיד עם סיום יצירת הסיפור.'
-              : "Upload a photo to make the story personal and unique 📸 The photo is deleted as soon as the story is created."}
-          </p>
-        </div>
-      </div>
+              <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
+                {isHe
+                  ? 'העלו תמונה של הילד/ה כדי שהסיפור יהיה אישי ומיוחד 📸 התמונה נמחקת מיד עם סיום יצירת הסיפור.'
+                  : "Upload a photo to make the story personal and unique 📸 The photo is deleted as soon as the story is created."}
+              </p>
+            </div>
+          </motion.div>
+        )}
 
-      {/* Section 2: Story Setting */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_story_world')}</h3>
-        <div className="space-y-2">
-          <Label htmlFor="setting" className="text-gray-700 font-medium">{t('form_setting')}</Label>
-          <Select value={formData.setting} onValueChange={(value) => handleChange('setting', value)} required>
-            <SelectTrigger className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400">
-              <SelectValue placeholder={t('form_setting_ph')} />
-            </SelectTrigger>
-            <SelectContent>
-              {settings.map((s) => (
-                <SelectItem key={s.value} value={s.value}>
-                  <span className="flex items-center gap-2"><span>{s.emoji}</span><span>{s.label}</span></span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+        {/* STEP 2: Story Setting */}
+        {formStep === 1 && (
+          <motion.div
+            key="step2"
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+            className="space-y-5"
+          >
+            <h3 className="text-lg font-bold pb-2" style={{ color: DARK, borderBottom: `2px solid ${GOLD}40` }}>
+              {t('form_story_world')}
+            </h3>
 
-      {/* Section 3: Challenge */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_challenge_section')}</h3>
-        <div className="space-y-2">
-          <Label htmlFor="challengeType" className="text-gray-700 font-medium">{t('form_challenge')}</Label>
-          <Select value={formData.challengeType} onValueChange={(value) => handleChange('challengeType', value)} required>
-            <SelectTrigger className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400">
-              <SelectValue placeholder={t('form_challenge_ph')} />
-            </SelectTrigger>
-            <SelectContent>
-              {challengeTypes.map((c) => (
-                <SelectItem key={c.value} value={c.value}>
-                  <span className="flex items-center gap-2"><span>{c.emoji}</span><span>{c.label}</span></span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="triggerDesc" className="text-gray-700 font-medium">{t('form_trigger')}</Label>
-          <Textarea id="triggerDesc" value={formData.triggerDesc} onChange={(e) => handleChange('triggerDesc', e.target.value)}
-            placeholder={t('form_trigger_ph')} className="rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400 resize-none" rows={2} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="reactionType" className="text-gray-700 font-medium">{t('form_reaction')}</Label>
-          <Select value={formData.reactionType} onValueChange={(value) => handleChange('reactionType', value)}>
-            <SelectTrigger className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400">
-              <SelectValue placeholder={t('form_reaction_ph')} />
-            </SelectTrigger>
-            <SelectContent>
-              {reactionTypes.map((r) => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {settings.map((s) => {
+                const isSelected = formData.setting === s.value;
+                return (
+                  <button
+                    key={s.value}
+                    type="button"
+                    onClick={() => handleChange('setting', s.value)}
+                    className="flex flex-col items-center justify-center gap-3 py-6 rounded-2xl border-2 transition-all hover:scale-[1.03]"
+                    style={{
+                      borderColor: isSelected ? PURPLE : '#e2e8f0',
+                      background: isSelected ? `linear-gradient(135deg, ${PURPLE}10, ${GOLD}10)` : '#fff',
+                      boxShadow: isSelected ? `0 8px 24px ${PURPLE}20` : 'none',
+                    }}
+                  >
+                    <span className="text-4xl">{s.emoji}</span>
+                    <span className="text-sm font-bold" style={{ color: isSelected ? PURPLE : DARK }}>{s.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
 
-      {/* Section 4: Personal Connection */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_personal')}</h3>
-        <div className="space-y-2">
-          <Label htmlFor="hobbies" className="text-gray-700 font-medium">{t('form_hobbies')}</Label>
-          <Textarea id="hobbies" value={formData.hobbies} onChange={(e) => handleChange('hobbies', e.target.value)}
-            placeholder={t('form_hobbies_ph')} className="rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400 resize-none" rows={2} />
-        </div>
-      </div>
+        {/* STEP 3: Challenge */}
+        {formStep === 2 && (
+          <motion.div
+            key="step3"
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+            className="space-y-5"
+          >
+            <h3 className="text-lg font-bold pb-2" style={{ color: DARK, borderBottom: `2px solid ${GOLD}40` }}>
+              {t('form_challenge_section')}
+            </h3>
 
-      {/* Section 5: Contact */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-700 border-b border-slate-100 pb-2">{t('form_contact')}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="contactEmail" className="text-gray-700 font-medium">{t('form_email')}</Label>
-            <Input id="contactEmail" type="email" value={formData.contactEmail} onChange={(e) => handleChange('contactEmail', e.target.value)}
-              placeholder="your@email.com" className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="contactPhone" className="text-gray-700 font-medium">{t('form_phone')}</Label>
-            <Input id="contactPhone" type="tel" value={formData.contactPhone} onChange={(e) => handleChange('contactPhone', e.target.value)}
-              placeholder="050-0000000" className="h-11 rounded-xl border-slate-200 focus:border-slate-400 focus:ring-slate-400" />
-          </div>
-        </div>
-      </div>
+            <div className="space-y-2">
+              <Label className="font-medium" style={{ color: DARK }}>{t('form_challenge')}</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {challengeTypes.map((c) => {
+                  const isSelected = formData.challengeType === c.value;
+                  return (
+                    <button
+                      key={c.value}
+                      type="button"
+                      onClick={() => handleChange('challengeType', c.value)}
+                      className="flex items-center gap-3 px-4 py-4 rounded-xl border-2 transition-all hover:scale-[1.02]"
+                      style={{
+                        borderColor: isSelected ? PURPLE : '#e2e8f0',
+                        background: isSelected ? `${PURPLE}08` : '#fff',
+                        boxShadow: isSelected ? `0 6px 20px ${PURPLE}15` : 'none',
+                      }}
+                    >
+                      <span className="text-2xl">{c.emoji}</span>
+                      <span className="text-sm font-medium text-right" style={{ color: isSelected ? PURPLE : DARK }}>{c.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-      <div className="space-y-3">
-        <Button type="submit" disabled={isLoading || uploading}
-          className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg shadow-slate-200 hover:shadow-slate-300 transition-all">
-          {isLoading ? (
-            <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
-          ) : (
-            <span className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5" />
-              {lang === 'he' ? 'המשך ליצירת הספר ←' : 'Continue to Create Book →'}
-            </span>
-          )}
-        </Button>
+            <div className="space-y-2">
+              <Label className="font-medium" style={{ color: DARK }}>{t('form_trigger')}</Label>
+              <Textarea
+                value={formData.triggerDesc}
+                onChange={(e) => handleChange('triggerDesc', e.target.value)}
+                placeholder={t('form_trigger_ph')}
+                className="rounded-xl resize-none"
+                style={{ borderColor: `${PURPLE}30` }}
+                rows={2}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-medium" style={{ color: DARK }}>{t('form_reaction')}</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {reactionTypes.map((r) => {
+                  const isSelected = formData.reactionType === r.value;
+                  return (
+                    <button
+                      key={r.value}
+                      type="button"
+                      onClick={() => handleChange('reactionType', r.value)}
+                      className="px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all"
+                      style={{
+                        borderColor: isSelected ? PURPLE : '#e2e8f0',
+                        background: isSelected ? `${PURPLE}10` : '#fff',
+                        color: isSelected ? PURPLE : DARK,
+                      }}
+                    >
+                      {r.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* STEP 4: Hobbies + Contact + Summary */}
+        {formStep === 3 && (
+          <motion.div
+            key="step4"
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+            className="space-y-5"
+          >
+            <h3 className="text-lg font-bold pb-2" style={{ color: DARK, borderBottom: `2px solid ${GOLD}40` }}>
+              {t('form_personal')}
+            </h3>
+
+            <div className="space-y-2">
+              <Label className="font-medium" style={{ color: DARK }}>{t('form_hobbies')}</Label>
+              <Textarea
+                value={formData.hobbies}
+                onChange={(e) => handleChange('hobbies', e.target.value)}
+                placeholder={t('form_hobbies_ph')}
+                className="rounded-xl resize-none"
+                style={{ borderColor: `${PURPLE}30` }}
+                rows={2}
+              />
+            </div>
+
+            <div className="space-y-4 pt-2">
+              <h4 className="text-base font-semibold pb-1 border-b border-slate-100" style={{ color: DARK }}>
+                {isHe ? 'פרטי התקשרות' : 'Contact Details'}
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="font-medium" style={{ color: DARK }}>{t('form_email')}</Label>
+                  <Input
+                    type="email"
+                    value={formData.contactEmail}
+                    onChange={(e) => handleChange('contactEmail', e.target.value)}
+                    placeholder="your@email.com"
+                    className="h-11 rounded-xl"
+                    style={{ borderColor: `${PURPLE}30` }}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-medium" style={{ color: DARK }}>{t('form_phone')}</Label>
+                  <Input
+                    type="tel"
+                    value={formData.contactPhone}
+                    onChange={(e) => handleChange('contactPhone', e.target.value)}
+                    placeholder="050-0000000"
+                    className="h-11 rounded-xl"
+                    style={{ borderColor: `${PURPLE}30` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Summary */}
+            <div className="rounded-2xl p-5 mt-4" style={{ background: `linear-gradient(135deg, ${PURPLE}08, ${GOLD}10)`, border: `1px solid ${PURPLE}20` }}>
+              <h4 className="font-bold text-sm mb-3" style={{ color: PURPLE }}>
+                {isHe ? '✅ סיכום הסיפור' : '✅ Story Summary'}
+              </h4>
+              <div className="space-y-1.5 text-sm" style={{ color: DARK }}>
+                <p><strong>{isHe ? 'ילד/ה:' : 'Child:'}</strong> {formData.childName} ({formData.childAge}, {genders.find(g => g.value === formData.gender)?.label || '-'})</p>
+                <p><strong>{isHe ? 'עולם:' : 'Setting:'}</strong> {settings.find(s => s.value === formData.setting)?.emoji} {settings.find(s => s.value === formData.setting)?.label}</p>
+                <p><strong>{isHe ? 'אתגר:' : 'Challenge:'}</strong> {challengeTypes.find(c => c.value === formData.challengeType)?.emoji} {challengeTypes.find(c => c.value === formData.challengeType)?.label}</p>
+                {formData.hobbies && <p><strong>{isHe ? 'תחביבים:' : 'Hobbies:'}</strong> {formData.hobbies}</p>}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Navigation Buttons */}
+      <div className="flex items-center gap-3 pt-2">
+        {formStep > 0 && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handlePrev}
+            className="h-12 px-6 rounded-xl"
+            disabled={isLoading || uploading}
+          >
+            {isHe ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+            <span className="ml-1">{isHe ? 'חזור' : 'Back'}</span>
+          </Button>
+        )}
+
+        <div className="flex-1" />
+
+        {formStep < 3 ? (
+          <Button
+            type="button"
+            onClick={handleNext}
+            disabled={!isStepValid(formStep) || isLoading || uploading}
+            className="h-12 px-8 rounded-xl text-white font-semibold shadow-lg transition-all"
+            style={{ background: PURPLE, boxShadow: `0 8px 24px ${PURPLE}30` }}
+          >
+            <span className="mr-1">{isHe ? 'המשך' : 'Next'}</span>
+            {isHe ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            disabled={isLoading || uploading}
+            className="h-14 px-8 text-lg rounded-xl text-white font-bold shadow-lg transition-all"
+            style={{ background: `linear-gradient(135deg, ${PURPLE}, ${GOLD})`, boxShadow: `0 8px 24px ${PURPLE}30` }}
+          >
+            {isLoading ? (
+              <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5" />
+                {isHe ? 'המשך ליצירת הספר ←' : 'Continue to Create Book →'}
+              </span>
+            )}
+          </Button>
+        )}
       </div>
     </form>
   );
