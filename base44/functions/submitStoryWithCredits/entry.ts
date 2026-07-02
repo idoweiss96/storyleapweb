@@ -1,8 +1,20 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+
+function utf8ToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  for (const byte of bytes) { binary += String.fromCharCode(byte); }
+  return btoa(binary);
+}
+
+function buildRawMessage(to, subject, html) {
+  const encodedSubject = `=?UTF-8?B?${utf8ToBase64(subject)}?=`;
+  const message = [`To: ${to}`, `Subject: ${encodedSubject}`, 'Content-Type: text/html; charset=utf-8', 'MIME-Version: 1.0', '', html].join('\r\n');
+  return utf8ToBase64(message).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
 
 async function sendStoryInProgressEmail(base44ServiceRole, email, childName, isHebrew) {
   if (!email) return;
-  const _ = childName;
   const subject = isHebrew
     ? 'הקסם מתחיל! אנחנו כבר עובדים על הסיפור שלך 📝✨'
     : "The magic begins! We're working on your story 📝✨";
@@ -21,7 +33,13 @@ async function sendStoryInProgressEmail(base44ServiceRole, email, childName, isH
         <p style="font-size:16px;line-height:1.7;">As soon as the story is ready, we will send you another email with a direct link to read it.</p>
         <p style="margin-top:24px;font-size:15px;">Best regards,<br/>StoryLeap</p>
       </div>`;
-  await base44ServiceRole.functions.invoke('sendGmailEmail', { to: email, subject, body });
+  const { accessToken } = await base44ServiceRole.connectors.getConnection('gmail');
+  const raw = buildRawMessage(email, subject, body);
+  await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ raw }),
+  });
 }
 
 Deno.serve(async (req) => {

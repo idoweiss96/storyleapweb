@@ -1,4 +1,24 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+
+function utf8ToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  for (const byte of bytes) { binary += String.fromCharCode(byte); }
+  return btoa(binary);
+}
+
+function buildRawMessage(to, subject, html) {
+  const encodedSubject = `=?UTF-8?B?${utf8ToBase64(subject)}?=`;
+  const message = [
+    `To: ${to}`,
+    `Subject: ${encodedSubject}`,
+    'Content-Type: text/html; charset=utf-8',
+    'MIME-Version: 1.0',
+    '',
+    html
+  ].join('\r\n');
+  return utf8ToBase64(message).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
 
 Deno.serve(async (req) => {
   try {
@@ -90,7 +110,17 @@ Deno.serve(async (req) => {
           <p style="font-size:15px;margin-top:24px;">Thank you for choosing StoryLeap 💛<br/><br/>The StoryLeap Team</p>
         </div>`;
 
-    await base44.asServiceRole.functions.invoke('sendGmailEmail', { to, subject, body });
+    const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
+    const raw = buildRawMessage(to, subject, body);
+    const gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ raw }),
+    });
+    if (!gmailRes.ok) {
+      const err = await gmailRes.text();
+      return Response.json({ error: 'Gmail send failed', details: err }, { status: 500 });
+    }
 
     return Response.json({ success: true });
   } catch (error) {

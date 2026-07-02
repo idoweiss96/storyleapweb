@@ -1,10 +1,22 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID');
 const PAYPAL_CLIENT_SECRET = Deno.env.get('PAYPAL_CLIENT_SECRET');
 const PAYPAL_BASE = 'https://api-m.paypal.com';
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 const CREDITS_AMOUNT = 20;
+
+function utf8ToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  for (const byte of bytes) { binary += String.fromCharCode(byte); }
+  return btoa(binary);
+}
+
+function buildRawMessage(to, subject, html) {
+  const encodedSubject = `=?UTF-8?B?${utf8ToBase64(subject)}?=`;
+  const message = [`To: ${to}`, `Subject: ${encodedSubject}`, 'Content-Type: text/html; charset=utf-8', 'MIME-Version: 1.0', '', html].join('\r\n');
+  return utf8ToBase64(message).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
 
 async function getPaypalAccessToken() {
   const credentials = btoa(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`);
@@ -41,7 +53,13 @@ async function sendStoryInProgressEmail(base44, email, childName, isHebrew) {
         <p style="font-size:16px;line-height:1.7;">As soon as the story is ready, we will send you another email with a direct link to read it.</p>
         <p style="margin-top:24px;font-size:15px;">Best regards,<br/>StoryLeap</p>
       </div>`;
-  await base44.asServiceRole.functions.invoke('sendGmailEmail', { to: email, subject, body: html });
+  const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
+  const raw = buildRawMessage(email, subject, html);
+  await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ raw }),
+  });
 }
 
 
