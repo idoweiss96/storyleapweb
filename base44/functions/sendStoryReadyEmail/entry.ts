@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
           <p style="font-size:15px;margin-top:24px;">Thank you for choosing StoryLeap 💛<br/><br/>The StoryLeap Team</p>
         </div>`;
 
-    await base44.asServiceRole.integrations.Core.SendEmail({ to, subject, body, from_name: 'StoryLeap' });
+    await base44.asServiceRole.functions.invoke('sendGmailEmail', { to, subject, body });
 
     return Response.json({ success: true });
   } catch (error) {

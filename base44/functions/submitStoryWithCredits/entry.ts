@@ -2,6 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 async function sendStoryInProgressEmail(base44ServiceRole, email, childName, isHebrew) {
   if (!email) return;
+  const _ = childName;
   const subject = isHebrew
     ? 'הקסם מתחיל! אנחנו כבר עובדים על הסיפור שלך 📝✨'
     : "The magic begins! We're working on your story 📝✨";
@@ -20,7 +21,7 @@ async function sendStoryInProgressEmail(base44ServiceRole, email, childName, isH
         <p style="font-size:16px;line-height:1.7;">As soon as the story is ready, we will send you another email with a direct link to read it.</p>
         <p style="margin-top:24px;font-size:15px;">Best regards,<br/>StoryLeap</p>
       </div>`;
-  await base44ServiceRole.integrations.Core.SendEmail({ to: email, subject, body, from_name: 'StoryLeap' });
+  await base44ServiceRole.functions.invoke('sendGmailEmail', { to: email, subject, body });
 }
 
 Deno.serve(async (req) => {

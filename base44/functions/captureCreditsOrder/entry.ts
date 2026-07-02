@@ -20,8 +20,9 @@ async function getPaypalAccessToken() {
   return data.access_token;
 }
 
-async function sendStoryInProgressEmail(email, childName, isHebrew) {
-  if (!email || !RESEND_API_KEY) return;
+async function sendStoryInProgressEmail(base44, email, childName, isHebrew) {
+  if (!email) return;
+  const _ = childName;
   const subject = isHebrew
     ? 'הקסם מתחיל! אנחנו כבר עובדים על הסיפור שלך 📝✨'
     : "The magic begins! We're working on your story 📝✨";
@@ -40,11 +41,7 @@ async function sendStoryInProgressEmail(email, childName, isHebrew) {
         <p style="font-size:16px;line-height:1.7;">As soon as the story is ready, we will send you another email with a direct link to read it.</p>
         <p style="margin-top:24px;font-size:15px;">Best regards,<br/>StoryLeap</p>
       </div>`;
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: 'StoryLeap AI <stories@storyleapai.com>', to: email, subject, html }),
-  });
+  await base44.asServiceRole.functions.invoke('sendGmailEmail', { to: email, subject, body: html });
 }
 
 
@@ -64,7 +61,7 @@ async function processPendingStories(base44, userEmail, userCredits) {
 
     const isHebrewName = /[\u0590-\u05FF]/.test(story.child_name || '');
     if (story.contact_email) {
-      try { await sendStoryInProgressEmail(story.contact_email, story.child_name, isHebrewName); } catch (_) {}
+      try { await sendStoryInProgressEmail(base44, story.contact_email, story.child_name, isHebrewName); } catch (_) {}
     }
 
     base44.asServiceRole.functions.invoke('processStoryGeneration', { story_id: story.id }).catch(() => {});
