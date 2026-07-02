@@ -492,35 +492,11 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               </div>
             </div>
 
-            {/* Coupon Code */}
-            <div className="space-y-2 pt-2">
-              <h4 className="text-base font-semibold pb-1 border-b border-slate-100" style={{ color: DARK }}>
-                {isHe ? 'קוד קופון' : 'Coupon Code'}
-              </h4>
-              <div className="flex items-center gap-2">
-                <div className="relative flex-1">
-                  <Input
-                    value={formData.couponCode || ''}
-                    onChange={(e) => handleChange('couponCode', e.target.value.toUpperCase().trim())}
-                    placeholder={isHe ? 'הזינו קוד קופון (אופציונלי)' : 'Enter coupon code (optional)'}
-                    className="h-11 rounded-xl"
-                    style={{ borderColor: `${PURPLE}30` }}
-                  />
-                </div>
-                {formData.couponCode && (
-                  <button
-                    type="button"
-                    onClick={() => handleChange('couponCode', '')}
-                    className="p-2 text-slate-400 hover:text-slate-600"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-              <p className="text-xs text-slate-500">
-                {isHe ? 'יש לכם קוד קופון? הזינו אותו כאן ותקבלו סיפור במתנה 🎁' : 'Have a coupon code? Enter it here for a free story 🎁'}
-              </p>
-            </div>
+            {/* Summary */}
+            
+
+
+
 
 
 
