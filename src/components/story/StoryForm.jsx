@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Sparkles, Loader2, Upload, X, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../LanguageContext';
+import TermsOfUseModal from './TermsOfUseModal';
 
 async function convertHeicToJpeg(file) {
   return new Promise((resolve, reject) => {
@@ -41,6 +42,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
   const { t, lang } = useLanguage();
   const isHe = lang === 'he';
   const [uploading, setUploading] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
   const [formStep, setFormStep] = useState(0); // 0-3 for 4 steps
 
   const genders = [
@@ -295,18 +297,34 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
                   {isHe ? (
                     <>
                       אני מאשר/ת את העלאת תמונת הילד/ה ליצירת סיפור אישי, ומסכים/ה ל-{' '}
-                      <span className="font-medium" style={{ color: PURPLE }}>תנאי השימוש</span>.
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); setShowTerms(true); }}
+                        className="font-medium underline inline"
+                        style={{ color: PURPLE }}
+                      >
+                        תנאי השימוש
+                      </button>.
                       אנו מתחייבים למחוק את התמונה מהמאגר שלנו תוך חודש ממועד ההעלאה. 🔒
                     </>
                   ) : (
                     <>
                       I consent to uploading my child's photo for a personalized story and agree to the{' '}
-                      <span className="font-medium" style={{ color: PURPLE }}>Terms of Use</span>.
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); setShowTerms(true); }}
+                        className="font-medium underline inline"
+                        style={{ color: PURPLE }}
+                      >
+                        Terms of Use
+                      </button>.
                       We commit to deleting the photo from our database within one month of upload. 🔒
                     </>
                   )}
                 </span>
               </label>
+
+              <TermsOfUseModal open={showTerms} onOpenChange={setShowTerms} />
             </div>
           </motion.div>
         }
