@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Sparkles, AlertCircle, Loader2, ShoppingCart } from 'lucide-react';
+import { Sparkles, AlertCircle, Loader2, ShoppingCart, Tag } from 'lucide-react';
 import { toast } from 'sonner';
 import StoryForm from '../components/story/StoryForm';
 import LoginPromptModal from '../components/story/LoginPromptModal';
@@ -26,10 +26,13 @@ export default function CreateStory() {
   const [generatedStory, setGeneratedStory] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [couponStatus, setCouponStatus] = useState(null); // null | 'validating' | 'valid' | 'invalid'
+  const [couponMessage, setCouponMessage] = useState('');
   const [formData, setFormData] = useState({
     childName: '', childAge: '', gender: '', childImage: '',
     setting: '', challengeType: '', customChallenge: '', triggerDesc: '',
     reactionType: '', hobbies: '', contactEmail: '', contactPhone: '',
+    couponCode: '',
   });
 
   useEffect(() => {
@@ -140,6 +143,31 @@ export default function CreateStory() {
     }
   };
 
+  // Redeem coupon code for free credits
+  const handleRedeemCoupon = async () => {
+    if (!formData.couponCode) return;
+    setCouponStatus('validating');
+    setCouponMessage('');
+    try {
+      const result = await base44.functions.invoke('validateCoupon', { code: formData.couponCode });
+      if (result.data?.valid) {
+        const newCredits = result.data.new_total;
+        await base44.auth.updateMe({ credits: newCredits });
+        setUser(prev => ({ ...prev, credits: newCredits }));
+        window.dispatchEvent(new Event('credits-updated'));
+        setCouponStatus('valid');
+        setCouponMessage(isHe ? `🎉 הקופון מומש! קיבלת ${result.data.credits_added} קרדיטים` : `🎉 Coupon redeemed! You got ${result.data.credits_added} credits`);
+        toast.success(isHe ? 'הקופון מומש בהצלחה!' : 'Coupon redeemed successfully!');
+      } else {
+        setCouponStatus('invalid');
+        setCouponMessage(result.data?.error || (isHe ? 'קוד קופון לא תקין' : 'Invalid coupon code'));
+      }
+    } catch (err) {
+      setCouponStatus('invalid');
+      setCouponMessage(isHe ? 'שגיאה במימוש הקופון' : 'Error redeeming coupon');
+    }
+  };
+
   // Step 2 alt: User clicks "רכישת קרדיטים" (no credits)
   const handleBuyCredits = async () => {
     setError('');
@@ -161,7 +189,9 @@ export default function CreateStory() {
     sessionStorage.removeItem(PENDING_FORM_KEY);
     setGeneratedStory(null);
     setStep('form');
-    setFormData({ childName: '', childAge: '', gender: '', childImage: '', setting: '', challengeType: '', customChallenge: '', triggerDesc: '', reactionType: '', hobbies: '', contactEmail: '', contactPhone: '' });
+    setFormData({ childName: '', childAge: '', gender: '', childImage: '', setting: '', challengeType: '', customChallenge: '', triggerDesc: '', reactionType: '', hobbies: '', contactEmail: '', contactPhone: '', couponCode: '' });
+    setCouponStatus(null);
+    setCouponMessage('');
   };
 
   if (isLoading) {
@@ -234,6 +264,39 @@ export default function CreateStory() {
                   <p className="text-slate-800 font-bold text-lg">{formData.childName}</p>
                   <p className="text-slate-500 text-sm">{isHe ? `גיל ${formData.childAge}` : `Age ${formData.childAge}`}</p>
                 </div>
+
+                {/* Coupon redemption section */}
+                {formData.couponCode && couponStatus !== 'valid' && (
+                  <div className="mb-4 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Tag className="w-4 h-4 text-purple-600" />
+                      <span className="text-sm font-medium text-purple-700">
+                        {isHe ? `קוד קופון: ${formData.couponCode}` : `Coupon code: ${formData.couponCode}`}
+                      </span>
+                    </div>
+                    {couponStatus === 'invalid' && couponMessage && (
+                      <p className="text-sm text-red-600 mb-2">{couponMessage}</p>
+                    )}
+                    <Button
+                      onClick={handleRedeemCoupon}
+                      disabled={couponStatus === 'validating'}
+                      variant="outline"
+                      className="w-full h-10 rounded-xl border-purple-300 text-purple-700 hover:bg-purple-100"
+                    >
+                      {couponStatus === 'validating' ? (
+                        <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{isHe ? 'מממש קופון...' : 'Redeeming...'}</span>
+                      ) : (
+                        isHe ? 'ממש קופון 🎁' : 'Redeem Coupon 🎁'
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                {couponStatus === 'valid' && couponMessage && (
+                  <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-center">
+                    <p className="text-sm text-green-700 font-medium">{couponMessage}</p>
+                  </div>
+                )}
 
                 {hasCredits ? (
                   <div className="space-y-4">
