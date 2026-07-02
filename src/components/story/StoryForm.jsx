@@ -102,7 +102,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
 
   // Validation per step
   const isStepValid = (step) => {
-    if (step === 0) return formData.childName && formData.childAge && formData.gender && formData.childImage;
+    if (step === 0) return formData.childName && formData.childAge && formData.gender && formData.childImage && formData.imageConsent;
     if (step === 1) return !!formData.setting;
     if (step === 2) {
       if (!formData.challengeType) return false;
@@ -278,9 +278,35 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
             }
               <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
                 {isHe ?
-              'העלו תמונה של הילד/ה כדי שהסיפור יהיה אישי ומיוחד 📸 התמונה נמחקת מיד עם סיום יצירת הסיפור.' :
-              "Upload a photo to make the story personal and unique 📸 The photo is deleted as soon as the story is created."}
+              'העלו תמונה של הילד/ה כדי שהסיפור יהיה אישי ומיוחד 📸' :
+              "Upload a photo to make the story personal and unique 📸"}
               </p>
+
+              {/* Image consent checkbox */}
+              <label className="flex items-start gap-2.5 cursor-pointer mt-3 p-3 rounded-xl border" style={{ borderColor: formData.imageConsent ? `${PURPLE}40` : '#e2e8f0', background: formData.imageConsent ? `${PURPLE}05` : '#fff' }}>
+                <input
+                  type="checkbox"
+                  checked={formData.imageConsent || false}
+                  onChange={(e) => handleChange('imageConsent', e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded cursor-pointer"
+                  style={{ accentColor: PURPLE }}
+                />
+                <span className="text-xs text-slate-600 leading-relaxed">
+                  {isHe ? (
+                    <>
+                      אני מאשר/ת את העלאת תמונת הילד/ה ליצירת סיפור אישי, ומסכים/ה ל-{' '}
+                      <span className="font-medium" style={{ color: PURPLE }}>תנאי השימוש</span>.
+                      אנו מתחייבים למחוק את התמונה מהמאגר שלנו תוך חודש ממועד ההעלאה. 🔒
+                    </>
+                  ) : (
+                    <>
+                      I consent to uploading my child's photo for a personalized story and agree to the{' '}
+                      <span className="font-medium" style={{ color: PURPLE }}>Terms of Use</span>.
+                      We commit to deleting the photo from our database within one month of upload. 🔒
+                    </>
+                  )}
+                </span>
+              </label>
             </div>
           </motion.div>
         }
