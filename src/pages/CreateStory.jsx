@@ -144,7 +144,7 @@ export default function CreateStory() {
     }
   };
 
-  // Redeem coupon code for free credits
+  // Redeem coupon code — free coupons add credits, discount coupons redirect to Pricing
   const handleRedeemCoupon = async () => {
     if (!formData.couponCode) return;
     setCouponStatus('validating');
@@ -152,13 +152,19 @@ export default function CreateStory() {
     try {
       const result = await base44.functions.invoke('validateCoupon', { code: formData.couponCode });
       if (result.data?.valid) {
-        const newCredits = result.data.new_total;
-        await base44.auth.updateMe({ credits: newCredits });
-        setUser(prev => ({ ...prev, credits: newCredits }));
-        window.dispatchEvent(new Event('credits-updated'));
-        setCouponStatus('valid');
-        setCouponMessage(isHe ? `🎉 הקופון מומש! קיבלת ${result.data.credits_added} קרדיטים` : `🎉 Coupon redeemed! You got ${result.data.credits_added} credits`);
-        toast.success(isHe ? 'הקופון מומש בהצלחה!' : 'Coupon redeemed successfully!');
+        if (result.data.type === 'discount') {
+          // Discount coupon — redirect to Pricing page with code pre-filled
+          navigate('/Pricing?code=' + encodeURIComponent(formData.couponCode));
+        } else {
+          // Free coupon — credits added
+          const newCredits = result.data.new_total;
+          await base44.auth.updateMe({ credits: newCredits });
+          setUser(prev => ({ ...prev, credits: newCredits }));
+          window.dispatchEvent(new Event('credits-updated'));
+          setCouponStatus('valid');
+          setCouponMessage(isHe ? `🎉 הקופון מומש! קיבלת ${result.data.credits_added} קרדיטים` : `🎉 Coupon redeemed! You got ${result.data.credits_added} credits`);
+          toast.success(isHe ? 'הקופון מומש בהצלחה!' : 'Coupon redeemed successfully!');
+        }
       } else {
         setCouponStatus('invalid');
         setCouponMessage(result.data?.error || (isHe ? 'קוד קופון לא תקין' : 'Invalid coupon code'));

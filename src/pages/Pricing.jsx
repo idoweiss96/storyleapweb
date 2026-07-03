@@ -11,8 +11,6 @@ import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
 
-const VALID_CODES = ['MIL30', 'NYUD30', 'SHNK30', 'MIAMI30', 'MATANA30'];
-const FREE_CREDIT_CODES = { 'STORY20': 20 };
 // Special test codes with hosted button override
 const HOSTED_BUTTON_CODES = {
   'IDO10': { hostedButtonId: 'AMAMAC5GTGJUG', currency: 'ILS', display: '₪0.10' },
@@ -49,12 +47,16 @@ export default function Pricing() {
 
   const isHe = lang === 'he';
   const [hostedButtonCode, setHostedButtonCode] = useState(null); // e.g. 'IDO10'
-  const mode = promoApplied ? 'discount' : 'full';
-  const btnConfig = useMemo(() => (
-    hostedButtonCode
-      ? HOSTED_BUTTON_CODES[hostedButtonCode]
-      : PRICE_CONFIG[isHe ? 'he' : 'en'][mode]
-  ), [hostedButtonCode, isHe, mode]);
+  const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, price_ils, price_usd } from DB
+  const btnConfig = useMemo(() => {
+    if (hostedButtonCode) return HOSTED_BUTTON_CODES[hostedButtonCode];
+    if (appliedCoupon) {
+      return isHe
+        ? { amount: String(appliedCoupon.price_ils), currency: 'ILS', display: `₪${appliedCoupon.price_ils}` }
+        : { amount: String(appliedCoupon.price_usd), currency: 'USD', display: `$${appliedCoupon.price_usd}` };
+    }
+    return PRICE_CONFIG[isHe ? 'he' : 'en'].full;
+  }, [hostedButtonCode, appliedCoupon, isHe]);
 
   // Handle PayPal redirect return on mobile
   useEffect(() => {
@@ -110,6 +112,15 @@ export default function Pricing() {
   }, []);
 
   useEffect(() => {
+    // Auto-apply coupon code from URL (redirected from CreateStory)
+    const urlParams = new URLSearchParams(window.location.search);
+    const couponCode = urlParams.get('code');
+    if (couponCode) {
+      window.history.replaceState({}, '', window.location.pathname);
+      setPromoCode(couponCode.toUpperCase());
+      setTimeout(() => applyPromoCode(couponCode.toUpperCase()), 300);
+    }
+
     const init = async () => {
       const authed = await base44.auth.isAuthenticated();
       if (!authed) {
@@ -259,41 +270,54 @@ export default function Pricing() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [btnConfig]);
 
-  const handleApplyPromo = async () => {
+  const applyPromoCode = async (rawCode) => {
     setPromoError('');
-    const code = promoCode.trim().toUpperCase();
+    const code = rawCode.trim().toUpperCase();
+    if (!code) return;
 
-    if (FREE_CREDIT_CODES[code] !== undefined) {
-      // Free credits coupon — add credits directly
-      setPromoLoading(true);
-      try {
-        const credits = FREE_CREDIT_CODES[code];
-        const res = await base44.functions.invoke('captureCreditsOrder', { paypal_order_id: `COUPON_${code}`, credits, coupon: true });
-        if (res.data?.success) {
-          window.dispatchEvent(new Event('credits-updated'));
-          setCreditsPopup({ added: credits, total: res.data.new_total });
-          setPromoCode('');
-        } else {
-          setPromoError(isHe ? 'שגיאה בהפעלת הקוד' : 'Error applying code');
-        }
-      } catch (err) {
-        setPromoError(isHe ? 'שגיאה בהפעלת הקוד' : 'Error applying code');
-      } finally {
-        setPromoLoading(false);
-      }
+    // Special case: hosted buttons (e.g. IDO10)
+    if (Object.prototype.hasOwnProperty.call(HOSTED_BUTTON_CODES, code)) {
+      setHostedButtonCode(code);
+      setAppliedCoupon(null);
+      setPromoApplied(true);
       return;
     }
 
-    if (Object.prototype.hasOwnProperty.call(HOSTED_BUTTON_CODES, code)) {
-      setHostedButtonCode(code);
-      setPromoApplied(true);
-    } else if (VALID_CODES.includes(code)) {
-      setHostedButtonCode(null);
-      setPromoApplied(true);
-    } else {
+    setPromoLoading(true);
+    try {
+      // Validate against database (validate_only = true, don't redeem yet)
+      const validateRes = await base44.functions.invoke('validateCoupon', { code, validate_only: true });
+
+      if (!validateRes.data?.valid) {
+        setPromoError(isHe ? 'קוד פרומו לא תקין' : 'Invalid promo code');
+        return;
+      }
+
+      if (validateRes.data.type === 'free') {
+        // Free coupon — redeem now (adds credits directly)
+        const redeemRes = await base44.functions.invoke('validateCoupon', { code });
+        if (redeemRes.data?.valid && redeemRes.data.credits_added) {
+          await base44.auth.updateMe({ credits: redeemRes.data.new_total });
+          window.dispatchEvent(new Event('credits-updated'));
+          setCreditsPopup({ added: redeemRes.data.credits_added, total: redeemRes.data.new_total, navigateOnClose: true });
+          setPromoCode('');
+        } else {
+          setPromoError(redeemRes.data?.error || (isHe ? 'שגיאה בהפעלת הקוד' : 'Error applying code'));
+        }
+      } else {
+        // Discount coupon — apply price from DB to PayPal button
+        setAppliedCoupon({ code, price_ils: validateRes.data.price_ils, price_usd: validateRes.data.price_usd });
+        setHostedButtonCode(null);
+        setPromoApplied(true);
+      }
+    } catch (err) {
       setPromoError(isHe ? 'קוד פרומו לא תקין' : 'Invalid promo code');
+    } finally {
+      setPromoLoading(false);
     }
   };
+
+  const handleApplyPromo = () => applyPromoCode(promoCode);
 
   return (
     <div className="max-w-4xl mx-auto pb-16">
@@ -357,7 +381,7 @@ export default function Pricing() {
                     </Button>
                   </div>
                 ) : (
-                  <button className="text-xs text-slate-400 underline" onClick={() => { setPromoApplied(false); setPromoCode(''); setHostedButtonCode(null); }}>
+                  <button className="text-xs text-slate-400 underline" onClick={() => { setPromoApplied(false); setPromoCode(''); setHostedButtonCode(null); setAppliedCoupon(null); }}>
                     {isHe ? 'הסר קוד' : 'Remove code'}
                   </button>
                 )}

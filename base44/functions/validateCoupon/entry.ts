@@ -8,7 +8,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { code } = await req.json();
+    const { code, validate_only } = await req.json();
     if (!code) return Response.json({ valid: false, error: 'Coupon code required' }, { status: 400 });
 
     const normalizedCode = code.trim().toUpperCase();
@@ -16,7 +16,6 @@ Deno.serve(async (req) => {
     const coupon = allCoupons.find(c => (c.code || '').toUpperCase() === normalizedCode);
 
     if (!coupon) return Response.json({ valid: false, error: 'Coupon not found' }, { status: 200 });
-    if (!coupon.is_active) return Response.json({ valid: false, error: 'Coupon is not active' }, { status: 200 });
 
     // Check expiration
     if (coupon.expiration_date) {
@@ -38,7 +37,29 @@ Deno.serve(async (req) => {
       return Response.json({ valid: false, error: 'Coupon usage limit reached for this user' }, { status: 200 });
     }
 
-    // Increment used_count on the coupon
+    const isFree = !coupon.price_ils || coupon.price_ils === 0;
+
+    // Discount coupons: just return price info (redemption happens after PayPal payment)
+    if (!isFree) {
+      return Response.json({
+        valid: true,
+        type: 'discount',
+        price_ils: coupon.price_ils,
+        price_usd: coupon.price_usd || 0,
+      });
+    }
+
+    // Free coupon — if validate_only, just return info without redeeming
+    if (validate_only) {
+      return Response.json({
+        valid: true,
+        type: 'free',
+        price_ils: 0,
+        price_usd: 0,
+      });
+    }
+
+    // Redeem free coupon: increment used_count
     await base44.asServiceRole.entities.Coupon.update(coupon.id, {
       used_count: (coupon.used_count || 0) + 1,
     });
@@ -57,12 +78,13 @@ Deno.serve(async (req) => {
       user_email: user.email,
       paypal_order_id: `COUPON:${normalizedCode}`,
       status: 'paid',
-      amount: coupon.price_ils || 0,
+      amount: 0,
       currency: 'ILS',
     });
 
     return Response.json({
       valid: true,
+      type: 'free',
       credits_added: STORY_CREDIT_COST,
       new_total: newCredits,
     });
