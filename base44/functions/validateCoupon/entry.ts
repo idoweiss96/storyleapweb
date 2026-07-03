@@ -69,7 +69,8 @@ Deno.serve(async (req) => {
     const dbUser = users[0];
     if (!dbUser) return Response.json({ error: 'User not found' }, { status: 404 });
 
-    const newCredits = (dbUser.credits || 0) + STORY_CREDIT_COST;
+    const creditsToAdd = coupon.credits || STORY_CREDIT_COST;
+    const newCredits = (dbUser.credits || 0) + creditsToAdd;
     await base44.asServiceRole.entities.User.update(dbUser.id, { credits: newCredits });
 
     // Create an order record for audit
