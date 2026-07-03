@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
     return Response.json({
       valid: true,
       type: 'free',
-      credits_added: STORY_CREDIT_COST,
+      credits_added: creditsToAdd,
       new_total: newCredits,
     });
   } catch (error) {

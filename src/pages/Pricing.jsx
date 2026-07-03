@@ -301,6 +301,7 @@ export default function Pricing() {
           window.dispatchEvent(new Event('credits-updated'));
           setCreditsPopup({ added: redeemRes.data.credits_added, total: redeemRes.data.new_total, navigateOnClose: true });
           setPromoCode('');
+          setPromoCode('');
         } else {
           setPromoError(redeemRes.data?.error || (isHe ? 'שגיאה בהפעלת הקוד' : 'Error applying code'));
         }
