@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Sparkles, AlertCircle, Loader2, ShoppingCart, Tag } from 'lucide-react';
 import { toast } from 'sonner';
 import StoryForm from '../components/story/StoryForm';
@@ -266,29 +267,37 @@ export default function CreateStory() {
                 </div>
 
                 {/* Coupon redemption section */}
-                {formData.couponCode && couponStatus !== 'valid' && (
+                {couponStatus !== 'valid' && (
                   <div className="mb-4 p-4 bg-purple-50 border border-purple-200 rounded-xl">
                     <div className="flex items-center gap-2 mb-2">
                       <Tag className="w-4 h-4 text-purple-600" />
                       <span className="text-sm font-medium text-purple-700">
-                        {isHe ? `קוד קופון: ${formData.couponCode}` : `Coupon code: ${formData.couponCode}`}
+                        {isHe ? 'יש לך קוד קופון? הזן/י אותו כאן' : 'Have a coupon code? Enter it here'}
                       </span>
                     </div>
+                    <div className="flex gap-2">
+                      <Input
+                        value={formData.couponCode || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, couponCode: e.target.value }))}
+                        placeholder={isHe ? 'הזן קוד קופון' : 'Enter coupon code'}
+                        className="flex-1 h-10 rounded-xl border-purple-300"
+                      />
+                      <Button
+                        onClick={handleRedeemCoupon}
+                        disabled={couponStatus === 'validating' || !formData.couponCode}
+                        variant="outline"
+                        className="h-10 rounded-xl border-purple-300 text-purple-700 hover:bg-purple-100"
+                      >
+                        {couponStatus === 'validating' ? (
+                          <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{isHe ? '...' : '...'}</span>
+                        ) : (
+                          isHe ? 'ממש 🎁' : 'Redeem 🎁'
+                        )}
+                      </Button>
+                    </div>
                     {couponStatus === 'invalid' && couponMessage && (
-                      <p className="text-sm text-red-600 mb-2">{couponMessage}</p>
+                      <p className="text-sm text-red-600 mt-2">{couponMessage}</p>
                     )}
-                    <Button
-                      onClick={handleRedeemCoupon}
-                      disabled={couponStatus === 'validating'}
-                      variant="outline"
-                      className="w-full h-10 rounded-xl border-purple-300 text-purple-700 hover:bg-purple-100"
-                    >
-                      {couponStatus === 'validating' ? (
-                        <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{isHe ? 'מממש קופון...' : 'Redeeming...'}</span>
-                      ) : (
-                        isHe ? 'ממש קופון 🎁' : 'Redeem Coupon 🎁'
-                      )}
-                    </Button>
                   </div>
                 )}
 
