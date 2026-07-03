@@ -11,9 +11,9 @@ Deno.serve(async (req) => {
     const { code } = await req.json();
     if (!code) return Response.json({ valid: false, error: 'Coupon code required' }, { status: 400 });
 
-    const normalizedCode = code.trim();
-    const coupons = await base44.asServiceRole.entities.Coupon.filter({ code: normalizedCode });
-    const coupon = coupons[0];
+    const normalizedCode = code.trim().toUpperCase();
+    const allCoupons = await base44.asServiceRole.entities.Coupon.filter({ is_active: true });
+    const coupon = allCoupons.find(c => (c.code || '').toUpperCase() === normalizedCode);
 
     if (!coupon) return Response.json({ valid: false, error: 'Coupon not found' }, { status: 200 });
     if (!coupon.is_active) return Response.json({ valid: false, error: 'Coupon is not active' }, { status: 200 });
@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
 
     // Create an order record for audit
     await base44.asServiceRole.entities.Order.create({
-      story_id: null,
+      story_id: `COUPON:${normalizedCode}`,
       user_email: user.email,
       paypal_order_id: `COUPON:${normalizedCode}`,
       status: 'paid',
