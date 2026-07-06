@@ -175,7 +175,10 @@ export default function MyStories() {
                     <h3 className="font-bold text-gray-800 text-lg mb-1">{story.child_name}</h3>
                     <p className="text-sm text-gray-500 mb-2">{t('my_story_age')} {story.child_age}</p>
                     {story.story_link ? (
-                      <Badge className="bg-green-100 text-green-700">{t('my_story_ready')}</Badge>
+                      <Badge className="bg-green-100 text-green-700 gap-1">
+                        <Sparkles className="w-3 h-3 text-amber-500" />
+                        {t('my_story_ready')}
+                      </Badge>
                     ) : story.payment_status === 'pending_payment' ? (
                       <div className="space-y-2">
                         <Badge className="bg-red-100 text-red-700">
