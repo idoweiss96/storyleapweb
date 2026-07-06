@@ -70,9 +70,22 @@ export default function MyStories() {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
-      const res = await base44.functions.invoke('getUserStories', {});
-      setStories(res.data?.stories || []);
+      let userStories = [];
+      try {
+        const res = await base44.functions.invoke('getUserStories', {});
+        userStories = res.data?.stories || [];
+        console.log('[MyStories] getUserStories response, count:', userStories.length);
+      } catch (fnErr) {
+        console.error('[MyStories] function error, falling back to direct query:', fnErr);
+      }
+      // Fallback: direct entity query (works if RLS allows it)
+      if (userStories.length === 0) {
+        userStories = await base44.entities.Story.filter({ contact_email: currentUser.email }, '-created_date');
+        console.log('[MyStories] direct query fallback, count:', userStories.length);
+      }
+      setStories(userStories);
     } catch (e) {
+      console.error('[MyStories] loadStories error:', e);
       base44.auth.redirectToLogin(window.location.href);
     } finally {
       setIsLoading(false);

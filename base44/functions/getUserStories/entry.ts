@@ -6,12 +6,11 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const stories = await base44.asServiceRole.entities.Story.filter(
-      { contact_email: user.email },
-      '-created_date'
-    );
+    // Fetch all stories via service role (bypasses RLS), then filter in code
+    const allStories = await base44.asServiceRole.entities.Story.list('-created_date', 500);
+    const userStories = allStories.filter(s => s.contact_email === user.email);
 
-    return Response.json({ stories });
+    return Response.json({ stories: userStories });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
