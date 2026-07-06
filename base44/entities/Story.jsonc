@@ -115,6 +115,9 @@
           "created_by_id": "{{user.id}}"
         },
         {
+          "data.contact_email": "{{user.email}}"
+        },
+        {
           "user_condition": {
             "role": "admin"
           }
@@ -125,6 +128,9 @@
       "$or": [
         {
           "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.contact_email": "{{user.email}}"
         },
         {
           "user_condition": {
