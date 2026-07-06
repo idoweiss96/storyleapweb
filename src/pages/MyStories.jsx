@@ -47,7 +47,8 @@ export default function MyStories() {
           try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
           window.dispatchEvent(new Event('credits-updated'));
           // After refresh, find pending story and show popup
-          const refreshedStories = await base44.entities.Story.filter({ contact_email: (await base44.auth.me()).email }, '-created_date');
+          const refreshedRes = await base44.functions.invoke('getUserStories', {});
+          const refreshedStories = refreshedRes.data?.stories || [];
           setStories(refreshedStories);
           const pendingStory = refreshedStories.find(s => s.payment_status === 'pending_payment');
           setCreditsAddedPopup({ added: 20, total: res.data.new_total, pendingStory });
@@ -69,8 +70,8 @@ export default function MyStories() {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
-      const userStories = await base44.entities.Story.filter({ contact_email: currentUser.email }, '-created_date');
-      setStories(userStories);
+      const res = await base44.functions.invoke('getUserStories', {});
+      setStories(res.data?.stories || []);
     } catch (e) {
       base44.auth.redirectToLogin(window.location.href);
     } finally {
