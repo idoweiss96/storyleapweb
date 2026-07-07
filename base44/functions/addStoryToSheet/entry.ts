@@ -57,33 +57,35 @@ Deno.serve(async (req) => {
 
     console.log('[addStoryToSheet] Story data received:', { child_name: storyData.child_name, event_type: body.event?.type, has_data: !!body.data });
 
-    const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
-
     const lang = detectLanguage(storyData);
     const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
-
     const row = storyToRow(storyData, lang);
 
-    const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:append?valueInputOption=USER_ENTERED`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ values: [row] }),
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
+        const response = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:append?valueInputOption=USER_ENTERED`,
+          {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ values: [row] }),
+          }
+        );
+        if (response.ok) {
+          console.log('[addStoryToSheet] Success:', { child_name: storyData.child_name, lang, spreadsheetId, attempt });
+          return Response.json({ success: true, lang });
+        }
+        const err = await response.text();
+        console.error(`[addStoryToSheet] Sheets API error (attempt ${attempt}):`, response.status, err);
+      } catch (e) {
+        console.error(`[addStoryToSheet] Exception (attempt ${attempt}):`, e.message);
       }
-    );
-
-    if (!response.ok) {
-      const err = await response.text();
-      console.error('[addStoryToSheet] Google Sheets API error:', response.status, err);
-      return Response.json({ error: err }, { status: 500 });
+      if (attempt < 3) await new Promise(r => setTimeout(r, 1000 * attempt));
     }
 
-    console.log('[addStoryToSheet] Success:', { child_name: storyData.child_name, lang, spreadsheetId });
-    return Response.json({ success: true, lang });
+    console.error('[addStoryToSheet] FAILED after 3 attempts:', storyData.child_name);
+    return Response.json({ error: 'Failed after 3 attempts' }, { status: 500 });
   } catch (error) {
     console.error('[addStoryToSheet] Error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });

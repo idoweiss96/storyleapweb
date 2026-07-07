@@ -135,6 +135,11 @@ Deno.serve(async (req) => {
       }
     } catch (_) {}
 
+    // Add story to Google Sheet
+    try {
+      await base44.asServiceRole.functions.invoke('addStoryToSheet', story);
+    } catch (_) {}
+
     return Response.json({ success: true, status: 'story_generating', capture_id: captureId });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

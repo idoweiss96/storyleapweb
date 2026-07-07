@@ -40,28 +40,34 @@ function storyToRow(story, lang) {
 }
 
 async function addStoryToSheet(base44ServiceRole, story) {
-  try {
-    const lang = isHebrew(story.child_name) || isHebrew(story.trigger_desc) || isHebrew(story.hobbies) ? 'he' : 'en';
-    const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
-    const row = storyToRow(story, lang);
-    const { accessToken } = await base44ServiceRole.connectors.getConnection('googlesheets');
-    const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:append?valueInputOption=USER_ENTERED`,
-      {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ values: [row] }),
+  const lang = isHebrew(story.child_name) || isHebrew(story.trigger_desc) || isHebrew(story.hobbies) ? 'he' : 'en';
+  const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
+  const row = storyToRow(story, lang);
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const { accessToken } = await base44ServiceRole.connectors.getConnection('googlesheets');
+      const response = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:append?valueInputOption=USER_ENTERED`,
+        {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ values: [row] }),
+        }
+      );
+      if (response.ok) {
+        console.log('[submitStoryWithCredits] Story added to sheet:', { child_name: story.child_name, lang, attempt });
+        return true;
       }
-    );
-    if (!response.ok) {
       const err = await response.text();
-      console.error('[submitStoryWithCredits] Google Sheets API error:', response.status, err);
-    } else {
-      console.log('[submitStoryWithCredits] Story added to sheet:', { child_name: story.child_name, lang });
+      console.error(`[submitStoryWithCredits] Sheets API error (attempt ${attempt}):`, response.status, err);
+    } catch (e) {
+      console.error(`[submitStoryWithCredits] addStoryToSheet exception (attempt ${attempt}):`, e.message);
     }
-  } catch (e) {
-    console.error('[submitStoryWithCredits] Failed to add story to sheet:', e.message);
+    if (attempt < 3) await new Promise(r => setTimeout(r, 1000 * attempt));
   }
+  console.error('[submitStoryWithCredits] FAILED to add story to sheet after 3 attempts:', story.child_name);
+  return false;
 }
 
 function utf8ToBase64(str) {

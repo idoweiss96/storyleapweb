@@ -118,6 +118,12 @@ Deno.serve(async (req) => {
     if (story.contact_email) {
       await sendStoryInProgressEmail(story.contact_email, story.child_name, isHebrew).catch(() => {});
     }
+
+    // Add story to Google Sheet
+    try {
+      await base44.asServiceRole.functions.invoke('addStoryToSheet', story);
+    } catch (_) {}
+
     base44.asServiceRole.functions.invoke('processStoryGeneration', { story_id: order.story_id, order_id: order.id }).catch(() => {});
 
     return Response.json({ received: true });
