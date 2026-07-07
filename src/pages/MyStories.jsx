@@ -80,7 +80,7 @@ export default function MyStories() {
       }
       // Fallback: direct entity query (works if RLS allows it)
       if (userStories.length === 0) {
-        userStories = await base44.entities.Story.filter({ contact_email: currentUser.email }, '-created_date');
+        userStories = await base44.entities.Story.filter({ created_by_id: currentUser.id }, '-created_date');
         console.log('[MyStories] direct query fallback, count:', userStories.length);
       }
       setStories(userStories);

@@ -8,7 +8,7 @@ Deno.serve(async (req) => {
 
     // Fetch all stories via service role (bypasses RLS), then filter in code
     const allStories = await base44.asServiceRole.entities.Story.list('-created_date', 500);
-    const userStories = allStories.filter(s => s.contact_email === user.email);
+    const userStories = allStories.filter(s => s.contact_email === user.email || s.created_by_id === user.id);
 
     return Response.json({ stories: userStories });
   } catch (error) {
