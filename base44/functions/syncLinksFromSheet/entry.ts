@@ -60,18 +60,8 @@ Deno.serve(async (req) => {
       if (sheetLink && sheetLink !== currentLink) {
         await base44.asServiceRole.entities.Story.update(story.id, { story_link: sheetLink });
         updated++;
-        // Send email notification to customer using the rich template
-        const email = fields.contact_email || '';
-        const childName = fields.child_name || '';
-        const isHebrew = /[\u0590-\u05FF]/.test(childName);
-        if (email) {
-          await base44.asServiceRole.functions.invoke('sendStoryReadyEmail', {
-            to: email,
-            childName,
-            storyLink: sheetLink,
-            isHebrew,
-          }).catch(() => {});
-        }
+        // "Story ready" email is sent automatically by the onStoryLinkAdded entity automation
+        // (which falls back to the creator's email if contact_email is not set)
       }
     }
 
