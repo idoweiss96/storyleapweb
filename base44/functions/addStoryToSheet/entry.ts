@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 const SPREADSHEET_ID_EN = '1-LZ-ai2LdJ4BoTTdSacDRl-L0LpcIEg5JrCKK6txLxg';
 const SPREADSHEET_ID_HE = '1yT2WdAlyjpp8gciT4iZYEL122FyrliTin3MEcTvvr20';
@@ -51,12 +51,14 @@ Deno.serve(async (req) => {
     // entity automation sends { data: {...}, event: {...} }
     const storyData = body.data || body;
     if (!storyData) {
+      console.log('[addStoryToSheet] No story data provided. Body keys:', Object.keys(body));
       return Response.json({ error: 'No story data provided' }, { status: 400 });
     }
 
+    console.log('[addStoryToSheet] Story data received:', { child_name: storyData.child_name, event_type: body.event?.type, has_data: !!body.data });
+
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
-    // storyData here is already the flat fields from automation payload
     const lang = detectLanguage(storyData);
     const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
 
@@ -76,11 +78,14 @@ Deno.serve(async (req) => {
 
     if (!response.ok) {
       const err = await response.text();
+      console.error('[addStoryToSheet] Google Sheets API error:', response.status, err);
       return Response.json({ error: err }, { status: 500 });
     }
 
+    console.log('[addStoryToSheet] Success:', { child_name: storyData.child_name, lang, spreadsheetId });
     return Response.json({ success: true, lang });
   } catch (error) {
+    console.error('[addStoryToSheet] Error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
