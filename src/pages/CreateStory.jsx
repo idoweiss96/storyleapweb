@@ -44,12 +44,11 @@ export default function CreateStory() {
     setIsLoading(true);
     try {
       const currentUser = await base44.auth.me();
-      // Sync credits from DB
+      // Sync credits from DB via backend function
       try {
-        const users = await base44.entities.User.filter({ email: currentUser.email });
-        if (users[0]?.credits !== undefined) {
-          currentUser.credits = users[0].credits;
-          await base44.auth.updateMe({ credits: users[0].credits });
+        const res = await base44.functions.invoke('getUserCredits', {});
+        if (res.data?.credits !== undefined) {
+          currentUser.credits = res.data.credits;
         }
       } catch (_) {}
       if (currentUser.credits === undefined || currentUser.credits === null) {

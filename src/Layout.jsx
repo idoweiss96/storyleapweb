@@ -29,16 +29,13 @@ function LayoutInner({ children, currentPageName }) {
   const loadUser = async () => {
     try {
       const currentUser = await base44.auth.me();
-      // Always read credits from DB (source of truth) — never rely on session for credits
+      // Read credits from DB (source of truth) via backend function — bypasses RLS
       let displayCredits = currentUser.credits || 0;
       try {
-        const users = await base44.entities.User.filter({ email: currentUser.email });
-        if (users[0] && users[0].credits !== undefined) {
-          displayCredits = users[0].credits;
-          // Sync session only if different
-          if (users[0].credits !== currentUser.credits) {
-            await base44.auth.updateMe({ credits: users[0].credits });
-          }
+        const res = await base44.functions.invoke('getUserCredits', {});
+        if (res.data?.credits !== undefined) {
+          displayCredits = res.data.credits;
+          currentUser.credits = displayCredits;
         }
       } catch (_) {}
       setUser(currentUser);
