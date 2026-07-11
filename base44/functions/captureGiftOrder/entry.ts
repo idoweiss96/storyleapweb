@@ -61,11 +61,20 @@ async function sendGiftEmail(base44, recipientEmail, giftCode, senderEmail) {
     <p style="font-size:16px;line-height:1.7;margin-top:24px;">בהנאה! ✨</p>
     <p style="margin-top:24px;font-size:15px;">צוות StoryLeap</p>
   </div>`;
-  await base44.asServiceRole.functions.invoke('sendGmailEmail', {
-    to: recipientEmail,
-    subject,
-    body: html,
+  const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
+  console.log('[captureGiftOrder] Gmail accessToken obtained, sending to:', recipientEmail);
+  const raw = buildRawMessage(recipientEmail, subject, html);
+  const gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ raw }),
   });
+  if (!gmailRes.ok) {
+    const errText = await gmailRes.text();
+    console.error('[captureGiftOrder] Gmail send failed:', gmailRes.status, errText);
+    throw new Error(`Gmail send failed: ${gmailRes.status} ${errText}`);
+  }
+  console.log('[captureGiftOrder] Gift email sent successfully to:', recipientEmail);
 }
 
 Deno.serve(async (req) => {
@@ -121,10 +130,14 @@ Deno.serve(async (req) => {
       is_active: true,
     });
 
-    // Send gift email to recipient
+    // Send gift email to recipient — surface errors instead of swallowing
+    let emailSent = false;
+    let emailError = null;
     try {
       await sendGiftEmail(base44, recipient_email, giftCode, user.email);
+      emailSent = true;
     } catch (emailErr) {
+      emailError = emailErr.message;
       console.error('[captureGiftOrder] Email send failed:', emailErr.message);
     }
 
@@ -133,6 +146,8 @@ Deno.serve(async (req) => {
       code: giftCode,
       recipient_email,
       credits: creditsToAdd,
+      email_sent: emailSent,
+      email_error: emailError,
     });
   } catch (error) {
     console.error('[captureGiftOrder] Error:', error.message);
