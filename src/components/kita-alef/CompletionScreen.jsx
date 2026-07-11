@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
 import { PAGES } from './questionsConfig';
 
 function getDisplayValue(question, value) {
@@ -18,6 +19,14 @@ function getDisplayValue(question, value) {
 export default function CompletionScreen({ answers }) {
   const navigate = useNavigate();
   const name = answers.name || '';
+  const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    // Send answers to Google Sheet once on mount
+    base44.functions.invoke('submitKitaAlefAnswers', { answers })
+      .then(() => setSubmitted(true))
+      .catch((err) => console.error('Failed to submit answers:', err));
+  }, []);
 
   return (
     <div className="min-h-[75vh] rounded-3xl flex flex-col items-center justify-center px-4 py-10" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
