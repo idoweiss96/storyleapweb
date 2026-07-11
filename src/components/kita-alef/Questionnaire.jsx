@@ -13,17 +13,18 @@ export default function Questionnaire({ answers, setAnswers, onComplete }) {
   };
 
   return (
-    <div className="min-h-[75vh] bg-kita-bg rounded-3xl px-4 py-6">
+    <div className="min-h-[75vh] rounded-3xl px-4 py-6" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
       <div className="max-w-lg mx-auto">
         {/* Progress bar */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-kita-subtext">עמוד {pageIdx + 1} מתוך {PAGES.length}</span>
-            <span className="text-sm font-semibold text-kita-navy">{page.title}</span>
+            <span className="text-sm font-medium" style={{ color: '#4FC3E8' }}>עמוד {pageIdx + 1} מתוך {PAGES.length}</span>
+            <span className="text-sm font-semibold" style={{ color: '#FF6FB5' }}>{page.title}</span>
           </div>
-          <div className="h-2 bg-white rounded-full overflow-hidden">
+          <div className="h-2.5 bg-white rounded-full overflow-hidden shadow-inner">
             <motion.div
-              className="h-full bg-gradient-to-l from-kita-purple to-kita-navy rounded-full"
+              className="h-full rounded-full"
+              style={{ background: 'linear-gradient(to left, #4FC3E8, #FF6FB5)' }}
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ type: 'spring', stiffness: 200, damping: 30 }}
@@ -52,7 +53,8 @@ export default function Questionnaire({ answers, setAnswers, onComplete }) {
           {pageIdx > 0 ? (
             <button
               onClick={() => setPageIdx(pageIdx - 1)}
-              className="px-6 py-3 rounded-[14px] bg-white border border-kita-border text-kita-subtext font-medium hover:bg-kita-grad-start transition-colors"
+              className="px-6 py-3 rounded-[14px] bg-white border font-medium hover:opacity-80 transition-opacity"
+              style={{ borderColor: '#B8EBF7', color: '#4FC3E8' }}
             >
               → חזור
             </button>
@@ -61,14 +63,16 @@ export default function Questionnaire({ answers, setAnswers, onComplete }) {
           {pageIdx < PAGES.length - 1 ? (
             <button
               onClick={() => setPageIdx(pageIdx + 1)}
-              className="px-6 py-3 rounded-[14px] bg-kita-navy text-white font-semibold hover:opacity-90 transition-opacity"
+              className="px-6 py-3 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(135deg, #4FC3E8, #6BB6E8)' }}
             >
               הבא ←
             </button>
           ) : (
             <button
               onClick={onComplete}
-              className="px-6 py-3 rounded-[14px] bg-gradient-to-l from-kita-purple to-kita-navy text-white font-semibold hover:opacity-90 transition-opacity"
+              className="px-6 py-3 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
+              style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
             >
               סיום ✨
             </button>

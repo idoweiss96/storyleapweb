@@ -64,6 +64,12 @@ module.exports = {
   				navy: '#1A1A6E',
   				purple: '#6B5CE7',
   				lavender: '#A89BE8',
+  				pink: '#FF6FB5',
+  				'pink-soft': '#FFD6EC',
+  				'pink-bg': '#FFF0F7',
+  				sky: '#4FC3E8',
+  				'sky-soft': '#B8EBF7',
+  				'sky-bg': '#EAF8FD',
   				bg: '#f0eef8',
   				border: '#ede9f8',
   				text: '#1a1a2e',
@@ -71,8 +77,8 @@ module.exports = {
   				yellow: '#F5C842',
   				'yellow-text': '#7A5000',
   				'yellow-bg': '#FFF8EC',
-  				'grad-start': '#EEF0FF',
-  				'grad-end': '#F5EAF5',
+  				'grad-start': '#EAF8FD',
+  				'grad-end': '#FFF0F7',
   				'input-bg': '#FAFAFE'
   			}
   		},
