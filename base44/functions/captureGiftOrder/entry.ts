@@ -61,12 +61,10 @@ async function sendGiftEmail(base44, recipientEmail, giftCode, senderEmail) {
     <p style="font-size:16px;line-height:1.7;margin-top:24px;">בהנאה! ✨</p>
     <p style="margin-top:24px;font-size:15px;">צוות StoryLeap</p>
   </div>`;
-  const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
-  const raw = buildRawMessage(recipientEmail, subject, html);
-  await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ raw }),
+  await base44.asServiceRole.functions.invoke('sendGmailEmail', {
+    to: recipientEmail,
+    subject,
+    body: html,
   });
 }
 

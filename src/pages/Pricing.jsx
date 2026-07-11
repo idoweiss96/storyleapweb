@@ -308,7 +308,7 @@ export default function Pricing() {
     document.body.appendChild(script);
     return () => {};
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [btnConfig]);
+  }, [btnConfig, giftMode]);
 
   const applyPromoCode = async (rawCode) => {
     setPromoError('');
@@ -488,7 +488,16 @@ export default function Pricing() {
 
               {/* PayPal Button */}
               <div className="max-w-xs mx-auto mt-4">
-                <div ref={containerRef} />
+                {giftMode && !recipientEmail && (
+                  <div className="p-4 bg-slate-50 rounded-xl text-center">
+                    <p className="text-sm text-slate-400">
+                      {isHe ? 'הזינו מייל של מקבל/ת המתנה כדי להמשיך' : 'Enter recipient email to continue'}
+                    </p>
+                  </div>
+                )}
+                {(!giftMode || recipientEmail) && (
+                  <div ref={containerRef} />
+                )}
               </div>
 
               <div className="mt-6 border-t border-slate-100 pt-6">
