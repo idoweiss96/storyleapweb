@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Star, CheckCircle, Tag } from 'lucide-react';
+import { Sparkles, Star, CheckCircle, Tag, Gift } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
@@ -41,6 +41,13 @@ export default function Pricing() {
   const [creditsPopup, setCreditsPopup] = useState(null);
   const [paypalError, setPaypalError] = useState('');
   const [processing, setProcessing] = useState(false);
+  const [giftMode, setGiftMode] = useState(false);
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [giftSuccess, setGiftSuccess] = useState(null);
+  const giftModeRef = useRef(false);
+  const recipientEmailRef = useRef('');
+  giftModeRef.current = giftMode;
+  recipientEmailRef.current = recipientEmail;
   const containerRef = useRef(null);
   const renderKeyRef = useRef(0);
   const isRenderedRef = useRef(false);
@@ -85,19 +92,34 @@ export default function Pricing() {
             setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
           }
         } else {
-          // Hosted buttons auto-capture on PayPal's side — skip manual capture
-        const res = await base44.functions.invoke('captureCreditsOrder', {
-            paypal_order_id: paypalToken,
-            credits: 20,
-            coupon: true,
-          });
-          if (res.data?.success) {
-            // Sync credits to session
-            try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
-            window.dispatchEvent(new Event('credits-updated'));
-            setCreditsPopup({ added: 20, total: res.data.new_total, navigateOnClose: true });
+          const storedGiftMode = localStorage.getItem('giftMode') === 'true';
+          const storedRecipient = localStorage.getItem('giftRecipient');
+          if (storedGiftMode && storedRecipient) {
+            const res = await base44.functions.invoke('captureGiftOrder', {
+              paypal_order_id: paypalToken,
+              recipient_email: storedRecipient,
+              credits: 20,
+            });
+            if (res.data?.success) {
+              localStorage.removeItem('giftMode');
+              localStorage.removeItem('giftRecipient');
+              setGiftSuccess({ code: res.data.code, recipient: storedRecipient });
+            } else {
+              setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
+            }
           } else {
-            setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
+            const res = await base44.functions.invoke('captureCreditsOrder', {
+              paypal_order_id: paypalToken,
+              credits: 20,
+              coupon: true,
+            });
+            if (res.data?.success) {
+              try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
+              window.dispatchEvent(new Event('credits-updated'));
+              setCreditsPopup({ added: 20, total: res.data.new_total, navigateOnClose: true });
+            } else {
+              setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
+            }
           }
         }
       } catch (err) {
@@ -171,18 +193,29 @@ export default function Pricing() {
             navigate('/PaymentSuccess?story_id=' + pendingStoryId);
           }
         } else {
-          const isHostedButton = !!btnConfig.hostedButtonId;
-          const res = await base44.functions.invoke('captureCreditsOrder', {
-            paypal_order_id: data.orderID,
-            credits: 20,
-            coupon: isHostedButton, // hosted buttons auto-capture, skip manual capture
-          });
-          if (res.data?.success) {
-            // Update session with new credits from server response (source of truth)
-            await base44.auth.updateMe({ credits: res.data.new_total });
-            // Small delay to ensure session is updated before layout re-reads it
-            setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
-            setCreditsPopup({ added: 20, total: res.data.new_total, navigateOnClose: true });
+          if (giftModeRef.current && recipientEmailRef.current) {
+            const res = await base44.functions.invoke('captureGiftOrder', {
+              paypal_order_id: data.orderID,
+              recipient_email: recipientEmailRef.current,
+              credits: 20,
+            });
+            if (res.data?.success) {
+              setGiftSuccess({ code: res.data.code, recipient: recipientEmailRef.current });
+            } else {
+              setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
+            }
+          } else {
+            const isHostedButton = !!btnConfig.hostedButtonId;
+            const res = await base44.functions.invoke('captureCreditsOrder', {
+              paypal_order_id: data.orderID,
+              credits: 20,
+              coupon: isHostedButton,
+            });
+            if (res.data?.success) {
+              await base44.auth.updateMe({ credits: res.data.new_total });
+              setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
+              setCreditsPopup({ added: 20, total: res.data.new_total, navigateOnClose: true });
+            }
           }
         }
       } catch (err) {
@@ -215,6 +248,13 @@ export default function Pricing() {
       const buttons = window.paypal.Buttons({
         style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
         createOrder: async () => {
+          if (giftModeRef.current && recipientEmailRef.current) {
+            localStorage.setItem('giftMode', 'true');
+            localStorage.setItem('giftRecipient', recipientEmailRef.current);
+          } else {
+            localStorage.removeItem('giftMode');
+            localStorage.removeItem('giftRecipient');
+          }
           const res = await base44.functions.invoke('createCreditsOrder', {
             currency: btnConfig.currency,
             amount: btnConfig.amount,
@@ -356,6 +396,27 @@ export default function Pricing() {
                 </p>
               </div>
 
+              {/* Gift Mode Toggle */}
+              <div className="mb-6">
+                <div className="flex gap-2 p-1 bg-slate-100 rounded-xl">
+                  <button onClick={() => { setGiftMode(false); setGiftSuccess(null); }} className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all text-sm font-medium ${!giftMode ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}`}>
+                    <Star className="w-4 h-4" />
+                    {isHe ? 'רכישה עבורי' : 'Buy for myself'}
+                  </button>
+                  <button onClick={() => { setGiftMode(true); setPromoApplied(false); setPromoCode(''); setHostedButtonCode(null); setAppliedCoupon(null); }} className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all text-sm font-medium ${giftMode ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}`}>
+                    <Gift className="w-4 h-4" />
+                    {isHe ? 'שלח כמתנה' : 'Send as gift'}
+                  </button>
+                </div>
+              </div>
+
+              {giftMode && (
+                <div className="mb-6 max-w-xs mx-auto">
+                  <Input type="email" placeholder={isHe ? 'מייל מקבל/ת המתנה' : 'Recipient email'} value={recipientEmail} onChange={(e) => setRecipientEmail(e.target.value)} className="text-sm" />
+                  <p className="text-xs text-slate-400 mt-1 text-center">{isHe ? 'הקוד יישלח למייל זה לאחר התשלום' : 'The gift code will be sent to this email after payment'}</p>
+                </div>
+              )}
+
               <div className="text-center mb-6">
                 <p className="text-3xl font-bold text-slate-800">{btnConfig.display}</p>
                 {promoApplied && (
@@ -441,6 +502,31 @@ export default function Pricing() {
           </Card>
         </motion.div>
       </div>
+
+      {giftSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+            <Card className="border-0 shadow-2xl max-w-md">
+              <CardContent className="p-8 text-center">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mx-auto mb-4">
+                  <Gift className="w-10 h-10 text-amber-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">{isHe ? 'המתנה נשלחה! 🎁' : 'Gift sent! 🎁'}</h3>
+                <p className="text-slate-500 mb-4 text-sm">
+                  {isHe ? `שלחנו מייל עם קוד המתנה ל-${giftSuccess.recipient}` : `We sent a gift email to ${giftSuccess.recipient}`}
+                </p>
+                <div className="bg-amber-50 border-2 border-dashed border-amber-300 rounded-xl p-4 mb-4">
+                  <p className="text-sm text-amber-600 mb-1">{isHe ? 'קוד המתנה:' : 'Gift code:'}</p>
+                  <p className="text-2xl font-bold tracking-wider text-slate-800">{giftSuccess.code}</p>
+                </div>
+                <Button onClick={() => { setGiftSuccess(null); setGiftMode(false); setRecipientEmail(''); navigate('/MyStories'); }} className="w-full">
+                  {isHe ? 'סיום' : 'Done'}
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      )}
 
       {creditsPopup && (
         <CreditsAddedPopup
