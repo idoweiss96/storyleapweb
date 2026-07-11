@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from './LanguageContext';
 
 export default function FloatingGift() {
-  const { isHe } = useLanguage();
+  const { lang } = useLanguage();
+  const isHe = lang === 'he';
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [showBubble, setShowBubble] = useState(false);
