@@ -149,6 +149,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Kita Alef Special Banner */}
+      <section className="py-4">
+        <Link to="/KitaAlef">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.02 }}
+            className="rounded-2xl p-5 text-center cursor-pointer shadow-lg shadow-purple-100"
+            style={{ background: 'linear-gradient(135deg, #6B5CE7 0%, #1A1A6E 100%)' }}
+          >
+            <span className="inline-block px-4 py-1 rounded-full bg-white/20 text-white text-xs font-medium mb-2">
+              ✨ ספיישל כיתה א׳
+            </span>
+            <h3 className="text-xl font-bold text-white">הכנה לכיתה א׳ שמתחילה מהלב</h3>
+            <p className="text-sm text-white/80 mt-1">שאלון משותף לילד ולהורה — 3 דקות 🎒</p>
+          </motion.div>
+        </Link>
+      </section>
+
       {/* Maya Story CTA */}
       <section className="py-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
