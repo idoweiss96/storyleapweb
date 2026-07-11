@@ -127,6 +127,37 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Kita Alef Special Banner */}
+      <section className="py-4">
+        <Link to="/KitaAlef">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.02 }}
+            className="rounded-3xl p-6 md:p-8 text-center cursor-pointer relative overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)', border: '1px solid #FFD6EC', boxShadow: '0 8px 30px rgba(255,111,181,0.12)' }}
+          >
+            {/* Decorative floating stars */}
+            <div className="absolute top-3 right-6 text-2xl opacity-60 star-float-1">✦</div>
+            <div className="absolute bottom-3 left-8 text-lg opacity-50 star-float-2">★</div>
+            <div className="absolute top-6 left-12 text-sm opacity-40 star-twinkle">✦</div>
+
+            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-3" style={{ background: 'linear-gradient(135deg, #FFD6EC, #B8EBF7)', color: '#1A1A6E' }}>
+              ✨ ספיישל כיתה א׳
+            </span>
+            <h3 className="text-xl md:text-2xl font-bold mb-1" style={{ color: '#1A1A6E' }}>הכנה לכיתה א׳ ביחד 💗</h3>
+            <p className="text-sm md:text-base mb-4" style={{ color: '#6b6b8a' }}>שאלון משותף לילד ולהורה — 3 דקות 🎒</p>
+            <span
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-semibold shadow-md transition-opacity hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
+            >
+              <Sparkles className="w-4 h-4" />
+              לחצו כאן להתחלה
+            </span>
+          </motion.div>
+        </Link>
+      </section>
+
       {/* Features Section */}
       <section className="py-12 hidden md:block">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -147,25 +178,6 @@ export default function Home() {
 
           })}
         </div>
-      </section>
-
-      {/* Kita Alef Special Banner */}
-      <section className="py-4">
-        <Link to="/KitaAlef">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.02 }}
-            className="rounded-2xl p-5 text-center cursor-pointer shadow-lg shadow-purple-100"
-            style={{ background: 'linear-gradient(135deg, #6B5CE7 0%, #1A1A6E 100%)' }}
-          >
-            <span className="inline-block px-4 py-1 rounded-full bg-white/20 text-white text-xs font-medium mb-2">
-              ✨ ספיישל כיתה א׳
-            </span>
-            <h3 className="text-xl font-bold text-white">הכנה לכיתה א׳ ביחד 💗</h3>
-            <p className="text-sm text-white/80 mt-1">שאלון משותף לילד ולהורה — 3 דקות 🎒</p>
-          </motion.div>
-        </Link>
       </section>
 
       {/* Maya Story CTA */}
