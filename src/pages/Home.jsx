@@ -162,7 +162,7 @@ export default function Home() {
             <span className="inline-block px-4 py-1 rounded-full bg-white/20 text-white text-xs font-medium mb-2">
               ✨ ספיישל כיתה א׳
             </span>
-            <h3 className="text-xl font-bold text-white">הכנה לכיתה א׳ שמתחילה מהלב</h3>
+            <h3 className="text-xl font-bold text-white">הכנה לכיתה א׳ ביחד 💗</h3>
             <p className="text-sm text-white/80 mt-1">שאלון משותף לילד ולהורה — 3 דקות 🎒</p>
           </motion.div>
         </Link>
