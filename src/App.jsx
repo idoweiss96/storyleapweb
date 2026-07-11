@@ -15,6 +15,7 @@ import PaymentCheckout from './pages/PaymentCheckout';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancel from './pages/PaymentCancel';
 import Vision from './pages/Vision';
+import KitaAlef from './pages/KitaAlef';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -73,6 +74,7 @@ const AuthenticatedApp = () => {
       <Route path="/PaymentSuccess" element={<LayoutWrapper currentPageName="PaymentSuccess"><PaymentSuccess /></LayoutWrapper>} />
       <Route path="/PaymentCancel" element={<LayoutWrapper currentPageName="PaymentCancel"><PaymentCancel /></LayoutWrapper>} />
       <Route path="/Vision" element={<LayoutWrapper currentPageName="Vision"><Vision /></LayoutWrapper>} />
+      <Route path="/KitaAlef" element={<LayoutWrapper currentPageName="KitaAlef"><KitaAlef /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

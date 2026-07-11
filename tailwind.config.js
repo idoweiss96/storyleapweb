@@ -59,6 +59,21 @@ module.exports = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
+  			},
+  			kita: {
+  				navy: '#1A1A6E',
+  				purple: '#6B5CE7',
+  				lavender: '#A89BE8',
+  				bg: '#f0eef8',
+  				border: '#ede9f8',
+  				text: '#1a1a2e',
+  				subtext: '#6b6b8a',
+  				yellow: '#F5C842',
+  				'yellow-text': '#7A5000',
+  				'yellow-bg': '#FFF8EC',
+  				'grad-start': '#EEF0FF',
+  				'grad-end': '#F5EAF5',
+  				'input-bg': '#FAFAFE'
   			}
   		},
   		keyframes: {
