@@ -75,7 +75,10 @@ export default function CompletionScreen({ answers }) {
         </div>
 
         <button
-          onClick={() => navigate('/CreateStory')}
+          onClick={() => {
+            sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers }));
+            navigate('/KitaAlefStory');
+          }}
           className="w-full py-3.5 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
           style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
         >
