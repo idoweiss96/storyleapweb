@@ -10,8 +10,6 @@ const PILLS = [
 export default function HomeScreen({ onStart }) {
   return (
     <div className="min-h-[75vh] flex flex-col items-center justify-center px-4 py-10 rounded-3xl" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
-      <h1 className="text-3xl font-bold mb-8" style={{ color: '#1A1A6E' }}>StoryLeap</h1>
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
