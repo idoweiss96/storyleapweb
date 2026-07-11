@@ -39,7 +39,7 @@ export default function CompletionScreen({ answers }) {
         </div>
 
         <h2 className="text-2xl font-bold text-kita-navy text-center mb-6">
-          הפרופיל של {name} מוכן! 🎉
+          הסיפור של {name} כמעט מוכן! ✨
         </h2>
 
         {/* Summary */}
