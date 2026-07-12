@@ -211,11 +211,11 @@ export default function Pricing() {
               setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
             }
           } else {
-            const isTestCode = !!hostedButtonCode;
+            const isHostedButton = !!btnConfig.hostedButtonId;
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: data.orderID,
               credits: 20,
-              coupon: isTestCode,
+              coupon: isHostedButton,
             });
             if (res.data?.success) {
               await base44.auth.updateMe({ credits: res.data.new_total });
