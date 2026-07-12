@@ -18,15 +18,17 @@ const HOSTED_BUTTON_CODES = {
 
 const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
 
-// Price configs by language and promo
-const PRICE_CONFIG = {
+// Hosted buttons by language and discount tier
+const HOSTED_BUTTONS = {
   he: {
-    full:     { amount: '45', currency: 'ILS', display: '₪45' },
-    discount: { amount: '15', currency: 'ILS', display: '₪15' },
+    full:       { hostedButtonId: '9HE46Y9GZ53GL', currency: 'ILS', display: '₪110' },
+    discount30: { hostedButtonId: 'CLHK3KQMH4XXA', currency: 'ILS', display: '₪77' },
+    discount50: { hostedButtonId: 'B9TUMXZVS8NMG', currency: 'ILS', display: '₪55' },
   },
   en: {
-    full:     { amount: '15', currency: 'USD', display: '$15' },
-    discount: { amount: '5',  currency: 'USD', display: '$5'  },
+    full:       { hostedButtonId: 'RRQSP3N3TULMG', currency: 'USD', display: '$40' },
+    discount30: { hostedButtonId: 'HY2FYDAMXP68C', currency: 'USD', display: '$28' },
+    discount50: { hostedButtonId: 'MKWP2B9RHT8RN', currency: 'USD', display: '$20' },
   },
 };
 
@@ -57,12 +59,16 @@ export default function Pricing() {
   const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, price_ils, price_usd } from DB
   const btnConfig = useMemo(() => {
     if (hostedButtonCode) return HOSTED_BUTTON_CODES[hostedButtonCode];
+    const langKey = isHe ? 'he' : 'en';
     if (appliedCoupon) {
+      if (appliedCoupon.code.endsWith('30')) return HOSTED_BUTTONS[langKey].discount30;
+      if (appliedCoupon.code.endsWith('50')) return HOSTED_BUTTONS[langKey].discount50;
+      // Fallback to DB price with regular button
       return isHe
         ? { amount: String(appliedCoupon.price_ils), currency: 'ILS', display: `₪${appliedCoupon.price_ils}` }
         : { amount: String(appliedCoupon.price_usd), currency: 'USD', display: `$${appliedCoupon.price_usd}` };
     }
-    return PRICE_CONFIG[isHe ? 'he' : 'en'].full;
+    return HOSTED_BUTTONS[langKey].full;
   }, [hostedButtonCode, appliedCoupon, isHe]);
 
   // Handle PayPal redirect return on mobile
@@ -111,7 +117,7 @@ export default function Pricing() {
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: paypalToken,
               credits: 20,
-              coupon: true,
+              coupon: false,
             });
             if (res.data?.success) {
               try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
@@ -205,11 +211,11 @@ export default function Pricing() {
               setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
             }
           } else {
-            const isHostedButton = !!btnConfig.hostedButtonId;
+            const isTestCode = !!hostedButtonCode;
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: data.orderID,
               credits: 20,
-              coupon: isHostedButton,
+              coupon: isTestCode,
             });
             if (res.data?.success) {
               await base44.auth.updateMe({ credits: res.data.new_total });
