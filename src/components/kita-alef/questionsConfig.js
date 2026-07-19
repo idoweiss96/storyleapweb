@@ -116,6 +116,7 @@ export const PAGES = [
       },
       {
         key: 'one_worry', tag: 'together', question: 'איזה דבר אחד קצת מדאיג?', type: 'textarea',
+        showIf: { dependsOn: 'feelings_before', values: ['קצת מפחד/ת', 'מפחד/ת'] },
         hint: 'כתבו יחד...'
       },
       {
