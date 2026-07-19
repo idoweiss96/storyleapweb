@@ -1,9 +1,18 @@
 import React, { useRef } from 'react';
 import { Plus, X } from 'lucide-react';
-
-const ROLES = ['אבא', 'אמא', 'סבא', 'סבתא', 'אחר'];
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function FamilyPhotosInput({ value, onChange }) {
+  const { lang } = useLanguage();
+  const isEn = lang === 'en';
+
+  const ROLES = isEn ? ['Dad', 'Mom', 'Grandpa', 'Grandma', 'Other'] : ['אבא', 'אמא', 'סבא', 'סבתא', 'אחר'];
+  const OTHER = isEn ? 'Other' : 'אחר';
+  const addLabel = isEn ? 'Add photo' : 'הוספת תמונה';
+  const maxLabel = isEn ? `Max ${2} photos` : `מקסימום ${2} תמונות`;
+  const whoLabel = isEn ? "Who's in the photo?" : 'מי בתמונה?';
+  const inPhotoLabel = isEn ? 'In photo:' : 'בתמונה:';
+
   const photos = Array.isArray(value) ? value : [];
   const MAX = 2;
 
@@ -34,6 +43,10 @@ export default function FamilyPhotosInput({ value, onChange }) {
         <PhotoEntry
           key={idx}
           entry={entry}
+          roles={ROLES}
+          otherLabel={OTHER}
+          whoLabel={whoLabel}
+          inPhotoLabel={inPhotoLabel}
           onPhoto={(file) => handlePhoto(idx, file)}
           onRoleChange={(role) => updateEntry(idx, { role })}
           onCustomLabelChange={(label) => updateEntry(idx, { customLabel: label })}
@@ -48,13 +61,13 @@ export default function FamilyPhotosInput({ value, onChange }) {
         style={{ borderColor: '#4FC3E8', color: '#4FC3E8', background: '#EAF8FD' }}
       >
         <Plus className="w-5 h-5" />
-        {photos.length >= MAX ? `מקסימום ${MAX} תמונות` : 'הוספת תמונה'}
+        {photos.length >= MAX ? maxLabel : addLabel}
       </button>
     </div>
   );
 }
 
-function PhotoEntry({ entry, onPhoto, onRoleChange, onCustomLabelChange, onRemove }) {
+function PhotoEntry({ entry, roles, otherLabel, whoLabel, inPhotoLabel, onPhoto, onRoleChange, onCustomLabelChange, onRemove }) {
   const fileRef = useRef(null);
 
   return (
@@ -66,7 +79,7 @@ function PhotoEntry({ entry, onPhoto, onRoleChange, onCustomLabelChange, onRemov
         style={{ borderColor: '#FF6FB5' }}
       >
         {entry.photo ? (
-          <img src={entry.photo} alt="תמונה" className="w-full h-full object-cover" />
+          <img src={entry.photo} alt="Photo" className="w-full h-full object-cover" />
         ) : (
           <span className="text-xl" style={{ color: '#4FC3E8' }}>📷</span>
         )}
@@ -82,7 +95,7 @@ function PhotoEntry({ entry, onPhoto, onRoleChange, onCustomLabelChange, onRemov
       {/* Role selection */}
       <div className="flex-1 space-y-2">
         <div className="flex flex-wrap gap-1.5">
-          {ROLES.map((role) => {
+          {roles.map((role) => {
             const selected = entry.role === role;
             return (
               <button
@@ -100,19 +113,19 @@ function PhotoEntry({ entry, onPhoto, onRoleChange, onCustomLabelChange, onRemov
           })}
         </div>
 
-        {entry.role === 'אחר' && (
+        {entry.role === otherLabel && (
           <input
             type="text"
             value={entry.customLabel || ''}
             onChange={(e) => onCustomLabelChange(e.target.value)}
             className="w-full px-3 py-2 rounded-[8px] border bg-white text-sm focus:outline-none"
             style={{ borderColor: '#F0E8F5' }}
-            placeholder="מי בתמונה?"
+            placeholder={whoLabel}
           />
         )}
 
-        {entry.role && entry.role !== 'אחר' && (
-          <p className="text-xs" style={{ color: '#6b6b8a' }}>בתמונה: {entry.role}</p>
+        {entry.role && entry.role !== otherLabel && (
+          <p className="text-xs" style={{ color: '#6b6b8a' }}>{inPhotoLabel} {entry.role}</p>
         )}
       </div>
 

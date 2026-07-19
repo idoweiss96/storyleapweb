@@ -1,11 +1,18 @@
 import React, { useRef } from 'react';
 import FamilyPhotosInput from './FamilyPhotosInput';
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function QuestionInput({ question, answers, onAnswerChange }) {
+  const { lang } = useLanguage();
+  const isEn = lang === 'en';
   const { type, key } = question;
   const value = answers[key];
   const parentValue = answers[`${key}_parent`];
   const fileRef = useRef(null);
+
+  const placeholder = isEn ? 'Type here...' : 'כתבו כאן...';
+  const removePhotoLabel = isEn ? 'Remove photo' : 'הסר תמונה';
+  const maxSelectLabel = isEn ? `(Up to ${question.maxSelect})` : `(${question.maxSelect} לכל היותר)`;
 
   const handleEmojiClick = (opt) => {
     onAnswerChange(key, value === opt.label ? null : opt.label);
@@ -43,7 +50,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
           onChange={(e) => onAnswerChange(key, e.target.value)}
           className="w-full px-4 py-3 rounded-[10px] border bg-kita-input-bg text-kita-text focus:outline-none transition-colors"
           style={{ borderColor: '#F0E8F5' }}
-          placeholder="כתבו כאן..."
+          placeholder={placeholder}
         />
       )}
 
@@ -55,7 +62,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
           rows={3}
           className="w-full px-4 py-3 rounded-[10px] border bg-kita-input-bg text-kita-text focus:outline-none resize-none transition-colors"
           style={{ borderColor: '#F0E8F5' }}
-          placeholder={question.hint || 'כתבו כאן...'}
+          placeholder={question.hint || placeholder}
         />
       )}
 
@@ -103,7 +110,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
           })}
           {question.multi && question.maxSelect && (
             <span className="text-xs text-kita-subtext self-center">
-              ({question.maxSelect} לכל היותר)
+              {maxSelectLabel}
             </span>
           )}
         </div>
@@ -118,7 +125,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
             style={{ borderColor: '#FF6FB5' }}
           >
             {value ? (
-              <img src={value} alt="תמונה" className="w-full h-full object-cover" />
+              <img src={value} alt={isEn ? 'Photo' : 'תמונה'} className="w-full h-full object-cover" />
             ) : (
               <span className="text-3xl" style={{ color: '#4FC3E8' }}>📷</span>
             )}
@@ -129,7 +136,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
               onClick={() => onAnswerChange(key, null)}
               className="text-xs text-kita-subtext underline self-end ml-2"
             >
-              הסר תמונה
+              {removePhotoLabel}
             </button>
           )}
         </div>
@@ -150,7 +157,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
             rows={2}
             className="w-full px-4 py-3 rounded-[10px] border bg-kita-input-bg text-kita-text focus:outline-none resize-none transition-colors"
             style={{ borderColor: '#F0E8F5' }}
-            placeholder="כתבו כאן..."
+            placeholder={placeholder}
           />
         </div>
       )}

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PAGES } from './questionsConfig';
+import { getPages } from './questionsConfig';
+import { useLanguage } from '@/components/LanguageContext';
 import QuestionCard from './QuestionCard';
 
 export default function Questionnaire({ answers, setAnswers, onComplete }) {
+  const { lang } = useLanguage();
+  const pages = getPages(lang);
   const [pageIdx, setPageIdx] = useState(0);
-  const page = PAGES[pageIdx];
-  const progress = ((pageIdx + 1) / PAGES.length) * 100;
+  const page = pages[pageIdx];
+  const progress = ((pageIdx + 1) / pages.length) * 100;
+  const isEn = lang === 'en';
 
   const handleAnswer = (key, val) => {
     setAnswers(prev => ({ ...prev, [key]: val }));
@@ -18,7 +22,9 @@ export default function Questionnaire({ answers, setAnswers, onComplete }) {
         {/* Progress bar */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium" style={{ color: '#4FC3E8' }}>עמוד {pageIdx + 1} מתוך {PAGES.length}</span>
+            <span className="text-sm font-medium" style={{ color: '#4FC3E8' }}>
+              {isEn ? `Page ${pageIdx + 1} of ${pages.length}` : `עמוד ${pageIdx + 1} מתוך ${pages.length}`}
+            </span>
             <span className="text-sm font-semibold" style={{ color: '#FF6FB5' }}>{page.title}</span>
           </div>
           <div className="h-2.5 bg-white rounded-full overflow-hidden shadow-inner">
@@ -60,17 +66,17 @@ export default function Questionnaire({ answers, setAnswers, onComplete }) {
               className="px-6 py-3 rounded-[14px] bg-white border font-medium hover:opacity-80 transition-opacity"
               style={{ borderColor: '#B8EBF7', color: '#4FC3E8' }}
             >
-              → חזור
+              {isEn ? '← Back' : '→ חזור'}
             </button>
           ) : <div />}
 
-          {pageIdx < PAGES.length - 1 ? (
+          {pageIdx < pages.length - 1 ? (
             <button
               onClick={() => setPageIdx(pageIdx + 1)}
               className="px-6 py-3 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(135deg, #4FC3E8, #6BB6E8)' }}
             >
-              הבא ←
+              {isEn ? 'Next →' : 'הבא ←'}
             </button>
           ) : (
             <button
@@ -78,7 +84,7 @@ export default function Questionnaire({ answers, setAnswers, onComplete }) {
               className="px-6 py-3 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
             >
-              סיום ✨
+              {isEn ? 'Finish ✨' : 'סיום ✨'}
             </button>
           )}
         </div>

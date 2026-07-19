@@ -1,13 +1,45 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
-const PILLS = [
-  { emoji: '💜', text: 'מבוסס על שיטות טיפול פסיכולוגיות' },
-  { emoji: '👨‍👩‍👧', text: 'חוויה משותפת הורה-ילד' },
-  { emoji: '⏱', text: 'כ-3 דקות' },
-];
+import { useLanguage } from '@/components/LanguageContext';
 
 export default function HomeScreen({ onStart }) {
+  const { lang } = useLanguage();
+  const isEn = lang === 'en';
+
+  const PILLS = isEn
+    ? [
+        { emoji: '💜', text: 'Based on psychological therapy methods' },
+        { emoji: '👨‍👩‍👧', text: 'Shared parent-child experience' },
+        { emoji: '⏱', text: 'About 3 minutes' },
+      ]
+    : [
+        { emoji: '💜', text: 'מבוסס על שיטות טיפול פסיכולוגיות' },
+        { emoji: '👨‍👩‍👧', text: 'חוויה משותפת הורה-ילד' },
+        { emoji: '⏱', text: 'כ-3 דקות' },
+      ];
+
+  const SECTIONS = isEn
+    ? [
+        { emoji: '🧒', title: 'Who are you?', desc: 'Getting to know each other: name, personal strength, and a photo.' },
+        { emoji: '💭', title: 'Feelings', desc: 'Emotions before starting 1st grade, things that might be a bit scary, and moments of separation.' },
+        { emoji: '👨‍👩‍👧', title: 'Who matters to you?', desc: 'Close people, friends, and photos of family members.' },
+        { emoji: '🎨', title: 'What do you love?', desc: 'Hobbies, heroes, and what helps when things feel uncomfortable.' },
+        { emoji: '🎒', title: '1st Grade', desc: 'Expectations, small worries, and visiting the school.' },
+        { emoji: '🌟', title: 'Wishes', desc: "Wishes from the child and from you for the coming year." },
+      ]
+    : [
+        { emoji: '🧒', title: 'מי אתה/את?', desc: 'היכרות: שם, כוח אישי ותמונה.' },
+        { emoji: '💭', title: 'רגשות', desc: 'תחושות לפני העלייה לכיתה א׳, דברים שאולי קצת מפחידים ורגעי פרידה.' },
+        { emoji: '👨‍👩‍👧', title: 'מי חשוב לך?', desc: 'אנשים קרובים, חברים ותמונות של בני המשפחה.' },
+        { emoji: '🎨', title: 'מה אוהבים?', desc: 'תחביבים, גיבורים ומה שעוזר כשלא נעים.' },
+        { emoji: '🎒', title: 'כיתה א׳', desc: 'ציפיות, דאגות קטנות וביקור בבית הספר.' },
+        { emoji: '🌟', title: 'משאלות', desc: 'איחולים של הילד/ה ושלכם לקראת השנה.' },
+      ];
+
+  const introText = isEn
+    ? "This is a time for a fun, shared conversation with your child about starting 1st grade. Ask together, answer together, and feel free to add your own perspective in the fields marked \"Parent\". Along the way, we'll go through several parts together:"
+    : 'זה הזמן לשיח משותף וכיפי עם הילד/ה לקראת העלייה לכיתה א׳. שאלו יחד, ענו ביחד, ותהיו מוזמנים להוסיף גם את הטעם שלכם בשדות המסומנות "הורה". לאורך הדרך נעבור יחד בכמה חלקים:';
+
   return (
     <div className="min-h-[75vh] flex flex-col items-center justify-center px-4 py-10 rounded-3xl" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
       <motion.div
@@ -21,37 +53,29 @@ export default function HomeScreen({ onStart }) {
 
         <div className="flex justify-center mb-4">
           <span className="px-4 py-1.5 rounded-[20px] text-white text-sm font-medium" style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}>
-            ✨ ספיישל כיתה א׳
+            {isEn ? '✨ 1st Grade Special' : '✨ ספיישל כיתה א׳'}
           </span>
         </div>
 
-        <h2 className="text-xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>הכנה לכיתה א׳ ביחד 💗</h2>
-        <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>שאלון משותף לילד ולהורה — 3 דקות</p>
+        <h2 className="text-xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>
+          {isEn ? 'Getting Ready for 1st Grade Together 💗' : 'הכנה לכיתה א׳ ביחד 💗'}
+        </h2>
+        <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>
+          {isEn ? 'A joint questionnaire for child and parent — 3 minutes' : 'שאלון משותף לילד ולהורה — 3 דקות'}
+        </p>
 
         {/* Parent intro — what to expect */}
         <div className="mb-5 rounded-2xl p-4 border" style={{ background: '#FFF8EC', borderColor: '#F5C842' }}>
           <p className="text-[13px] leading-relaxed mb-3" style={{ color: '#7A5000' }}>
-            <span className="font-semibold">להורים ♥</span> זה הזמן לשיח משותף וכיפי עם הילד/ה לקראת העלייה לכיתה א׳. שאלו יחד, ענו ביחד, ותהיו מוזמנים להוסיף גם את הטעם שלכם בשדות המסומנות "הורה". לאורך הדרך נעבור יחד בכמה חלקים:
+            <span className="font-semibold">{isEn ? 'For parents ♥' : 'להורים ♥'}</span> {introText}
           </p>
           <ul className="space-y-1.5">
-            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
-              <span>🧒</span><span><span className="font-semibold">מי אתה/את?</span> — היכרות: שם, כוח אישי ותמונה.</span>
-            </li>
-            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
-              <span>💭</span><span><span className="font-semibold">רגשות</span> — תחושות לפני העלייה לכיתה א׳, דברים שאולי קצת מפחידים ורגעי פרידה.</span>
-            </li>
-            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
-              <span>👨‍👩‍👧</span><span><span className="font-semibold">מי חשוב לך?</span> — אנשים קרובים, חברים ותמונות של בני המשפחה.</span>
-            </li>
-            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
-              <span>🎨</span><span><span className="font-semibold">מה אוהבים?</span> — תחביבים, גיבורים ומה שעוזר כשלא נעים.</span>
-            </li>
-            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
-              <span>🎒</span><span><span className="font-semibold">כיתה א׳</span> — ציפיות, דאגות קטנות וביקור בבית הספר.</span>
-            </li>
-            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
-              <span>🌟</span><span><span className="font-semibold">משאלות</span> — איחולים של הילד/ה ושלכם לקראת השנה.</span>
-            </li>
+            {SECTIONS.map((s, i) => (
+              <li key={i} className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
+                <span>{s.emoji}</span>
+                <span><span className="font-semibold">{s.title}</span> — {s.desc}</span>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -60,7 +84,7 @@ export default function HomeScreen({ onStart }) {
           className="w-full py-3.5 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
           style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)' }}
         >
-          בואו נתחיל יחד ←
+          {isEn ? 'Let\'s start together →' : 'בואו נתחיל יחד ←'}
         </button>
       </motion.div>
 

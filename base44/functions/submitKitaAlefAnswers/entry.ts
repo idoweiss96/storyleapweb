@@ -1,7 +1,13 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const SPREADSHEET_ID = '1rATg8VqjteU8MUwxckXv4pUprUfUGHGleMbhNuKBmKk';
-const SHEET_NAME = 'תשובות שאלון כיתה א';
+const SPREADSHEET_ID_HE = '1rATg8VqjteU8MUwxckXv4pUprUfUGHGleMbhNuKBmKk';
+const SHEET_NAME_HE = 'תשובות שאלון כיתה א';
+
+const SPREADSHEET_ID_EN = '1R4BcLPgr5moYJlVOnYmBOdtpcYJCWkbsTfYT6TYDkJM';
+const SHEET_NAME_EN = 'Kita Alef Answers';
+
+const OTHER_LABEL_HE = 'אחר';
+const OTHER_LABEL_EN = 'Other';
 
 function formatValue(val) {
   if (val == null) return '';
@@ -9,47 +15,50 @@ function formatValue(val) {
   return String(val);
 }
 
-function formatFamilyPhotos(photos) {
+function formatFamilyPhotos(photos, otherLabel) {
   if (!Array.isArray(photos) || photos.length === 0) return '';
   return photos
-    .map(p => p.role === 'אחר' ? (p.customLabel || 'אחר') : (p.role || ''))
+    .map(p => p.role === otherLabel ? (p.customLabel || otherLabel) : (p.role || ''))
     .filter(Boolean)
     .join(', ');
 }
 
-function answersToRow(answers, userEmail) {
-  const now = new Date().toLocaleString('he-IL');
+function answersToRow(answers, userEmail, lang) {
+  const isEn = lang === 'en';
+  const now = new Date().toLocaleString(isEn ? 'en-US' : 'he-IL');
+  const yesNo = answers.photo ? (isEn ? 'Yes' : 'כן') : (isEn ? 'No' : 'לא');
+  const otherLabel = isEn ? OTHER_LABEL_EN : OTHER_LABEL_HE;
   return [
     now,
     userEmail || '',
-    // עמוד 1
+    // Page 1
     formatValue(answers.name),
     formatValue(answers.gender),
     formatValue(answers.strength),
     formatValue(answers.strength_parent),
-    answers.photo ? 'כן' : 'לא',
-    // עמוד 2
+    yesNo,
+    // Page 2
     formatValue(answers.feelings_before),
     formatValue(answers.feelings_before_parent),
     formatValue(answers.scary_things),
     formatValue(answers.separation_feelings),
     formatValue(answers.separation_feelings_parent),
-    // עמוד 3
+    // Page 3
     formatValue(answers.favorite_person),
     formatValue(answers.favorite_person_parent),
     formatValue(answers.gan_friends),
     formatValue(answers.sibling_experience),
-    formatFamilyPhotos(answers.family_photos),
-    // עמוד 4
+    formatFamilyPhotos(answers.family_photos, otherLabel),
+    // Page 4
     formatValue(answers.activities),
     formatValue(answers.hero),
     formatValue(answers.comfort),
-    // עמוד 5
+    // Page 5
     formatValue(answers.looking_forward),
     formatValue(answers.looking_forward_parent),
     formatValue(answers.one_worry),
     formatValue(answers.visited_school),
-    // עמוד 6
+    // Page 6
     formatValue(answers.wish_self),
     formatValue(answers.wish_self_parent),
     formatValue(answers.wish_parent),
@@ -61,11 +70,15 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
-    const { answers } = body;
+    const { answers, lang } = body;
 
     if (!answers) {
       return Response.json({ error: 'No answers provided' }, { status: 400 });
     }
+
+    const isEn = lang === 'en';
+    const spreadsheetId = isEn ? SPREADSHEET_ID_EN : SPREADSHEET_ID_HE;
+    const sheetName = isEn ? SHEET_NAME_EN : SHEET_NAME_HE;
 
     // Get user email if logged in (optional — questionnaire may be public)
     let userEmail = '';
@@ -74,11 +87,11 @@ Deno.serve(async (req) => {
       userEmail = user?.email || '';
     } catch (_) {}
 
-    const row = answersToRow(answers, userEmail);
+    const row = answersToRow(answers, userEmail, lang);
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
     const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(SHEET_NAME)}!A1:append?valueInputOption=USER_ENTERED`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A1:append?valueInputOption=USER_ENTERED`,
       {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },

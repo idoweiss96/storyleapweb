@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { PAGES } from './questionsConfig';
+import { getPages } from './questionsConfig';
+import { useLanguage } from '@/components/LanguageContext';
 
 function getDisplayValue(question, value) {
   if (!value) return '—';
@@ -17,13 +18,16 @@ function getDisplayValue(question, value) {
 }
 
 export default function CompletionScreen({ answers }) {
+  const { lang } = useLanguage();
+  const isEn = lang === 'en';
+  const pages = getPages(lang);
   const navigate = useNavigate();
   const name = answers.name || '';
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     // Send answers to Google Sheet once on mount
-    base44.functions.invoke('submitKitaAlefAnswers', { answers })
+    base44.functions.invoke('submitKitaAlefAnswers', { answers, lang })
       .then(() => setSubmitted(true))
       .catch((err) => console.error('Failed to submit answers:', err));
   }, []);
@@ -48,12 +52,12 @@ export default function CompletionScreen({ answers }) {
         </div>
 
         <h2 className="text-2xl font-bold text-center mb-6" style={{ color: '#1A1A6E' }}>
-          הסיפור של {name} כמעט מוכן! ✨
+          {isEn ? `${name}'s story is almost ready! ✨` : `הסיפור של ${name} כמעט מוכן! ✨`}
         </h2>
 
         {/* Summary */}
         <div className="bg-white rounded-3xl border p-5 space-y-4 mb-6 max-h-[40vh] overflow-y-auto" style={{ borderColor: '#F0E8F5', boxShadow: '0 4px 20px rgba(255,111,181,0.08)' }}>
-          {PAGES.map((page, pi) => (
+          {pages.map((page, pi) => (
             <div key={pi}>
               <h4 className="text-sm font-semibold mb-2" style={{ color: pi % 2 === 0 ? '#4FC3E8' : '#FF6FB5' }}>{page.title}</h4>
               <div className="space-y-2">
@@ -82,7 +86,7 @@ export default function CompletionScreen({ answers }) {
           className="w-full py-3.5 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
           style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
         >
-          צור את הספר עכשיו ✨
+          {isEn ? 'Create the book now ✨' : 'צור את הספר עכשיו ✨'}
         </button>
       </motion.div>
     </div>
