@@ -143,16 +143,20 @@ export default function Home() {
             <div className="absolute top-6 left-12 text-sm opacity-40 star-twinkle">✦</div>
 
             <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-3" style={{ background: 'linear-gradient(135deg, #FFD6EC, #B8EBF7)', color: '#1A1A6E' }}>
-              ✨ ספיישל כיתה א׳
-            </span>
-            <h3 className="text-xl md:text-2xl font-bold mb-1" style={{ color: '#1A1A6E' }}>הכנה לכיתה א׳ ביחד 💗</h3>
-            <p className="text-sm md:text-base mb-4" style={{ color: '#6b6b8a' }}>שאלון משותף לילד ולהורה - 5 דקות 🎒</p>
+               {lang === 'he' ? '✨ ספיישל כיתה א׳' : '✨ 1st Grade Special'}
+             </span>
+            <h3 className="text-xl md:text-2xl font-bold mb-1" style={{ color: '#1A1A6E' }}>
+              {lang === 'he' ? 'הכנה לכיתה א׳ ביחד 💗' : 'Getting Ready for 1st Grade Together 💗'}
+            </h3>
+            <p className="text-sm md:text-base mb-4" style={{ color: '#6b6b8a' }}>
+              {lang === 'he' ? 'שאלון משותף לילד ולהורה - 5 דקות 🎒' : 'A joint questionnaire for child and parent — 5 minutes 🎒'}
+            </p>
             <span
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-semibold shadow-md transition-opacity hover:opacity-90"
               style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
             >
               <Sparkles className="w-4 h-4" />
-              לחצו כאן להתחלה
+              {lang === 'he' ? 'לחצו כאן להתחלה' : 'Click here to start'}
             </span>
           </motion.div>
         </Link>
