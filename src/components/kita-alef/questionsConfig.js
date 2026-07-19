@@ -17,7 +17,7 @@ export const PAGES = [
         ],
         parentField: { label: 'הורה — ספרו לילד/ה מה הכוח שאתם רואים בו/בה ♥' }
       },
-      { key: 'photo', tag: 'together', question: 'תמונה (אופציונלי)', type: 'photo' },
+      { key: 'photo', tag: 'together', question: 'תמונה שלך (אופציונלי)', type: 'photo' },
     ]
   },
   {
@@ -70,7 +70,7 @@ export const PAGES = [
       },
       { key: 'gan_friends', tag: 'together', question: 'יש חברים מהגן שגם עולים לכיתה א׳?', type: 'textarea' },
       { key: 'sibling_experience', tag: 'together', question: 'יש אח/ות גדול/ה שעבר/ה את זה? מה הוא/היא אמר/ה?', type: 'textarea' },
-      { key: 'family_photos', tag: 'together', question: 'תמונה שלך (אופציונלי)', type: 'family_photos' },
+      { key: 'family_photos', tag: 'together', question: 'תמונות של בני משפחה (אופציונלי)', type: 'family_photos' },
     ]
   },
   {
