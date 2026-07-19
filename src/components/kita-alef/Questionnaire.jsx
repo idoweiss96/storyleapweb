@@ -32,20 +32,6 @@ export default function Questionnaire({ answers, setAnswers, onComplete }) {
           </div>
         </div>
 
-        {/* Parent intro - first page only */}
-        {pageIdx === 0 && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            className="mb-4 rounded-2xl p-4 border"
-            style={{ background: '#FFF8EC', borderColor: '#F5C842' }}
-          >
-            <p className="text-sm leading-relaxed" style={{ color: '#7A5000' }}>
-              <span className="font-semibold">להורים ♥</span> שאלון קצר וכיפי שמכין את הילד/ה לקראת כיתה א׳. שאלו יחד, ענו ביחד, ותהיו מוזמנים להוסיף גם את הטעם שלכם בשדות המסומנות "הורה". זמן משוער: כ־5 דקות.
-            </p>
-          </motion.div>
-        )}
-
         {/* Questions */}
         <AnimatePresence mode="wait">
           <motion.div

@@ -26,7 +26,34 @@ export default function HomeScreen({ onStart }) {
         </div>
 
         <h2 className="text-xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>הכנה לכיתה א׳ ביחד 💗</h2>
-        <p className="text-[13px] text-center mb-6" style={{ color: '#FF6FB5' }}>שאלון משותף לילד ולהורה — 3 דקות</p>
+        <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>שאלון משותף לילד ולהורה — 3 דקות</p>
+
+        {/* Parent intro — what to expect */}
+        <div className="mb-5 rounded-2xl p-4 border" style={{ background: '#FFF8EC', borderColor: '#F5C842' }}>
+          <p className="text-[13px] leading-relaxed mb-3" style={{ color: '#7A5000' }}>
+            <span className="font-semibold">להורים ♥</span> זה הזמן לשיח משותף וכיפי עם הילד/ה לקראת העלייה לכיתה א׳. שאלו יחד, ענו ביחד, ותהיו מוזמנים להוסיף גם את הטעם שלכם בשדות המסומנות "הורה". לאורך הדרך נעבור יחד בכמה חלקים:
+          </p>
+          <ul className="space-y-1.5">
+            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
+              <span>🧒</span><span><span className="font-semibold">מי אתה/את?</span> — היכרות: שם, כוח אישי ותמונה.</span>
+            </li>
+            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
+              <span>💭</span><span><span className="font-semibold">רגשות</span> — תחושות לפני העלייה לכיתה א׳, דברים שאולי קצת מפחידים ורגעי פרידה.</span>
+            </li>
+            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
+              <span>👨‍👩‍👧</span><span><span className="font-semibold">מי חשוב לך?</span> — אנשים קרובים, חברים ותמונות של בני המשפחה.</span>
+            </li>
+            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
+              <span>🎨</span><span><span className="font-semibold">מה אוהבים?</span> — תחביבים, גיבורים ומה שעוזר כשלא נעים.</span>
+            </li>
+            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
+              <span>🎒</span><span><span className="font-semibold">כיתה א׳</span> — ציפיות, דאגות קטנות וביקור בבית הספר.</span>
+            </li>
+            <li className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
+              <span>🌟</span><span><span className="font-semibold">משאלות</span> — איחולים של הילד/ה ושלכם לקראת השנה.</span>
+            </li>
+          </ul>
+        </div>
 
         <button
           onClick={onStart}
