@@ -9,6 +9,14 @@ function formatValue(val) {
   return String(val);
 }
 
+function formatFamilyPhotos(photos) {
+  if (!Array.isArray(photos) || photos.length === 0) return '';
+  return photos
+    .map(p => p.role === 'אחר' ? (p.customLabel || 'אחר') : (p.role || ''))
+    .filter(Boolean)
+    .join(', ');
+}
+
 function answersToRow(answers, userEmail) {
   const now = new Date().toLocaleString('he-IL');
   return [
@@ -31,6 +39,7 @@ function answersToRow(answers, userEmail) {
     formatValue(answers.favorite_person_parent),
     formatValue(answers.gan_friends),
     formatValue(answers.sibling_experience),
+    formatFamilyPhotos(answers.family_photos),
     // עמוד 4
     formatValue(answers.activities),
     formatValue(answers.hero),

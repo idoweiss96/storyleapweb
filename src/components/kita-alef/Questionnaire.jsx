@@ -42,7 +42,11 @@ export default function Questionnaire({ answers, setAnswers, onComplete }) {
             transition={{ duration: 0.2 }}
             className="space-y-4"
           >
-            {page.questions.map(q => (
+            {page.questions.filter(q => {
+              if (!q.showIf) return true;
+              const dep = answers[q.showIf.dependsOn];
+              return q.showIf.values.includes(dep);
+            }).map(q => (
               <QuestionCard key={q.key} question={q} answers={answers} onAnswerChange={handleAnswer} />
             ))}
           </motion.div>
