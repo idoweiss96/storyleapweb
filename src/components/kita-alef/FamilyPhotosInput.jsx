@@ -5,6 +5,7 @@ const ROLES = ['אבא', 'אמא', 'סבא', 'סבתא', 'אחר'];
 
 export default function FamilyPhotosInput({ value, onChange }) {
   const photos = Array.isArray(value) ? value : [];
+  const MAX = 2;
 
   const updateEntry = (idx, patch) => {
     const next = photos.map((p, i) => (i === idx ? { ...p, ...patch } : p));
@@ -12,6 +13,7 @@ export default function FamilyPhotosInput({ value, onChange }) {
   };
 
   const addEntry = () => {
+    if (photos.length >= MAX) return;
     onChange([...photos, { role: '', customLabel: '', photo: '' }]);
   };
 
@@ -41,11 +43,12 @@ export default function FamilyPhotosInput({ value, onChange }) {
 
       <button
         onClick={addEntry}
-        className="w-full py-3 rounded-[14px] border-2 border-dashed flex items-center justify-center gap-2 font-medium transition-colors hover:opacity-80"
+        disabled={photos.length >= MAX}
+        className="w-full py-3 rounded-[14px] border-2 border-dashed flex items-center justify-center gap-2 font-medium transition-colors hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
         style={{ borderColor: '#4FC3E8', color: '#4FC3E8', background: '#EAF8FD' }}
       >
         <Plus className="w-5 h-5" />
-        הוספת תמונה
+        {photos.length >= MAX ? `מקסימום ${MAX} תמונות` : 'הוספת תמונה'}
       </button>
     </div>
   );
