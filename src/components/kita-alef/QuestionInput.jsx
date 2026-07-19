@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import FamilyPhotosInput from './FamilyPhotosInput';
 
 export default function QuestionInput({ question, answers, onAnswerChange }) {
   const { type, key } = question;
@@ -132,6 +133,11 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
             </button>
           )}
         </div>
+      )}
+
+      {/* Family photos (multiple labeled uploads) */}
+      {type === 'family_photos' && (
+        <FamilyPhotosInput value={value} onChange={(val) => onAnswerChange(key, val)} />
       )}
 
       {/* Parent field */}
