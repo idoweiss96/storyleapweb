@@ -12,6 +12,7 @@ import { FileSpreadsheet, BookOpen, Loader2, ShieldAlert, Pencil, Check, Externa
 import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageContext';
 import CouponManager from '../components/admin/CouponManager';
+import KitaAlefStoryList from '../components/admin/KitaAlefStoryList';
 
 export default function Admin() {
   const { t } = useLanguage();
@@ -394,6 +395,8 @@ export default function Admin() {
           </div>
         </CardContent>
       </Card>
+
+      <KitaAlefStoryList />
 
       <CouponManager />
 
