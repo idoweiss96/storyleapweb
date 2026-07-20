@@ -8,15 +8,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sparkles, AlertCircle, Loader2, ShoppingCart, Tag, Star } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '@/components/LanguageContext';
 
 const PENDING_KEY = 'storyLeap_kitaAlefPending';
 
 export default function KitaAlefStory() {
   const navigate = useNavigate();
+  const { lang } = useLanguage();
+  const isEn = lang === 'en';
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [step, setStep] = useState('details'); // 'details' | 'credits_check' | 'success'
+  const [step, setStep] = useState('details');
   const [createdStory, setCreatedStory] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [couponStatus, setCouponStatus] = useState(null);
@@ -33,7 +36,6 @@ export default function KitaAlefStory() {
   const initPage = async () => {
     setIsLoading(true);
     try {
-      // Load answers from sessionStorage
       const saved = sessionStorage.getItem(PENDING_KEY);
       if (saved) {
         const data = JSON.parse(saved);
@@ -55,7 +57,6 @@ export default function KitaAlefStory() {
       }
       setUser(currentUser);
 
-      // Check if returning after login
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('resume') === '1') {
         window.history.replaceState({}, '', window.location.pathname);
@@ -74,19 +75,13 @@ export default function KitaAlefStory() {
     e.preventDefault();
     setError('');
     if (!contactEmail || !/\S+@\S+\.\S+/.test(contactEmail)) {
-      setError('נא למלא מייל תקין');
+      setError(isEn ? 'Please enter a valid email' : 'נא למלא מייל תקין');
       return;
     }
 
-    // Save to sessionStorage
-    sessionStorage.setItem(PENDING_KEY, JSON.stringify({
-      answers,
-      contactEmail,
-      contactPhone,
-    }));
+    sessionStorage.setItem(PENDING_KEY, JSON.stringify({ answers, contactEmail, contactPhone, lang }));
 
     if (!user) {
-      // Save and redirect to login
       base44.auth.redirectToLogin('/KitaAlefStory?resume=1');
       return;
     }
@@ -98,7 +93,6 @@ export default function KitaAlefStory() {
     setError('');
     setIsCreating(true);
     try {
-      // Create KitaAlefStory entity
       const savedStory = await base44.entities.KitaAlefStory.create({
         child_name: answers.name || '',
         gender: answers.gender || '',
@@ -113,7 +107,7 @@ export default function KitaAlefStory() {
 
       base44.analytics.track({ eventName: 'kita_alef_story_submitted', properties: { story_id: savedStory.id } });
 
-      const result = await base44.functions.invoke('submitKitaAlefStoryWithCredits', { story_id: savedStory.id });
+      const result = await base44.functions.invoke('submitKitaAlefStoryWithCredits', { story_id: savedStory.id, lang });
       if (result.data?.success) {
         const newCredits = result.data.credits_remaining;
         await base44.auth.updateMe({ credits: newCredits });
@@ -124,10 +118,10 @@ export default function KitaAlefStory() {
         setCreatedStory(savedStory);
         setStep('success');
       } else {
-        setError('אירעה שגיאה ביצירת הסיפור. נסו שוב.');
+        setError(isEn ? 'An error occurred. Please try again.' : 'אירעה שגיאה ביצירת הסיפור. נסו שוב.');
       }
     } catch (err) {
-      setError('אירעה שגיאה ביצירת הסיפור. נסו שוב.');
+      setError(isEn ? 'An error occurred. Please try again.' : 'אירעה שגיאה ביצירת הסיפור. נסו שוב.');
     } finally {
       setIsCreating(false);
     }
@@ -152,7 +146,7 @@ export default function KitaAlefStory() {
       sessionStorage.removeItem(PENDING_KEY);
       navigate('/Pricing');
     } catch (err) {
-      setError('אירעה שגיאה. נסו שוב.');
+      setError(isEn ? 'An error occurred. Please try again.' : 'אירעה שגיאה. נסו שוב.');
     } finally {
       setIsCreating(false);
     }
@@ -173,16 +167,18 @@ export default function KitaAlefStory() {
           setUser(prev => ({ ...prev, credits: newCredits }));
           window.dispatchEvent(new Event('credits-updated'));
           setCouponStatus('valid');
-          setCouponMessage(`🎉 הקופון מומש! קיבלת ${result.data.credits_added} קרדיטים`);
-          toast.success('הקופון מומש בהצלחה!');
+          setCouponMessage(isEn
+            ? `🎉 Coupon redeemed! You got ${result.data.credits_added} credits`
+            : `🎉 הקופון מומש! קיבלת ${result.data.credits_added} קרדיטים`);
+          toast.success(isEn ? 'Coupon redeemed successfully!' : 'הקופון מומש בהצלחה!');
         }
       } else {
         setCouponStatus('invalid');
-        setCouponMessage(result.data?.error || 'קוד קופון לא תקין');
+        setCouponMessage(result.data?.error || (isEn ? 'Invalid coupon code' : 'קוד קופון לא תקין'));
       }
     } catch (err) {
       setCouponStatus('invalid');
-      setCouponMessage('שגיאה במימוש הקופון');
+      setCouponMessage(isEn ? 'Error redeeming coupon' : 'שגיאה במימוש הקופון');
     }
   };
 
@@ -197,9 +193,11 @@ export default function KitaAlefStory() {
   if (!answers) {
     return (
       <div className="max-w-lg mx-auto py-20 text-center">
-        <p className="text-slate-500 mb-4">לא נמצאו תשובות שאלון. אנא מלאו את השאלון תחילה.</p>
+        <p className="text-slate-500 mb-4">
+          {isEn ? 'No questionnaire answers found. Please complete the questionnaire first.' : 'לא נמצאו תשובות שאלון. אנא מלאו את השאלון תחילה.'}
+        </p>
         <Button onClick={() => navigate('/KitaAlef')} className="rounded-xl bg-slate-800 hover:bg-slate-700">
-          לשאלון כיתה א׳
+          {isEn ? 'To 1st Grade questionnaire' : 'לשאלון כיתה א׳'}
         </Button>
       </div>
     );
@@ -216,8 +214,12 @@ export default function KitaAlefStory() {
             <Sparkles className="w-6 h-6 text-white" />
           </div>
         </motion.div>
-        <h1 className="text-3xl font-bold mb-2" style={{ color: '#1A1A6E' }}>הסיפור של {name} 🎒✨</h1>
-        <p className="text-slate-600">הכנה לכיתה א׳ ביחד — סיפור אישי ומרגש</p>
+        <h1 className="text-3xl font-bold mb-2" style={{ color: '#1A1A6E' }}>
+          {isEn ? `${name}'s story 🎒✨` : `הסיפור של ${name} 🎒✨`}
+        </h1>
+        <p className="text-slate-600">
+          {isEn ? 'Getting ready for 1st grade — a personal, heartwarming story' : 'הכנה לכיתה א׳ ביחד — סיפור אישי ומרגש'}
+        </p>
       </div>
 
       <AnimatePresence mode="wait">
@@ -229,16 +231,20 @@ export default function KitaAlefStory() {
                 <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
                   <Sparkles className="w-10 h-10 text-green-600" />
                 </div>
-                <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A6E' }}>✨ הספר של {name} בהכנה 🎬</h2>
+                <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A6E' }}>
+                  {isEn ? `✨ ${name}'s book is being created 🎬` : `✨ הספר של ${name} בהכנה 🎬`}
+                </h2>
                 <p className="text-slate-600 mb-6">
-                  אנחנו יוצרים עכשיו את הסיפור המיוחד של {name}. תקבלו מייל כשהסיפור יהיה מוכן לקריאה!
+                  {isEn
+                    ? `We're now creating ${name}'s special story. You'll get an email when it's ready to read!`
+                    : `אנחנו יוצרים עכשיו את הסיפור המיוחד של ${name}. תקבלו מייל כשהסיפור יהיה מוכן לקריאה!`}
                 </p>
                 <div className="flex gap-3 justify-center">
                   <Button variant="outline" onClick={() => navigate('/MyStories')} className="rounded-xl">
-                    הסיפורים שלי
+                    {isEn ? 'My Stories' : 'הסיפורים שלי'}
                   </Button>
                   <Button onClick={() => navigate('/KitaAlef')} className="rounded-xl text-white" style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}>
-                    שאלון נוסף
+                    {isEn ? 'Another questionnaire' : 'שאלון נוסף'}
                   </Button>
                 </div>
               </CardContent>
@@ -259,7 +265,9 @@ export default function KitaAlefStory() {
                 )}
 
                 <div className="mb-6 p-4 rounded-xl border" style={{ background: 'linear-gradient(135deg, #EAF8FD, #FFF0F7)', borderColor: '#F0E8F5' }}>
-                  <h3 className="font-semibold mb-2 text-sm" style={{ color: '#1A1A6E' }}>✅ השאלון הושלם עבור:</h3>
+                  <h3 className="font-semibold mb-2 text-sm" style={{ color: '#1A1A6E' }}>
+                    {isEn ? '✅ Questionnaire completed for:' : '✅ השאלון הושלם עבור:'}
+                  </h3>
                   <p className="font-bold text-lg" style={{ color: '#1A1A6E' }}>{name}</p>
                   <p className="text-sm text-slate-500">{contactEmail}</p>
                 </div>
@@ -269,13 +277,15 @@ export default function KitaAlefStory() {
                   <div className="mb-4 p-4 bg-purple-50 border border-purple-200 rounded-xl">
                     <div className="flex items-center gap-2 mb-2">
                       <Tag className="w-4 h-4 text-purple-600" />
-                      <span className="text-sm font-medium text-purple-700">יש לך קוד קופון? הזן/י אותו כאן</span>
+                      <span className="text-sm font-medium text-purple-700">
+                        {isEn ? 'Have a coupon code? Enter it here' : 'יש לך קוד קופון? הזן/י אותו כאן'}
+                      </span>
                     </div>
                     <div className="flex gap-2">
                       <Input
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value)}
-                        placeholder="הזן קוד קופון"
+                        placeholder={isEn ? 'Enter coupon code' : 'הזן קוד קופון'}
                         className="flex-1 h-10 rounded-xl border-purple-300"
                       />
                       <Button
@@ -286,7 +296,7 @@ export default function KitaAlefStory() {
                       >
                         {couponStatus === 'validating' ? (
                           <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />...</span>
-                        ) : 'ממש 🎁'}
+                        ) : (isEn ? 'Redeem 🎁' : 'ממש 🎁')}
                       </Button>
                     </div>
                     {couponStatus === 'invalid' && couponMessage && (
@@ -306,7 +316,9 @@ export default function KitaAlefStory() {
                     <div className="p-3 bg-green-50 border border-green-200 rounded-xl text-center">
                       <p className="text-sm text-green-700 font-medium flex items-center justify-center gap-2">
                         <Star className="w-4 h-4 fill-green-500 text-green-500" />
-                        יש לך {userCredits} קרדיטים — מספיק ליצירת הספר!
+                        {isEn
+                          ? `You have ${userCredits} credits — enough to create the book!`
+                          : `יש לך ${userCredits} קרדיטים — מספיק ליצירת הספר!`}
                       </p>
                     </div>
                     <Button
@@ -316,17 +328,27 @@ export default function KitaAlefStory() {
                       style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
                     >
                       {isCreating ? (
-                        <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />הפיה כותבת את הסיפור...</span>
+                        <span className="flex items-center gap-2">
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          {isEn ? 'Creating story...' : 'הפיה כותבת את הסיפור...'}
+                        </span>
                       ) : (
-                        <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" />צור ספר (20 ⭐)</span>
+                        <span className="flex items-center gap-2">
+                          <Sparkles className="w-5 h-5" />
+                          {isEn ? 'Create Book (20 ⭐)' : 'צור ספר (20 ⭐)'}
+                        </span>
                       )}
                     </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
                     <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
-                      <p className="text-amber-800 font-semibold mb-1">⚠️ נדרשים 20 קרדיטים ליצירת ספר</p>
-                      <p className="text-amber-600 text-sm">יש לך כרגע {userCredits} קרדיטים</p>
+                      <p className="text-amber-800 font-semibold mb-1">
+                        {isEn ? '⚠️ 20 credits required to create a book' : '⚠️ נדרשים 20 קרדיטים ליצירת ספר'}
+                      </p>
+                      <p className="text-amber-600 text-sm">
+                        {isEn ? `You currently have ${userCredits} credits` : `יש לך כרגע ${userCredits} קרדיטים`}
+                      </p>
                     </div>
                     <Button
                       onClick={handleBuyCredits}
@@ -336,7 +358,7 @@ export default function KitaAlefStory() {
                       {isCreating ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                         <span className="flex items-center gap-2">
                           <ShoppingCart className="w-5 h-5" />
-                          רכישת קרדיטים והמשך
+                          {isEn ? 'Buy Credits & Continue' : 'רכישת קרדיטים והמשך'}
                         </span>
                       )}
                     </Button>
@@ -347,7 +369,7 @@ export default function KitaAlefStory() {
                   onClick={() => { setStep('details'); setError(''); }}
                   className="w-full text-sm text-slate-400 hover:text-slate-600 pt-4 mt-2 border-t border-slate-100"
                 >
-                  ← חזרה לעריכת פרטים
+                  {isEn ? '← Back to edit details' : '← חזרה לעריכת פרטים'}
                 </button>
               </CardContent>
             </Card>
@@ -377,14 +399,16 @@ export default function KitaAlefStory() {
                   )}
                   <div>
                     <p className="font-bold text-lg" style={{ color: '#1A1A6E' }}>{name}</p>
-                    <p className="text-sm text-slate-500">הכנה לכיתה א׳</p>
+                    <p className="text-sm text-slate-500">
+                      {isEn ? 'Getting ready for 1st grade' : 'הכנה לכיתה א׳'}
+                    </p>
                   </div>
                 </div>
 
                 <form onSubmit={handleDetailsSubmit} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-2" style={{ color: '#1A1A6E' }}>
-                      מייל <span className="text-red-500">*</span>
+                      {isEn ? 'Email' : 'מייל'} <span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="email"
@@ -394,11 +418,15 @@ export default function KitaAlefStory() {
                       className="h-12 rounded-xl"
                       required
                     />
-                    <p className="text-xs text-slate-400 mt-1">לכאן יישלח הסיפור כשיהיה מוכן</p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      {isEn ? "The story will be sent here when it's ready" : 'לכאן יישלח הסיפור כשיהיה מוכן'}
+                    </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2" style={{ color: '#1A1A6E' }}>טלפון</label>
+                    <label className="block text-sm font-medium mb-2" style={{ color: '#1A1A6E' }}>
+                      {isEn ? 'Phone' : 'טלפון'}
+                    </label>
                     <Input
                       type="tel"
                       value={contactPhone}
@@ -415,7 +443,7 @@ export default function KitaAlefStory() {
                   >
                     <span className="flex items-center gap-2">
                       <Sparkles className="w-5 h-5" />
-                      המשך ליצירת הספר
+                      {isEn ? 'Continue to book creation' : 'המשך ליצירת הספר'}
                     </span>
                   </Button>
                 </form>

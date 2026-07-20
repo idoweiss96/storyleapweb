@@ -13,16 +13,30 @@ function buildRawMessage(to, subject, html) {
   return utf8ToBase64(message).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-async function sendStoryInProgressEmail(base44ServiceRole, email, childName) {
+async function sendStoryInProgressEmail(base44ServiceRole, email, childName, lang) {
   if (!email) return;
-  const subject = 'הקסם מתחיל! אנחנו כבר עובדים על הסיפור שלך 📝✨';
-  const body = `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
+  const isEn = lang === 'en';
+
+  const subject = isEn
+    ? 'The magic begins! We are working on your story 📝✨'
+    : 'הקסם מתחיל! אנחנו כבר עובדים על הסיפור שלך 📝✨';
+
+  const body = isEn
+    ? `<div dir="ltr" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
+    <h2>Hi,</h2>
+    <p style="font-size:16px;line-height:1.7;">How exciting! We received your answers from the 1st grade readiness questionnaire.</p>
+    <p style="font-size:16px;line-height:1.7;">We are already working on creating ${childName}'s special story.</p>
+    <p style="font-size:16px;line-height:1.7;">Once the story is ready, we'll send you another email with a direct link to read it.</p>
+    <p style="margin-top:24px;font-size:15px;">Thank you,<br/>The StoryLeap Team</p>
+  </div>`
+    : `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
     <h2>היי,</h2>
     <p style="font-size:16px;line-height:1.7;">איזה כיף! קיבלנו את התשובות שלכם משאלון ההכנה לכיתה א׳.</p>
     <p style="font-size:16px;line-height:1.7;">אנחנו כבר עובדים על יצירת הסיפור המיוחד של ${childName}.</p>
     <p style="font-size:16px;line-height:1.7;">ברגע שהסיפור יהיה מוכן, נשלח לך מייל עדכון נוסף עם קישור ישיר לקריאה.</p>
     <p style="margin-top:24px;font-size:15px;">תודה,<br/>צוות StoryLeap</p>
   </div>`;
+
   const { accessToken } = await base44ServiceRole.connectors.getConnection('gmail');
   const raw = buildRawMessage(email, subject, body);
   await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
@@ -38,7 +52,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { story_id } = await req.json();
+    const { story_id, lang } = await req.json();
     if (!story_id) return Response.json({ error: 'story_id required' }, { status: 400 });
 
     // Server-side: get fresh user data for authoritative credit check
@@ -62,7 +76,7 @@ Deno.serve(async (req) => {
     // Send "story in progress" email
     const story = await base44.asServiceRole.entities.KitaAlefStory.get(story_id);
     if (story.contact_email) {
-      await sendStoryInProgressEmail(base44.asServiceRole, story.contact_email, story.child_name).catch(() => {});
+      await sendStoryInProgressEmail(base44.asServiceRole, story.contact_email, story.child_name, lang).catch(() => {});
     }
 
     // Notify admin about new KitaAlef story
