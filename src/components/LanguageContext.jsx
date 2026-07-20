@@ -149,10 +149,25 @@ const translations = {
 
 export const LanguageContext = createContext();
 
+function getLangFromPath(pathname) {
+  if (pathname === '/he' || pathname.startsWith('/he/')) return 'he';
+  return null;
+}
+
 export function LanguageProvider({ children }) {
   const [lang, setLang] = React.useState(() => {
+    const urlLang = getLangFromPath(window.location.pathname);
+    if (urlLang) return urlLang;
     try { return localStorage.getItem('sl_lang') || 'he'; } catch { return 'he'; }
   });
+
+  // Sync language when navigating to/from /he routes (client-side), before paint to avoid flicker
+  React.useLayoutEffect(() => {
+    const urlLang = getLangFromPath(window.location.pathname);
+    if (urlLang && urlLang !== lang) {
+      setLang(urlLang);
+    }
+  }, [lang]);
 
   const toggleLang = () => {
     const newLang = lang === 'he' ? 'en' : 'he';
