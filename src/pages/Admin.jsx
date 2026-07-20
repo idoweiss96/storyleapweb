@@ -238,6 +238,8 @@ export default function Admin() {
         </Card>
       </div>
 
+      <KitaAlefStoryList />
+
       <Card className="border-0 shadow-xl shadow-slate-100 mb-8">
         <CardHeader>
           <CardTitle className="text-lg">{t('admin_table_title')}</CardTitle>
@@ -395,8 +397,6 @@ export default function Admin() {
           </div>
         </CardContent>
       </Card>
-
-      <KitaAlefStoryList />
 
       <CouponManager />
 
