@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const translations = {
   he: {
@@ -155,23 +156,20 @@ function getLangFromPath(pathname) {
 }
 
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = React.useState(() => {
-    const urlLang = getLangFromPath(window.location.pathname);
-    if (urlLang) return urlLang;
+  const location = useLocation();
+
+  // preferredLang = the user's stored preference (persists, never overwritten by URL routing)
+  const [preferredLang, setPreferredLang] = useState(() => {
     try { return localStorage.getItem('sl_lang') || 'he'; } catch { return 'he'; }
   });
 
-  // Sync language when navigating to/from /he routes (client-side), before paint to avoid flicker
-  React.useLayoutEffect(() => {
-    const urlLang = getLangFromPath(window.location.pathname);
-    if (urlLang && urlLang !== lang) {
-      setLang(urlLang);
-    }
-  }, [lang]);
+  // effective language: URL-derived Hebrew takes priority on /he routes, otherwise the stored preference
+  const urlLang = getLangFromPath(location.pathname);
+  const lang = urlLang || preferredLang;
 
   const toggleLang = () => {
     const newLang = lang === 'he' ? 'en' : 'he';
-    setLang(newLang);
+    setPreferredLang(newLang);
     try { localStorage.setItem('sl_lang', newLang); } catch {}
   };
 
