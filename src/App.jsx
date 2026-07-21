@@ -17,6 +17,10 @@ import PaymentCancel from './pages/PaymentCancel';
 import Vision from './pages/Vision';
 import KitaAlef from './pages/KitaAlef';
 import KitaAlefStory from './pages/KitaAlefStory';
+import EnPricing from './pages/EnPricing';
+import EnAbout from './pages/EnAbout';
+import EnContact from './pages/EnContact';
+import EnFirstGrade from './pages/EnFirstGrade';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -77,6 +81,10 @@ const AuthenticatedApp = () => {
       <Route path="/Vision" element={<LayoutWrapper currentPageName="Vision"><Vision /></LayoutWrapper>} />
       <Route path="/KitaAlef" element={<LayoutWrapper currentPageName="KitaAlef"><KitaAlef /></LayoutWrapper>} />
       <Route path="/KitaAlefStory" element={<LayoutWrapper currentPageName="KitaAlefStory"><KitaAlefStory /></LayoutWrapper>} />
+      <Route path="/pricing" element={<LayoutWrapper currentPageName="pricing"><EnPricing /></LayoutWrapper>} />
+      <Route path="/about" element={<LayoutWrapper currentPageName="about"><EnAbout /></LayoutWrapper>} />
+      <Route path="/contact" element={<LayoutWrapper currentPageName="contact"><EnContact /></LayoutWrapper>} />
+      <Route path="/first-grade-transition" element={<LayoutWrapper currentPageName="first-grade-transition"><EnFirstGrade /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
