@@ -27,17 +27,9 @@ export function isHebrewRoute(pathname) {
   return pathname === '/he' || pathname.startsWith('/he/');
 }
 
-// Lowercase English marketing routes that always render in English (LTR).
-// Each maps to the legacy component route it reuses via a thin wrapper page.
-export const EXPLICIT_EN_ROUTES = {
-  '/pricing': '/Pricing',
-  '/about': '/Vision',
-  '/contact': '/Contact',
-  '/first-grade-transition': '/KitaAlef',
-};
-
-export function isExplicitEnRoute(pathname) {
-  return Object.prototype.hasOwnProperty.call(EXPLICIT_EN_ROUTES, pathname);
+// /en and /en/* routes always render in English (LTR).
+export function isEnglishRoute(pathname) {
+  return pathname === '/en' || pathname.startsWith('/en/');
 }
 
 // Resolve a nav item destination for the current locale.

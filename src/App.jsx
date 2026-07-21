@@ -17,6 +17,7 @@ import PaymentCancel from './pages/PaymentCancel';
 import Vision from './pages/Vision';
 import KitaAlef from './pages/KitaAlef';
 import KitaAlefStory from './pages/KitaAlefStory';
+import EnHome from './pages/EnHome';
 import EnPricing from './pages/EnPricing';
 import EnAbout from './pages/EnAbout';
 import EnContact from './pages/EnContact';
@@ -81,10 +82,11 @@ const AuthenticatedApp = () => {
       <Route path="/Vision" element={<LayoutWrapper currentPageName="Vision"><Vision /></LayoutWrapper>} />
       <Route path="/KitaAlef" element={<LayoutWrapper currentPageName="KitaAlef"><KitaAlef /></LayoutWrapper>} />
       <Route path="/KitaAlefStory" element={<LayoutWrapper currentPageName="KitaAlefStory"><KitaAlefStory /></LayoutWrapper>} />
-      <Route path="/pricing" element={<LayoutWrapper currentPageName="pricing"><EnPricing /></LayoutWrapper>} />
-      <Route path="/about" element={<LayoutWrapper currentPageName="about"><EnAbout /></LayoutWrapper>} />
-      <Route path="/contact" element={<LayoutWrapper currentPageName="contact"><EnContact /></LayoutWrapper>} />
-      <Route path="/first-grade-transition" element={<LayoutWrapper currentPageName="first-grade-transition"><EnFirstGrade /></LayoutWrapper>} />
+      <Route path="/en" element={<LayoutWrapper currentPageName="en"><EnHome /></LayoutWrapper>} />
+      <Route path="/en/pricing" element={<LayoutWrapper currentPageName="en/pricing"><EnPricing /></LayoutWrapper>} />
+      <Route path="/en/about" element={<LayoutWrapper currentPageName="en/about"><EnAbout /></LayoutWrapper>} />
+      <Route path="/en/contact" element={<LayoutWrapper currentPageName="en/contact"><EnContact /></LayoutWrapper>} />
+      <Route path="/en/first-grade-transition" element={<LayoutWrapper currentPageName="en/first-grade-transition"><EnFirstGrade /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

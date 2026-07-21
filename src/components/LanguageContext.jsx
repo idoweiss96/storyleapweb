@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getLangSwitchTarget, isExplicitEnRoute } from '@/lib/marketingRoutes';
+import { getLangSwitchTarget, isEnglishRoute } from '@/lib/marketingRoutes';
 
 const translations = {
   he: {
@@ -153,7 +153,7 @@ export const LanguageContext = createContext();
 
 function getLangFromPath(pathname) {
   if (pathname === '/he' || pathname.startsWith('/he/')) return 'he';
-  if (isExplicitEnRoute(pathname)) return 'en';
+  if (isEnglishRoute(pathname)) return 'en';
   return null;
 }
 
