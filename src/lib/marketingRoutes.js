@@ -27,11 +27,6 @@ export function isHebrewRoute(pathname) {
   return pathname === '/he' || pathname.startsWith('/he/');
 }
 
-// /en and /en/* routes always render in English (LTR).
-export function isEnglishRoute(pathname) {
-  return pathname === '/en' || pathname.startsWith('/en/');
-}
-
 // Resolve a nav item destination for the current locale.
 // Marketing items are locale-aware; non-marketing items fall back to createPageUrl (unchanged).
 export function navPathFor(name, pathname, lang) {
