@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getLangSwitchTarget } from '@/lib/marketingRoutes';
+import { getLangSwitchTarget, resolveRouteLang } from '@/lib/marketingRoutes';
 
 const translations = {
   he: {
@@ -151,11 +151,6 @@ const translations = {
 
 export const LanguageContext = createContext();
 
-function getLangFromPath(pathname) {
-  if (pathname === '/he' || pathname.startsWith('/he/')) return 'he';
-  return null;
-}
-
 export function LanguageProvider({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -165,8 +160,9 @@ export function LanguageProvider({ children }) {
     try { return localStorage.getItem('sl_lang') || 'he'; } catch { return 'he'; }
   });
 
-  // effective language: URL-derived Hebrew takes priority on /he routes, otherwise the stored preference
-  const urlLang = getLangFromPath(location.pathname);
+  // effective language: URL-derived language takes priority on explicit marketing routes
+  // (/he/* → he, original routes → en); shared pages fall back to the stored preference.
+  const urlLang = resolveRouteLang(location.pathname);
   const lang = urlLang || preferredLang;
 
   const toggleLang = () => {

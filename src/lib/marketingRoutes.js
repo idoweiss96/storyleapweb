@@ -13,6 +13,17 @@ const HE_TO_EN = Object.fromEntries(
   Object.entries(EN_TO_HE).map(([en, he]) => [he, en])
 );
 
+const EN_MARKETING_ROUTES = Object.keys(EN_TO_HE);
+
+// Centralized route-language resolver.
+// Returns 'he' for /he routes, 'en' for the original marketing routes,
+// and null for shared functional/noindex routes (which keep the stored preference).
+export function resolveRouteLang(pathname) {
+  if (pathname === '/he' || pathname.startsWith('/he/')) return 'he';
+  if (EN_MARKETING_ROUTES.includes(pathname)) return 'en';
+  return null;
+}
+
 // Nav item name -> English marketing path. Only these items are locale-aware;
 // every other nav item (CreateStory, MyStories, Admin) keeps its existing destination.
 const NAV_EN_PATH = {
