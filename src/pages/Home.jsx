@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell, ChevronRight, ChevronLeft, Quote } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
+import { useLocation } from 'react-router-dom';
+import { navPathFor } from '@/lib/marketingRoutes';
 
 function TestimonialsCarousel() {
   const { t } = useLanguage();
@@ -75,6 +77,8 @@ function TestimonialsCarousel() {
 
 export default function Home() {
   const { t, lang } = useLanguage();
+  const location = useLocation();
+  const kitaAlefPath = navPathFor('KitaAlef', location.pathname, lang);
 
   const features = [
   { icon: Wand2, title: t('feature1_title'), description: t('feature1_desc'), bg: 'bg-blue-50', iconColor: 'text-blue-600' },
@@ -129,7 +133,7 @@ export default function Home() {
 
       {/* Kita Alef Special Banner */}
       <section className="py-4">
-        <Link to="/KitaAlef">
+        <Link to={kitaAlefPath}>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
