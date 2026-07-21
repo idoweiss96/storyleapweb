@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import StoryForm from '../components/story/StoryForm';
 import LoginPromptModal from '../components/story/LoginPromptModal';
 import { useLanguage } from '../components/LanguageContext';
+import { useNavPath } from '@/lib/useNavPath';
 
 const PENDING_FORM_KEY = 'storyLeap_pendingFormData';
 
@@ -19,6 +20,7 @@ const PENDING_FORM_KEY = 'storyLeap_pendingFormData';
 export default function CreateStory() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const navPath = useNavPath();
   const isHe = lang === 'he';
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -153,7 +155,7 @@ export default function CreateStory() {
       if (result.data?.valid) {
         if (result.data.type === 'discount') {
           // Discount coupon — redirect to Pricing page with code pre-filled
-          navigate('/Pricing?code=' + encodeURIComponent(formData.couponCode));
+          navigate(navPath('Pricing') + '?code=' + encodeURIComponent(formData.couponCode));
         } else {
           // Free coupon — credits added
           const newCredits = result.data.new_total;
@@ -183,7 +185,7 @@ export default function CreateStory() {
       const savedStory = await base44.entities.Story.create(buildStoryData('pending_payment'));
       base44.analytics.track({ eventName: 'story_saved_pending_payment', properties: { story_id: savedStory.id } });
       sessionStorage.removeItem(PENDING_FORM_KEY);
-      navigate('/Pricing');
+      navigate(navPath('Pricing'));
     } catch (err) {
       setError(t('create_error_save'));
     } finally {

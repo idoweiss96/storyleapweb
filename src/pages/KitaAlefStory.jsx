@@ -9,12 +9,14 @@ import { Input } from '@/components/ui/input';
 import { Sparkles, AlertCircle, Loader2, ShoppingCart, Tag, Star } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/components/LanguageContext';
+import { useNavPath } from '@/lib/useNavPath';
 
 const PENDING_KEY = 'storyLeap_kitaAlefPending';
 
 export default function KitaAlefStory() {
   const navigate = useNavigate();
   const { lang } = useLanguage();
+  const navPath = useNavPath();
   const isEn = lang === 'en';
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -144,7 +146,7 @@ export default function KitaAlefStory() {
       });
       base44.analytics.track({ eventName: 'kita_alef_story_saved_pending_payment', properties: { story_id: savedStory.id } });
       sessionStorage.removeItem(PENDING_KEY);
-      navigate('/Pricing');
+      navigate(navPath('Pricing'));
     } catch (err) {
       setError(isEn ? 'An error occurred. Please try again.' : 'אירעה שגיאה. נסו שוב.');
     } finally {
@@ -160,7 +162,7 @@ export default function KitaAlefStory() {
       const result = await base44.functions.invoke('validateCoupon', { code: couponCode });
       if (result.data?.valid) {
         if (result.data.type === 'discount') {
-          navigate('/Pricing?code=' + encodeURIComponent(couponCode));
+          navigate(navPath('Pricing') + '?code=' + encodeURIComponent(couponCode));
         } else {
           const newCredits = result.data.new_total;
           await base44.auth.updateMe({ credits: newCredits });
@@ -196,7 +198,7 @@ export default function KitaAlefStory() {
         <p className="text-slate-500 mb-4">
           {isEn ? 'No questionnaire answers found. Please complete the questionnaire first.' : 'לא נמצאו תשובות שאלון. אנא מלאו את השאלון תחילה.'}
         </p>
-        <Button onClick={() => navigate('/KitaAlef')} className="rounded-xl bg-slate-800 hover:bg-slate-700">
+        <Button onClick={() => navigate(navPath('KitaAlef'))} className="rounded-xl bg-slate-800 hover:bg-slate-700">
           {isEn ? 'To 1st Grade questionnaire' : 'לשאלון כיתה א׳'}
         </Button>
       </div>
@@ -243,7 +245,7 @@ export default function KitaAlefStory() {
                   <Button variant="outline" onClick={() => navigate('/MyStories')} className="rounded-xl">
                     {isEn ? 'My Stories' : 'הסיפורים שלי'}
                   </Button>
-                  <Button onClick={() => navigate('/KitaAlef')} className="rounded-xl text-white" style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}>
+                  <Button onClick={() => navigate(navPath('KitaAlef'))} className="rounded-xl text-white" style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}>
                     {isEn ? 'Another questionnaire' : 'שאלון נוסף'}
                   </Button>
                 </div>

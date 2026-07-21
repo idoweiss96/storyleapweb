@@ -12,11 +12,13 @@ import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star } from 
 import { format } from 'date-fns';
 import StoryReadyNotification from '../components/story/StoryReadyNotification';
 import { useLanguage } from '../components/LanguageContext';
+import { useNavPath } from '@/lib/useNavPath';
 import { toast } from 'sonner';
 
 export default function MyStories() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
+  const navPath = useNavPath();
   const [stories, setStories] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -96,7 +98,7 @@ export default function MyStories() {
     e.stopPropagation();
     const credits = user?.credits || 0;
     if (credits < 20) {
-      navigate('/Pricing');
+      navigate(navPath('Pricing'));
       return;
     }
     setActivatingStoryId(story.id);
@@ -109,10 +111,10 @@ export default function MyStories() {
         window.dispatchEvent(new Event('credits-updated'));
         setStories(prev => prev.map(s => s.id === story.id ? { ...s, payment_status: 'paid' } : s));
       } else {
-        navigate('/Pricing');
+        navigate(navPath('Pricing'));
       }
     } catch (err) {
-      navigate('/Pricing');
+      navigate(navPath('Pricing'));
     } finally {
       setActivatingStoryId(null);
     }

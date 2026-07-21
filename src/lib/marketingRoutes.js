@@ -29,10 +29,14 @@ export function isHebrewRoute(pathname) {
 
 // Resolve a nav item destination for the current locale.
 // Marketing items are locale-aware; non-marketing items fall back to createPageUrl (unchanged).
-export function navPathFor(name, pathname) {
+export function navPathFor(name, pathname, lang) {
   const enPath = NAV_EN_PATH[name];
   if (enPath) {
-    return isHebrewRoute(pathname) ? EN_TO_HE[enPath] : enPath;
+    // Hebrew when on a /he route OR when the active language is Hebrew.
+    // The lang check covers shared functional/noindex pages (e.g. /MyStories)
+    // whose URL is not /he but whose user is browsing in Hebrew.
+    const hebrew = isHebrewRoute(pathname) || lang === 'he';
+    return hebrew ? EN_TO_HE[enPath] : enPath;
   }
   return createPageUrl(name);
 }

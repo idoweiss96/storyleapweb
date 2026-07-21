@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Gift, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from './LanguageContext';
+import { useNavPath } from '@/lib/useNavPath';
 
 export default function FloatingGift() {
   const { lang } = useLanguage();
+  const navPath = useNavPath();
   const isHe = lang === 'he';
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
@@ -28,7 +30,7 @@ export default function FloatingGift() {
   };
 
   const handleClick = () => {
-    navigate('/Pricing');
+    navigate(navPath('Pricing'));
   };
 
   return (
