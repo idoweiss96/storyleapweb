@@ -2,8 +2,9 @@ import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import NavigationTracker from '@/lib/NavigationTracker'
+import { useEffect } from 'react';
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -26,6 +27,43 @@ const MainPage = mainPageKey ? Pages[mainPageKey] : <></>;
 const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
+
+// Temporary SEO safety: noindex the exact /he route (duplicate Hebrew content) until multilingual migration completes
+function HeRouteMeta() {
+  const location = useLocation();
+  useEffect(() => {
+    if (location.pathname !== '/he') return;
+
+    let meta = document.querySelector('meta[name="robots"]');
+    let created = false;
+    let originalContent = null;
+
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'robots');
+      document.head.appendChild(meta);
+      created = true;
+    } else {
+      originalContent = meta.getAttribute('content');
+    }
+
+    meta.setAttribute('content', 'noindex,follow');
+
+    return () => {
+      if (created && meta.parentNode) {
+        meta.parentNode.removeChild(meta);
+      } else if (meta) {
+        if (originalContent === null) {
+          meta.removeAttribute('content');
+        } else {
+          meta.setAttribute('content', originalContent);
+        }
+      }
+    };
+  }, [location.pathname]);
+
+  return null;
+}
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -92,6 +130,7 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <NavigationTracker />
+          <HeRouteMeta />
           <AuthenticatedApp />
         </Router>
         <Toaster />
