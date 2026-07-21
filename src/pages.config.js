@@ -50,6 +50,7 @@
 import Admin from './pages/Admin';
 import CreateStory from './pages/CreateStory';
 import Home from './pages/Home';
+import HeHome from './pages/HeHome';
 import MyStories from './pages/MyStories';
 import __Layout from './Layout.jsx';
 
@@ -58,6 +59,7 @@ export const PAGES = {
     "Admin": Admin,
     "CreateStory": CreateStory,
     "Home": Home,
+    "he": HeHome,
     "MyStories": MyStories,
 }
 
