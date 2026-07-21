@@ -14,13 +14,25 @@ const HE_TO_EN = Object.fromEntries(
 );
 
 const EN_MARKETING_ROUTES = Object.keys(EN_TO_HE);
+const EN_MARKETING_ROUTES_LC = EN_MARKETING_ROUTES.map((r) => r.toLowerCase());
+
+// Normalize a pathname for language matching only (does not change the browser URL):
+// strip query/hash, remove a trailing slash except for root, and lowercase.
+function normalizePath(pathname) {
+  if (!pathname) return '/';
+  let p = pathname.split('?')[0].split('#')[0];
+  if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
+  return p.toLowerCase();
+}
 
 // Centralized route-language resolver.
 // Returns 'he' for /he routes, 'en' for the original marketing routes,
 // and null for shared functional/noindex routes (which keep the stored preference).
+// Matching is case-insensitive so /pricing and /Pricing resolve identically.
 export function resolveRouteLang(pathname) {
-  if (pathname === '/he' || pathname.startsWith('/he/')) return 'he';
-  if (EN_MARKETING_ROUTES.includes(pathname)) return 'en';
+  const p = normalizePath(pathname);
+  if (p === '/he' || p.startsWith('/he/')) return 'he';
+  if (EN_MARKETING_ROUTES_LC.includes(p)) return 'en';
   return null;
 }
 
@@ -35,7 +47,8 @@ const NAV_EN_PATH = {
 };
 
 export function isHebrewRoute(pathname) {
-  return pathname === '/he' || pathname.startsWith('/he/');
+  const p = normalizePath(pathname);
+  return p === '/he' || p.startsWith('/he/');
 }
 
 // Resolve a nav item destination for the current locale.

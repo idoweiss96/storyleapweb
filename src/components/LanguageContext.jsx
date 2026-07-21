@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getLangSwitchTarget, resolveRouteLang } from '@/lib/marketingRoutes';
 
@@ -183,6 +183,12 @@ export function LanguageProvider({ children }) {
 
   const t = (key) => translations[lang]?.[key] ?? translations['he']?.[key] ?? key;
   const isRTL = lang === 'he';
+
+  // Sync the document's language attributes with the effective language.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+  }, [lang, isRTL]);
 
   return (
     <LanguageContext.Provider value={{ lang, toggleLang, t, isRTL }}>
