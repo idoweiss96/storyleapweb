@@ -70,13 +70,17 @@ Deno.serve(async (req) => {
     // Deduct credits atomically
     await base44.asServiceRole.entities.User.update(dbUser.id, { credits: currentCredits - 20 });
 
-    // Mark story as paid
-    await base44.asServiceRole.entities.KitaAlefStory.update(story_id, { payment_status: 'paid' });
-
-    // Send "story in progress" email
+    // Fetch story, persist lang durably on the record, then mark as paid
     const story = await base44.asServiceRole.entities.KitaAlefStory.get(story_id);
+    const effectiveLang = lang || story.lang;
+    await base44.asServiceRole.entities.KitaAlefStory.update(story_id, {
+      payment_status: 'paid',
+      ...(effectiveLang ? { lang: effectiveLang } : {}),
+    });
+
+    // Send "story in progress" email using the authoritative record lang
     if (story.contact_email) {
-      await sendStoryInProgressEmail(base44.asServiceRole, story.contact_email, story.child_name, lang).catch(() => {});
+      await sendStoryInProgressEmail(base44.asServiceRole, story.contact_email, story.child_name, effectiveLang).catch(() => {});
     }
 
     // Notify admin about new KitaAlef story

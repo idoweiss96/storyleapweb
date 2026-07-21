@@ -15,8 +15,12 @@ const PENDING_KEY = 'storyLeap_kitaAlefPending';
 
 export default function KitaAlefStory() {
   const navigate = useNavigate();
-  const { lang } = useLanguage();
+  const { lang: contextLang } = useLanguage();
   const navPath = useNavPath();
+  const [resolvedLang, setResolvedLang] = useState(null);
+  const [storyId, setStoryId] = useState(null);
+  // Language priority: record lang > url/pending lang > LanguageContext (contextLang).
+  const lang = resolvedLang || contextLang;
   const isEn = lang === 'en';
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,13 +42,47 @@ export default function KitaAlefStory() {
   const initPage = async () => {
     setIsLoading(true);
     try {
-      const saved = sessionStorage.getItem(PENDING_KEY);
-      if (saved) {
-        const data = JSON.parse(saved);
-        setAnswers(data.answers || {});
-        setContactEmail(data.contactEmail || '');
-        setContactPhone(data.contactPhone || '');
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlStoryId = urlParams.get('story_id');
+      const urlLang = urlParams.get('lang');
+
+      // sessionStorage is a fast fallback only; the DB record is the source of truth.
+      const savedRaw = sessionStorage.getItem(PENDING_KEY);
+      let pending = null;
+      if (savedRaw) {
+        try { pending = JSON.parse(savedRaw); } catch (_) {}
       }
+
+      let restored = false;
+
+      // Priority 1: durable DB record by story_id (survives refresh, new tab, cleared sessionStorage)
+      if (urlStoryId) {
+        try {
+          const record = await base44.entities.KitaAlefStory.get(urlStoryId);
+          if (record) {
+            setStoryId(record.id);
+            setAnswers(record.answers || pending?.answers || {});
+            setContactEmail(record.contact_email || pending?.contactEmail || '');
+            setContactPhone(record.contact_phone || pending?.contactPhone || '');
+            // Language priority: record.lang > answers.lang > url lang > pending.lang
+            const recLang = record.lang || record.answers?.lang || urlLang || pending?.lang || null;
+            if (recLang) setResolvedLang(recLang);
+            restored = true;
+          }
+        } catch (_) {}
+      }
+
+      // Priority 2/3: sessionStorage fallback (backwards compatibility)
+      if (!restored && pending) {
+        setAnswers(pending.answers || {});
+        setContactEmail(pending.contactEmail || '');
+        setContactPhone(pending.contactPhone || '');
+        const pendingLang = urlLang || pending.lang || null;
+        if (pendingLang) setResolvedLang(pendingLang);
+        restored = true;
+      }
+
+      // Priority 4: LanguageContext (via resolvedLang || contextLang at render)
 
       const currentUser = await base44.auth.me();
       try {
@@ -59,10 +97,11 @@ export default function KitaAlefStory() {
       }
       setUser(currentUser);
 
-      const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('resume') === '1') {
-        window.history.replaceState({}, '', window.location.pathname);
-        if (saved) setStep('credits_check');
+        urlParams.delete('resume');
+        const qs = urlParams.toString();
+        window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''));
+        if (restored) setStep('credits_check');
       }
     } catch (e) {
       setUser(null);
@@ -73,7 +112,7 @@ export default function KitaAlefStory() {
 
   const name = answers?.name || '';
 
-  const handleDetailsSubmit = (e) => {
+  const handleDetailsSubmit = async (e) => {
     e.preventDefault();
     setError('');
     if (!contactEmail || !/\S+@\S+\.\S+/.test(contactEmail)) {
@@ -82,6 +121,13 @@ export default function KitaAlefStory() {
     }
 
     sessionStorage.setItem(PENDING_KEY, JSON.stringify({ answers, contactEmail, contactPhone, lang }));
+
+    // Persist contact details to the durable record when one already exists.
+    if (storyId) {
+      try {
+        await base44.entities.KitaAlefStory.update(storyId, { contact_email: contactEmail, contact_phone: contactPhone || null, lang });
+      } catch (_) {}
+    }
 
     if (!user) {
       base44.auth.redirectToLogin('/KitaAlefStory?resume=1');
@@ -95,29 +141,41 @@ export default function KitaAlefStory() {
     setError('');
     setIsCreating(true);
     try {
-      const savedStory = await base44.entities.KitaAlefStory.create({
-        child_name: answers.name || '',
-        gender: answers.gender || '',
-        child_image_url: answers.photo || null,
-        answers: answers,
-        contact_email: contactEmail,
-        contact_phone: contactPhone || null,
-        content: null,
-        story_link: null,
-        payment_status: 'draft',
-      });
+      let id = storyId;
+      if (!id) {
+        // No prior record (e.g. anonymous path) — create it now and expose story_id in the URL.
+        const savedStory = await base44.entities.KitaAlefStory.create({
+          child_name: answers.name || '',
+          gender: answers.gender || '',
+          child_image_url: answers.photo || null,
+          answers: answers,
+          lang,
+          contact_email: contactEmail,
+          contact_phone: contactPhone || null,
+          content: null,
+          story_link: null,
+          payment_status: 'draft',
+        });
+        id = savedStory.id;
+        setStoryId(id);
+        setCreatedStory(savedStory);
+        window.history.replaceState({}, '', `/KitaAlefStory?story_id=${id}`);
+      } else {
+        // Record already exists — ensure contact details and lang are persisted.
+        await base44.entities.KitaAlefStory.update(id, { contact_email: contactEmail, contact_phone: contactPhone || null, lang, answers });
+        setCreatedStory({ id, child_name: answers.name || '' });
+      }
 
-      base44.analytics.track({ eventName: 'kita_alef_story_submitted', properties: { story_id: savedStory.id } });
+      base44.analytics.track({ eventName: 'kita_alef_story_submitted', properties: { story_id: id } });
 
-      const result = await base44.functions.invoke('submitKitaAlefStoryWithCredits', { story_id: savedStory.id, lang });
+      const result = await base44.functions.invoke('submitKitaAlefStoryWithCredits', { story_id: id, lang });
       if (result.data?.success) {
         const newCredits = result.data.credits_remaining;
         await base44.auth.updateMe({ credits: newCredits });
         setUser(prev => ({ ...prev, credits: newCredits }));
         window.dispatchEvent(new Event('credits-updated'));
         sessionStorage.removeItem(PENDING_KEY);
-        base44.analytics.track({ eventName: 'kita_alef_credits_used', properties: { story_id: savedStory.id } });
-        setCreatedStory(savedStory);
+        base44.analytics.track({ eventName: 'kita_alef_credits_used', properties: { story_id: id } });
         setStep('success');
       } else {
         setError(isEn ? 'An error occurred. Please try again.' : 'אירעה שגיאה ביצירת הסיפור. נסו שוב.');
@@ -133,18 +191,26 @@ export default function KitaAlefStory() {
     setError('');
     setIsCreating(true);
     try {
-      const savedStory = await base44.entities.KitaAlefStory.create({
-        child_name: answers.name || '',
-        gender: answers.gender || '',
-        child_image_url: answers.photo || null,
-        answers: answers,
-        contact_email: contactEmail,
-        contact_phone: contactPhone || null,
-        content: null,
-        story_link: null,
-        payment_status: 'draft',
-      });
-      base44.analytics.track({ eventName: 'kita_alef_story_saved_pending_payment', properties: { story_id: savedStory.id } });
+      let id = storyId;
+      if (!id) {
+        const savedStory = await base44.entities.KitaAlefStory.create({
+          child_name: answers.name || '',
+          gender: answers.gender || '',
+          child_image_url: answers.photo || null,
+          answers: answers,
+          lang,
+          contact_email: contactEmail,
+          contact_phone: contactPhone || null,
+          content: null,
+          story_link: null,
+          payment_status: 'draft',
+        });
+        id = savedStory.id;
+        setStoryId(id);
+      } else {
+        await base44.entities.KitaAlefStory.update(id, { contact_email: contactEmail, contact_phone: contactPhone || null, lang, answers });
+      }
+      base44.analytics.track({ eventName: 'kita_alef_story_saved_pending_payment', properties: { story_id: id } });
       sessionStorage.removeItem(PENDING_KEY);
       navigate(navPath('Pricing'));
     } catch (err) {
@@ -209,7 +275,7 @@ export default function KitaAlefStory() {
   const hasCredits = userCredits >= 20;
 
   return (
-    <div className="max-w-2xl mx-auto pb-12">
+    <div className="max-w-2xl mx-auto pb-12" dir={lang === 'he' ? 'rtl' : 'ltr'}>
       <div className="text-center mb-8">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 mb-4">
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}>

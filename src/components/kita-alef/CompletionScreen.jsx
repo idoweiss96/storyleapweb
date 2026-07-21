@@ -24,6 +24,7 @@ export default function CompletionScreen({ answers }) {
   const navigate = useNavigate();
   const name = answers.name || '';
   const [submitted, setSubmitted] = useState(false);
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     // Send answers to Google Sheet once on mount
@@ -79,11 +80,33 @@ export default function CompletionScreen({ answers }) {
         </div>
 
         <button
-          onClick={() => {
+          disabled={creating}
+          onClick={async () => {
+            if (creating) return;
+            setCreating(true);
             sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers, lang }));
-            navigate('/KitaAlefStory');
+            try {
+              // Create the durable draft record now so story_id is stable across
+              // refresh, new tabs, and payment redirects — not only in sessionStorage.
+              const saved = await base44.entities.KitaAlefStory.create({
+                child_name: answers.name || '',
+                gender: answers.gender || '',
+                child_image_url: answers.photo || null,
+                answers,
+                lang,
+                content: null,
+                story_link: null,
+                payment_status: 'draft',
+              });
+              navigate(`/KitaAlefStory?story_id=${saved.id}&lang=${lang}`);
+            } catch (e) {
+              // Not logged in or creation failed — fall back to the sessionStorage path.
+              navigate('/KitaAlefStory');
+            } finally {
+              setCreating(false);
+            }
           }}
-          className="w-full py-3.5 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
+          className="w-full py-3.5 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
           style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
         >
           {isEn ? 'Create the book now ✨' : 'צור את הספר עכשיו ✨'}
