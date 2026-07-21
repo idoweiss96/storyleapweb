@@ -27,11 +27,12 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
 
-// Temporary SEO safety: noindex the exact /he route (duplicate Hebrew content) until multilingual migration completes
+// Temporary SEO safety: noindex the Hebrew /he routes (duplicate Hebrew content) until multilingual migration completes
+const HE_NOINDEX_PATHS = new Set(['/he', '/he/pricing', '/he/about', '/he/contact', '/he/kita-alef']);
 function HeRouteMeta() {
   const location = useLocation();
   useEffect(() => {
-    if (location.pathname !== '/he') return;
+    if (!HE_NOINDEX_PATHS.has(location.pathname)) return;
 
     let meta = document.querySelector('meta[name="robots"]');
     let created = false;

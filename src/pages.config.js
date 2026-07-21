@@ -51,6 +51,10 @@ import Admin from './pages/Admin';
 import CreateStory from './pages/CreateStory';
 import Home from './pages/Home';
 import HeHome from './pages/HeHome';
+import HePricing from './pages/HePricing';
+import HeAbout from './pages/HeAbout';
+import HeContact from './pages/HeContact';
+import HeKitaAlef from './pages/HeKitaAlef';
 import MyStories from './pages/MyStories';
 import __Layout from './Layout.jsx';
 
@@ -60,6 +64,10 @@ export const PAGES = {
     "CreateStory": CreateStory,
     "Home": Home,
     "he": HeHome,
+    "he/pricing": HePricing,
+    "he/about": HeAbout,
+    "he/contact": HeContact,
+    "he/kita-alef": HeKitaAlef,
     "MyStories": MyStories,
 }
 
