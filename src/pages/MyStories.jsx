@@ -121,7 +121,7 @@ export default function MyStories() {
   };
 
   useEffect(() => {
-    const unsubscribe = base44.entities.Story.subscribe((event) => {
+    const handler = (event) => {
       if (event.type === 'update' && event.data.story_link) {
         const updatedStory = stories.find(s => s.id === event.id);
         if (updatedStory && !updatedStory.story_link && event.data.story_link) {
@@ -129,8 +129,10 @@ export default function MyStories() {
           setStories(prev => prev.map(s => s.id === event.id ? { ...s, ...event.data } : s));
         }
       }
-    });
-    return () => unsubscribe();
+    };
+    const unsubStory = base44.entities.Story.subscribe(handler);
+    const unsubKita = base44.entities.KitaAlefStory.subscribe(handler);
+    return () => { unsubStory(); unsubKita(); };
   }, [stories]);
 
   const genderLabels = { boy: t('gender_boy_label') || t('gender_boy'), girl: t('gender_girl_label') || t('gender_girl'), other: t('gender_other') };
@@ -189,7 +191,9 @@ export default function MyStories() {
                       <Sparkles className="w-7 h-7 text-slate-600" />
                     </div>
                     <h3 className="font-bold text-gray-800 text-lg mb-1">{story.child_name}</h3>
-                    <p className="text-sm text-gray-500 mb-2">{t('my_story_age')} {story.child_age}</p>
+                    {story.child_age ? (
+                      <p className="text-sm text-gray-500 mb-2">{t('my_story_age')} {story.child_age}</p>
+                    ) : null}
                     {story.story_link ? (
                       <Badge className="bg-green-100 text-green-700 gap-1">
                         <Sparkles className="w-3 h-3 text-amber-500" />

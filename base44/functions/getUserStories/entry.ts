@@ -10,7 +10,16 @@ Deno.serve(async (req) => {
     const allStories = await base44.asServiceRole.entities.Story.list('-created_date', 500);
     const userStories = allStories.filter(s => s.contact_email === user.email || s.created_by_id === user.id);
 
-    return Response.json({ stories: userStories });
+    // Also fetch KitaAlefStory records belonging to the user (1st-grade questionnaire)
+    const allKitaStories = await base44.asServiceRole.entities.KitaAlefStory.list('-created_date', 500);
+    const userKitaStories = allKitaStories
+      .filter(s => s.contact_email === user.email || s.created_by_id === user.id)
+      .map(s => ({ ...s, source: 'kitaalef' }));
+
+    const merged = [...userStories, ...userKitaStories]
+      .sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+
+    return Response.json({ stories: merged });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
