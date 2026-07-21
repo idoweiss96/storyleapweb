@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getLangSwitchTarget } from '@/lib/marketingRoutes';
 
 const translations = {
   he: {
@@ -157,6 +158,7 @@ function getLangFromPath(pathname) {
 
 export function LanguageProvider({ children }) {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // preferredLang = the user's stored preference (persists, never overwritten by URL routing)
   const [preferredLang, setPreferredLang] = useState(() => {
@@ -168,6 +170,16 @@ export function LanguageProvider({ children }) {
   const lang = urlLang || preferredLang;
 
   const toggleLang = () => {
+    // Route-aware switch for the five marketing pairs: URL destination takes priority
+    // over the saved preference, and we persist the language of the destination.
+    const target = getLangSwitchTarget(location.pathname);
+    if (target) {
+      setPreferredLang(target.lang);
+      try { localStorage.setItem('sl_lang', target.lang); } catch {}
+      navigate(target.path);
+      return;
+    }
+    // Non-paired route: preserve the previous behavior (toggle stored preference only).
     const newLang = lang === 'he' ? 'en' : 'he';
     setPreferredLang(newLang);
     try { localStorage.setItem('sl_lang', newLang); } catch {}
