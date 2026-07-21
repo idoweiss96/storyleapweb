@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import OnboardingTour from './components/onboarding/OnboardingTour';
 import FloatingGift from './components/FloatingGift';
+import LocalizedAlternates from '@/components/SEO/LocalizedAlternates';
 import { LanguageProvider, useLanguage } from './components/LanguageContext';
 
 // New brand logo URL
@@ -251,6 +252,7 @@ function LayoutInner({ children, currentPageName }) {
       )}
 
       <FloatingGift />
+      <LocalizedAlternates />
     </div>
   );
 }
