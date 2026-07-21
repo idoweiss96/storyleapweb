@@ -104,7 +104,7 @@ export default function Pricing() {
             const res = await base44.functions.invoke('captureGiftOrder', {
               paypal_order_id: paypalToken,
               recipient_email: storedRecipient,
-              credits: 20,
+              credits: 100,
             });
             if (res.data?.success) {
               localStorage.removeItem('giftMode');
@@ -116,13 +116,13 @@ export default function Pricing() {
           } else {
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: paypalToken,
-              credits: 20,
+              credits: 100,
               coupon: false,
             });
             if (res.data?.success) {
               try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
               window.dispatchEvent(new Event('credits-updated'));
-              setCreditsPopup({ added: 20, total: res.data.new_total, navigateOnClose: true });
+              setCreditsPopup({ added: 100, total: res.data.new_total, navigateOnClose: true });
             } else {
               setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
             }
@@ -203,7 +203,7 @@ export default function Pricing() {
             const res = await base44.functions.invoke('captureGiftOrder', {
               paypal_order_id: data.orderID,
               recipient_email: recipientEmailRef.current,
-              credits: 20,
+              credits: 100,
             });
             if (res.data?.success) {
               setGiftSuccess({ code: res.data.code, recipient: recipientEmailRef.current });
@@ -214,13 +214,13 @@ export default function Pricing() {
             const isHostedButton = !!btnConfig.hostedButtonId;
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: data.orderID,
-              credits: 20,
+              credits: 100,
               coupon: isHostedButton,
             });
             if (res.data?.success) {
               await base44.auth.updateMe({ credits: res.data.new_total });
               setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
-              setCreditsPopup({ added: 20, total: res.data.new_total, navigateOnClose: true });
+              setCreditsPopup({ added: 100, total: res.data.new_total, navigateOnClose: true });
             }
           }
         }
@@ -395,10 +395,10 @@ export default function Pricing() {
 
               <div className="bg-amber-50 border border-amber-200 rounded-xl px-6 py-4 mb-6 mt-2">
                 <p className="text-lg font-bold text-amber-800">
-                  {isHe ? '⭐ חבילת 20 קרדיטים' : '⭐ 20 Credits Package'}
+                  {isHe ? '⭐ חבילת 100 קרדיטים' : '⭐ 100 Credits Package'}
                 </p>
                 <p className="text-sm text-amber-600 mt-1">
-                  {isHe ? '20 קרדיטים = יצירת סיפור אחד מותאם אישית' : '20 credits = 1 personalized story'}
+                  {isHe ? '100 קרדיטים = יצירת סיפור אחד מותאם אישית' : '100 credits = 1 personalized story'}
                 </p>
               </div>
 

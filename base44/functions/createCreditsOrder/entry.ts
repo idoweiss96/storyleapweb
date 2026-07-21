@@ -4,7 +4,7 @@ const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID');
 const PAYPAL_CLIENT_SECRET = Deno.env.get('PAYPAL_CLIENT_SECRET');
 const PAYPAL_BASE = 'https://api-m.paypal.com';
 
-const CREDITS_AMOUNT = 20;
+const CREDITS_AMOUNT = 100;
 
 async function getPaypalAccessToken() {
   const credentials = btoa(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`);

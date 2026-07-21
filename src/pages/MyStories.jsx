@@ -42,7 +42,7 @@ export default function MyStories() {
       try {
         const res = await base44.functions.invoke('captureCreditsOrder', {
           paypal_order_id: paypalToken,
-          credits: 20,
+          credits: 100,
           coupon: true,
         });
         if (res.data?.success) {
@@ -53,7 +53,7 @@ export default function MyStories() {
           const refreshedStories = refreshedRes.data?.stories || [];
           setStories(refreshedStories);
           const pendingStory = refreshedStories.find(s => s.payment_status === 'pending_payment');
-          setCreditsAddedPopup({ added: 20, total: res.data.new_total, pendingStory });
+          setCreditsAddedPopup({ added: 100, total: res.data.new_total, pendingStory });
         } else {
           toast.error(lang === 'he' ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
         }
@@ -97,7 +97,7 @@ export default function MyStories() {
   const handleActivateStory = async (story, e) => {
     e.stopPropagation();
     const credits = user?.credits || 0;
-    if (credits < 20) {
+    if (credits < 100) {
       navigate(navPath('Pricing'));
       return;
     }
@@ -215,7 +215,7 @@ export default function MyStories() {
                           ) : (
                             <span className="flex items-center gap-1">
                               <Sparkles className="w-3 h-3" />
-                              {lang === 'he' ? 'צור סיפור (20 ⭐)' : 'Create Story (20 ⭐)'}
+                              {lang === 'he' ? 'צור סיפור (100 ⭐)' : 'Create Story (100 ⭐)'}
                             </span>
                           )}
                         </Button>
@@ -276,7 +276,7 @@ export default function MyStories() {
                             onClick={(e) => { handleActivateStory(selectedStory, e); setSelectedStory(null); }}
                             className="h-8 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs">
                             {activatingStoryId === selectedStory.id ? <Clock className="w-3 h-3 animate-spin" /> : (
-                              <span className="flex items-center gap-1"><Sparkles className="w-3 h-3" />{lang === 'he' ? 'צור סיפור (20 ⭐)' : 'Create Story (20 ⭐)'}</span>
+                              <span className="flex items-center gap-1"><Sparkles className="w-3 h-3" />{lang === 'he' ? 'צור סיפור (100 ⭐)' : 'Create Story (100 ⭐)'}</span>
                             )}
                           </Button>
                         </div>

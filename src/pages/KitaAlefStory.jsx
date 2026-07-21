@@ -272,7 +272,7 @@ export default function KitaAlefStory() {
   }
 
   const userCredits = user?.credits || 0;
-  const hasCredits = userCredits >= 20;
+  const hasCredits = userCredits >= 100;
 
   return (
     <div className="max-w-2xl mx-auto pb-12" dir={lang === 'he' ? 'rtl' : 'ltr'}>
@@ -403,7 +403,7 @@ export default function KitaAlefStory() {
                       ) : (
                         <span className="flex items-center gap-2">
                           <Sparkles className="w-5 h-5" />
-                          {isEn ? 'Create Book (20 ⭐)' : 'צור ספר (20 ⭐)'}
+                          {isEn ? 'Create Book (100 ⭐)' : 'צור ספר (100 ⭐)'}
                         </span>
                       )}
                     </Button>
@@ -412,7 +412,7 @@ export default function KitaAlefStory() {
                   <div className="space-y-4">
                     <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
                       <p className="text-amber-800 font-semibold mb-1">
-                        {isEn ? '⚠️ 20 credits required to create a book' : '⚠️ נדרשים 20 קרדיטים ליצירת ספר'}
+                        {isEn ? '⚠️ 100 credits required to create a book' : '⚠️ נדרשים 100 קרדיטים ליצירת ספר'}
                       </p>
                       <p className="text-amber-600 text-sm">
                         {isEn ? `You currently have ${userCredits} credits` : `יש לך כרגע ${userCredits} קרדיטים`}

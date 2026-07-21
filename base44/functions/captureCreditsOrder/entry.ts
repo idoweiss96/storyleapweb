@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID');
 const PAYPAL_CLIENT_SECRET = Deno.env.get('PAYPAL_CLIENT_SECRET');
 const PAYPAL_BASE = 'https://api-m.paypal.com';
-const CREDITS_AMOUNT = 20;
+const CREDITS_AMOUNT = 100;
 
 function utf8ToBase64(str) {
   const bytes = new TextEncoder().encode(str);
@@ -73,8 +73,8 @@ async function processPendingStories(base44, userEmail, userCredits) {
   let processed = 0;
 
   for (const story of pendingStories) {
-    if (remainingCredits < 20) break;
-    remainingCredits -= 20;
+    if (remainingCredits < 100) break;
+    remainingCredits -= 100;
     await base44.asServiceRole.entities.Story.update(story.id, { payment_status: 'paid' });
 
     const isHebrewName = /[\u0590-\u05FF]/.test(story.child_name || '');
