@@ -3,10 +3,10 @@ import { createPageUrl } from '@/utils';
 // Single source of truth for the five marketing route pairs (English <-> Hebrew).
 const EN_TO_HE = {
   '/': '/he',
-  '/Pricing': '/he/pricing',
-  '/Vision': '/he/about',
-  '/Contact': '/he/contact',
-  '/KitaAlef': '/he/kita-alef',
+  '/pricing': '/he/pricing',
+  '/vision': '/he/about',
+  '/contact': '/he/contact',
+  '/kitaalef': '/he/kita-alef',
 };
 
 const HE_TO_EN = Object.fromEntries(
@@ -15,6 +15,19 @@ const HE_TO_EN = Object.fromEntries(
 
 const EN_MARKETING_ROUTES = Object.keys(EN_TO_HE);
 const EN_MARKETING_ROUTES_LC = EN_MARKETING_ROUTES.map((r) => r.toLowerCase());
+
+// Centralized canonical URL map.
+// English marketing routes always use the lowercase canonical (any casing of
+// the request URL is normalized). Hebrew routes are intentionally NOT listed
+// here — they keep their platform-injected self-referencing lowercase canonicals.
+const ORIGIN = 'https://storyleapai.com';
+const EN_CANONICAL = {
+  '/': ORIGIN + '/',
+  '/pricing': ORIGIN + '/pricing',
+  '/vision': ORIGIN + '/vision',
+  '/contact': ORIGIN + '/contact',
+  '/kitaalef': ORIGIN + '/kitaalef',
+};
 
 // Normalize a pathname for language matching only (does not change the browser URL):
 // strip query/hash, remove a trailing slash except for root, and lowercase.
@@ -40,10 +53,10 @@ export function resolveRouteLang(pathname) {
 // every other nav item (CreateStory, MyStories, Admin) keeps its existing destination.
 const NAV_EN_PATH = {
   Home: '/',
-  Pricing: '/Pricing',
-  Contact: '/Contact',
-  Vision: '/Vision',
-  KitaAlef: '/KitaAlef',
+  Pricing: '/pricing',
+  Contact: '/contact',
+  Vision: '/vision',
+  KitaAlef: '/kitaalef',
 };
 
 export function isHebrewRoute(pathname) {
@@ -69,7 +82,15 @@ export function navPathFor(name, pathname, lang) {
 // return the counterpart path and the language to persist. Otherwise null
 // (caller preserves the existing preference-only toggle behavior).
 export function getLangSwitchTarget(pathname) {
-  if (EN_TO_HE[pathname]) return { path: EN_TO_HE[pathname], lang: 'he' };
-  if (HE_TO_EN[pathname]) return { path: HE_TO_EN[pathname], lang: 'en' };
+  const p = normalizePath(pathname);
+  if (EN_TO_HE[p]) return { path: EN_TO_HE[p], lang: 'he' };
+  if (HE_TO_EN[p]) return { path: HE_TO_EN[p], lang: 'en' };
   return null;
+}
+
+// Centralized canonical resolver. Returns the absolute lowercase canonical URL
+// for the five English marketing routes (any casing), or null for Hebrew and
+// non-marketing routes (which keep the platform-injected canonical untouched).
+export function getCanonicalUrl(pathname) {
+  return EN_CANONICAL[normalizePath(pathname)] || null;
 }
