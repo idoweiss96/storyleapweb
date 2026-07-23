@@ -41,6 +41,7 @@ export default function Pricing() {
   const [promoError, setPromoError] = useState('');
   const [promoLoading, setPromoLoading] = useState(false);
   const [creditsPopup, setCreditsPopup] = useState(null);
+  const [bonusPopup, setBonusPopup] = useState(null);
   const [paypalError, setPaypalError] = useState('');
   const [processing, setProcessing] = useState(false);
   const [giftMode, setGiftMode] = useState(false);
@@ -109,7 +110,7 @@ export default function Pricing() {
             const res = await base44.functions.invoke('captureGiftOrder', {
               paypal_order_id: paypalToken,
               recipient_email: storedRecipient,
-              credits: 100,
+              credits: 110,
             });
             if (res.data?.success) {
               localStorage.removeItem('giftMode');
@@ -121,13 +122,17 @@ export default function Pricing() {
           } else {
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: paypalToken,
-              credits: 100,
+              credits: 110,
               coupon: false,
             });
-            if (res.data?.success) {
+            if (res.data?.success && !res.data.already_processed) {
               try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
               window.dispatchEvent(new Event('credits-updated'));
-              setCreditsPopup({ added: 100, total: res.data.new_total, navigateOnClose: true });
+              const added = res.data.credits_added || 110;
+              const bonus = res.data.bonus || 0;
+              const total = res.data.new_total;
+              setCreditsPopup({ added, total: total - bonus, navigateOnClose: true });
+              if (bonus) setBonusPopup({ added: bonus, total });
             } else {
               setPaypalError(isHe ? 'שגיאה בעיבוד התשלום, נסו שנית' : 'Payment processing error, please try again');
             }
@@ -220,7 +225,7 @@ export default function Pricing() {
             const res = await base44.functions.invoke('captureGiftOrder', {
               paypal_order_id: data.orderID,
               recipient_email: recipientEmailRef.current,
-              credits: 100,
+              credits: 110,
             });
             if (res.data?.success) {
               setGiftSuccess({ code: res.data.code, recipient: recipientEmailRef.current });
@@ -231,13 +236,17 @@ export default function Pricing() {
             const isHostedButton = !!btnConfig.hostedButtonId;
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: data.orderID,
-              credits: 100,
+              credits: 110,
               coupon: isHostedButton,
             });
-            if (res.data?.success) {
+            if (res.data?.success && !res.data.already_processed) {
               await base44.auth.updateMe({ credits: res.data.new_total });
               setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
-              setCreditsPopup({ added: 100, total: res.data.new_total, navigateOnClose: true });
+              const added = res.data.credits_added || 110;
+              const bonus = res.data.bonus || 0;
+              const total = res.data.new_total;
+              setCreditsPopup({ added, total: total - bonus, navigateOnClose: true });
+              if (bonus) setBonusPopup({ added: bonus, total });
             }
           }
         }
@@ -411,11 +420,11 @@ export default function Pricing() {
               <div className="bg-amber-50 border border-amber-200 rounded-xl px-6 py-4 mb-6 mt-2">
                 <p className="text-lg font-bold text-amber-800">
                   {selectedPackage
-                    ? `⭐ ${selectedPackage.name} — ${selectedPackage.credits} ${isHe ? 'קרדיטים' : 'Credits'}`
-                    : (isHe ? '⭐ חבילת 100 קרדיטים' : '⭐ 100 Credits Package')}
+                    ? `⭐ ${selectedPackage.credits} ${isHe ? 'קרדיטים' : 'Credits'}`
+                    : (isHe ? '⭐ 110 קרדיטים' : '⭐ 110 Credits')}
                 </p>
                 <p className="text-sm text-amber-600 mt-1">
-                  {isHe ? '100 קרדיטים = יצירת סיפור אחד מותאם אישית' : '100 credits = 1 personalized story'}
+                  {isHe ? '110 קרדיטים = יצירת סיפור אחד מותאם אישית' : '110 credits = 1 personalized story'}
                 </p>
               </div>
 
@@ -565,9 +574,19 @@ export default function Pricing() {
           added={creditsPopup.added}
           total={creditsPopup.total}
           onClose={() => {
-            const shouldNavigate = creditsPopup.navigateOnClose;
             setCreditsPopup(null);
-            if (shouldNavigate) navigate('/MyStories');
+            if (!bonusPopup) navigate('/MyStories');
+          }}
+        />
+      )}
+      {!creditsPopup && bonusPopup && (
+        <CreditsAddedPopup
+          bonus
+          added={bonusPopup.added}
+          total={bonusPopup.total}
+          onClose={() => {
+            setBonusPopup(null);
+            navigate('/MyStories');
           }}
         />
       )}

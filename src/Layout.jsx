@@ -6,6 +6,7 @@ import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail, Globe } 
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import OnboardingTour from './components/onboarding/OnboardingTour';
+import CreditsAddedPopup from './components/story/CreditsAddedPopup';
 import FloatingGift from './components/FloatingGift';
 import LocalizedAlternates from '@/components/SEO/LocalizedAlternates';
 import CanonicalUrl from '@/components/SEO/CanonicalUrl';
@@ -21,6 +22,7 @@ function LayoutInner({ children, currentPageName }) {
   const [credits, setCredits] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [signupBonusPopup, setSignupBonusPopup] = useState(null);
 
   useEffect(() => {
     loadUser();
@@ -52,12 +54,36 @@ function LayoutInner({ children, currentPageName }) {
 
   const handleOnboardingComplete = async () => {
     setShowOnboarding(false);
-    try { await base44.auth.updateMe({ onboarding_completed: true }); } catch (e) {}
+    try {
+      const res = await base44.functions.invoke('claimSignupBonus', {});
+      if (res.data?.granted) {
+        await base44.auth.updateMe({ credits: res.data.new_total, onboarding_completed: true });
+        setCredits(res.data.new_total);
+        setSignupBonusPopup({ added: res.data.granted, total: res.data.new_total });
+      } else {
+        await base44.auth.updateMe({ onboarding_completed: true });
+      }
+    } catch (e) {
+      try { await base44.auth.updateMe({ onboarding_completed: true }); } catch (_) {}
+    }
+    window.dispatchEvent(new Event('credits-updated'));
   };
 
   const handleOnboardingSkip = async () => {
     setShowOnboarding(false);
-    try { await base44.auth.updateMe({ onboarding_completed: true }); } catch (e) {}
+    try {
+      const res = await base44.functions.invoke('claimSignupBonus', {});
+      if (res.data?.granted) {
+        await base44.auth.updateMe({ credits: res.data.new_total, onboarding_completed: true });
+        setCredits(res.data.new_total);
+        setSignupBonusPopup({ added: res.data.granted, total: res.data.new_total });
+      } else {
+        await base44.auth.updateMe({ onboarding_completed: true });
+      }
+    } catch (e) {
+      try { await base44.auth.updateMe({ onboarding_completed: true }); } catch (_) {}
+    }
+    window.dispatchEvent(new Event('credits-updated'));
   };
 
   const publicNavItems = [
@@ -252,6 +278,13 @@ function LayoutInner({ children, currentPageName }) {
         <OnboardingTour onComplete={handleOnboardingComplete} onSkip={handleOnboardingSkip} />
       )}
 
+      {signupBonusPopup && (
+        <CreditsAddedPopup
+          added={signupBonusPopup.added}
+          total={signupBonusPopup.total}
+          onClose={() => setSignupBonusPopup(null)}
+        />
+      )}
       <FloatingGift />
       <LocalizedAlternates />
       <CanonicalUrl />

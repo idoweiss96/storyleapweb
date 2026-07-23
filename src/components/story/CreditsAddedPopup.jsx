@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Star, Sparkles } from 'lucide-react';
+import { Star, Sparkles, Gift } from 'lucide-react';
 import { useLanguage } from '../LanguageContext';
 
-export default function CreditsAddedPopup({ added, total, pendingStory, onClose, onCreateStory }) {
+export default function CreditsAddedPopup({ added, total, pendingStory, onClose, onCreateStory, bonus }) {
   const { lang } = useLanguage();
   const isHe = lang === 'he';
 
@@ -19,13 +19,17 @@ export default function CreditsAddedPopup({ added, total, pendingStory, onClose,
           className="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 z-10 text-center"
         >
           <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
-            <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
+            {bonus ? <Gift className="w-8 h-8 text-amber-500" /> : <Star className="w-8 h-8 text-amber-500 fill-amber-400" />}
           </div>
           <h2 className="text-xl font-bold text-slate-800 mb-2">
-            {isHe ? '🎉 הקרדיטים נוספו!' : '🎉 Credits Added!'}
+            {bonus
+              ? (isHe ? '🎁 מתנה מאיתנו!' : '🎁 A gift from us!')
+              : (isHe ? '🎉 הקרדיטים נוספו!' : '🎉 Credits Added!')}
           </h2>
           <p className="text-slate-600 text-sm mb-1">
-            {isHe ? `נוספו לך ${added} קרדיטים לחשבון.` : `${added} credits were added to your account.`}
+            {bonus
+              ? (isHe ? `קיבלת מאיתנו ${added} קרדיטים בונוס! 🎁` : `You got a bonus of ${added} credits from us! 🎁`)
+              : (isHe ? `נוספו לך ${added} קרדיטים לחשבון.` : `${added} credits were added to your account.`)}
           </p>
           <p className="text-slate-500 text-sm mb-4">
             {isHe ? `סה"כ יש לך כעת ${total} קרדיטים.` : `You now have ${total} credits total.`}

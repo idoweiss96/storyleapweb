@@ -2,6 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 import { getPaypalAccessToken } from '../../shared/paypal.ts';
 
 const PAYPAL_BASE = 'https://api-m.paypal.com';
+const BONUS_CREDITS = 30; // Bonus credits granted on top of every purchase
 
 // Captures a PayPal order created by createCreditsOrder and grants the credits
 // that were persisted on the Order record (DB-sourced via CreditPackage).
@@ -22,7 +23,7 @@ Deno.serve(async (req) => {
     const order = orders[0];
 
     // Credits to grant: prefer the stored DB value, fall back to client param (legacy/hosted-button)
-    const creditsToAdd = (order && order.credits) ? Number(order.credits) : (Number(creditsParam) || 100);
+    const creditsToAdd = (order && order.credits) ? Number(order.credits) : (Number(creditsParam) || 110);
 
     if (!coupon) {
       const accessToken = await getPaypalAccessToken();
@@ -77,7 +78,7 @@ Deno.serve(async (req) => {
     const currentUser = users[0];
     if (!currentUser) return Response.json({ error: 'User not found' }, { status: 404 });
 
-    const newCredits = (currentUser.credits || 0) + creditsToAdd;
+    const newCredits = (currentUser.credits || 0) + creditsToAdd + BONUS_CREDITS;
     await base44.asServiceRole.entities.User.update(currentUser.id, { credits: newCredits });
     console.log(`[captureCreditsOrder] Credits updated for ${user.email}: ${currentUser.credits || 0} -> ${newCredits}`);
 
@@ -86,7 +87,7 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.entities.Order.update(order.id, { status: 'paid' });
     }
 
-    return Response.json({ success: true, credits_added: creditsToAdd, new_total: newCredits });
+    return Response.json({ success: true, credits_added: creditsToAdd, bonus: BONUS_CREDITS, new_total: newCredits });
   } catch (error) {
     console.error('[captureCreditsOrder] Error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });

@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
       const dbUser = users[0];
       if (dbUser) {
         await base44.asServiceRole.entities.User.update(dbUser.id, {
-          credits: (dbUser.credits || 0) + Number(order.credits),
+          credits: (dbUser.credits || 0) + Number(order.credits) + 30, // +30 bonus on every purchase
         });
       }
       await base44.asServiceRole.entities.Order.update(order.id, {

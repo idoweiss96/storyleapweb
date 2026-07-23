@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     } else {
       // Legacy fallback (coupon custom-price flow): client-supplied amount
       amount = Number(body.amount);
-      credits = Number(body.credits) || 100;
+      credits = Number(body.credits) || 110;
       description = `StoryLeap - ${credits} Credits`;
     }
 

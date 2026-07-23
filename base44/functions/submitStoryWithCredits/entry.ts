@@ -129,12 +129,12 @@ Deno.serve(async (req) => {
     const currentCredits = dbUser.credits || 0;
 
     // Not enough credits — stop here, frontend should redirect to Pricing
-    if (currentCredits < 100) {
+    if (currentCredits < 110) {
       return Response.json({ success: false, reason: 'insufficient_credits', credits: currentCredits });
     }
 
     // Deduct credits atomically
-    await base44.asServiceRole.entities.User.update(dbUser.id, { credits: currentCredits - 100 });
+    await base44.asServiceRole.entities.User.update(dbUser.id, { credits: currentCredits - 110 });
 
     // Mark story as paid
     await base44.asServiceRole.entities.Story.update(story_id, { payment_status: 'paid' });
@@ -152,7 +152,7 @@ Deno.serve(async (req) => {
     // Trigger story generation asynchronously
     base44.asServiceRole.functions.invoke('processStoryGeneration', { story_id }).catch(() => {});
 
-    return Response.json({ success: true, credits_remaining: currentCredits - 100 });
+    return Response.json({ success: true, credits_remaining: currentCredits - 110 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

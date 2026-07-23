@@ -211,7 +211,7 @@ export default function CreateStory() {
   }
 
   const userCredits = user?.credits || 0;
-  const hasCredits = userCredits >= 100;
+  const hasCredits = userCredits >= 110;
 
   return (
     <div className="max-w-2xl mx-auto pb-12">
@@ -329,7 +329,7 @@ export default function CreateStory() {
                       {isCreating ? (
                         <span className="flex items-center gap-2"><Loader2 className="w-5 h-5 animate-spin" />{t('form_writing')}</span>
                       ) : (
-                        <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" />{isHe ? 'צור ספר (100 ⭐)' : 'Create Book (100 ⭐)'}</span>
+                        <span className="flex items-center gap-2"><Sparkles className="w-5 h-5" />{isHe ? 'צור ספר (110 ⭐)' : 'Create Book (110 ⭐)'}</span>
                       )}
                     </Button>
                   </div>
@@ -337,7 +337,7 @@ export default function CreateStory() {
                   <div className="space-y-4">
                     <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
                       <p className="text-amber-800 font-semibold mb-1">
-                        {isHe ? '⚠️ נדרשים 100 קרדיטים ליצירת ספר' : '⚠️ 100 credits required to create a book'}
+                        {isHe ? '⚠️ נדרשים 110 קרדיטים ליצירת ספר' : '⚠️ 110 credits required to create a book'}
                       </p>
                       <p className="text-amber-600 text-sm">
                         {isHe ? `יש לך כרגע ${userCredits} קרדיטים` : `You currently have ${userCredits} credits`}
