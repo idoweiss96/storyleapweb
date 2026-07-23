@@ -63,9 +63,7 @@ export default function Pricing() {
     if (hostedButtonCode) return HOSTED_BUTTON_CODES[hostedButtonCode];
     const langKey = isHe ? 'he' : 'en';
     if (appliedCoupon) {
-      if (appliedCoupon.code.endsWith('30')) return HOSTED_BUTTONS[langKey].discount30;
-      if (appliedCoupon.code.endsWith('50')) return HOSTED_BUTTONS[langKey].discount50;
-      // Fallback to DB price with regular button
+      // All discount coupons use the dynamic regular button (DB-sourced price)
       return isHe
         ? { amount: String(appliedCoupon.price_ils), currency: 'ILS', display: `₪${appliedCoupon.price_ils}` }
         : { amount: String(appliedCoupon.price_usd), currency: 'USD', display: `$${appliedCoupon.price_usd}` };
