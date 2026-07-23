@@ -4,7 +4,7 @@
   "properties": {
     "story_id": {
       "type": "string",
-      "description": "ID of the related Story entity"
+      "description": "ID of the related Story entity (story-purchase orders only)"
     },
     "user_email": {
       "type": "string",
@@ -29,12 +29,20 @@
     },
     "amount": {
       "type": "number",
-      "description": "Payment amount in ILS"
+      "description": "Payment amount charged (matches the currency field)"
     },
     "currency": {
       "type": "string",
       "default": "ILS",
       "description": "Currency code"
+    },
+    "credits": {
+      "type": "number",
+      "description": "Credits to grant on successful payment (credits-purchase orders; read from CreditPackage at order creation)"
+    },
+    "package_id": {
+      "type": "string",
+      "description": "ID of the CreditPackage this order was created from (credits-purchase orders)"
     },
     "paypal_capture_id": {
       "type": "string",
@@ -46,7 +54,6 @@
     }
   },
   "required": [
-    "story_id",
     "user_email",
     "amount"
   ],

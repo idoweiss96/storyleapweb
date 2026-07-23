@@ -57,6 +57,7 @@ export default function Pricing() {
   const isHe = lang === 'he';
   const [hostedButtonCode, setHostedButtonCode] = useState(null); // e.g. 'IDO10'
   const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, price_ils, price_usd } from DB
+  const [selectedPackage, setSelectedPackage] = useState(null); // CreditPackage from DB (dynamic price)
   const btnConfig = useMemo(() => {
     if (hostedButtonCode) return HOSTED_BUTTON_CODES[hostedButtonCode];
     const langKey = isHe ? 'he' : 'en';
@@ -68,8 +69,12 @@ export default function Pricing() {
         ? { amount: String(appliedCoupon.price_ils), currency: 'ILS', display: `₪${appliedCoupon.price_ils}` }
         : { amount: String(appliedCoupon.price_usd), currency: 'USD', display: `$${appliedCoupon.price_usd}` };
     }
+    // Default: dynamic pricing from the CreditPackage in the DB (no fixed payment link)
+    if (selectedPackage) {
+      return { package_id: selectedPackage.id, currency: 'ILS', display: `₪${selectedPackage.price}` };
+    }
     return HOSTED_BUTTONS[langKey].full;
-  }, [hostedButtonCode, appliedCoupon, isHe]);
+  }, [hostedButtonCode, appliedCoupon, isHe, selectedPackage]);
 
   // Handle PayPal redirect return on mobile
   useEffect(() => {
@@ -172,6 +177,13 @@ export default function Pricing() {
     init();
   }, []);
 
+  // Load CreditPackage from DB for dynamic (non-fixed-link) pricing
+  useEffect(() => {
+    base44.entities.CreditPackage.list()
+      .then((pkgs) => { if (pkgs.length > 0) setSelectedPackage(pkgs[0]); })
+      .catch(() => {});
+  }, []);
+
   // Render PayPal Buttons
   useEffect(() => {
     renderKeyRef.current += 1;
@@ -261,12 +273,10 @@ export default function Pricing() {
             localStorage.removeItem('giftMode');
             localStorage.removeItem('giftRecipient');
           }
-          const res = await base44.functions.invoke('createCreditsOrder', {
-            currency: btnConfig.currency,
-            amount: btnConfig.amount,
-            return_url: window.location.href,
-            cancel_url: window.location.href,
-          });
+          const payload = btnConfig.package_id
+            ? { package_id: btnConfig.package_id, currency: btnConfig.currency, return_url: window.location.href, cancel_url: window.location.href }
+            : { currency: btnConfig.currency, amount: btnConfig.amount, return_url: window.location.href, cancel_url: window.location.href };
+          const res = await base44.functions.invoke('createCreditsOrder', payload);
           return res.data.paypal_order_id;
         },
         onApprove: onApproveHandler,

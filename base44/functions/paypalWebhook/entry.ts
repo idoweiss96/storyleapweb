@@ -1,38 +1,15 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { verifyPaypalWebhook } from '../../shared/paypal.ts';
 
-const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID');
-const PAYPAL_CLIENT_SECRET = Deno.env.get('PAYPAL_CLIENT_SECRET');
-const PAYPAL_BASE = 'https://api-m.paypal.com';
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
-async function getPaypalAccessToken() {
-  const credentials = btoa(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`);
-  const res = await fetch(`${PAYPAL_BASE}/v1/oauth2/token`, {
-    method: 'POST',
-    headers: { 'Authorization': `Basic ${credentials}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: 'grant_type=client_credentials',
-  });
-  const data = await res.json();
-  return data.access_token;
-}
-
-async function verifyWebhookSignature(headers, body, webhookId, accessToken) {
-  const res = await fetch(`${PAYPAL_BASE}/v1/notifications/verify-webhook-signature`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      auth_algo: headers.get('paypal-auth-algo'),
-      cert_url: headers.get('paypal-cert-url'),
-      transmission_id: headers.get('paypal-transmission-id'),
-      transmission_sig: headers.get('paypal-transmission-sig'),
-      transmission_time: headers.get('paypal-transmission-time'),
-      webhook_id: webhookId,
-      webhook_event: JSON.parse(body),
-    }),
-  });
-  const data = await res.json();
-  return data.verification_status === 'SUCCESS';
-}
+// PayPal webhook endpoint. Verifies the payment succeeded (optionally via
+// signature verification when PAYPAL_WEBHOOK_ID is configured) and updates the
+// database:
+//  - Credits-purchase orders (have `credits`, no `story_id`): grant the DB-sourced
+//    credits and mark the Order paid.
+//  - Story-purchase orders (have `story_id`): existing flow — mark story paid,
+//    grant credits, email the user, add to sheet, trigger generation.
 
 async function sendStoryInProgressEmail(email, childName, isHebrew) {
   if (!email || !RESEND_API_KEY) return;
@@ -56,7 +33,7 @@ async function sendStoryInProgressEmail(email, childName, isHebrew) {
       </div>`;
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ from: 'StoryLeap AI <stories@storyleapai.com>', to: email, subject, html }),
   });
 }
@@ -64,6 +41,16 @@ async function sendStoryInProgressEmail(email, childName, isHebrew) {
 Deno.serve(async (req) => {
   try {
     const body = await req.text();
+
+    // Verify webhook signature (when PAYPAL_WEBHOOK_ID is configured)
+    const verified = await verifyPaypalWebhook(req.headers, body);
+    if (verified === false) {
+      return Response.json({ error: 'Invalid signature' }, { status: 401 });
+    }
+    if (verified === null) {
+      console.warn('[paypalWebhook] PAYPAL_WEBHOOK_ID not set — signature verification skipped');
+    }
+
     const event = JSON.parse(body);
 
     // Only handle completed payment captures
@@ -77,11 +64,10 @@ Deno.serve(async (req) => {
 
     // Look up our Order by paypal_order_id
     const orders = await base44.asServiceRole.entities.Order.filter({ paypal_order_id: paypalOrderId });
-    let order = orders[0];
+    const order = orders[0];
 
-    // If not found by order ID, try by capture ID (fallback)
     if (!order) {
-      console.log('Order not found for paypal_order_id:', paypalOrderId);
+      console.log('[paypalWebhook] Order not found for paypal_order_id:', paypalOrderId);
       return Response.json({ received: true });
     }
 
@@ -90,36 +76,46 @@ Deno.serve(async (req) => {
       return Response.json({ received: true, already_processed: true });
     }
 
-    // Mark order as paid
+    // Credits-only order (no story_id, has credits): grant DB-sourced credits
+    if (!order.story_id && order.credits) {
+      const users = await base44.asServiceRole.entities.User.filter({ email: order.user_email });
+      const dbUser = users[0];
+      if (dbUser) {
+        await base44.asServiceRole.entities.User.update(dbUser.id, {
+          credits: (dbUser.credits || 0) + Number(order.credits),
+        });
+      }
+      await base44.asServiceRole.entities.Order.update(order.id, {
+        status: 'paid',
+        paypal_capture_id: capture.id,
+      });
+      return Response.json({ received: true });
+    }
+
+    // Story-purchase order: existing flow
     await base44.asServiceRole.entities.Order.update(order.id, {
       status: 'story_generating',
       paypal_capture_id: capture.id,
     });
 
-    // Add 20 credits to user
     const users = await base44.asServiceRole.entities.User.filter({ email: order.user_email });
-    const dbUser = users[0];
-    if (dbUser) {
-      await base44.asServiceRole.entities.User.update(dbUser.id, { credits: (dbUser.credits || 0) + 20 });
+    if (users[0]) {
+      await base44.asServiceRole.entities.User.update(users[0].id, { credits: (users[0].credits || 0) + 20 });
     }
 
-    // Get the story
     const story = await base44.asServiceRole.entities.Story.get(order.story_id);
     if (!story) {
-      console.error('Story not found:', order.story_id);
+      console.error('[paypalWebhook] Story not found:', order.story_id);
       return Response.json({ received: true });
     }
 
-    // Mark story as paid
     await base44.asServiceRole.entities.Story.update(order.story_id, { payment_status: 'paid' });
 
-    // Send "story in progress" email + trigger generation (same as capturePaypalOrder)
     const isHebrew = /[\u0590-\u05FF]/.test(story.child_name || '');
     if (story.contact_email) {
       await sendStoryInProgressEmail(story.contact_email, story.child_name, isHebrew).catch(() => {});
     }
 
-    // Add story to Google Sheet
     try {
       await base44.asServiceRole.functions.invoke('addStoryToSheet', story);
     } catch (_) {}
@@ -128,7 +124,7 @@ Deno.serve(async (req) => {
 
     return Response.json({ received: true });
   } catch (error) {
-    console.error('Webhook error:', error.message);
+    console.error('[paypalWebhook] Error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
