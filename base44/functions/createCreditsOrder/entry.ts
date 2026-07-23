@@ -28,7 +28,12 @@ Deno.serve(async (req) => {
 
     if (package_id) {
       // Dynamic pricing: read price + credits from the CreditPackage in the DB
-      const pkg = await base44.asServiceRole.entities.CreditPackage.get(package_id);
+      let pkg;
+      try {
+        pkg = await base44.asServiceRole.entities.CreditPackage.get(package_id);
+      } catch (_) {
+        return Response.json({ error: 'Package not found' }, { status: 404 });
+      }
       if (!pkg) return Response.json({ error: 'Package not found' }, { status: 404 });
       amount = Number(pkg.price);
       credits = Number(pkg.credits);

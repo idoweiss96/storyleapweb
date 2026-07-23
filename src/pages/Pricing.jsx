@@ -180,7 +180,12 @@ export default function Pricing() {
   // Load CreditPackage from DB for dynamic (non-fixed-link) pricing
   useEffect(() => {
     base44.entities.CreditPackage.list()
-      .then((pkgs) => { if (pkgs.length > 0) setSelectedPackage(pkgs[0]); })
+      .then((pkgs) => {
+        if (pkgs.length > 0) {
+          const popular = pkgs.find((p) => p.is_popular);
+          setSelectedPackage(popular || pkgs[0]);
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -405,7 +410,9 @@ export default function Pricing() {
 
               <div className="bg-amber-50 border border-amber-200 rounded-xl px-6 py-4 mb-6 mt-2">
                 <p className="text-lg font-bold text-amber-800">
-                  {isHe ? '⭐ חבילת 100 קרדיטים' : '⭐ 100 Credits Package'}
+                  {selectedPackage
+                    ? `⭐ ${selectedPackage.name} — ${selectedPackage.credits} ${isHe ? 'קרדיטים' : 'Credits'}`
+                    : (isHe ? '⭐ חבילת 100 קרדיטים' : '⭐ 100 Credits Package')}
                 </p>
                 <p className="text-sm text-amber-600 mt-1">
                   {isHe ? '100 קרדיטים = יצירת סיפור אחד מותאם אישית' : '100 credits = 1 personalized story'}
