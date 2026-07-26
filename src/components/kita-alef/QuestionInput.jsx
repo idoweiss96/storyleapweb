@@ -1,6 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import FamilyPhotosInput from './FamilyPhotosInput';
 import { useLanguage } from '@/components/LanguageContext';
+import { base44 } from '@/api/base44Client';
+import { Loader2 } from 'lucide-react';
 
 export default function QuestionInput({ question, answers, onAnswerChange }) {
   const { lang } = useLanguage();
@@ -9,6 +11,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
   const value = answers[key];
   const parentValue = answers[`${key}_parent`];
   const fileRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
 
   const placeholder = isEn ? 'Type here...' : 'כתבו כאן...';
   const removePhotoLabel = isEn ? 'Remove photo' : 'הסר תמונה';
@@ -32,12 +35,18 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
     }
   };
 
-  const handlePhotoChange = (e) => {
+  const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => onAnswerChange(key, ev.target.result);
-    reader.readAsDataURL(file);
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      onAnswerChange(key, file_url);
+    } catch (err) {
+      console.error('Upload error:', err);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -126,6 +135,8 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
           >
             {value ? (
               <img src={value} alt={isEn ? 'Photo' : 'תמונה'} className="w-full h-full object-cover" />
+            ) : uploading ? (
+              <Loader2 className="w-6 h-6 animate-spin" style={{ color: '#4FC3E8' }} />
             ) : (
               <span className="text-3xl" style={{ color: '#4FC3E8' }}>📷</span>
             )}

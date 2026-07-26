@@ -90,6 +90,9 @@ Deno.serve(async (req) => {
       child_name: story.child_name,
     }).catch(() => {});
 
+    // Trigger automatic story generation (same flow as regular stories)
+    base44.asServiceRole.functions.invoke('processKitaAlefStoryGeneration', { story_id }).catch(() => {});
+
     return Response.json({ success: true, credits_remaining: currentCredits - 110 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
