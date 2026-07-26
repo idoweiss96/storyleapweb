@@ -84,7 +84,9 @@ export default function CompletionScreen({ answers }) {
           onClick={async () => {
             if (creating) return;
             setCreating(true);
-            sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers, lang }));
+            // sessionStorage may throw QuotaExceededError when answers contain
+            // large base64 photos — never let that block navigation.
+            try { sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers, lang })); } catch (_) {}
             try {
               // Create the durable draft record now so story_id is stable across
               // refresh, new tabs, and payment redirects — not only in sessionStorage.

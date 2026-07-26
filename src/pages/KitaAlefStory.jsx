@@ -120,7 +120,7 @@ export default function KitaAlefStory() {
       return;
     }
 
-    sessionStorage.setItem(PENDING_KEY, JSON.stringify({ answers, contactEmail, contactPhone, lang }));
+    try { sessionStorage.setItem(PENDING_KEY, JSON.stringify({ answers, contactEmail, contactPhone, lang })); } catch (_) {}
 
     // Persist contact details to the durable record when one already exists.
     if (storyId) {
@@ -130,7 +130,8 @@ export default function KitaAlefStory() {
     }
 
     if (!user) {
-      base44.auth.redirectToLogin('/KitaAlefStory?resume=1');
+      const resumeUrl = storyId ? `/KitaAlefStory?story_id=${storyId}&resume=1` : '/KitaAlefStory?resume=1';
+      base44.auth.redirectToLogin(resumeUrl);
       return;
     }
 
