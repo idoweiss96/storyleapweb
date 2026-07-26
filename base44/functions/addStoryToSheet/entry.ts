@@ -33,6 +33,7 @@ function storyToRow(story, lang) {
     genderMap[story.gender] || story.gender || '',
     settingMap[story.setting] || story.setting || '',
     challengeMap[story.challenge_type] || story.challenge_type || '',
+    story.custom_challenge || '',
     story.trigger_desc || '',
     reactionMap[story.reaction_type] || story.reaction_type || '',
     story.hobbies || '',
