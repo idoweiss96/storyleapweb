@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
-import { Plus, X } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Plus, X, Loader2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import { useLanguage } from '@/components/LanguageContext';
 
 export default function FamilyPhotosInput({ value, onChange }) {
@@ -30,11 +31,17 @@ export default function FamilyPhotosInput({ value, onChange }) {
     onChange(photos.filter((_, i) => i !== idx));
   };
 
-  const handlePhoto = (idx, file) => {
+  const [uploadingIdx, setUploadingIdx] = useState(null);
+
+  const handlePhoto = async (idx, file) => {
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => updateEntry(idx, { photo: ev.target.result });
-    reader.readAsDataURL(file);
+    setUploadingIdx(idx);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      updateEntry(idx, { photo: file_url });
+    } finally {
+      setUploadingIdx(null);
+    }
   };
 
   return (
@@ -51,6 +58,7 @@ export default function FamilyPhotosInput({ value, onChange }) {
           onRoleChange={(role) => updateEntry(idx, { role })}
           onCustomLabelChange={(label) => updateEntry(idx, { customLabel: label })}
           onRemove={() => removeEntry(idx)}
+          isUploading={uploadingIdx === idx}
         />
       ))}
 
@@ -67,7 +75,7 @@ export default function FamilyPhotosInput({ value, onChange }) {
   );
 }
 
-function PhotoEntry({ entry, roles, otherLabel, whoLabel, inPhotoLabel, onPhoto, onRoleChange, onCustomLabelChange, onRemove }) {
+function PhotoEntry({ entry, roles, otherLabel, whoLabel, inPhotoLabel, onPhoto, onRoleChange, onCustomLabelChange, onRemove, isUploading }) {
   const fileRef = useRef(null);
 
   return (
@@ -75,10 +83,13 @@ function PhotoEntry({ entry, roles, otherLabel, whoLabel, inPhotoLabel, onPhoto,
       {/* Photo */}
       <button
         onClick={() => fileRef.current?.click()}
-        className="w-16 h-16 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden shrink-0 transition-colors"
+        disabled={isUploading}
+        className="w-16 h-16 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden shrink-0 transition-colors disabled:opacity-60"
         style={{ borderColor: '#FF6FB5' }}
       >
-        {entry.photo ? (
+        {isUploading ? (
+          <Loader2 className="w-5 h-5 animate-spin" style={{ color: '#4FC3E8' }} />
+        ) : entry.photo ? (
           <img src={entry.photo} alt="Photo" className="w-full h-full object-cover" />
         ) : (
           <span className="text-xl" style={{ color: '#4FC3E8' }}>📷</span>
