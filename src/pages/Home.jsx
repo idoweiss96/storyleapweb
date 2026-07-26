@@ -147,7 +147,7 @@ export default function Home() {
             <div className="absolute top-6 left-12 text-sm opacity-40 star-twinkle">✦</div>
 
             <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-3" style={{ background: 'linear-gradient(135deg, #FFD6EC, #B8EBF7)', color: '#1A1A6E' }}>
-               {lang === 'he' ? '✨ ספיישל כיתה א׳' : '✨ 1st Grade Special'}
+               {lang === 'he' ? '✨ ספיישל כיתה א׳' : '✨ Starting School Special'}
              </span>
             <h3 className="text-xl md:text-2xl font-bold mb-1" style={{ color: '#1A1A6E' }}>
               {lang === 'he' ? 'הכנה לכיתה א׳ ביחד 💗' : 'Getting Ready for Kindergarten Together 💖'}
