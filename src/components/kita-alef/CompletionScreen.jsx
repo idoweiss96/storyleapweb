@@ -14,6 +14,11 @@ function getDisplayValue(question, value) {
   if (question.type === 'chips' && question.multi) {
     return Array.isArray(value) ? value.join(', ') : value;
   }
+  if (question.type === 'family_photos') {
+    if (!Array.isArray(value) || value.length === 0) return '—';
+    return value.map(p => p.role || p.customLabel).filter(Boolean).join(', ') || `${value.length} 📷`;
+  }
+  if (typeof value === 'object') return '—';
   return value;
 }
 
