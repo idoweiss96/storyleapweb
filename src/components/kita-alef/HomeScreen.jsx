@@ -21,10 +21,10 @@ export default function HomeScreen({ onStart }) {
   const SECTIONS = isEn
     ? [
         { emoji: '🧒', title: 'Who are you?', desc: 'Getting to know each other: name, personal strength, and a photo.' },
-        { emoji: '💭', title: 'Feelings', desc: 'Emotions before starting 1st grade, things that might be a bit scary, and moments of separation.' },
+        { emoji: '💭', title: 'Feelings', desc: 'Emotions before starting kindergarten, things that might be a bit scary, and moments of separation.' },
         { emoji: '👨‍👩‍👧', title: 'Who matters to you?', desc: 'Close people, friends, and photos of family members.' },
         { emoji: '🎨', title: 'What do you love?', desc: 'Hobbies, heroes, and what helps when things feel uncomfortable.' },
-        { emoji: '🎒', title: '1st Grade', desc: 'Expectations, small worries, and visiting the school.' },
+        { emoji: '🎒', title: 'Kindergarten', desc: 'Expectations, small worries, and visiting the school.' },
         { emoji: '🌟', title: 'Wishes', desc: "Wishes from the child and from you for the coming year." },
       ]
     : [
@@ -37,7 +37,7 @@ export default function HomeScreen({ onStart }) {
       ];
 
   const introText = isEn
-    ? "This is a time for a fun, shared conversation with your child about starting 1st grade. Ask together, answer together, and feel free to add your own perspective in the fields marked \"Parent\". Along the way, we'll go through several parts together:"
+    ? "This is a time for a fun, shared conversation with your child about starting kindergarten. Ask together, answer together, and feel free to add your own perspective in the fields marked \"Parent\". Along the way, we'll go through several parts together:"
     : 'זה הזמן לשיח משותף וכיפי עם הילד/ה לקראת העלייה לכיתה א׳. שאלו יחד, ענו ביחד, ותהיו מוזמנים להוסיף גם את הטעם שלכם בשדות המסומנות "הורה". לאורך הדרך נעבור יחד בכמה חלקים:';
 
   return (
@@ -53,12 +53,12 @@ export default function HomeScreen({ onStart }) {
 
         <div className="flex justify-center mb-4">
           <span className="px-4 py-1.5 rounded-[20px] text-white text-sm font-medium" style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}>
-            {isEn ? '✨ 1st Grade Special' : '✨ ספיישל כיתה א׳'}
+            {isEn ? '✨ Starting School Special' : '✨ ספיישל כיתה א׳'}
           </span>
         </div>
 
         <h2 className="text-xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>
-          {isEn ? 'Getting Ready for 1st Grade Together 💗' : 'הכנה לכיתה א׳ ביחד 💗'}
+          {isEn ? 'Getting Ready for Kindergarten Together 💖' : 'הכנה לכיתה א׳ ביחד 💗'}
         </h2>
         <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>
           {isEn ? 'A joint questionnaire for child and parent — 3 minutes' : 'שאלון משותף לילד ולהורה — 3 דקות'}

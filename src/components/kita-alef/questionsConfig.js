@@ -183,7 +183,7 @@ const PAGES_EN = [
     title: 'Feelings',
     questions: [
       {
-        key: 'feelings_before', tag: 'child', question: 'How do you feel about starting 1st grade?', type: 'emoji',
+        key: 'feelings_before', tag: 'child', question: 'How do you feel about starting kindergarten?', type: 'emoji',
         options: [
           { emoji: '🎉', label: 'Super excited' },
           { emoji: '😊', label: 'Fine' },
@@ -224,9 +224,9 @@ const PAGES_EN = [
           { emoji: '👦', label: 'Brother/Sister' },
           { emoji: '🐾', label: 'Pet' },
         ],
-        parentField: { label: "Parent — tell them what that person thinks about 1st grade" }
+        parentField: { label: "Parent — tell them what that person thinks about kindergarten" }
       },
-      { key: 'gan_friends', tag: 'together', question: 'Are there friends from kindergarten also going to 1st grade?', type: 'textarea' },
+      { key: 'gan_friends', tag: 'together', question: 'Are there friends from kindergarten also going to kindergarten?', type: 'textarea' },
       { key: 'sibling_experience', tag: 'together', question: 'Is there an older sibling who went through this? What did they say?', type: 'textarea' },
       { key: 'family_photos', tag: 'together', question: 'Photos of family members (optional)', type: 'family_photos' },
     ]
@@ -258,10 +258,10 @@ const PAGES_EN = [
   },
   {
     id: 5,
-    title: '1st Grade',
+    title: 'Kindergarten',
     questions: [
       {
-        key: 'looking_forward', tag: 'child', question: 'What are you most looking forward to in 1st grade?', type: 'emoji',
+        key: 'looking_forward', tag: 'child', question: 'What are you most looking forward to in kindergarten?', type: 'emoji',
         options: [
           { emoji: '📖', label: 'Learning to read' },
           { emoji: '🧑‍🤝‍🧑', label: 'New friends' },
@@ -288,7 +288,7 @@ const PAGES_EN = [
     title: 'Wishes',
     questions: [
       {
-        key: 'wish_self', tag: 'child', question: 'What do you wish for yourself for 1st grade?', type: 'emoji',
+        key: 'wish_self', tag: 'child', question: 'What do you wish for yourself for kindergarten?', type: 'emoji',
         options: [
           { emoji: '🧑‍🤝‍🧑', label: 'A good friend' },
           { emoji: '😊', label: 'To be happy' },
