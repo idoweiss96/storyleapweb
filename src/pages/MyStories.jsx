@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star } from 'lucide-react';
 import { format } from 'date-fns';
 import StoryReadyNotification from '../components/story/StoryReadyNotification';
+import StoryDisplay from '../components/story/StoryDisplay';
 import { useLanguage } from '../components/LanguageContext';
 import { useNavPath } from '@/lib/useNavPath';
 import { toast } from 'sonner';
@@ -23,6 +24,7 @@ export default function MyStories() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStory, setSelectedStory] = useState(null);
+  const [viewingStory, setViewingStory] = useState(null);
   const [readyNotification, setReadyNotification] = useState(null);
   const [activatingStoryId, setActivatingStoryId] = useState(null);
 
@@ -185,7 +187,16 @@ export default function MyStories() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {stories.map((story, index) => (
               <motion.div key={story.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}>
-                <Card className="border-0 shadow-lg shadow-violet-50 hover:shadow-xl hover:shadow-violet-100 transition-all cursor-pointer group" onClick={() => story.story_link ? window.open(story.story_link, '_blank') : setSelectedStory(story)}>
+                <Card className="border-0 shadow-lg shadow-violet-50 hover:shadow-xl hover:shadow-violet-100 transition-all cursor-pointer group" onClick={() => {
+                  const hasValidLink = story.story_link && story.story_link !== story.child_image_url;
+                  if (hasValidLink) {
+                    window.open(story.story_link, '_blank');
+                  } else if (story.content) {
+                    setViewingStory(story);
+                  } else {
+                    setSelectedStory(story);
+                  }
+                }}>
                   <CardContent className="p-6 text-center">
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                       <Sparkles className="w-7 h-7 text-slate-600" />
@@ -293,6 +304,23 @@ export default function MyStories() {
           )}
         </DialogContent>
       </Dialog>
+
+      {viewingStory && (
+        <Dialog open={!!viewingStory} onOpenChange={() => setViewingStory(null)}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-slate-800">
+                {t('dialog_title_prefix')} {viewingStory?.child_name}
+              </DialogTitle>
+            </DialogHeader>
+            {viewingStory && (
+              <div className="mt-4">
+                <StoryDisplay story={viewingStory} onNewStory={() => { setViewingStory(null); navigate(createPageUrl('CreateStory')); }} />
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
 
       {readyNotification && (
         <StoryReadyNotification story={readyNotification} onClose={() => setReadyNotification(null)} />
