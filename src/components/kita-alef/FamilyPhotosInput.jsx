@@ -1,7 +1,6 @@
-import React, { useRef, useState } from 'react';
-import { Plus, X, Loader2 } from 'lucide-react';
+import React, { useRef } from 'react';
+import { Plus, X } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageContext';
-import { base44 } from '@/api/base44Client';
 
 export default function FamilyPhotosInput({ value, onChange }) {
   const { lang } = useLanguage();
@@ -16,7 +15,6 @@ export default function FamilyPhotosInput({ value, onChange }) {
 
   const photos = Array.isArray(value) ? value : [];
   const MAX = 2;
-  const [uploadingIdx, setUploadingIdx] = useState(null);
 
   const updateEntry = (idx, patch) => {
     const next = photos.map((p, i) => (i === idx ? { ...p, ...patch } : p));
@@ -32,17 +30,11 @@ export default function FamilyPhotosInput({ value, onChange }) {
     onChange(photos.filter((_, i) => i !== idx));
   };
 
-  const handlePhoto = async (idx, file) => {
+  const handlePhoto = (idx, file) => {
     if (!file) return;
-    setUploadingIdx(idx);
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      updateEntry(idx, { photo: file_url });
-    } catch (err) {
-      console.error('Upload error:', err);
-    } finally {
-      setUploadingIdx(null);
-    }
+    const reader = new FileReader();
+    reader.onload = (ev) => updateEntry(idx, { photo: ev.target.result });
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -59,7 +51,6 @@ export default function FamilyPhotosInput({ value, onChange }) {
           onRoleChange={(role) => updateEntry(idx, { role })}
           onCustomLabelChange={(label) => updateEntry(idx, { customLabel: label })}
           onRemove={() => removeEntry(idx)}
-          uploading={uploadingIdx === idx}
         />
       ))}
 
@@ -76,7 +67,7 @@ export default function FamilyPhotosInput({ value, onChange }) {
   );
 }
 
-function PhotoEntry({ entry, roles, otherLabel, whoLabel, inPhotoLabel, onPhoto, onRoleChange, onCustomLabelChange, onRemove, uploading }) {
+function PhotoEntry({ entry, roles, otherLabel, whoLabel, inPhotoLabel, onPhoto, onRoleChange, onCustomLabelChange, onRemove }) {
   const fileRef = useRef(null);
 
   return (
@@ -89,8 +80,6 @@ function PhotoEntry({ entry, roles, otherLabel, whoLabel, inPhotoLabel, onPhoto,
       >
         {entry.photo ? (
           <img src={entry.photo} alt="Photo" className="w-full h-full object-cover" />
-        ) : uploading ? (
-          <Loader2 className="w-5 h-5 animate-spin" style={{ color: '#4FC3E8' }} />
         ) : (
           <span className="text-xl" style={{ color: '#4FC3E8' }}>📷</span>
         )}
