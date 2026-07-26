@@ -1,19 +1,48 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import { getPages } from './questionsConfig';
 import { useLanguage } from '@/components/LanguageContext';
 import QuestionCard from './QuestionCard';
 
-export default function Questionnaire({ answers, setAnswers, onComplete }) {
+export default function Questionnaire({ answers, setAnswers }) {
   const { lang } = useLanguage();
+  const navigate = useNavigate();
   const pages = getPages(lang);
   const [pageIdx, setPageIdx] = useState(0);
+  const [creating, setCreating] = useState(false);
   const page = pages[pageIdx];
   const progress = ((pageIdx + 1) / pages.length) * 100;
   const isEn = lang === 'en';
 
   const handleAnswer = (key, val) => {
     setAnswers(prev => ({ ...prev, [key]: val }));
+  };
+
+  const handleFinish = async () => {
+    if (creating) return;
+    setCreating(true);
+    base44.functions.invoke('submitKitaAlefAnswers', { answers, lang }).catch(() => {});
+    try { sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers, lang })); } catch (_) {}
+    try {
+      const saved = await base44.entities.KitaAlefStory.create({
+        child_name: answers.name || '',
+        gender: answers.gender || '',
+        child_image_url: answers.photo || null,
+        answers,
+        lang,
+        content: null,
+        story_link: null,
+        payment_status: 'draft',
+      });
+      navigate(`/KitaAlefStory?story_id=${saved.id}&lang=${lang}`);
+    } catch (e) {
+      navigate('/KitaAlefStory');
+    } finally {
+      setCreating(false);
+    }
   };
 
   return (
@@ -80,11 +109,17 @@ export default function Questionnaire({ answers, setAnswers, onComplete }) {
             </button>
           ) : (
             <button
-              onClick={onComplete}
-              className="px-6 py-3 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
+              onClick={handleFinish}
+              disabled={creating}
+              className="px-6 py-3 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity disabled:opacity-60 flex items-center gap-2"
               style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
             >
-              {isEn ? 'Finish ✨' : 'סיום ✨'}
+              {creating ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {isEn ? 'Creating...' : 'יוצר...'}
+                </>
+              ) : (isEn ? 'Create the story ✨' : 'צור את הסיפור ✨')}
             </button>
           )}
         </div>
