@@ -1,0 +1,60 @@
+/*
+  Reference-only component recipes for the Design System page.
+  Scoped under .ds-root so nothing here leaks into production pages.
+  These reproduce styles that already exist inline/in JSX elsewhere in the app.
+*/
+.ds-root .ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--ds-radius-xl);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 10px 24px;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+.ds-root .ds-btn-primary {
+  background: hsl(var(--ds-primary));
+  color: white;
+}
+.ds-root .ds-btn-kita-primary {
+  background: linear-gradient(135deg, var(--ds-kita-pink), var(--ds-kita-sky));
+  color: white;
+}
+.ds-root .ds-btn-kita-secondary {
+  background: linear-gradient(135deg, var(--ds-kita-sky), #6BB6E8);
+  color: white;
+}
+.ds-root .ds-btn-outline {
+  background: transparent;
+  border: 2px solid hsl(var(--ds-border));
+  color: hsl(var(--ds-foreground));
+}
+.ds-root .ds-btn:disabled,
+.ds-root .ds-btn[data-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.ds-root .ds-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.ds-root .ds-btn:focus-visible {
+  outline: 2px solid hsl(var(--ds-brand-blue));
+  outline-offset: 2px;
+}
+
+.ds-root .ds-card {
+  background: white;
+  border-radius: var(--ds-radius-2xl);
+  box-shadow: var(--ds-shadow-card);
+  padding: var(--ds-space-6);
+}
+.ds-root .ds-card-kita {
+  background: white;
+  border: 1px solid #F0E8F5;
+  border-radius: var(--ds-radius-3xl);
+  box-shadow: var(--ds-shadow-glow-2);
+}
