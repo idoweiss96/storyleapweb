@@ -1,10 +1,10 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const SPREADSHEET_ID_HE = '1rATg8VqjteU8MUwxckXv4pUprUfUGHGleMbhNuKBmKk';
-const SHEET_NAME_HE = 'תשובות שאלון כיתה א';
+const SPREADSHEET_ID_HE = '1EFo9UsU8i890D1AMMx2kqDQj4EvLmj1_W5dQ8_NNCvc';
+const SHEET_NAME_HE = 'Sheet1';
 
-const SPREADSHEET_ID_EN = '1R4BcLPgr5moYJlVOnYmBOdtpcYJCWkbsTfYT6TYDkJM';
-const SHEET_NAME_EN = 'Kita Alef Answers';
+const SPREADSHEET_ID_EN = '10WGE1LnGAl_zALEQOaqydfuv7bQ4LGaSNxMJb9ycnK8';
+const SHEET_NAME_EN = 'Sheet1';
 
 const OTHER_LABEL_HE = 'אחר';
 const OTHER_LABEL_EN = 'Other';
@@ -21,6 +21,11 @@ function formatFamilyPhotos(photos, otherLabel) {
     .map(p => p.role === otherLabel ? (p.customLabel || otherLabel) : (p.role || ''))
     .filter(Boolean)
     .join(', ');
+}
+
+function formatFamilyPhotosCount(photos, isEn) {
+  const count = Array.isArray(photos) ? photos.length : 0;
+  return count > 0 ? (isEn ? `Yes (${count})` : `כן (${count})`) : (isEn ? 'No' : 'לא');
 }
 
 function answersToRow(answers, userEmail, lang) {
@@ -48,6 +53,7 @@ function answersToRow(answers, userEmail, lang) {
     formatValue(answers.favorite_person_parent),
     formatValue(answers.gan_friends),
     formatValue(answers.sibling_experience),
+    formatFamilyPhotosCount(answers.family_photos, isEn),
     formatFamilyPhotos(answers.family_photos, otherLabel),
     // Page 4
     formatValue(answers.activities),
@@ -63,6 +69,7 @@ function answersToRow(answers, userEmail, lang) {
     formatValue(answers.wish_self_parent),
     formatValue(answers.wish_parent),
     formatValue(answers.wish_parent_parent),
+    '', // Story link — filled in later once the story is ready
   ];
 }
 
