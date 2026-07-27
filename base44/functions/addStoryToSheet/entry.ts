@@ -32,7 +32,7 @@ function storyToRow(story, lang, userEmail) {
     story.child_name || '',
     story.child_age || '',
     genderMap[story.gender] || story.gender || '',
-    story.child_image_url ? (lang === 'he' ? 'כן' : 'Yes') : (lang === 'he' ? 'לא' : 'No'),
+    story.child_image_url || '',
     settingMap[story.setting] || story.setting || '',
     challengeMap[story.challenge_type] || story.challenge_type || '',
     story.challenge_type === 'other' ? (story.custom_challenge || '') : '',
