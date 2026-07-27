@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 const SPREADSHEET_ID_EN = '1yDTjzw5LEPyOCbZ-c9TwpSV-tItyB3Fjtlbu0dbpbqk';
-const SPREADSHEET_ID_HE = '13IDiLl4UU-KH2JODPxHFInprmB4uxBmVmBoJTaFQzXc';
+const SPREADSHEET_ID_HE = '1vOXZ0bVjICeSzCjXUQ2DXby6OjQtJrYcpTxORfbJ1vo';
 const genderMapHE = { boy: 'בן', girl: 'בת', other: 'אחר' };
 const settingMapHE = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' };
 const challengeMapHE = { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' };
@@ -20,26 +20,26 @@ function detectLanguage(story) {
   return isHebrew(story.child_name) || isHebrew(story.trigger_desc) || isHebrew(story.hobbies) ? 'he' : 'en';
 }
 
-function storyToRow(story, lang) {
-  const createdDate = story.created_date ? new Date(story.created_date).toLocaleDateString('he-IL') : '';
+function storyToRow(story, lang, userEmail) {
+  const createdDate = story.created_date ? new Date(story.created_date).toLocaleString('he-IL') : '';
   const genderMap = lang === 'he' ? genderMapHE : genderMapEN;
   const settingMap = lang === 'he' ? settingMapHE : settingMapEN;
   const challengeMap = lang === 'he' ? challengeMapHE : challengeMapEN;
   const reactionMap = lang === 'he' ? reactionMapHE : reactionMapEN;
   return [
     createdDate,
+    userEmail || '',
     story.child_name || '',
     story.child_age || '',
     genderMap[story.gender] || story.gender || '',
+    story.child_image_url ? (lang === 'he' ? 'כן' : 'Yes') : (lang === 'he' ? 'לא' : 'No'),
     settingMap[story.setting] || story.setting || '',
-    story.challenge_type === 'other' ? (story.custom_challenge || 'Other') : (challengeMap[story.challenge_type] || story.challenge_type || ''),
+    challengeMap[story.challenge_type] || story.challenge_type || '',
+    story.challenge_type === 'other' ? (story.custom_challenge || '') : '',
     story.trigger_desc || '',
     reactionMap[story.reaction_type] || story.reaction_type || '',
     story.hobbies || '',
     story.contact_email || '',
-    story.contact_phone || '',
-    story.child_image_url || '',
-    story.story_link || '',
   ];
 }
 
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
 
     const lang = detectLanguage(storyData);
     const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
-    const row = storyToRow(storyData, lang);
+    const row = storyToRow(storyData, lang, storyData.created_by || storyData.user_email);
 
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
