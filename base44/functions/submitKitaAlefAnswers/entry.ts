@@ -23,15 +23,14 @@ function formatFamilyPhotos(photos, otherLabel) {
     .join(', ');
 }
 
-function formatFamilyPhotosCount(photos, isEn) {
-  const count = Array.isArray(photos) ? photos.length : 0;
-  return count > 0 ? (isEn ? `Yes (${count})` : `כן (${count})`) : (isEn ? 'No' : 'לא');
+function formatFamilyPhotosUrls(photos) {
+  if (!Array.isArray(photos) || photos.length === 0) return '';
+  return photos.map(p => p.photo || '').filter(Boolean).join(', ');
 }
 
 function answersToRow(answers, userEmail, lang) {
   const isEn = lang === 'en';
   const now = new Date().toLocaleString(isEn ? 'en-US' : 'he-IL');
-  const yesNo = answers.photo ? (isEn ? 'Yes' : 'כן') : (isEn ? 'No' : 'לא');
   const otherLabel = isEn ? OTHER_LABEL_EN : OTHER_LABEL_HE;
   return [
     now,
@@ -41,7 +40,7 @@ function answersToRow(answers, userEmail, lang) {
     formatValue(answers.gender),
     formatValue(answers.strength),
     formatValue(answers.strength_parent),
-    yesNo,
+    answers.photo || '',
     // Page 2
     formatValue(answers.feelings_before),
     formatValue(answers.feelings_before_parent),
@@ -53,7 +52,7 @@ function answersToRow(answers, userEmail, lang) {
     formatValue(answers.favorite_person_parent),
     formatValue(answers.gan_friends),
     formatValue(answers.sibling_experience),
-    formatFamilyPhotosCount(answers.family_photos, isEn),
+    formatFamilyPhotosUrls(answers.family_photos),
     formatFamilyPhotos(answers.family_photos, otherLabel),
     // Page 4
     formatValue(answers.activities),
