@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const SPREADSHEET_ID_EN = '1-LZ-ai2LdJ4BoTTdSacDRl-L0LpcIEg5JrCKK6txLxg';
-const SPREADSHEET_ID_HE = '1yT2WdAlyjpp8gciT4iZYEL122FyrliTin3MEcTvvr20';
+const SPREADSHEET_ID_EN = '1yDTjzw5LEPyOCbZ-c9TwpSV-tItyB3Fjtlbu0dbpbqk';
+const SPREADSHEET_ID_HE = '13IDiLl4UU-KH2JODPxHFInprmB4uxBmVmBoJTaFQzXc';
 
 const genderMapHE = { boy: 'בן', girl: 'בת', other: 'אחר' };
 const settingMapHE = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' };
