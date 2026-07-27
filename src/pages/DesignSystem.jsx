@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ShieldAlert } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import NoIndexMeta from '@/components/SEO/NoIndexMeta';
 import '@/styles/design-tokens.css';
 import '@/styles/typography.css';
 import '@/styles/components.css';
@@ -23,8 +26,39 @@ const NAV_ITEMS = [
 ];
 
 export default function DesignSystem() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    base44.auth.me()
+      .then((user) => setIsAdmin(user.role === 'admin'))
+      .catch(() => setIsAdmin(false))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <NoIndexMeta />
+        <div className="animate-spin w-8 h-8 border-4 border-violet-500 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="max-w-md mx-auto py-20 text-center">
+        <NoIndexMeta />
+        <ShieldAlert className="w-16 h-16 text-red-400 mx-auto mb-4" />
+        <h2 className="text-xl font-bold text-gray-800 mb-2">No access</h2>
+        <p className="text-gray-600">This page is for administrators only.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="ds-root max-w-6xl mx-auto px-4 py-8">
+      <NoIndexMeta />
       <div className="mb-8">
         <span className="inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-medium mb-3">Internal — not for production use</span>
         <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">StoryLeap Design System</h1>
