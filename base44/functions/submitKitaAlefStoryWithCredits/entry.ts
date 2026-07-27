@@ -24,7 +24,7 @@ async function sendStoryInProgressEmail(base44ServiceRole, email, childName, lan
   const body = isEn
     ? `<div dir="ltr" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
     <h2>Hi,</h2>
-    <p style="font-size:16px;line-height:1.7;">How exciting! We received your answers from the 1st grade readiness questionnaire.</p>
+    <p style="font-size:16px;line-height:1.7;">How exciting! We received your answers from the kindergarten readiness questionnaire.</p>
     <p style="font-size:16px;line-height:1.7;">We are already working on creating ${childName}'s special story.</p>
     <p style="font-size:16px;line-height:1.7;">Once the story is ready, we'll send you another email with a direct link to read it.</p>
     <p style="margin-top:24px;font-size:15px;">Thank you,<br/>The StoryLeap Team</p>
