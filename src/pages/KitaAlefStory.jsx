@@ -177,7 +177,7 @@ export default function KitaAlefStory() {
         window.dispatchEvent(new Event('credits-updated'));
         sessionStorage.removeItem(PENDING_KEY);
         base44.analytics.track({ eventName: 'kita_alef_credits_used', properties: { story_id: id } });
-        setStep('success');
+        navigate(`/FeelingsMap?lang=${lang}`);
       } else {
         setError(isEn ? 'An error occurred. Please try again.' : 'אירעה שגיאה ביצירת הסיפור. נסו שוב.');
       }
@@ -292,35 +292,6 @@ export default function KitaAlefStory() {
       </div>
 
       <AnimatePresence mode="wait">
-        {/* SUCCESS */}
-        {step === 'success' && createdStory && (
-          <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-            <Card className="border-0 shadow-xl" style={{ boxShadow: '0 4px 30px rgba(255,111,181,0.12)' }}>
-              <CardContent className="p-8 text-center">
-                <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="w-10 h-10 text-green-600" />
-                </div>
-                <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A6E' }}>
-                  {isEn ? `✨ ${name}'s book is being created 🎬` : `✨ הספר של ${name} בהכנה 🎬`}
-                </h2>
-                <p className="text-slate-600 mb-6">
-                  {isEn
-                    ? `We're now creating ${name}'s special story. You'll get an email when it's ready to read!`
-                    : `אנחנו יוצרים עכשיו את הסיפור המיוחד של ${name}. תקבלו מייל כשהסיפור יהיה מוכן לקריאה!`}
-                </p>
-                <div className="flex gap-3 justify-center">
-                  <Button variant="outline" onClick={() => navigate('/MyStories')} className="rounded-xl">
-                    {isEn ? 'My Stories' : 'הסיפורים שלי'}
-                  </Button>
-                  <Button onClick={() => navigate(navPath('KitaAlef'))} className="rounded-xl text-white" style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}>
-                    {isEn ? 'Another questionnaire' : 'שאלון נוסף'}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-
         {/* CREDITS CHECK */}
         {step === 'credits_check' && user && (
           <motion.div key="credits" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>

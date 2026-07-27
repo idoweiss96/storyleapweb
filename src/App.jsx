@@ -17,6 +17,7 @@ import PaymentCancel from './pages/PaymentCancel';
 import Vision from './pages/Vision';
 import KitaAlef from './pages/KitaAlef';
 import KitaAlefStory from './pages/KitaAlefStory';
+import FeelingsMap from './pages/FeelingsMap';
 import DesignSystem from './pages/DesignSystem';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -78,6 +79,7 @@ const AuthenticatedApp = () => {
       <Route path="/Vision" element={<LayoutWrapper currentPageName="Vision"><Vision /></LayoutWrapper>} />
       <Route path="/KitaAlef" element={<LayoutWrapper currentPageName="KitaAlef"><KitaAlef /></LayoutWrapper>} />
       <Route path="/KitaAlefStory" element={<LayoutWrapper currentPageName="KitaAlefStory"><KitaAlefStory /></LayoutWrapper>} />
+      <Route path="/FeelingsMap" element={<LayoutWrapper currentPageName="FeelingsMap"><FeelingsMap /></LayoutWrapper>} />
       <Route path="/design-system" element={<LayoutWrapper currentPageName="DesignSystem"><DesignSystem /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
