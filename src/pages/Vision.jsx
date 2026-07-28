@@ -47,7 +47,7 @@ const content = {
   },
   en: {
     heroBadge: '✨ StoryLeap',
-    heroTitle: "StoryLeap – no child faces it alone",
+    heroTitle: "Little heroes, big stories",
     heroSubtitle: 'In the early days of the war, we watched parents feel helpless. We knew technology could do more, so we started building the bridge between the clinical world and home.',
     heroCta: 'Create your story now',
     believeTitle: 'What We Believe',
