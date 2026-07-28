@@ -101,8 +101,15 @@ export default function Vision() {
     <div dir={isRTL ? 'rtl' : 'ltr'} className="pb-12">
 
       {/* HERO */}
-      <section className="relative py-16 md:py-20 overflow-hidden rounded-3xl mb-16" style={{ background: '#F0F6FF' }}>
-        <div className="absolute inset-0 pointer-events-none">
+      <section className="relative py-16 md:py-20 mb-16" style={{ background: '#F0F6FF', borderRadius: '45% 45% 8% 8% / 12% 12% 4% 4%' }}>
+        {/* Cloud bumps */}
+        <div className="absolute -top-6 left-[10%] w-24 h-24 rounded-full pointer-events-none" style={{ background: '#F0F6FF' }} />
+        <div className="absolute -top-10 left-[28%] w-32 h-32 rounded-full pointer-events-none" style={{ background: '#F0F6FF' }} />
+        <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-36 h-36 rounded-full pointer-events-none" style={{ background: '#F0F6FF' }} />
+        <div className="absolute -top-10 right-[28%] w-32 h-32 rounded-full pointer-events-none" style={{ background: '#F0F6FF' }} />
+        <div className="absolute -top-6 right-[10%] w-24 h-24 rounded-full pointer-events-none" style={{ background: '#F0F6FF' }} />
+
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ borderRadius: '45% 45% 8% 8% / 12% 12% 4% 4%' }}>
           {[...Array(10)].map((_, i) => (
             <Star key={i}
               className={`absolute w-3 h-3 text-blue-200 fill-blue-100 opacity-60 star-twinkle${i % 3 === 0 ? '' : i % 3 === 1 ? '-delay' : '-delay-2'}`}
