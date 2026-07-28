@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, Star } from 'lucide-react';
+import { Sparkles, Star, ArrowRight } from 'lucide-react';
 import { createPageUrl } from '../utils';
 import { useLanguage } from '@/components/LanguageContext';
 
@@ -165,14 +165,17 @@ export default function Vision() {
       {/* PARENT'S JOURNEY */}
       <motion.div variants={fadeUp} initial="hidden" animate="show" custom={7} className="rounded-2xl p-8 md:p-10 mb-20" style={{ background: '#FDF6F8' }}>
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-10" style={{ color: '#1C2A48' }}>{c.journeyTitle}</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {c.journey.map((step) => (
-            <div key={step.emotion} className="text-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6" dir="ltr">
+          {c.journey.map((step, i) => (
+            <div key={step.emotion} className="relative text-center">
               <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-3 bg-white" style={{ boxShadow: '0 10px 30px rgba(28,42,72,0.06)' }}>
                 {step.emoji}
               </div>
               <div className="font-bold mb-1" style={{ color: '#1C2A48' }}>{step.emotion}</div>
               <div className="text-xs leading-relaxed" style={{ color: '#63738A' }}>{step.sub}</div>
+              {i < c.journey.length - 1 && (
+                <ArrowRight className="hidden md:block absolute top-6 -right-8 w-5 h-5 opacity-40" style={{ color: '#1C2A48' }} />
+              )}
             </div>
           ))}
         </div>
