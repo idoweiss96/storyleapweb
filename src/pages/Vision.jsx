@@ -101,7 +101,7 @@ export default function Vision() {
     <div dir={isRTL ? 'rtl' : 'ltr'} className="pb-12">
 
       {/* HERO */}
-      <section className="relative py-16 md:py-20 overflow-hidden rounded-3xl mb-16" style={{ background: '#F0F6FF' }}>
+      <section className="relative py-16 md:py-20 overflow-hidden rounded-[3rem] mb-16" style={{ background: 'rgba(255,255,255,0.55)' }}>
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(22)].map((_, i) => (
             <Star key={i}
