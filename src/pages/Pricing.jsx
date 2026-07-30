@@ -236,6 +236,8 @@ export default function Pricing() {
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
     isRenderedRef.current = false;
+    let cancelled = false;
+    let instance = null;
 
     const onApproveHandler = async (data) => {
       console.log('[PayPal] onApprove called with:', JSON.stringify(data));
@@ -301,22 +303,23 @@ export default function Pricing() {
     };
 
     const renderHosted = () => {
-      if (renderKeyRef.current !== currentKey) return;
+      if (cancelled || renderKeyRef.current !== currentKey) return;
       if (!window.paypal?.HostedButtons || !containerRef.current) return;
       if (isRenderedRef.current) return;
       isRenderedRef.current = true;
       containerRef.current.innerHTML = '';
-      window.paypal.HostedButtons({
+      instance = window.paypal.HostedButtons({
         hostedButtonId: btnConfig.hostedButtonId,
         onClick: () => fbqTrack('InitiateCheckout', { value: parseAmountFromDisplay(btnConfig.display), currency: btnConfig.currency }),
         onApprove: onApproveHandler,
         onCancel: () => setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled'),
         onError: () => setPaypalError(isHe ? 'שגיאה בתשלום, נסו שנית' : 'Payment error, please try again'),
-      }).render(containerRef.current);
+      });
+      instance.render(containerRef.current);
     };
 
     const renderRegular = () => {
-      if (renderKeyRef.current !== currentKey) return;
+      if (cancelled || renderKeyRef.current !== currentKey) return;
       if (!window.paypal?.Buttons || !containerRef.current) return;
       if (isRenderedRef.current) return;
       isRenderedRef.current = true;
@@ -346,6 +349,7 @@ export default function Pricing() {
         onCancel: () => setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled'),
       });
       if (buttons.isEligible()) {
+        instance = buttons;
         buttons.render(containerRef.current);
       } else {
         console.warn('[PayPal] buttons not eligible');
@@ -362,13 +366,30 @@ export default function Pricing() {
     if (containerRef.current) containerRef.current.innerHTML = '';
     isRenderedRef.current = false;
 
-    const tryRender = () => isHosted ? renderHosted() : renderRegular();
+    const tryRender = () => {
+      if (cancelled) return;
+      isHosted ? renderHosted() : renderRegular();
+    };
     const sdkReady = isHosted ? window.paypal?.HostedButtons : window.paypal?.Buttons;
+
+    // Cleanup: runs on unmount and before every rerender of this effect.
+    // Closes any live button instance, invalidates pending async renders/timeouts,
+    // clears the container, and resets the render guard so a fresh mount can render again.
+    const cleanup = () => {
+      cancelled = true;
+      renderKeyRef.current += 1;
+      if (instance && typeof instance.close === 'function') {
+        try { instance.close().catch?.(() => {}); } catch (_) {}
+      }
+      instance = null;
+      if (containerRef.current) containerRef.current.innerHTML = '';
+      isRenderedRef.current = false;
+    };
 
     // If the right SDK is already loaded, just re-render
     if (sdkReady && existingScript) {
       setTimeout(() => tryRender(), 50);
-      return;
+      return cleanup;
     }
 
     // Need to reload SDK — remove old scripts and window.paypal
@@ -381,7 +402,7 @@ export default function Pricing() {
     script.onload = () => setTimeout(() => tryRender(), 300);
     script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh');
     document.body.appendChild(script);
-    return () => {};
+    return cleanup;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [btnConfig, giftMode]);
 
@@ -469,7 +490,7 @@ export default function Pricing() {
                     : (isHe ? '⭐ 110 קרדיטים' : '⭐ 110 Credits')}
                 </p>
                 <p className="text-sm text-amber-600 mt-1">
-                  {isHe ? '110 קרדיטים = יצירת סיפור אחד מותאם אישית' : '110 credits = 1 personalized story'}
+                  {isHe ? '110 קרדיטים = יצירת סיפור אחד מותאם אישית' : 'Includes one personalized story'}
                 </p>
               </div>
 
