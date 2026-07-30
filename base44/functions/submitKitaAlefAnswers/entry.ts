@@ -15,23 +15,25 @@ function formatValue(val) {
   return String(val);
 }
 
-function formatFamilyPhotos(photos, otherLabel) {
-  if (!Array.isArray(photos) || photos.length === 0) return '';
-  return photos
-    .map(p => p.role === otherLabel ? (p.customLabel || otherLabel) : (p.role || ''))
-    .filter(Boolean)
-    .join(', ');
-}
+const MAX_FAMILY_PHOTOS = 2;
+const NO_RELATION_LABEL_HE = '(לא נבחר קשר)';
+const NO_RELATION_LABEL_EN = '(No relation selected)';
 
-function formatFamilyPhotosUrls(photos) {
-  if (!Array.isArray(photos) || photos.length === 0) return '';
-  return photos.map(p => p.photo || '').filter(Boolean).join(', ');
+// Returns [relation, link] for the family photo at idx, or ['', ''] if not provided.
+function getFamilyPhotoPair(photos, idx, otherLabel, noRelationLabel) {
+  const p = Array.isArray(photos) ? photos[idx] : null;
+  if (!p || !p.photo) return ['', ''];
+  const relation = p.role === otherLabel ? (p.customLabel || otherLabel) : (p.role || noRelationLabel);
+  return [relation, p.photo];
 }
 
 function answersToRow(answers, userEmail, lang) {
   const isEn = lang === 'en';
   const now = new Date().toLocaleString(isEn ? 'en-US' : 'he-IL');
   const otherLabel = isEn ? OTHER_LABEL_EN : OTHER_LABEL_HE;
+  const noRelationLabel = isEn ? NO_RELATION_LABEL_EN : NO_RELATION_LABEL_HE;
+  const [photo1Relation, photo1Link] = getFamilyPhotoPair(answers.family_photos, 0, otherLabel, noRelationLabel);
+  const [photo2Relation, photo2Link] = getFamilyPhotoPair(answers.family_photos, 1, otherLabel, noRelationLabel);
   return [
     now,
     userEmail || '',
@@ -53,8 +55,10 @@ function answersToRow(answers, userEmail, lang) {
     formatValue(answers.favorite_person_parent),
     formatValue(answers.gan_friends),
     formatValue(answers.sibling_experience),
-    formatFamilyPhotosUrls(answers.family_photos),
-    formatFamilyPhotos(answers.family_photos, otherLabel),
+    photo1Relation,
+    photo1Link,
+    photo2Relation,
+    photo2Link,
     // Page 4
     formatValue(answers.activities),
     formatValue(answers.hero),
