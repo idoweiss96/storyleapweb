@@ -39,10 +39,10 @@ Deno.serve(async (req) => {
       credits = Number(pkg.credits);
       description = `StoryLeap - ${pkg.name || (credits + ' Credits')}`;
     } else {
-      // Legacy fallback (coupon custom-price flow): client-supplied amount
+      // Legacy fallback (coupon / fixed-price / test-code flow): client-supplied amount
       amount = Number(body.amount);
       credits = Number(body.credits) || 110;
-      description = `StoryLeap - ${credits} Credits`;
+      description = currency === 'ILS' ? `StoryLeap - ${credits} קרדיטים` : `StoryLeap - ${credits} Credits`;
     }
 
     if (!amount || amount <= 0) {

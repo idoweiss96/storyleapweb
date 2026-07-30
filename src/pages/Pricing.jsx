@@ -11,9 +11,14 @@ import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
 
-// Special test codes with hosted button override
+// Special test codes — routed through the same dynamic PayPal order flow as everything
+// else (createCreditsOrder), NOT a PayPal Hosted Button. Hosted Buttons carry their own
+// fixed amount/currency/item-name baked into the PayPal dashboard, which caused a
+// currency mismatch with the SDK's `currency` query param and PayPal's generic
+// "Something went wrong" error. Using the dynamic flow guarantees the currency and
+// item description sent to PayPal always match what's shown on screen.
 const HOSTED_BUTTON_CODES = {
-  'IDO10': { hostedButtonId: 'AMAMAC5GTGJUG', currency: 'ILS', display: '₪0.10' },
+  'IDO10': { amount: '0.10', currency: 'ILS', display: '₪0.10' },
 };
 
 
@@ -36,17 +41,15 @@ function parseAmountFromDisplay(display) {
   return Number.isFinite(num) ? num : 0;
 }
 
-// Hosted buttons by language and discount tier
+// Default fixed prices by language, used only as a fallback when there's no DB
+// CreditPackage / applied coupon for the active language. Routed through the same
+// dynamic PayPal order flow as everything else (see note above on Hosted Buttons).
 const HOSTED_BUTTONS = {
   he: {
-    full:       { hostedButtonId: '9HE46Y9GZ53GL', currency: 'ILS', display: '₪110' },
-    discount30: { hostedButtonId: 'CLHK3KQMH4XXA', currency: 'ILS', display: '₪77' },
-    discount50: { hostedButtonId: 'B9TUMXZVS8NMG', currency: 'ILS', display: '₪55' },
+    full: { amount: '110', currency: 'ILS', display: '₪110' },
   },
   en: {
-    full:       { hostedButtonId: 'RRQSP3N3TULMG', currency: 'USD', display: '$40' },
-    discount30: { hostedButtonId: 'HY2FYDAMXP68C', currency: 'USD', display: '$28' },
-    discount50: { hostedButtonId: 'MKWP2B9RHT8RN', currency: 'USD', display: '$20' },
+    full: { amount: '40', currency: 'USD', display: '$40' },
   },
 };
 
@@ -309,22 +312,6 @@ export default function Pricing() {
       }
     };
 
-    const renderHosted = () => {
-      if (cancelled || renderKeyRef.current !== currentKey) return;
-      if (!window.paypal?.HostedButtons || !containerRef.current) return;
-      if (isRenderedRef.current) return;
-      isRenderedRef.current = true;
-      containerRef.current.innerHTML = '';
-      instance = window.paypal.HostedButtons({
-        hostedButtonId: btnConfig.hostedButtonId,
-        onClick: () => fbqTrack('InitiateCheckout', { value: parseAmountFromDisplay(btnConfig.display), currency: btnConfig.currency }),
-        onApprove: onApproveHandler,
-        onCancel: () => setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled'),
-        onError: () => setPaypalError(isHe ? 'שגיאה בתשלום, נסו שנית' : 'Payment error, please try again'),
-      });
-      instance.render(containerRef.current);
-    };
-
     const renderRegular = () => {
       if (cancelled || renderKeyRef.current !== currentKey) return;
       if (!window.paypal?.Buttons || !containerRef.current) return;
@@ -364,8 +351,7 @@ export default function Pricing() {
       }
     };
 
-    const isHosted = !!btnConfig.hostedButtonId;
-    const components = isHosted ? 'hosted-buttons' : 'buttons';
+    const components = 'buttons';
     const sdkCurrency = btnConfig.currency;
     const scriptKey = `${paypalClientId}-${sdkCurrency}-${components}`;
     const existingScript = document.querySelector(`script[data-paypal-sdk="${scriptKey}"]`);
@@ -375,9 +361,9 @@ export default function Pricing() {
 
     const tryRender = () => {
       if (cancelled) return;
-      isHosted ? renderHosted() : renderRegular();
+      renderRegular();
     };
-    const sdkReady = isHosted ? window.paypal?.HostedButtons : window.paypal?.Buttons;
+    const sdkReady = window.paypal?.Buttons;
 
     // Cleanup: runs on unmount and before every rerender of this effect.
     // Closes any live button instance, invalidates pending async renders/timeouts,
