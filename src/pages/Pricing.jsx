@@ -20,8 +20,12 @@ const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8f
 
 // Meta Pixel helpers — fbq is loaded by the base code in index.html; never fire without checking it exists.
 function fbqTrack(eventName, params) {
-  if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-    window.fbq('track', eventName, params);
+  try {
+    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+      window.fbq('track', eventName, params);
+    }
+  } catch (error) {
+    console.warn('Meta Pixel tracking failed:', eventName, error);
   }
 }
 function parseAmountFromDisplay(display) {
@@ -90,10 +94,14 @@ export default function Pricing() {
 
   // Fires Purchase to Meta Pixel at most once per PayPal order ID.
   const trackPurchaseOnce = (orderId, amount, currency) => {
-    if (!orderId || purchaseTrackedRef.current.has(orderId)) return;
-    purchaseTrackedRef.current.add(orderId);
-    const value = Number.isFinite(amount) && amount > 0 ? amount : parseAmountFromDisplay(btnConfig.display);
-    fbqTrack('Purchase', { value, currency: currency || btnConfig.currency });
+    try {
+      if (!orderId || purchaseTrackedRef.current.has(orderId)) return;
+      purchaseTrackedRef.current.add(orderId);
+      const value = Number.isFinite(amount) && amount > 0 ? amount : parseAmountFromDisplay(btnConfig.display);
+      fbqTrack('Purchase', { value, currency: currency || btnConfig.currency });
+    } catch (error) {
+      console.warn('Meta Pixel Purchase tracking failed:', error);
+    }
   };
 
   // Handle PayPal redirect return on mobile
