@@ -61,7 +61,10 @@
     "create": {
       "$or": [
         {
-          "user_email": "{{user.email}}"
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.user_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -73,7 +76,10 @@
     "read": {
       "$or": [
         {
-          "user_email": "{{user.email}}"
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.user_email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -85,7 +91,10 @@
     "update": {
       "$or": [
         {
-          "user_email": "{{user.email}}"
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.user_email": "{{user.email}}"
         },
         {
           "user_condition": {
