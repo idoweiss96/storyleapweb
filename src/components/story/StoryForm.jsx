@@ -128,7 +128,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
 
   // Validation per step
   const isStepValid = (step) => {
-    if (step === 0) return formData.childName && formData.childAge && formData.gender && formData.childImage && formData.imageConsent;
+    if (step === 0) return formData.childName && formData.childAge && formData.gender && formData.childImage && formData.imageConsent && (!formData.parentImage || !!formData.parentRelation);
     if (step === 1) return !!formData.setting;
     if (step === 2) {
       if (!formData.challengeType) return false;
@@ -147,8 +147,8 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
   };
 
   const stepErrorMessages = isHe
-    ? ['נא למלא שם, גיל, מגדר, ולהעלות תמונה עם אישור השימוש', 'נא לבחור תפאורה לסיפור', 'נא לבחור אתגר רגשי (ותיאור קצר אם נבחרה האפשרות "אחר")', 'נא להזין כתובת מייל תקינה']
-    : ['Please fill in name, age, gender, and upload a photo with consent', 'Please choose a story setting', 'Please choose an emotional challenge (and a short description if "Other" is selected)', 'Please enter a valid email address'];
+    ? ['נא למלא שם, גיל, מגדר, להעלות תמונה עם אישור השימוש, ואם הועלתה תמונת הורה — לבחור מי בתמונה', 'נא לבחור תפאורה לסיפור', 'נא לבחור אתגר רגשי (ותיאור קצר אם נבחרה האפשרות "אחר")', 'נא להזין כתובת מייל תקינה']
+    : ['Please fill in name, age, gender, upload a photo with consent, and — if a parent photo was uploaded — select who is in it', 'Please choose a story setting', 'Please choose an emotional challenge (and a short description if "Other" is selected)', 'Please enter a valid email address'];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -404,7 +404,9 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
 
               {formData.parentImage &&
             <div className="space-y-2 pt-1">
-                  <Label className="font-medium" style={{ color: DARK }}>{isHe ? 'מי בתמונה?' : 'Who is in the photo?'}</Label>
+                  <Label className="font-medium" style={{ color: DARK }}>
+                    {isHe ? 'מי בתמונה?' : 'Who is in the photo?'} <span className="text-red-500">*</span>
+                  </Label>
                   <div className="grid grid-cols-2 gap-2 max-w-xs">
                     {[{ value: 'mom', label: isHe ? 'אמא' : 'Mom' }, { value: 'dad', label: isHe ? 'אבא' : 'Dad' }].map((opt) =>
                 <button
