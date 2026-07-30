@@ -1,10 +1,10 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const SPREADSHEET_ID_HE = '1EFo9UsU8i890D1AMMx2kqDQj4EvLmj1_W5dQ8_NNCvc';
-const SHEET_NAME_HE = 'Sheet1';
+const SPREADSHEET_ID_HE = '1tVuanXaYnEt50RA2ckzaFVRiLh6WR_OLS6cLLYzkhS8';
+const SHEET_NAME_HE = 'כיתה א';
 
-const SPREADSHEET_ID_EN = '10WGE1LnGAl_zALEQOaqydfuv7bQ4LGaSNxMJb9ycnK8';
-const SHEET_NAME_EN = 'Sheet1';
+const SPREADSHEET_ID_EN = '1udSbvT_3BbVYkAMxB7KovDocCyF_Soz727FgSfI6gz4';
+const SHEET_NAME_EN = 'Kindergarten';
 
 const OTHER_LABEL_HE = 'אחר';
 const OTHER_LABEL_EN = 'Other';
@@ -41,6 +41,7 @@ function answersToRow(answers, userEmail, lang) {
     formatValue(answers.strength),
     formatValue(answers.strength_parent),
     answers.photo || '',
+    answers.photo_consent ? (isEn ? 'Yes' : 'כן') : (isEn ? 'No' : 'לא'),
     // Page 2
     formatValue(answers.feelings_before),
     formatValue(answers.feelings_before_parent),
@@ -68,7 +69,10 @@ function answersToRow(answers, userEmail, lang) {
     formatValue(answers.wish_self_parent),
     formatValue(answers.wish_parent),
     formatValue(answers.wish_parent_parent),
+    '', // Contact email — filled in later once collected on the details step
+    '', // Contact phone — filled in later once collected on the details step
     '', // Story link — filled in later once the story is ready
+    '', // Email sent — filled in by the notification automation
   ];
 }
 
