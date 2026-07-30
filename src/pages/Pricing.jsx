@@ -88,8 +88,8 @@ export default function Pricing() {
         ? { amount: String(appliedCoupon.price_ils), currency: 'ILS', display: `₪${appliedCoupon.price_ils}` }
         : { amount: String(appliedCoupon.price_usd), currency: 'USD', display: `$${appliedCoupon.price_usd}` };
     }
-    // Default: dynamic pricing from the CreditPackage in the DB (no fixed payment link)
-    if (selectedPackage) {
+    // Default: dynamic pricing from the CreditPackage in the DB (Hebrew only; no fixed payment link)
+    if (langKey === 'he' && selectedPackage) {
       return { package_id: selectedPackage.id, currency: 'ILS', display: `₪${selectedPackage.price}` };
     }
     return HOSTED_BUTTONS[langKey].full;
