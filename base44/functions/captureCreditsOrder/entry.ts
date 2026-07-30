@@ -70,6 +70,8 @@ Deno.serve(async (req) => {
         credits_added: 0,
         new_total: (users[0] && users[0].credits) || 0,
         already_processed: true,
+        amount: order.amount ?? null,
+        currency: order.currency ?? null,
       });
     }
 
@@ -87,7 +89,7 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.entities.Order.update(order.id, { status: 'paid' });
     }
 
-    return Response.json({ success: true, credits_added: creditsToAdd, bonus: BONUS_CREDITS, new_total: newCredits });
+    return Response.json({ success: true, credits_added: creditsToAdd, bonus: BONUS_CREDITS, new_total: newCredits, amount: order?.amount ?? null, currency: order?.currency ?? null });
   } catch (error) {
     console.error('[captureCreditsOrder] Error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });

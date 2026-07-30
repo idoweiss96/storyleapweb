@@ -97,8 +97,12 @@ Deno.serve(async (req) => {
     const orderData = await orderCheckRes.json();
     console.log('[captureGiftOrder] Order status:', orderData.status);
 
+    let paidAmount = null;
+    let paidCurrency = null;
     if (orderData.status === 'COMPLETED') {
       console.log('[captureGiftOrder] Order already completed, skipping capture');
+      paidAmount = Number(orderData.purchase_units?.[0]?.amount?.value) || null;
+      paidCurrency = orderData.purchase_units?.[0]?.amount?.currency_code || null;
     } else if (orderData.status === 'APPROVED' || orderData.status === 'CREATED') {
       const captureRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}/capture`, {
         method: 'POST',
@@ -112,6 +116,9 @@ Deno.serve(async (req) => {
       if (!captureRes.ok || captureData.status !== 'COMPLETED') {
         return Response.json({ error: 'Payment capture failed', details: captureData }, { status: 400 });
       }
+      const captureInfo = captureData.purchase_units?.[0]?.payments?.captures?.[0];
+      paidAmount = Number(captureInfo?.amount?.value) || null;
+      paidCurrency = captureInfo?.amount?.currency_code || null;
     } else {
       return Response.json({ error: `Invalid order status: ${orderData.status}` }, { status: 400 });
     }
@@ -148,6 +155,8 @@ Deno.serve(async (req) => {
       credits: creditsToAdd,
       email_sent: emailSent,
       email_error: emailError,
+      amount: paidAmount,
+      currency: paidCurrency,
     });
   } catch (error) {
     console.error('[captureGiftOrder] Error:', error.message);

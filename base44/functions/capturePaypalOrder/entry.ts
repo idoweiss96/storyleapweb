@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
 
     // Idempotency: already paid
     if (order.status === 'paid' || order.status === 'story_generating' || order.status === 'story_ready') {
-      return Response.json({ success: true, status: order.status, already_processed: true });
+      return Response.json({ success: true, status: order.status, already_processed: true, amount: order.amount ?? null, currency: order.currency ?? null });
     }
 
     // Capture payment with PayPal
@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.functions.invoke('addStoryToSheet', story);
     } catch (_) {}
 
-    return Response.json({ success: true, status: 'story_generating', capture_id: captureId });
+    return Response.json({ success: true, status: 'story_generating', capture_id: captureId, amount: order.amount ?? null, currency: order.currency ?? null });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

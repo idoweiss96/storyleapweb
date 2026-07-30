@@ -18,6 +18,17 @@ const HOSTED_BUTTON_CODES = {
 
 const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
 
+// Meta Pixel helpers — fbq is loaded by the base code in index.html; never fire without checking it exists.
+function fbqTrack(eventName, params) {
+  if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+    window.fbq('track', eventName, params);
+  }
+}
+function parseAmountFromDisplay(display) {
+  const num = parseFloat((display || '').replace(/[^0-9.]/g, ''));
+  return Number.isFinite(num) ? num : 0;
+}
+
 // Hosted buttons by language and discount tier
 const HOSTED_BUTTONS = {
   he: {
@@ -54,6 +65,8 @@ export default function Pricing() {
   const containerRef = useRef(null);
   const renderKeyRef = useRef(0);
   const isRenderedRef = useRef(false);
+  // Tracks PayPal order IDs already reported as Purchase to Meta Pixel, to guarantee a single fire per transaction.
+  const purchaseTrackedRef = useRef(new Set());
 
   const isHe = lang === 'he';
   const [hostedButtonCode, setHostedButtonCode] = useState(null); // e.g. 'IDO10'
@@ -75,6 +88,14 @@ export default function Pricing() {
     return HOSTED_BUTTONS[langKey].full;
   }, [hostedButtonCode, appliedCoupon, isHe, selectedPackage]);
 
+  // Fires Purchase to Meta Pixel at most once per PayPal order ID.
+  const trackPurchaseOnce = (orderId, amount, currency) => {
+    if (!orderId || purchaseTrackedRef.current.has(orderId)) return;
+    purchaseTrackedRef.current.add(orderId);
+    const value = Number.isFinite(amount) && amount > 0 ? amount : parseAmountFromDisplay(btnConfig.display);
+    fbqTrack('Purchase', { value, currency: currency || btnConfig.currency });
+  };
+
   // Handle PayPal redirect return on mobile
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -95,6 +116,7 @@ export default function Pricing() {
             story_id: pendingStoryId,
           });
           if (res.data?.success) {
+            if (!res.data.already_processed) trackPurchaseOnce(paypalToken, res.data.amount, res.data.currency);
             localStorage.removeItem('pendingStoryId');
             window.dispatchEvent(new Event('credits-updated'));
             navigate('/PaymentSuccess?story_id=' + pendingStoryId);
@@ -111,6 +133,7 @@ export default function Pricing() {
               credits: 110,
             });
             if (res.data?.success) {
+              trackPurchaseOnce(paypalToken, res.data.amount, res.data.currency);
               localStorage.removeItem('giftMode');
               localStorage.removeItem('giftRecipient');
               setGiftSuccess({ code: res.data.code, recipient: storedRecipient });
@@ -124,6 +147,7 @@ export default function Pricing() {
               coupon: false,
             });
             if (res.data?.success && !res.data.already_processed) {
+              trackPurchaseOnce(paypalToken, res.data.amount, res.data.currency);
               try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
               window.dispatchEvent(new Event('credits-updated'));
               const added = res.data.credits_added || 110;
@@ -214,6 +238,7 @@ export default function Pricing() {
             story_id: pendingStoryId,
           });
           if (res.data?.success) {
+            if (!res.data.already_processed) trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
             localStorage.removeItem('pendingStoryId');
             window.dispatchEvent(new Event('credits-updated'));
             navigate('/PaymentSuccess?story_id=' + pendingStoryId);
@@ -226,6 +251,7 @@ export default function Pricing() {
               credits: 110,
             });
             if (res.data?.success) {
+              trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
               setGiftSuccess({ code: res.data.code, recipient: recipientEmailRef.current });
             } else {
               setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
@@ -238,6 +264,7 @@ export default function Pricing() {
               coupon: isHostedButton,
             });
             if (res.data?.success && !res.data.already_processed) {
+              trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
               await base44.auth.updateMe({ credits: res.data.new_total });
               setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
               const added = res.data.credits_added || 110;
@@ -263,6 +290,7 @@ export default function Pricing() {
       containerRef.current.innerHTML = '';
       window.paypal.HostedButtons({
         hostedButtonId: btnConfig.hostedButtonId,
+        onClick: () => fbqTrack('InitiateCheckout', { value: parseAmountFromDisplay(btnConfig.display), currency: btnConfig.currency }),
         onApprove: onApproveHandler,
         onCancel: () => setPaypalError(isHe ? 'התשלום בוטל' : 'Payment cancelled'),
         onError: () => setPaypalError(isHe ? 'שגיאה בתשלום, נסו שנית' : 'Payment error, please try again'),
@@ -277,6 +305,7 @@ export default function Pricing() {
       containerRef.current.innerHTML = '';
       const buttons = window.paypal.Buttons({
         style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' },
+        onClick: () => fbqTrack('InitiateCheckout', { value: parseAmountFromDisplay(btnConfig.display), currency: btnConfig.currency }),
         createOrder: async () => {
           if (giftModeRef.current && recipientEmailRef.current) {
             localStorage.setItem('giftMode', 'true');
