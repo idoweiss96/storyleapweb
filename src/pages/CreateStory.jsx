@@ -110,15 +110,18 @@ export default function CreateStory() {
     if (!validateForm()) return;
 
     if (!user) {
-      // Save form data and prompt login
+      // Guest: save form data and show a recap before asking to sign in
       sessionStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
-      setShowLoginModal(true);
+      setStep('recap');
       return;
     }
 
     // Logged in → go to credits check step
     setStep('credits_check');
   };
+
+  const settingLabels = { space: t('setting_space'), forest: t('setting_forest'), castle: t('setting_castle'), sports: t('setting_sports'), real_life: t('setting_real_life') };
+  const challengeLabels = { fears: t('ch_fears'), social_difficulty: t('ch_social'), changes: t('ch_changes'), emotional_regulation: t('ch_emotional'), separation_anxiety: t('ch_separation'), self_confidence: t('ch_confidence'), sleep_issues: t('ch_sleep'), other: formData.customChallenge };
 
   // Step 2: User clicks "צור ספר" (has credits)
   const handleCreateStory = async () => {
@@ -250,6 +253,50 @@ export default function CreateStory() {
                     {t('create_another')}
                   </Button>
                 </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* RECAP — guest confirms their answers before being asked to sign in */}
+        {step === 'recap' && (
+          <motion.div key="recap" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <Card className="border-0 shadow-xl shadow-slate-100">
+              <CardContent className="p-8">
+                <h3 className="font-semibold text-slate-700 mb-4 text-sm">
+                  {isHe ? '✅ בואו נאשר את הפרטים לפני שממשיכים' : "✅ Let's confirm your details before continuing"}
+                </h3>
+                <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-500">{t('form_child_name')}</span>
+                    <span className="font-semibold text-slate-800">{formData.childName}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-500">{t('form_age')}</span>
+                    <span className="font-semibold text-slate-800">{formData.childAge}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-500">{t('form_setting')}</span>
+                    <span className="font-semibold text-slate-800">{settingLabels[formData.setting] || formData.setting}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-500">{t('form_challenge')}</span>
+                    <span className="font-semibold text-slate-800">{challengeLabels[formData.challengeType] || formData.challengeType}</span>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => setShowLoginModal(true)}
+                  className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg transition-all mb-3"
+                >
+                  {isHe ? 'הכל נכון — המשך להתחברות' : "Looks good — Continue to Sign In"}
+                </Button>
+                <button
+                  onClick={() => setStep('form')}
+                  className="w-full text-sm text-slate-400 hover:text-slate-600"
+                >
+                  {isHe ? '← חזרה לעריכת השאלון' : '← Back to edit questionnaire'}
+                </button>
               </CardContent>
             </Card>
           </motion.div>

@@ -165,6 +165,17 @@ export function LanguageProvider({ children }) {
   const urlLang = resolveRouteLang(location.pathname);
   const lang = urlLang || preferredLang;
 
+  // Whenever the effective language on the current route is URL-derived (e.g. a
+  // /he/* marketing page), persist it as the stored preference too. This makes the
+  // language "stick" when navigating to a shared/functional page (questionnaire,
+  // pricing, login, personal area) that has no locale in its own URL.
+  useEffect(() => {
+    if (urlLang && urlLang !== preferredLang) {
+      setPreferredLang(urlLang);
+      try { localStorage.setItem('sl_lang', urlLang); } catch {}
+    }
+  }, [urlLang]);
+
   const toggleLang = () => {
     // Route-aware switch for the five marketing pairs: URL destination takes priority
     // over the saved preference, and we persist the language of the destination.

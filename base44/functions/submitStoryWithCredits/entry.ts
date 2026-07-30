@@ -1,75 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const SPREADSHEET_ID_EN = '153bOGbdmfaPj1_W1P6crJ9zoCYo_CBhXkT4oRTiaxUc';
-const SPREADSHEET_ID_HE = '1vOXZ0bVjICeSzCjXUQ2DXby6OjQtJrYcpTxORfbJ1vo';
-
-const genderMapHE = { boy: 'בן', girl: 'בת', other: 'אחר' };
-const settingMapHE = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' };
-const challengeMapHE = { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' };
-const reactionMapHE = { outburst: 'התפרצות', withdrawal: 'הסתגרות', attention_seeking: 'חיפוש תשומת לב', crying: 'בכי', aggression: 'תוקפנות', avoidance: 'הימנעות' };
-const genderMapEN = { boy: 'Boy', girl: 'Girl', other: 'Other' };
-const settingMapEN = { space: 'Space', forest: 'Enchanted Forest', castle: 'Castle', sports: 'Sports', real_life: 'Real Life' };
-const challengeMapEN = { fears: 'Fears', social_difficulty: 'Social Difficulty', changes: 'Changes', emotional_regulation: 'Emotional Regulation', separation_anxiety: 'Separation Anxiety', self_confidence: 'Self Confidence', sleep_issues: 'Sleep Issues' };
-const reactionMapEN = { outburst: 'Outburst', withdrawal: 'Withdrawal', attention_seeking: 'Attention Seeking', crying: 'Crying', aggression: 'Aggression', avoidance: 'Avoidance' };
-
-function isHebrew(text) {
-  return /[\u0590-\u05FF]/.test(text || '');
-}
-
-function storyToRow(story, lang, userEmail) {
-  const createdDate = story.created_date ? new Date(story.created_date).toLocaleString('he-IL') : '';
-  const genderMap = lang === 'he' ? genderMapHE : genderMapEN;
-  const settingMap = lang === 'he' ? settingMapHE : settingMapEN;
-  const challengeMap = lang === 'he' ? challengeMapHE : challengeMapEN;
-  const reactionMap = lang === 'he' ? reactionMapHE : reactionMapEN;
-  return [
-    createdDate,
-    userEmail || '',
-    story.child_name || '',
-    story.child_age || '',
-    genderMap[story.gender] || story.gender || '',
-    story.child_image_url || '',
-    settingMap[story.setting] || story.setting || '',
-    challengeMap[story.challenge_type] || story.challenge_type || '',
-    story.challenge_type === 'other' ? (story.custom_challenge || '') : '',
-    story.trigger_desc || '',
-    reactionMap[story.reaction_type] || story.reaction_type || '',
-    story.hobbies || '',
-    story.contact_email || '',
-  ];
-}
-
-async function addStoryToSheet(base44ServiceRole, story, userEmail) {
-  const lang = isHebrew(story.child_name) || isHebrew(story.trigger_desc) || isHebrew(story.hobbies) ? 'he' : 'en';
-  const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
-  const row = storyToRow(story, lang, userEmail);
-
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      const { accessToken } = await base44ServiceRole.connectors.getConnection('googlesheets');
-      const response = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:append?valueInputOption=USER_ENTERED`,
-        {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ values: [row] }),
-        }
-      );
-      if (response.ok) {
-        console.log('[submitStoryWithCredits] Story added to sheet:', { child_name: story.child_name, lang, attempt });
-        return true;
-      }
-      const err = await response.text();
-      console.error(`[submitStoryWithCredits] Sheets API error (attempt ${attempt}):`, response.status, err);
-    } catch (e) {
-      console.error(`[submitStoryWithCredits] addStoryToSheet exception (attempt ${attempt}):`, e.message);
-    }
-    if (attempt < 3) await new Promise(r => setTimeout(r, 1000 * attempt));
-  }
-  console.error('[submitStoryWithCredits] FAILED to add story to sheet after 3 attempts:', story.child_name);
-  return false;
-}
-
 function utf8ToBase64(str) {
   const bytes = new TextEncoder().encode(str);
   let binary = '';
@@ -146,8 +76,8 @@ Deno.serve(async (req) => {
       await sendStoryInProgressEmail(base44.asServiceRole, storyForEmail.contact_email, storyForEmail.child_name, isHebrew).catch(() => {});
     }
 
-    // Add story to Google Sheet (bypass unreliable automation)
-    await addStoryToSheet(base44.asServiceRole, storyForEmail, user.email);
+    // Add story to Google Sheet (shared function — keeps row format consistent with the PayPal capture path)
+    await base44.asServiceRole.functions.invoke('addStoryToSheet', storyForEmail).catch(() => {});
 
     // Trigger story generation asynchronously
     base44.asServiceRole.functions.invoke('processStoryGeneration', { story_id }).catch(() => {});

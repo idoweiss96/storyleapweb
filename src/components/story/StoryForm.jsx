@@ -44,6 +44,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
   const [uploading, setUploading] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [formStep, setFormStep] = useState(0); // 0-3 for 4 steps
+  const [stepError, setStepError] = useState('');
 
   const genders = [
   { value: 'boy', label: t('gender_boy'), emoji: '👦' },
@@ -145,8 +146,17 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
     if (formStep > 0) setFormStep(formStep - 1);
   };
 
+  const stepErrorMessages = isHe
+    ? ['נא למלא שם, גיל, מגדר, ולהעלות תמונה עם אישור השימוש', 'נא לבחור תפאורה לסיפור', 'נא לבחור אתגר רגשי (ותיאור קצר אם נבחרה האפשרות "אחר")', 'נא להזין כתובת מייל תקינה']
+    : ['Please fill in name, age, gender, and upload a photo with consent', 'Please choose a story setting', 'Please choose an emotional challenge (and a short description if "Other" is selected)', 'Please enter a valid email address'];
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!isStepValid(formStep)) {
+      setStepError(stepErrorMessages[formStep]);
+      return;
+    }
+    setStepError('');
     if (formStep < 3) {
       nextStep();
       return;
@@ -166,11 +176,20 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
   };
   const [direction, setDirection] = useState(1);
   const goToStep = (newStep) => {
+    setStepError('');
     setDirection(newStep > formStep ? 1 : -1);
     setFormStep(newStep);
   };
-  const handleNext = () => {setDirection(1);nextStep();};
-  const handlePrev = () => {setDirection(-1);prevStep();};
+  const handleNext = () => {
+    if (!isStepValid(formStep)) {
+      setStepError(stepErrorMessages[formStep]);
+      return;
+    }
+    setStepError('');
+    setDirection(1);
+    nextStep();
+  };
+  const handlePrev = () => { setStepError(''); setDirection(-1); prevStep(); };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -631,6 +650,12 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
         }
       </AnimatePresence>
 
+      {stepError && (
+        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">
+          {stepError}
+        </div>
+      )}
+
       {/* Navigation Buttons */}
       <div className="flex items-center gap-3 pt-2">
         {formStep > 0 &&
@@ -652,7 +677,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
         <Button
           type="button"
           onClick={handleNext}
-          disabled={!isStepValid(formStep) || isLoading || uploading}
+          disabled={isLoading || uploading}
           className="h-12 px-8 rounded-xl text-white font-semibold shadow-lg transition-all"
           style={{ background: PURPLE, boxShadow: `0 8px 24px ${PURPLE}30` }}>
           
