@@ -21,8 +21,11 @@ const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8f
 // Meta Pixel helpers — fbq is loaded by the base code in index.html; never fire without checking it exists.
 function fbqTrack(eventName, params) {
   try {
-    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+    const fbqExists = typeof window !== 'undefined' && typeof window.fbq === 'function';
+    if (eventName === 'Purchase') console.log('[MetaPixelDiag] fbqTrack(Purchase) — fbq available:', fbqExists);
+    if (fbqExists) {
       window.fbq('track', eventName, params);
+      if (eventName === 'Purchase') console.log('[MetaPixelDiag] fbq("track","Purchase") call executed');
     }
   } catch (error) {
     console.warn('Meta Pixel tracking failed:', eventName, error);
@@ -95,6 +98,7 @@ export default function Pricing() {
   // Fires Purchase to Meta Pixel at most once per PayPal order ID.
   const trackPurchaseOnce = (orderId, amount, currency) => {
     try {
+      console.log('[MetaPixelDiag] trackPurchaseOnce reached — orderId present:', !!orderId, 'already tracked:', orderId ? purchaseTrackedRef.current.has(orderId) : null, 'amount:', amount, 'currency:', currency);
       if (!orderId || purchaseTrackedRef.current.has(orderId)) return;
       purchaseTrackedRef.current.add(orderId);
       const value = Number.isFinite(amount) && amount > 0 ? amount : parseAmountFromDisplay(btnConfig.display);
@@ -123,6 +127,7 @@ export default function Pricing() {
             paypal_order_id: paypalToken,
             story_id: pendingStoryId,
           });
+          console.log('[MetaPixelDiag] path=mobile-story success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
           if (res.data?.success) {
             if (!res.data.already_processed) trackPurchaseOnce(paypalToken, res.data.amount, res.data.currency);
             localStorage.removeItem('pendingStoryId');
@@ -140,6 +145,7 @@ export default function Pricing() {
               recipient_email: storedRecipient,
               credits: 110,
             });
+            console.log('[MetaPixelDiag] path=mobile-gift success:', res.data?.success, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success) {
               trackPurchaseOnce(paypalToken, res.data.amount, res.data.currency);
               localStorage.removeItem('giftMode');
@@ -154,6 +160,7 @@ export default function Pricing() {
               credits: 110,
               coupon: false,
             });
+            console.log('[MetaPixelDiag] path=mobile-credits success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success && !res.data.already_processed) {
               trackPurchaseOnce(paypalToken, res.data.amount, res.data.currency);
               try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
@@ -245,6 +252,7 @@ export default function Pricing() {
             paypal_order_id: data.orderID,
             story_id: pendingStoryId,
           });
+          console.log('[MetaPixelDiag] path=desktop-story success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
           if (res.data?.success) {
             if (!res.data.already_processed) trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
             localStorage.removeItem('pendingStoryId');
@@ -258,6 +266,7 @@ export default function Pricing() {
               recipient_email: recipientEmailRef.current,
               credits: 110,
             });
+            console.log('[MetaPixelDiag] path=desktop-gift success:', res.data?.success, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success) {
               trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
               setGiftSuccess({ code: res.data.code, recipient: recipientEmailRef.current });
@@ -271,6 +280,7 @@ export default function Pricing() {
               credits: 110,
               coupon: isHostedButton,
             });
+            console.log('[MetaPixelDiag] path=desktop-credits success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success && !res.data.already_processed) {
               trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
               await base44.auth.updateMe({ credits: res.data.new_total });
