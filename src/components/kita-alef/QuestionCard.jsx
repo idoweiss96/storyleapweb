@@ -28,7 +28,9 @@ export default function QuestionCard({ question, answers, onAnswerChange }) {
     <div className="rounded-3xl overflow-hidden border bg-white" style={{ borderColor: '#F0E8F5', boxShadow: '0 4px 20px rgba(255,111,181,0.08), 0 2px 10px rgba(79,195,232,0.06)' }}>
       <div className="p-4" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
         <Tag tag={question.tag} isEn={isEn} />
-        <h3 className="text-lg font-semibold mt-2" style={{ color: '#1a1a2e' }}>{question.question}</h3>
+        <h3 className="text-lg font-semibold mt-2" style={{ color: '#1a1a2e' }}>
+          {question.question} {question.required && <span className="text-red-500">*</span>}
+        </h3>
       </div>
       <div className="bg-white p-4">
         <QuestionInput question={question} answers={answers} onAnswerChange={onAnswerChange} />

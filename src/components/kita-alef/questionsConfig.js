@@ -17,7 +17,7 @@ const PAGES_HE = [
         ],
         parentField: { label: 'הורה — ספרו לילד/ה מה הכוח שאתם רואים בו/בה ♥' }
       },
-      { key: 'photo', tag: 'together', question: 'תמונה שלך (אופציונלי)', type: 'photo' },
+      { key: 'photo', tag: 'together', question: 'תמונה שלך', type: 'photo', required: true, consent: true },
     ]
   },
   {
@@ -175,7 +175,7 @@ const PAGES_EN = [
         ],
         parentField: { label: "Parent — tell your child what strength you see in them ♥" }
       },
-      { key: 'photo', tag: 'together', question: 'Your photo (optional)', type: 'photo' },
+      { key: 'photo', tag: 'together', question: 'Your photo', type: 'photo', required: true, consent: true },
     ]
   },
   {

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import FamilyPhotosInput from './FamilyPhotosInput';
+import TermsOfUseModal from '@/components/story/TermsOfUseModal';
 import { useLanguage } from '@/components/LanguageContext';
 
 export default function QuestionInput({ question, answers, onAnswerChange }) {
@@ -10,8 +11,10 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
   const { type, key } = question;
   const value = answers[key];
   const parentValue = answers[`${key}_parent`];
+  const consentValue = answers[`${key}_consent`];
   const fileRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   const placeholder = isEn ? 'Type here...' : 'כתבו כאן...';
   const removePhotoLabel = isEn ? 'Remove photo' : 'הסר תמונה';
@@ -150,6 +153,54 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
             </button>
           )}
         </div>
+      )}
+
+      {/* Photo consent checkbox */}
+      {type === 'photo' && question.consent && (
+        <label
+          className="flex items-start gap-2.5 cursor-pointer p-3 rounded-2xl border transition-colors"
+          style={{ borderColor: consentValue ? '#4FC3E8' : '#F0E8F5', background: consentValue ? '#EAF8FD' : '#fff' }}
+        >
+          <input
+            type="checkbox"
+            checked={consentValue || false}
+            onChange={(e) => onAnswerChange(`${key}_consent`, e.target.checked)}
+            className="mt-0.5 w-4 h-4 rounded cursor-pointer"
+            style={{ accentColor: '#FF6FB5' }}
+          />
+          <span className="text-xs text-kita-subtext leading-relaxed">
+            {isEn ? (
+              <>
+                I consent to uploading my child's photo for a personalized story and agree to the{' '}
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); setShowTerms(true); }}
+                  className="font-medium underline inline"
+                  style={{ color: '#FF6FB5' }}
+                >
+                  Terms of Use
+                </button>.
+                We commit to deleting the photo from our database within one month of upload.
+              </>
+            ) : (
+              <>
+                אני מאשר/ת את העלאת תמונת הילד/ה ליצירת סיפור אישי, ומסכים/ה ל-{' '}
+                <button
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); setShowTerms(true); }}
+                  className="font-medium underline inline"
+                  style={{ color: '#FF6FB5' }}
+                >
+                  תנאי השימוש
+                </button>.
+                אנו מתחייבים למחוק את התמונה מהמאגר שלנו תוך חודש ממועד ההעלאה.
+              </>
+            )}
+          </span>
+        </label>
+      )}
+      {type === 'photo' && question.consent && (
+        <TermsOfUseModal open={showTerms} onOpenChange={setShowTerms} />
       )}
 
       {/* Family photos (multiple labeled uploads) */}

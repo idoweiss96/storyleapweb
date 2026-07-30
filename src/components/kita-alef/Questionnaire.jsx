@@ -13,6 +13,7 @@ export default function Questionnaire({ answers, setAnswers }) {
   const pages = getPages(lang);
   const [pageIdx, setPageIdx] = useState(0);
   const [creating, setCreating] = useState(false);
+  const [pageError, setPageError] = useState('');
   const page = pages[pageIdx];
   const progress = ((pageIdx + 1) / pages.length) * 100;
   const isEn = lang === 'en';
@@ -21,8 +22,35 @@ export default function Questionnaire({ answers, setAnswers }) {
     setAnswers(prev => ({ ...prev, [key]: val }));
   };
 
+  const isPageValid = () => {
+    for (const q of page.questions) {
+      if (q.required) {
+        if (!answers[q.key]) return false;
+        if (q.consent && !answers[`${q.key}_consent`]) return false;
+      }
+    }
+    return true;
+  };
+
+  const pageErrorMsg = isEn
+    ? "Please upload your child's photo and confirm the consent checkbox to continue"
+    : 'נא להעלות תמונה של הילד/ה ולאשר את תיבת ההסכמה כדי להמשיך';
+
+  const goNext = () => {
+    if (!isPageValid()) { setPageError(pageErrorMsg); return; }
+    setPageError('');
+    setPageIdx(pageIdx + 1);
+  };
+
+  const goPrev = () => {
+    setPageError('');
+    setPageIdx(pageIdx - 1);
+  };
+
   const handleFinish = async () => {
     if (creating) return;
+    if (!isPageValid()) { setPageError(pageErrorMsg); return; }
+    setPageError('');
     setCreating(true);
     base44.functions.invoke('submitKitaAlefAnswers', { answers, lang }).catch(() => {});
     try { sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers, lang })); } catch (_) {}
@@ -87,11 +115,18 @@ export default function Questionnaire({ answers, setAnswers }) {
           </motion.div>
         </AnimatePresence>
 
+        {/* Error */}
+        {pageError && (
+          <div className="mt-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">
+            {pageError}
+          </div>
+        )}
+
         {/* Navigation */}
         <div className="flex justify-between mt-8 gap-3">
           {pageIdx > 0 ? (
             <button
-              onClick={() => setPageIdx(pageIdx - 1)}
+              onClick={goPrev}
               className="px-6 py-3 rounded-[14px] bg-white border font-medium hover:opacity-80 transition-opacity"
               style={{ borderColor: '#B8EBF7', color: '#4FC3E8' }}
             >
@@ -101,7 +136,7 @@ export default function Questionnaire({ answers, setAnswers }) {
 
           {pageIdx < pages.length - 1 ? (
             <button
-              onClick={() => setPageIdx(pageIdx + 1)}
+              onClick={goNext}
               className="px-6 py-3 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(135deg, #4FC3E8, #6BB6E8)' }}
             >

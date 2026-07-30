@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
       return Response.json({ skipped: true, reason: 'no_email' });
     }
 
-    const isHebrew = /[\u0590-\u05FF]/.test(story.child_name || '');
+    const isHebrew = story.lang ? story.lang === 'he' : /[\u0590-\u05FF]/.test(story.child_name || '');
 
     await base44.asServiceRole.functions.invoke('sendStoryReadyEmail', {
       to: recipientEmail,

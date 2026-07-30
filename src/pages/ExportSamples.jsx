@@ -33,6 +33,17 @@ export default function ExportSamples() {
     }
   };
 
+  const handleKitaAlefDownload = async (lang) => {
+    const key = `kita_${lang}`;
+    setLoading(key);
+    try {
+      const res = await base44.functions.invoke('generateKitaAlefExcelSample', { lang });
+      downloadBase64Xlsx(res.data.base64, res.data.filename);
+    } finally {
+      setLoading(null);
+    }
+  };
+
   return (
     <div className="max-w-lg mx-auto py-16">
       <Card className="border-0 shadow-xl shadow-slate-100">
@@ -49,6 +60,21 @@ export default function ExportSamples() {
             {loading === 'en' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
             Download English Sample (.xlsx)
           </Button>
+
+          <div className="pt-4 border-t border-slate-100 space-y-4">
+            <h2 className="text-lg font-bold text-slate-800">Kita Alef / Kindergarten Export Samples</h2>
+            <p className="text-sm text-slate-500">
+              Sample .xlsx files matching the Kita Alef / Kindergarten joint questionnaire, field-for-field.
+            </p>
+            <Button onClick={() => handleKitaAlefDownload('he')} disabled={loading === 'kita_he'} className="w-full h-12 rounded-xl">
+              {loading === 'kita_he' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              Download Hebrew Sample (.xlsx)
+            </Button>
+            <Button onClick={() => handleKitaAlefDownload('en')} disabled={loading === 'kita_en'} variant="outline" className="w-full h-12 rounded-xl">
+              {loading === 'kita_en' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              Download English Sample (.xlsx)
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
