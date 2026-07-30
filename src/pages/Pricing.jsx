@@ -158,7 +158,6 @@ export default function Pricing() {
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: paypalToken,
               credits: 110,
-              coupon: false,
             });
             console.log('[MetaPixelDiag] path=mobile-credits success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success && !res.data.already_processed) {
@@ -276,11 +275,9 @@ export default function Pricing() {
               setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
             }
           } else {
-            const isHostedButton = !!btnConfig.hostedButtonId;
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: data.orderID,
               credits: 110,
-              coupon: isHostedButton,
             });
             console.log('[MetaPixelDiag] path=desktop-credits success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success && !res.data.already_processed) {

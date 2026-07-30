@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { paypal_order_id, credits: creditsParam, coupon } = await req.json();
+    const { paypal_order_id, credits: creditsParam } = await req.json();
     if (!paypal_order_id) return Response.json({ error: 'paypal_order_id required' }, { status: 400 });
 
     // Look up our Order record (created by createCreditsOrder) to read DB-sourced credits
@@ -25,41 +25,40 @@ Deno.serve(async (req) => {
     // Credits to grant: prefer the stored DB value, fall back to client param (legacy/hosted-button)
     const creditsToAdd = (order && order.credits) ? Number(order.credits) : (Number(creditsParam) || 110);
 
-    if (!coupon) {
-      const accessToken = await getPaypalAccessToken();
+    // Always verify payment status directly with PayPal — never trust a client-supplied flag
+    // to skip verification (hosted-button orders are simply already COMPLETED at this point).
+    const accessToken = await getPaypalAccessToken();
 
-      // Idempotency: check PayPal order status first to prevent double-capture
-      const orderCheckRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
+    const orderCheckRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const orderData = await orderCheckRes.json();
+    console.log('[captureCreditsOrder] PayPal order status:', orderData.status);
+
+    if (orderData.status === 'COMPLETED') {
+      console.log('[captureCreditsOrder] Order already completed, skipping capture');
+    } else if (orderData.status === 'APPROVED' || orderData.status === 'CREATED') {
+      const captureRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}/capture`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          'PayPal-Request-Id': `capture-credits-${paypal_order_id}`,
+        },
       });
-      const orderData = await orderCheckRes.json();
-      console.log('[captureCreditsOrder] PayPal order status:', orderData.status);
-
-      if (orderData.status === 'COMPLETED') {
-        console.log('[captureCreditsOrder] Order already completed, skipping capture');
-      } else if (orderData.status === 'APPROVED' || orderData.status === 'CREATED') {
-        const captureRes = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypal_order_id}/capture`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-            'PayPal-Request-Id': `capture-credits-${paypal_order_id}`,
-          },
-        });
-        const captureData = await captureRes.json();
-        console.log('[captureCreditsOrder] Capture result:', JSON.stringify(captureData));
-        if (!captureRes.ok || captureData.status !== 'COMPLETED') {
-          if (order) {
-            await base44.asServiceRole.entities.Order.update(order.id, {
-              status: 'failed',
-              error_message: captureData.message || 'Capture failed',
-            });
-          }
-          return Response.json({ error: 'Payment capture failed', details: captureData }, { status: 400 });
+      const captureData = await captureRes.json();
+      console.log('[captureCreditsOrder] Capture result:', JSON.stringify(captureData));
+      if (!captureRes.ok || captureData.status !== 'COMPLETED') {
+        if (order) {
+          await base44.asServiceRole.entities.Order.update(order.id, {
+            status: 'failed',
+            error_message: captureData.message || 'Capture failed',
+          });
         }
-      } else {
-        return Response.json({ error: `Invalid order status: ${orderData.status}`, details: orderData }, { status: 400 });
+        return Response.json({ error: 'Payment capture failed', details: captureData }, { status: 400 });
       }
+    } else {
+      return Response.json({ error: `Invalid order status: ${orderData.status}`, details: orderData }, { status: 400 });
     }
 
     // Idempotency: don't grant credits twice for an already-paid Order
