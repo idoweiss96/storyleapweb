@@ -16,7 +16,7 @@ const HOSTED_BUTTON_CODES = {
   'IDO10': { hostedButtonId: 'AMAMAC5GTGJUG', currency: 'ILS', display: '₪0.10' },
 };
 
-const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
+
 
 // Meta Pixel helpers — fbq is loaded by the base code in index.html; never fire without checking it exists.
 function fbqTrack(eventName, params) {
@@ -61,6 +61,7 @@ export default function Pricing() {
   const [creditsPopup, setCreditsPopup] = useState(null);
   const [bonusPopup, setBonusPopup] = useState(null);
   const [paypalError, setPaypalError] = useState('');
+  const [paypalClientId, setPaypalClientId] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [giftMode, setGiftMode] = useState(false);
   const [recipientEmail, setRecipientEmail] = useState('');
@@ -218,6 +219,14 @@ export default function Pricing() {
     init();
   }, []);
 
+  // Load the real PayPal REST client ID (same credential used server-side for order create/capture)
+  useEffect(() => {
+    base44.functions.invoke('getPaypalClientId', {})
+      .then((res) => { if (res.data?.client_id) setPaypalClientId(res.data.client_id); })
+      .catch(() => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh'));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Load CreditPackage from DB for dynamic (non-fixed-link) pricing
   useEffect(() => {
     base44.entities.CreditPackage.list()
@@ -232,6 +241,7 @@ export default function Pricing() {
 
   // Render PayPal Buttons
   useEffect(() => {
+    if (!paypalClientId) return;
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
     isRenderedRef.current = false;
@@ -357,7 +367,7 @@ export default function Pricing() {
     const isHosted = !!btnConfig.hostedButtonId;
     const components = isHosted ? 'hosted-buttons' : 'buttons';
     const sdkCurrency = btnConfig.currency;
-    const scriptKey = `${PAYPAL_CLIENT_ID}-${sdkCurrency}-${components}`;
+    const scriptKey = `${paypalClientId}-${sdkCurrency}-${components}`;
     const existingScript = document.querySelector(`script[data-paypal-sdk="${scriptKey}"]`);
 
     if (containerRef.current) containerRef.current.innerHTML = '';
@@ -395,13 +405,13 @@ export default function Pricing() {
 
     const script = document.createElement('script');
     script.setAttribute('data-paypal-sdk', scriptKey);
-    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&components=${components}&currency=${sdkCurrency}&disable-funding=venmo,credit&enable-funding=paylater`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&components=${components}&currency=${sdkCurrency}&disable-funding=venmo,credit&enable-funding=paylater`;
     script.onload = () => setTimeout(() => tryRender(), 300);
     script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh');
     document.body.appendChild(script);
     return cleanup;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [btnConfig, giftMode]);
+  }, [btnConfig, giftMode, paypalClientId]);
 
   const applyPromoCode = async (rawCode) => {
     setPromoError('');
