@@ -3,6 +3,8 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 const SPREADSHEET_ID_EN = '153bOGbdmfaPj1_W1P6crJ9zoCYo_CBhXkT4oRTiaxUc';
 const SPREADSHEET_ID_HE = '1vOXZ0bVjICeSzCjXUQ2DXby6OjQtJrYcpTxORfbJ1vo';
 const genderMapHE = { boy: 'בן', girl: 'בת', other: 'אחר' };
+const parentRelationMapHE = { mom: 'אמא', dad: 'אבא' };
+const parentRelationMapEN = { mom: 'Mom', dad: 'Dad' };
 const settingMapHE = { space: 'חלל', forest: 'יער קסום', castle: 'ארמון', sports: 'ספורט', real_life: 'חיים אמיתיים' };
 const challengeMapHE = { fears: 'פחדים', social_difficulty: 'קושי חברתי', changes: 'שינויים', emotional_regulation: 'ויסות רגשי', separation_anxiety: 'חרדת נטישה', self_confidence: 'ביטחון עצמי', sleep_issues: 'קשיי שינה' };
 const reactionMapHE = { outburst: 'התפרצות', withdrawal: 'הסתגרות', attention_seeking: 'חיפוש תשומת לב', crying: 'בכי', aggression: 'תוקפנות', avoidance: 'הימנעות' };
@@ -40,6 +42,8 @@ function storyToRow(story, lang, userEmail) {
     reactionMap[story.reaction_type] || story.reaction_type || '',
     story.hobbies || '',
     story.contact_email || '',
+    story.parent_image_url || '',
+    (lang === 'he' ? parentRelationMapHE : parentRelationMapEN)[story.parent_relation] || '',
   ];
 }
 

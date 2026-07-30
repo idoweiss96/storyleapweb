@@ -33,6 +33,7 @@ export default function CreateStory() {
   const [couponMessage, setCouponMessage] = useState('');
   const [formData, setFormData] = useState({
     childName: '', childAge: '', gender: '', childImage: '',
+    parentImage: '', parentRelation: '',
     setting: '', challengeType: '', customChallenge: '', triggerDesc: '',
     reactionType: '', hobbies: '', contactEmail: '', contactPhone: '',
     couponCode: '',
@@ -93,7 +94,9 @@ export default function CreateStory() {
 
   const buildStoryData = (paymentStatus) => ({
     child_name: formData.childName, child_age: parseInt(formData.childAge), gender: formData.gender,
-    child_image_url: formData.childImage || null, setting: formData.setting,
+    child_image_url: formData.childImage || null,
+    parent_image_url: formData.parentImage || null, parent_relation: formData.parentImage ? (formData.parentRelation || null) : null,
+    setting: formData.setting,
     challenge_type: formData.challengeType, custom_challenge: formData.challengeType === 'other' ? (formData.customChallenge || null) : null, trigger_desc: formData.triggerDesc || null,
     reaction_type: formData.reactionType || null, hobbies: formData.hobbies || null,
     contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
@@ -197,7 +200,7 @@ export default function CreateStory() {
     sessionStorage.removeItem(PENDING_FORM_KEY);
     setGeneratedStory(null);
     setStep('form');
-    setFormData({ childName: '', childAge: '', gender: '', childImage: '', setting: '', challengeType: '', customChallenge: '', triggerDesc: '', reactionType: '', hobbies: '', contactEmail: '', contactPhone: '', couponCode: '' });
+    setFormData({ childName: '', childAge: '', gender: '', childImage: '', parentImage: '', parentRelation: '', setting: '', challengeType: '', customChallenge: '', triggerDesc: '', reactionType: '', hobbies: '', contactEmail: '', contactPhone: '', couponCode: '' });
     setCouponStatus(null);
     setCouponMessage('');
   };

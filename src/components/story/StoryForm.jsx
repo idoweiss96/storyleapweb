@@ -102,6 +102,29 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
 
   const removeImage = () => handleChange('childImage', '');
 
+  const [uploadingParent, setUploadingParent] = useState(false);
+  const handleParentImageUpload = async (e) => {
+    let file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingParent(true);
+    try {
+      if (/\.(heic|heif)$/i.test(file.name) || file.type === 'image/heic' || file.type === 'image/heif') {
+        file = await convertHeicToJpeg(file);
+      }
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      handleChange('parentImage', file_url);
+    } catch (err) {
+      console.error('Upload error:', err);
+    } finally {
+      setUploadingParent(false);
+    }
+  };
+
+  const removeParentImage = () => {
+    handleChange('parentImage', '');
+    handleChange('parentRelation', '');
+  };
+
   // Validation per step
   const isStepValid = (step) => {
     if (step === 0) return formData.childName && formData.childAge && formData.gender && formData.childImage && formData.imageConsent;
@@ -325,6 +348,63 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               </label>
 
               <TermsOfUseModal open={showTerms} onOpenChange={setShowTerms} />
+            </div>
+
+            {/* Optional parent photo */}
+            <div className="space-y-2">
+              <Label className="font-medium" style={{ color: DARK }}>
+                {isHe ? 'תמונת הורה (אופציונלי)' : "Parent's Photo (optional)"}
+              </Label>
+              {formData.parentImage ?
+            <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2" style={{ borderColor: PURPLE }}>
+                  <img src={formData.parentImage} alt="Parent" className="w-full h-full object-cover" />
+                  <button type="button" onClick={removeParentImage} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div> :
+
+            <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed rounded-xl cursor-pointer transition-colors"
+            style={{ borderColor: uploadingParent ? '#cbd5e1' : `${PURPLE}60`, background: uploadingParent ? '#f8fafc' : `${PURPLE}05` }}>
+              
+                  <input type="file" accept="image/jpeg,image/png,image/jpg,.heic,.heif" onChange={handleParentImageUpload} className="hidden" />
+                  {uploadingParent ?
+              <Loader2 className="w-6 h-6 animate-spin" style={{ color: PURPLE }} /> :
+
+              <>
+                      <Upload className="w-6 h-6 mb-1" style={{ color: PURPLE }} />
+                      <span className="text-xs font-medium" style={{ color: PURPLE }}>{t('form_upload')}</span>
+                    </>
+              }
+                </label>
+            }
+              <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
+                {isHe ?
+              'ניתן להעלות תמונה אחת בלבד של אמא או אבא 📸' :
+              'You may upload only one photo of a mom or dad 📸'}
+              </p>
+
+              {formData.parentImage &&
+            <div className="space-y-2 pt-1">
+                  <Label className="font-medium" style={{ color: DARK }}>{isHe ? 'מי בתמונה?' : 'Who is in the photo?'}</Label>
+                  <div className="grid grid-cols-2 gap-2 max-w-xs">
+                    {[{ value: 'mom', label: isHe ? 'אמא' : 'Mom' }, { value: 'dad', label: isHe ? 'אבא' : 'Dad' }].map((opt) =>
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => handleChange('parentRelation', opt.value)}
+                  className="px-4 py-2 rounded-xl border-2 text-sm font-medium transition-all"
+                  style={{
+                    borderColor: formData.parentRelation === opt.value ? PURPLE : '#e2e8f0',
+                    background: formData.parentRelation === opt.value ? `${PURPLE}10` : '#fff',
+                    color: formData.parentRelation === opt.value ? PURPLE : DARK
+                  }}>
+                  
+                        {opt.label}
+                      </button>
+                )}
+                  </div>
+                </div>
+            }
             </div>
           </motion.div>
         }
