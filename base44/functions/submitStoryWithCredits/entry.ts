@@ -13,24 +13,19 @@ function buildRawMessage(to, subject, html) {
   return utf8ToBase64(message).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-async function sendStoryInProgressEmail(base44ServiceRole, email, childName, isHebrew) {
+async function sendStoryInProgressEmail(base44ServiceRole, email, childName, isHebrew, gender) {
   if (!email) return;
   const subject = isHebrew
-    ? 'הקסם מתחיל! אנחנו כבר עובדים על הסיפור שלך 📝✨'
-    : "The magic begins! We're working on your story 📝✨";
+    ? `קיבלנו את הפרטים של ${childName}! ✨`
+    : `We received ${childName}'s details! ✨`;
+  const pronoun = gender === 'girl' ? 'עבורה' : 'עבורו';
   const body = isHebrew
     ? `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
-        <h2>היי,</h2>
-        <p style="font-size:16px;line-height:1.7;">איזה כיף! קיבלנו את הפרטים בהצלחה.</p>
-        <p style="font-size:16px;line-height:1.7;">אנחנו כבר עובדים על יצירת הסיפור המיוחד שלכם.</p>
-        <p style="font-size:16px;line-height:1.7;">ברגע שהסיפור יהיה מוכן, נשלח לך מייל עדכון נוסף עם קישור ישיר לקריאה.</p>
+        <p style="font-size:16px;line-height:1.7;">היי, קיבלנו את הפרטים של ${childName} ואנחנו כבר יוצרים ${pronoun} סיפור קסום ומיוחד. נעדכן אתכם ברגע שהוא מוכן!</p>
         <p style="margin-top:24px;font-size:15px;">תודה,<br/>צוות StoryLeap</p>
       </div>`
     : `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
-        <h2>Hi there,</h2>
-        <p style="font-size:16px;line-height:1.7;">Exciting news! We have successfully received your details.</p>
-        <p style="font-size:16px;line-height:1.7;">We are already working on creating your special story.</p>
-        <p style="font-size:16px;line-height:1.7;">As soon as the story is ready, we will send you another email with a direct link to read it.</p>
+        <p style="font-size:16px;line-height:1.7;">Hi there, we've received ${childName}'s details and we're already creating a special, magical story just for them. We'll let you know the moment it's ready!</p>
         <p style="margin-top:24px;font-size:15px;">Best regards,<br/>StoryLeap</p>
       </div>`;
   const { accessToken } = await base44ServiceRole.connectors.getConnection('gmail');
@@ -73,7 +68,7 @@ Deno.serve(async (req) => {
     const storyForEmail = await base44.asServiceRole.entities.Story.get(story_id);
     const isHebrew = /[\u0590-\u05FF]/.test(storyForEmail.child_name || '');
     if (storyForEmail.contact_email) {
-      await sendStoryInProgressEmail(base44.asServiceRole, storyForEmail.contact_email, storyForEmail.child_name, isHebrew).catch(() => {});
+      await sendStoryInProgressEmail(base44.asServiceRole, storyForEmail.contact_email, storyForEmail.child_name, isHebrew, storyForEmail.gender).catch(() => {});
     }
 
     // Add story to Google Sheet (shared function — keeps row format consistent with the PayPal capture path)

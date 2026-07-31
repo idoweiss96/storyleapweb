@@ -13,27 +13,22 @@ function buildRawMessage(to, subject, html) {
   return utf8ToBase64(message).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-async function sendStoryInProgressEmail(base44ServiceRole, email, childName, lang) {
+async function sendStoryInProgressEmail(base44ServiceRole, email, childName, lang, gender) {
   if (!email) return;
   const isEn = lang === 'en';
+  const pronoun = /בת/.test(gender || '') ? 'עבורה' : 'עבורו';
 
   const subject = isEn
-    ? 'The magic begins! We are working on your story 📝✨'
-    : 'הקסם מתחיל! אנחנו כבר עובדים על הסיפור שלך 📝✨';
+    ? `We received ${childName}'s details! 🎒`
+    : `קיבלנו את הפרטים של ${childName}! 🎒`;
 
   const body = isEn
     ? `<div dir="ltr" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
-    <h2>Hi,</h2>
-    <p style="font-size:16px;line-height:1.7;">How exciting! We received your answers from the kindergarten readiness questionnaire.</p>
-    <p style="font-size:16px;line-height:1.7;">We are already working on creating ${childName}'s special story.</p>
-    <p style="font-size:16px;line-height:1.7;">Once the story is ready, we'll send you another email with a direct link to read it.</p>
+    <p style="font-size:16px;line-height:1.7;">Hi there, we've received ${childName}'s details and we're creating a special story to help them get ready for kindergarten. We'll let you know the moment it's ready!</p>
     <p style="margin-top:24px;font-size:15px;">Thank you,<br/>The StoryLeap Team</p>
   </div>`
     : `<div dir="rtl" style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;">
-    <h2>היי,</h2>
-    <p style="font-size:16px;line-height:1.7;">איזה כיף! קיבלנו את התשובות שלכם משאלון ההכנה לכיתה א׳.</p>
-    <p style="font-size:16px;line-height:1.7;">אנחנו כבר עובדים על יצירת הסיפור המיוחד של ${childName}.</p>
-    <p style="font-size:16px;line-height:1.7;">ברגע שהסיפור יהיה מוכן, נשלח לך מייל עדכון נוסף עם קישור ישיר לקריאה.</p>
+    <p style="font-size:16px;line-height:1.7;">היי, קיבלנו את הפרטים של ${childName} ואנחנו יוצרים ${pronoun} סיפור מיוחד שילווה ${pronoun === 'עבורה' ? 'אותה' : 'אותו'} לקראת העלייה לכיתה א׳. נעדכן אתכם ברגע שהוא מוכן!</p>
     <p style="margin-top:24px;font-size:15px;">תודה,<br/>צוות StoryLeap</p>
   </div>`;
 
@@ -80,7 +75,7 @@ Deno.serve(async (req) => {
 
     // Send "story in progress" email using the authoritative record lang
     if (story.contact_email) {
-      await sendStoryInProgressEmail(base44.asServiceRole, story.contact_email, story.child_name, effectiveLang).catch(() => {});
+      await sendStoryInProgressEmail(base44.asServiceRole, story.contact_email, story.child_name, effectiveLang, story.gender).catch(() => {});
     }
 
     // Notify admin about new KitaAlef story
