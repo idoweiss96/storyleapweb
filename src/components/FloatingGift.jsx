@@ -52,7 +52,7 @@ export default function FloatingGift() {
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   exit={{ opacity: 0, scale: 0.8, x: isHe ? 20 : -20 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                  className="relative mb-1 max-w-[200px] bg-white rounded-2xl shadow-xl border border-pink-100 p-3"
+                  className="relative mb-1 max-w-[240px] bg-white rounded-2xl shadow-xl border border-pink-100 p-3"
                 >
                   <button
                     onClick={handleDismiss}
@@ -62,8 +62,8 @@ export default function FloatingGift() {
                   </button>
                   <p className="text-sm font-medium text-slate-700 pr-4">
                     {isHe
-                      ? '🎁 רוצה להפתיע? שלחו סיפור כמתנה לחבר!'
-                      : '🎁 Surprise a friend — send a story as a gift!'}
+                      ? 'רוצה להפתיע? 🎁 תנו קרדיטים במתנה – והם ייצרו סיפור קסום לילד שלהם!'
+                      : 'Want to surprise someone? 🎁 Gift them credits — they can create a magical story for their own child!'}
                   </p>
                 </motion.div>
               )}
