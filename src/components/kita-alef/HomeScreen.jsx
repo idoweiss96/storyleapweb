@@ -10,12 +10,12 @@ export default function HomeScreen({ onStart }) {
     ? [
         { emoji: '💜', text: 'Based on psychological therapy methods' },
         { emoji: '👨‍👩‍👧', text: 'Shared parent-child experience' },
-        { emoji: '⏱', text: 'About 3 minutes' },
+        { emoji: '⏱', text: 'About 5 minutes' },
       ]
     : [
         { emoji: '💜', text: 'מבוסס על שיטות טיפול פסיכולוגיות' },
         { emoji: '👨‍👩‍👧', text: 'חוויה משותפת הורה-ילד' },
-        { emoji: '⏱', text: 'כ-3 דקות' },
+        { emoji: '⏱', text: 'כ-5 דקות' },
       ];
 
   const SECTIONS = isEn
@@ -61,7 +61,7 @@ export default function HomeScreen({ onStart }) {
           {isEn ? 'Getting Ready for Kindergarten Together 💖' : 'הכנה לכיתה א׳ ביחד 💗'}
         </h2>
         <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>
-          {isEn ? 'A joint questionnaire for child and parent, 3 minutes' : 'שאלון משותף לילד ולהורה, 3 דקות'}
+          {isEn ? 'A joint questionnaire for child and parent, 5 minutes' : 'שאלון משותף לילד ולהורה, 5 דקות'}
         </p>
 
         {/* Parent intro — what to expect */}
