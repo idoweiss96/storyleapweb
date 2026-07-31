@@ -30,7 +30,7 @@ const content = {
     ],
     partnersHighlight: 'המפעיל בבית: הדרכה, שפה וכלים מעשיים שממשיכים את העבודה הרגשית בבית, ומתרגמים כוונות טובות לתמיכה אפקטיבית.',
     partnersCta: 'הצטרפו למסע של StoryLeap',
-    journeyTitle: 'מסע ההורה: מחוסר אונים לעוצמה',
+    journeyTitle: 'מסע ההורה: מתסכול לעוצמה',
     journey: [
       { emoji: '😔', emotion: 'תסכול', sub: 'הילד שלי מתקשה ואני לא יודע/ת מה לעשות' },
       { emoji: '💛', emotion: 'הקלה', sub: 'זה בסדר. אנחנו לא לבד בזה' },
@@ -66,7 +66,7 @@ const content = {
     ],
     partnersHighlight: 'The operator at home: guidance, language, and practical tools that continue the emotional work at home, turning good intentions into effective support.',
     partnersCta: 'Join the StoryLeap journey',
-    journeyTitle: "The Parent's Journey: From Helpless to Empowered",
+    journeyTitle: "The Parent's Journey: From Frustration to Empowerment",
     journey: [
       { emoji: '😔', emotion: 'Frustrated', sub: 'My child is struggling and I do not know what to do' },
       { emoji: '💛', emotion: 'Relieved', sub: 'This is okay. We are not alone in this' },
@@ -118,15 +118,18 @@ export default function Vision() {
           <h1 className="text-3xl md:text-5xl font-black mb-5 leading-tight" style={{ color: '#1C2A48' }}>
             {c.heroTitle}
           </h1>
-          <p className="text-base md:text-lg font-medium mb-4 leading-relaxed italic" style={{ color: '#1C2A48' }}>
-            {c.heroMission}
-          </p>
           <p className="text-base md:text-lg mb-8 leading-relaxed" style={{ color: '#63738A' }}>
             {c.heroSubtitle}
           </p>
           <CtaButton to={createPageUrl('CreateStory')}>{c.heroCta}</CtaButton>
         </motion.div>
       </section>
+
+      {/* MISSION STATEMENT */}
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={0.5}
+        className="rounded-2xl p-6 md:p-8 text-center max-w-2xl mx-auto mb-16 border-2" style={{ background: '#FDF6F8', borderColor: '#FDB654' }}>
+        <p className="text-lg italic leading-relaxed font-medium" style={{ color: '#1C2A48' }}>{c.heroMission}</p>
+      </motion.div>
 
       {/* WHAT WE BELIEVE */}
       <motion.div variants={fadeUp} initial="hidden" animate="show" custom={1} className="text-center mb-8">
