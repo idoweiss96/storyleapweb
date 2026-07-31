@@ -137,7 +137,7 @@ const TEXT_HE = {
   introTitle: 'מפת הרגשות שלי בדרך לכיתה א׳',
   introBody: 'אחרי שקראתם את הסיפור האישי, אפשר לעצור לכמה דקות ולגלות יחד מה הילד/ה מרגיש/ה ומה יכול לעזור לו/לה להתחיל את כיתה א׳ בתחושת ביטחון.',
   tips: [
-    'לא חייבים לענות במילים — אפשר גם להצביע.',
+    'לא חייבים לענות במילים, אפשר גם להצביע.',
     'מותר להרגיש כמה רגשות יחד.',
     'קודם מקשיבים ומתקפים, אחר כך מחפשים מה יכול לעזור.',
     'זו לא שיחה שצריך להצליח בה, אלא רגע קטן ביחד.',
@@ -150,7 +150,7 @@ const TEXT_HE = {
   emotionsInstruction: 'אפשר לבחור יותר מרגש אחד.',
   emotionOtherLabel: 'איך קוראים לרגש שלך?',
   emotionOtherPlaceholder: 'אפשר לכתוב במילים שלכם',
-  emotionOther: { id: 'other', label: 'אחר — תרשמו בעצמכם', emoji: '✏️' },
+  emotionOther: { id: 'other', label: 'אחר: תרשמו בעצמכם', emoji: '✏️' },
   emotionsNote: 'לפעמים הלב מרגיש כמה דברים ביחד. זה טבעי במיוחד כשמתחילים משהו חדש.',
 
   bodyTitle: 'איפה אני מרגיש/ה את זה בגוף?',
@@ -194,7 +194,7 @@ const TEXT_EN = {
   introTitle: 'My Feelings Map on the Way to Kindergarten',
   introBody: "After reading the personal story together, take a few minutes to discover together what your child feels and what can help them start kindergarten feeling safe and confident.",
   tips: [
-    "You don't have to answer in words — pointing works too.",
+    "You don't have to answer in words, pointing works too.",
     "It's okay to feel a few things at once.",
     'First we listen and validate, then we look for what can help.',
     "This isn't a conversation to get right, just a small moment together.",
@@ -207,7 +207,7 @@ const TEXT_EN = {
   emotionsInstruction: 'You can choose more than one feeling.',
   emotionOtherLabel: "What's your feeling called?",
   emotionOtherPlaceholder: 'You can write it in your own words',
-  emotionOther: { id: 'other', label: 'Something else — write your own', emoji: '✏️' },
+  emotionOther: { id: 'other', label: 'Something else: write your own', emoji: '✏️' },
   emotionsNote: 'Sometimes the heart feels a few things together. That\u2019s natural, especially when starting something new.',
 
   bodyTitle: 'Where do I feel this in my body?',

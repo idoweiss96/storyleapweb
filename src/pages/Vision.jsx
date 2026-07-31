@@ -14,7 +14,7 @@ const content = {
     heroBadge: '✨ StoryLeap',
     heroTitle: 'גיבורים קטנים, סיפורים גדולים',
     heroSubtitle: 'בימים הראשונים של המלחמה ראינו הורים שמחפשים דרך לעזור לילדים שלהם ולא תמיד ידעו איך. ידענו שטכנולוגיה יכולה לעשות יותר, אז התחלנו לבנות את הגשר בין העולם הרגשי לבית.',
-    heroMission: 'לא יצאנו לדרך הזו כי זיהינו הזדמנות עסקית טובה. התחלנו כי ראינו ילדים שזקוקים לעזרה, והורים שמשתוקקים לתת אותה – וידענו שאנחנו יכולים לבנות את הגשר ביניהם.',
+    heroMission: 'לא יצאנו לדרך הזו כי זיהינו הזדמנות עסקית טובה. התחלנו כי ראינו ילדים שזקוקים לעזרה, והורים שמשתוקקים לתת אותה, וידענו שאנחנו יכולים לבנות את הגשר ביניהם.',
     heroCta: 'צרו את הסיפור שלכם עכשיו',
     believeTitle: 'במה אנחנו מאמינים',
     believe: [
@@ -43,14 +43,14 @@ const content = {
       { tag: 'השלב הבא', title: 'ארגז הכלים של המטפל', desc: 'התרחבות לסרטונים, יצירות ומשחקים. פלטפורמה חכמה להקצאת משימות.' },
       { tag: 'החזון שלנו ל-10 שנים', title: 'המנחה הרגשי', desc: 'פלטפורמה שלמה המלווה משפחות בכל שלב ומחברת בין מטפלים והורים.' },
     ],
-    closing: 'לא יצאנו לדרך הזו כי זיהינו הזדמנות עסקית טובה. התחלנו כי ראינו ילדים שזקוקים לעזרה, והורים שמשתוקקים לתת אותה – וידענו שאנחנו יכולים לבנות את הגשר ביניהם.',
+    closing: 'לא יצאנו לדרך הזו כי זיהינו הזדמנות עסקית טובה. התחלנו כי ראינו ילדים שזקוקים לעזרה, והורים שמשתוקקים לתת אותה, וידענו שאנחנו יכולים לבנות את הגשר ביניהם.',
     closingCta: 'התחילו את המסע המשותף',
   },
   en: {
     heroBadge: '✨ StoryLeap',
     heroTitle: "Little heroes, big stories",
-    heroSubtitle: 'In our early days, we saw parents searching for ways to help their children through hard, emotional moments — not always knowing how. We knew technology could do more, so we set out to build a bridge between the emotional world and home.',
-    heroMission: 'We did not start this because it was a good market opportunity. We started because we saw children who needed help, and parents who wanted to give it — and knew we could build the bridge between them.',
+    heroSubtitle: 'In our early days, we saw parents searching for ways to help their children through hard, emotional moments, not always knowing how. We knew technology could do more, so we set out to build a bridge between the emotional world and home.',
+    heroMission: 'We did not start this because it was a good market opportunity. We started because we saw children who needed help, and parents who wanted to give it, and knew we could build the bridge between them.',
     heroCta: 'Create your story now',
     believeTitle: 'What We Believe',
     believe: [
@@ -79,7 +79,7 @@ const content = {
       { tag: 'Next Step', title: "A Therapist's Toolkit", desc: 'Expanding into videos, art, and games. A smart platform to assign tasks.' },
       { tag: 'Our 10-Year Vision', title: 'The Emotional Navigator', desc: 'A full platform that guides families and connects therapists and parents.' },
     ],
-    closing: 'We did not start this because it was a good market opportunity. We started because we saw children who needed help, and parents who wanted to give it — and knew we could build the bridge between them.',
+    closing: 'We did not start this because it was a good market opportunity. We started because we saw children who needed help, and parents who wanted to give it, and knew we could build the bridge between them.',
     closingCta: 'Start the shared journey',
   }
 };

@@ -44,7 +44,7 @@ export default function PaymentCancel() {
               {childName ? `הנתונים של ${childName} נשמרו כטיוטה.` : 'הנתונים שלכם נשמרו כטיוטה.'}
             </p>
             <p className="text-slate-400 text-sm mb-8">
-              תוכלו לחזור ולהשלים את התשלום בכל עת — הסיפור יחכה לכם.
+              תוכלו לחזור ולהשלים את התשלום בכל עת, הסיפור יחכה לכם.
             </p>
 
             <div className="flex flex-col gap-3">

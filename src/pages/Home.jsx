@@ -153,7 +153,7 @@ export default function Home() {
               {lang === 'he' ? 'הכנה לכיתה א׳ ביחד 💗' : 'Getting Ready for Kindergarten Together 💖'}
             </h3>
             <p className="text-sm md:text-base mb-4" style={{ color: '#6b6b8a' }}>
-              {lang === 'he' ? 'שאלון משותף לילד ולהורה - 5 דקות 🎒' : 'A joint questionnaire for child and parent — 5 minutes 🎒'}
+              {lang === 'he' ? 'שאלון משותף לילד ולהורה - 5 דקות 🎒' : 'A joint questionnaire for child and parent, 5 minutes 🎒'}
             </p>
             <span
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white text-sm font-semibold shadow-md transition-opacity hover:opacity-90"

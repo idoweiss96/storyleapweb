@@ -358,8 +358,8 @@ export default function MyStories() {
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-right">
                   <p className="text-amber-800 text-sm font-medium">
                     {lang === 'he'
-                      ? `יש לך סיפור ממתין עבור ${creditsAddedPopup.pendingStory.child_name} — לחץ ליצירה עכשיו!`
-                      : `You have a pending story for ${creditsAddedPopup.pendingStory.child_name} — click to create now!`}
+                      ? `יש לך סיפור ממתין עבור ${creditsAddedPopup.pendingStory.child_name}, לחץ ליצירה עכשיו!`
+                      : `You have a pending story for ${creditsAddedPopup.pendingStory.child_name}, click to create now!`}
                   </p>
                 </div>
               ) : null}

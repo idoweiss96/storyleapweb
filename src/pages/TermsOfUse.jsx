@@ -55,7 +55,7 @@ export default function TermsOfUse() {
             <p>
               {isHe
                 ? 'אם יש טעות בסיפור - שם שגוי, פרט לא מדויק, תמונה לא נכונה או כל דבר אחר שלא מרגיש נכון - פשוט פנו אלינו ונתקן זאת ללא עלות נוספת עד לשביעות רצונכם.'
-                : 'If there\'s a mistake in the story — a wrong name, an inaccurate detail, the wrong photo, or anything else that doesn\'t feel right — just contact us and we\'ll correct it at no extra cost until you\'re happy with it.'}
+                : 'If there\'s a mistake in the story: a wrong name, an inaccurate detail, the wrong photo, or anything else that doesn\'t feel right, just contact us and we\'ll correct it at no extra cost until you\'re happy with it.'}
             </p>
           </section>
 
@@ -67,7 +67,7 @@ export default function TermsOfUse() {
             <p>
               {isHe
                 ? 'ניתן לבטל את הרכישה ולקבל החזר כספי מלא כל עוד יצירת הסיפור עדיין לא התחילה. מרגע שכתיבת הסיפור האישי שלכם התחילה, לא ניתן לבטל את העסקה, שכן מדובר בתוכן דיגיטלי שנוצר במיוחד ובאופן ייחודי עבורכם. אם יש בעיה כלשהי בסיפור שקיבלתם, אנחנו כאן לתקן אותה - ראו סעיף התיקונים למעלה.'
-                : 'You can cancel your purchase for a full refund as long as story creation hasn\'t started yet. Once work on your personalized story has begun, the purchase can no longer be cancelled, since this is digital content created uniquely and specifically for you. If there\'s any issue with the story you received, we\'re here to fix it — see the corrections section above.'}
+                : 'You can cancel your purchase for a full refund as long as story creation hasn\'t started yet. Once work on your personalized story has begun, the purchase can no longer be cancelled, since this is digital content created uniquely and specifically for you. If there\'s any issue with the story you received, we\'re here to fix it, see the corrections section above.'}
             </p>
           </section>
 
@@ -79,7 +79,7 @@ export default function TermsOfUse() {
             <p>
               {isHe
                 ? 'לכל שאלה, בקשת תיקון או בקשת ביטול - אתם מוזמנים לפנות אלינו בכל עת בעמוד "צור קשר" ונשמח לעזור.'
-                : 'For any question, correction request, or cancellation request — you\'re welcome to reach out to us anytime via our Contact page, and we\'ll be happy to help.'}
+                : 'For any question, correction request, or cancellation request, you\'re welcome to reach out to us anytime via our Contact page, and we\'ll be happy to help.'}
             </p>
           </section>
         </CardContent>

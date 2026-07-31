@@ -12,7 +12,7 @@ export default function TermsOfUseModal({ open, onOpenChange }) {
       <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col" dir={isHe ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="text-xl font-bold" style={{ color: '#1E293B' }}>
-            {isHe ? 'תנאי שימוש – העלאת תמונת ילד/ה' : 'Terms of Use – Child Photo Upload'}
+            {isHe ? 'תנאי שימוש: העלאת תמונת ילד/ה' : 'Terms of Use: Child Photo Upload'}
           </DialogTitle>
         </DialogHeader>
         <ScrollArea className="flex-1 pr-2" style={{ maxHeight: '60vh' }}>

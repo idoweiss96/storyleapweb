@@ -91,7 +91,7 @@ export default function CouponManager() {
     try { return !isAfter(parseISO(c.expiration_date), new Date()); } catch { return false; }
   };
 
-  const fmtDate = (d) => d ? format(parseISO(d), 'dd/MM/yyyy') : '—';
+  const fmtDate = (d) => d ? format(parseISO(d), 'dd/MM/yyyy') : '-';
 
   return (
     <Card className="border-0 shadow-xl shadow-slate-100 mt-8">

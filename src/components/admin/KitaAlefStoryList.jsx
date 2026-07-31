@@ -70,7 +70,7 @@ export default function KitaAlefStoryList() {
     <Card className="border-0 shadow-xl shadow-slate-100 mb-8" style={{ boxShadow: '0 4px 30px rgba(107,92,231,0.08)' }}>
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2" style={{ color: '#1A1A6E' }}>
-          <BookOpen className="w-5 h-5" /> ניהול הגשות — כיתה א׳
+          <BookOpen className="w-5 h-5" /> ניהול הגשות: כיתה א׳
           <Badge className="mr-2 bg-purple-100 text-purple-700">{stories.length}</Badge>
         </CardTitle>
         <div className="mt-4 relative">

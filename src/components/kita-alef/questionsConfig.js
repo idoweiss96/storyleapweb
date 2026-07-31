@@ -15,7 +15,7 @@ const PAGES_HE = [
           { emoji: '🏃', label: 'לזוז מהר' },
           { emoji: '🤗', label: 'לאהוב' },
         ],
-        parentField: { label: 'הורה — ספרו לילד/ה מה הכוח שאתם רואים בו/בה ♥' }
+        parentField: { label: 'הורה: ספרו לילד/ה מה הכוח שאתם רואים בו/בה ♥' }
       },
       { key: 'photo', tag: 'together', question: 'תמונה שלך', type: 'photo', required: true, consent: true },
     ]
@@ -38,7 +38,7 @@ const PAGES_HE = [
       {
         key: 'scary_things', tag: 'together', question: 'מה נראה קצת מפחיד?', type: 'chips', multi: true,
         showIf: { dependsOn: 'feelings_before', values: ['קצת מפחד/ת', 'מפחד/ת'] },
-        options: ['פרידה מאמא/אבא', 'לא למצוא חברים', 'שהלמידה תהיה קשה', 'המורה', 'לא לדעת לקרוא', 'שום דבר — הכל בסדר!']
+        options: ['פרידה מאמא/אבא', 'לא למצוא חברים', 'שהלמידה תהיה קשה', 'המורה', 'לא לדעת לקרוא', 'שום דבר, הכל בסדר!']
       },
       {
         key: 'separation_feelings', tag: 'together', question: 'איך מרגישים בפרידות?', type: 'emoji',
@@ -66,7 +66,7 @@ const PAGES_HE = [
           { emoji: '👦', label: 'אח/ות' },
           { emoji: '🐾', label: 'חיית מחמד' },
         ],
-        parentField: { label: 'הורה — ספרו לו/ה מה אותו/ה אדם חושב על כיתה א׳' }
+        parentField: { label: 'הורה: ספרו לו/ה מה אותו/ה אדם חושב על כיתה א׳' }
       },
       { key: 'gan_friends', tag: 'together', question: 'יש חברים מהגן שגם עולים לכיתה א׳?', type: 'textarea' },
       { key: 'sibling_experience', tag: 'together', question: 'יש אח/ות גדול/ה שעבר/ה את זה? מה הוא/היא אמר/ה?', type: 'textarea' },
@@ -150,7 +150,7 @@ const PAGES_HE = [
           { emoji: '🌟', label: 'שתאמין בעצמך' },
           { emoji: '🤝', label: 'שתמצא חברים' },
         ],
-        parentField: { label: 'הורה — זה הרגע לומר לו/ה ישירות ♥' }
+        parentField: { label: 'הורה: זה הרגע לומר לו/ה ישירות ♥' }
       },
     ]
   },
@@ -173,7 +173,7 @@ const PAGES_EN = [
           { emoji: '🏃', label: 'Running fast' },
           { emoji: '🤗', label: 'Loving' },
         ],
-        parentField: { label: "Parent — tell your child what strength you see in them ♥" }
+        parentField: { label: "Parent: tell your child what strength you see in them ♥" }
       },
       { key: 'photo', tag: 'together', question: 'Your photo', type: 'photo', required: true, consent: true },
     ]
@@ -196,7 +196,7 @@ const PAGES_EN = [
       {
         key: 'scary_things', tag: 'together', question: 'What seems a little scary?', type: 'chips', multi: true,
         showIf: { dependsOn: 'feelings_before', values: ['A little scared', 'Scared'] },
-        options: ['Separation from mom/dad', 'Not making friends', 'That learning will be hard', 'The teacher', 'Not knowing how to read', "Nothing — it's all fine!"]
+        options: ['Separation from mom/dad', 'Not making friends', 'That learning will be hard', 'The teacher', 'Not knowing how to read', "Nothing, it's all fine!"]
       },
       {
         key: 'separation_feelings', tag: 'together', question: 'How do separations feel?', type: 'emoji',
@@ -224,7 +224,7 @@ const PAGES_EN = [
           { emoji: '👦', label: 'Brother/Sister' },
           { emoji: '🐾', label: 'Pet' },
         ],
-        parentField: { label: "Parent — tell them what that person thinks about kindergarten" }
+        parentField: { label: "Parent: tell them what that person thinks about kindergarten" }
       },
       { key: 'gan_friends', tag: 'together', question: 'Are there friends from kindergarten also going to kindergarten?', type: 'textarea' },
       { key: 'sibling_experience', tag: 'together', question: 'Is there an older sibling who went through this? What did they say?', type: 'textarea' },
@@ -308,7 +308,7 @@ const PAGES_EN = [
           { emoji: '🌟', label: 'That you will believe in yourself' },
           { emoji: '🤝', label: 'That you will make friends' },
         ],
-        parentField: { label: 'Parent — this is the moment to tell them directly ♥' }
+        parentField: { label: 'Parent: this is the moment to tell them directly ♥' }
       },
     ]
   },

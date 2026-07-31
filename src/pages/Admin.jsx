@@ -425,7 +425,7 @@ export default function Admin() {
       <Dialog open={!!editingUser} onOpenChange={() => setEditingUser(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>עריכת קרדיטים — {editingUser?.full_name || editingUser?.email}</DialogTitle>
+            <DialogTitle>עריכת קרדיטים: {editingUser?.full_name || editingUser?.email}</DialogTitle>
           </DialogHeader>
           <div className="py-4 space-y-4">
             <div className="flex items-center gap-2 text-sm text-gray-600 bg-amber-50 rounded-lg px-3 py-2">

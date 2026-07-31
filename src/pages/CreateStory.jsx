@@ -295,7 +295,7 @@ export default function CreateStory() {
                   onClick={() => setShowLoginModal(true)}
                   className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg transition-all mb-3"
                 >
-                  {isHe ? 'הכל נכון — המשך להתחברות' : "Looks good — Continue to Sign In"}
+                  {isHe ? 'הכל נכון, המשך להתחברות' : "Looks good, continue to Sign In"}
                 </Button>
                 <button
                   onClick={() => setStep('form')}
@@ -374,7 +374,7 @@ export default function CreateStory() {
                   <div className="space-y-4">
                     <div className="p-3 bg-green-50 border border-green-200 rounded-xl text-center">
                       <p className="text-sm text-green-700 font-medium">
-                        ⭐ {isHe ? `יש לך ${userCredits} קרדיטים — מספיק ליצירת הספר!` : `You have ${userCredits} credits — enough to create the book!`}
+                        ⭐ {isHe ? `יש לך ${userCredits} קרדיטים, מספיק ליצירת הספר!` : `You have ${userCredits} credits, enough to create the book!`}
                       </p>
                     </div>
                     <Button

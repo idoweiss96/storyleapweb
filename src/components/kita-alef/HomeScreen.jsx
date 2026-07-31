@@ -61,7 +61,7 @@ export default function HomeScreen({ onStart }) {
           {isEn ? 'Getting Ready for Kindergarten Together 💖' : 'הכנה לכיתה א׳ ביחד 💗'}
         </h2>
         <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>
-          {isEn ? 'A joint questionnaire for child and parent — 3 minutes' : 'שאלון משותף לילד ולהורה — 3 דקות'}
+          {isEn ? 'A joint questionnaire for child and parent, 3 minutes' : 'שאלון משותף לילד ולהורה, 3 דקות'}
         </p>
 
         {/* Parent intro — what to expect */}
@@ -73,7 +73,7 @@ export default function HomeScreen({ onStart }) {
             {SECTIONS.map((s, i) => (
               <li key={i} className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
                 <span>{s.emoji}</span>
-                <span><span className="font-semibold">{s.title}</span> — {s.desc}</span>
+                <span><span className="font-semibold">{s.title}:</span> {s.desc}</span>
               </li>
             ))}
           </ul>
