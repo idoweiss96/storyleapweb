@@ -1,27 +1,29 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
-const SPREADSHEET_ID_HE = '1vOXZ0bVjICeSzCjXUQ2DXby6OjQtJrYcpTxORfbJ1vo';
-const SPREADSHEET_ID_EN = '153bOGbdmfaPj1_W1P6crJ9zoCYo_CBhXkT4oRTiaxUc';
-const RANGE = 'A2:Q'; // skip header row
-const SHEET_NAME = 'Sheet1';
+const SPREADSHEET_ID_HE = '1hEBop1uM-ldASUKGQWNFShCPlO5xZ2R7SwFOZ7EtN30';
+const SHEET_NAME_HE = 'שאלון';
+const SPREADSHEET_ID_EN = '1vDfEGbVfwplAgHTTYREauRxUgX-fxa5uJJZXenotZac';
+const SHEET_NAME_EN = 'Questionnaire';
+const RANGE = 'A2:W'; // skip header row
 
-// Row layout (0-based), written by addStoryToSheet + the Story Link / Email Sent columns appended after it:
-// 0 created_date, 1 user_email, 2 child_name, 3 age, 4 gender, 5 child_image_url, 6 setting,
-// 7 challenge, 8 custom_challenge, 9 trigger_desc, 10 reaction, 11 hobbies, 12 contact_email,
-// 13 parent_image_url, 14 parent_relation, 15 story_link, 16 email_sent
-const COL_CHILD_NAME = 2;
-const COL_CONTACT_EMAIL = 12;
-const COL_STORY_LINK = 15;
-const COL_EMAIL_SENT = 16;
+// Row layout (0-based), matching the headers already defined in the Questionnaire/שאלון sheets:
+// 0 Timestamp, 1 Language, 2 Order ID, 3 User Email, 4 Price, 5 Currency, 6 Credits Used,
+// 7 Child's Name, 8 Age, 9 Gender, 10 Child's Photo Link, 11 Parent Consent, 12 Parent's Photo Link,
+// 13 Whose Photo, 14 Story World, 15 Emotional Challenge, 16 Trigger Description, 17 Child's Reaction,
+// 18 What the Child Loves, 19 Contact Email, 20 Contact Phone, 21 Story Link, 22 Email Sent
+const COL_CHILD_NAME = 7;
+const COL_CONTACT_EMAIL = 19;
+const COL_STORY_LINK = 21;
+const COL_EMAIL_SENT = 22; // column W
 
 function isMarkedSent(value) {
   const v = (value || '').toString().trim().toUpperCase();
   return v === 'TRUE' || v === '✔' || v === 'V' || v === 'YES';
 }
 
-async function markEmailSent(spreadsheetId, rowNumber, accessToken) {
+async function markEmailSent(spreadsheetId, sheetName, rowNumber, accessToken) {
   await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${SHEET_NAME}!Q${rowNumber}?valueInputOption=USER_ENTERED`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!W${rowNumber}?valueInputOption=USER_ENTERED`,
     {
       method: 'PUT',
       headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
@@ -30,9 +32,9 @@ async function markEmailSent(spreadsheetId, rowNumber, accessToken) {
   );
 }
 
-async function processSheet(base44, spreadsheetId, isHebrew, accessToken) {
+async function processSheet(base44, spreadsheetId, sheetName, isHebrew, accessToken) {
   const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${SHEET_NAME}!${RANGE}`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!${RANGE}`,
     { headers: { 'Authorization': `Bearer ${accessToken}` } }
   );
   if (!res.ok) throw new Error(await res.text());
@@ -66,7 +68,7 @@ async function processSheet(base44, spreadsheetId, isHebrew, accessToken) {
       isHebrew,
     });
 
-    await markEmailSent(spreadsheetId, rowNumber, accessToken);
+    await markEmailSent(spreadsheetId, sheetName, rowNumber, accessToken);
 
     // Also write the link back onto the matching Story record so it shows up
     // as ready in the parent's "My Stories" area, not just via email.
@@ -92,8 +94,8 @@ export default async function(req) {
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
     const [heResult, enResult] = await Promise.all([
-      processSheet(base44, SPREADSHEET_ID_HE, true, accessToken),
-      processSheet(base44, SPREADSHEET_ID_EN, false, accessToken),
+      processSheet(base44, SPREADSHEET_ID_HE, SHEET_NAME_HE, true, accessToken),
+      processSheet(base44, SPREADSHEET_ID_EN, SHEET_NAME_EN, false, accessToken),
     ]);
 
     return Response.json({ success: true, hebrew: heResult, english: enResult });

@@ -1,7 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const SPREADSHEET_ID_EN = '153bOGbdmfaPj1_W1P6crJ9zoCYo_CBhXkT4oRTiaxUc';
-const SPREADSHEET_ID_HE = '1vOXZ0bVjICeSzCjXUQ2DXby6OjQtJrYcpTxORfbJ1vo';
+const SPREADSHEET_ID_EN = '1vDfEGbVfwplAgHTTYREauRxUgX-fxa5uJJZXenotZac';
+const SHEET_NAME_EN = 'Questionnaire';
+const SPREADSHEET_ID_HE = '1hEBop1uM-ldASUKGQWNFShCPlO5xZ2R7SwFOZ7EtN30';
+const SHEET_NAME_HE = 'שאלון';
 const genderMapHE = { boy: 'בן', girl: 'בת', other: 'אחר' };
 const parentRelationMapHE = { mom: 'אמא', dad: 'אבא' };
 const parentRelationMapEN = { mom: 'Mom', dad: 'Dad' };
@@ -28,22 +30,35 @@ function storyToRow(story, lang, userEmail) {
   const settingMap = lang === 'he' ? settingMapHE : settingMapEN;
   const challengeMap = lang === 'he' ? challengeMapHE : challengeMapEN;
   const reactionMap = lang === 'he' ? reactionMapHE : reactionMapEN;
+  // Column order matches the existing headers in the Questionnaire/שאלון sheets:
+  // Timestamp, Language, Order ID, User Email, Price, Currency, Credits Used,
+  // Child's Name, Age, Gender, Child's Photo Link, Parent Consent, Parent's Photo Link,
+  // Whose Photo, Story World, Emotional Challenge, Trigger Description, Child's Reaction,
+  // What the Child Loves, Contact Email, Contact Phone, Story Link, Email Sent
   return [
     createdDate,
+    lang === 'he' ? 'עברית' : 'English',
+    '', // Order ID — not tracked for credit-funded stories
     userEmail || '',
+    '', // Price — not tracked for credit-funded stories
+    '', // Currency — not tracked for credit-funded stories
+    story.payment_status === 'paid' ? 110 : '',
     story.child_name || '',
     story.child_age || '',
     genderMap[story.gender] || story.gender || '',
     story.child_image_url || '',
+    '', // Parent Consent — not currently collected
+    story.parent_image_url || '',
+    (lang === 'he' ? parentRelationMapHE : parentRelationMapEN)[story.parent_relation] || '',
     settingMap[story.setting] || story.setting || '',
-    challengeMap[story.challenge_type] || story.challenge_type || '',
-    story.challenge_type === 'other' ? (story.custom_challenge || '') : '',
+    story.challenge_type === 'other' ? (story.custom_challenge || '') : (challengeMap[story.challenge_type] || story.challenge_type || ''),
     story.trigger_desc || '',
     reactionMap[story.reaction_type] || story.reaction_type || '',
     story.hobbies || '',
     story.contact_email || '',
-    story.parent_image_url || '',
-    (lang === 'he' ? parentRelationMapHE : parentRelationMapEN)[story.parent_relation] || '',
+    story.contact_phone || '',
+    '', // Story Link — filled in later once the story is ready
+    '', // Email Sent — filled in by the notification automation
   ];
 }
 
@@ -63,13 +78,14 @@ Deno.serve(async (req) => {
 
     const lang = detectLanguage(storyData);
     const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
-    const row = storyToRow(storyData, lang, storyData.created_by || storyData.user_email);
+    const sheetName = lang === 'he' ? SHEET_NAME_HE : SHEET_NAME_EN;
+    const row = storyToRow(storyData, lang, storyData.contact_email || storyData.created_by || storyData.user_email);
 
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
         const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
         const response = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:append?valueInputOption=USER_ENTERED`,
+          `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A1:append?valueInputOption=USER_ENTERED`,
           {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
