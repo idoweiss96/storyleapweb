@@ -62,7 +62,7 @@ export default function FloatingGift() {
                   </button>
                   <p className="text-sm font-medium text-slate-700 pr-4">
                     {isHe
-                      ? 'רוצה להפתיע? 🎁 תנו קרדיטים במתנה – והם ייצרו סיפור קסום לילד שלהם!'
+                      ? 'רוצה להפתיע מישהו? 🎁 תנו קרדיטים במתנה – והם ייצרו סיפור קסום לילד שלהם!'
                       : 'Want to surprise someone? 🎁 Gift them credits — they can create a magical story for their own child!'}
                   </p>
                 </motion.div>
