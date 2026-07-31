@@ -13,7 +13,8 @@ const content = {
   he: {
     heroBadge: '✨ StoryLeap',
     heroTitle: 'גיבורים קטנים, סיפורים גדולים',
-    heroSubtitle: 'בימים הראשונים של המלחמה ראינו הורים חסרי אונים. ידענו שטכנולוגיה יכולה לעשות יותר, אז התחלנו לבנות את הגשר בין העולם הקליני לבית.',
+    heroSubtitle: 'בימים הראשונים של המלחמה ראינו הורים שמחפשים דרך לעזור לילדים שלהם ולא תמיד ידעו איך. ידענו שטכנולוגיה יכולה לעשות יותר, אז התחלנו לבנות את הגשר בין העולם הקליני לבית.',
+    heroMission: 'לא יצאנו לדרך הזו כי זיהינו הזדמנות עסקית טובה. התחלנו כי ראינו ילדים שזקוקים לעזרה, והורים שמשתוקקים לתת אותה – וידענו שאנחנו יכולים לבנות את הגשר ביניהם.',
     heroCta: 'צרו את הסיפור שלכם עכשיו',
     believeTitle: 'במה אנחנו מאמינים',
     believe: [
@@ -48,7 +49,8 @@ const content = {
   en: {
     heroBadge: '✨ StoryLeap',
     heroTitle: "Little heroes, big stories",
-    heroSubtitle: 'In the early days of the war, we watched parents feel helpless. We knew technology could do more, so we started building the bridge between the clinical world and home.',
+    heroSubtitle: 'In our early days, we saw parents searching for ways to help their children through hard, emotional moments — not always knowing how. We knew technology could do more, so we set out to build a bridge between the clinical world and home.',
+    heroMission: 'We did not start this because it was a good market opportunity. We started because we saw children who needed help, and parents who wanted to give it — and knew we could build the bridge between them.',
     heroCta: 'Create your story now',
     believeTitle: 'What We Believe',
     believe: [
@@ -116,6 +118,9 @@ export default function Vision() {
           <h1 className="text-3xl md:text-5xl font-black mb-5 leading-tight" style={{ color: '#1C2A48' }}>
             {c.heroTitle}
           </h1>
+          <p className="text-base md:text-lg font-medium mb-4 leading-relaxed italic" style={{ color: '#1C2A48' }}>
+            {c.heroMission}
+          </p>
           <p className="text-base md:text-lg mb-8 leading-relaxed" style={{ color: '#63738A' }}>
             {c.heroSubtitle}
           </p>
