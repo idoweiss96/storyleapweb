@@ -20,6 +20,8 @@ import KitaAlefStory from './pages/KitaAlefStory';
 import FeelingsMap from './pages/FeelingsMap';
 import DesignSystem from './pages/DesignSystem';
 import ExportSamples from './pages/ExportSamples';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfUse from './pages/TermsOfUse';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -83,6 +85,8 @@ const AuthenticatedApp = () => {
       <Route path="/FeelingsMap" element={<LayoutWrapper currentPageName="FeelingsMap"><FeelingsMap /></LayoutWrapper>} />
       <Route path="/design-system" element={<LayoutWrapper currentPageName="DesignSystem"><DesignSystem /></LayoutWrapper>} />
       <Route path="/ExportSamples" element={<LayoutWrapper currentPageName="ExportSamples"><ExportSamples /></LayoutWrapper>} />
+      <Route path="/PrivacyPolicy" element={<LayoutWrapper currentPageName="PrivacyPolicy"><PrivacyPolicy /></LayoutWrapper>} />
+      <Route path="/TermsOfUse" element={<LayoutWrapper currentPageName="TermsOfUse"><TermsOfUse /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

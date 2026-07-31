@@ -591,6 +591,17 @@ export default function Pricing() {
                 )}
               </div>
 
+              <p className="text-xs text-slate-400 mt-4">
+                {isHe ? 'בלחיצה על התשלום אתם מאשרים את ' : 'By proceeding to payment you agree to our '}
+                <Link to="/TermsOfUse" className="underline hover:text-slate-600">
+                  {isHe ? 'תנאי השימוש, הרכישה והביטול' : 'Terms of Use, Purchase & Cancellation'}
+                </Link>
+                {isHe ? ' ואת ' : ' and '}
+                <Link to="/PrivacyPolicy" className="underline hover:text-slate-600">
+                  {isHe ? 'מדיניות הפרטיות' : 'Privacy Policy'}
+                </Link>
+              </p>
+
               <div className="mt-6 border-t border-slate-100 pt-6">
                 <Link to={createPageUrl('Contact')}>
                   <Button variant="ghost" className="text-slate-500 hover:text-slate-700">

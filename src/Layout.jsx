@@ -270,6 +270,14 @@ function LayoutInner({ children, currentPageName }) {
 
       <footer className="border-t border-slate-200/60 bg-white/60 mt-auto">
         <div className="max-w-6xl mx-auto px-4 py-6 text-center">
+          <div className="flex items-center justify-center gap-4 mb-3">
+            <Link to="/PrivacyPolicy" className="text-sm text-slate-500 hover:text-slate-700 underline">
+              {lang === 'he' ? 'מדיניות פרטיות' : 'Privacy Policy'}
+            </Link>
+            <Link to="/TermsOfUse" className="text-sm text-slate-500 hover:text-slate-700 underline">
+              {lang === 'he' ? 'תנאי שימוש, רכישה וביטול' : 'Terms of Use, Purchase & Cancellation'}
+            </Link>
+          </div>
           <p className="text-sm text-slate-400">{t('footer')}</p>
         </div>
       </footer>
