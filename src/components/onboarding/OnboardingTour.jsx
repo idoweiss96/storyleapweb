@@ -15,7 +15,7 @@ const tourSteps = [
   {
     id: 'credits',
     title: 'Your Free Credits ⭐',
-    description: "You've received 20 free credits — enough to create your first personalized story!",
+    description: "You've received 10 free credits to get you started! A personalized story costs 110 credits — check out Pricing to top up.",
     icon: Star,
     position: 'top-right',
     highlight: 'credits',

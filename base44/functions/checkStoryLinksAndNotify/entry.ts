@@ -67,6 +67,19 @@ async function processSheet(base44, spreadsheetId, isHebrew, accessToken) {
     });
 
     await markEmailSent(spreadsheetId, rowNumber, accessToken);
+
+    // Also write the link back onto the matching Story record so it shows up
+    // as ready in the parent's "My Stories" area, not just via email.
+    try {
+      const matches = await base44.asServiceRole.entities.Story.filter({ contact_email: contactEmail, child_name: childName });
+      const target = matches.find(s => !s.story_link);
+      if (target) {
+        await base44.asServiceRole.entities.Story.update(target.id, { story_link: storyLink });
+      }
+    } catch (e) {
+      console.error('[checkStoryLinksAndNotify] Failed to sync story_link to Story entity:', e.message);
+    }
+
     sent++;
   }
 

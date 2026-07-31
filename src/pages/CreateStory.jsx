@@ -14,6 +14,8 @@ import LoginPromptModal from '../components/story/LoginPromptModal';
 import { useLanguage } from '../components/LanguageContext';
 import { useNavPath } from '@/lib/useNavPath';
 
+// Uses localStorage (not sessionStorage) so the saved questionnaire survives a
+// registration/email-verification flow that continues in a new tab.
 const PENDING_FORM_KEY = 'storyLeap_pendingFormData';
 
 // Steps: 'form' | 'credits_check' | 'success'
@@ -61,17 +63,21 @@ export default function CreateStory() {
       setUser(currentUser);
 
       const urlParams = new URLSearchParams(window.location.search);
-
-      // Returning after login — restore form and go to credits check
       if (urlParams.get('resume') === '1') {
         window.history.replaceState({}, '', window.location.pathname);
-        const saved = sessionStorage.getItem(PENDING_FORM_KEY);
-        if (saved) {
+      }
+
+      // Restore any questionnaire saved before a login/registration redirect.
+      // Checked on every visit (not just when a resume=1 param is present) so the
+      // answers are recovered even if verification finished in a different tab.
+      const saved = localStorage.getItem(PENDING_FORM_KEY);
+      if (saved) {
+        try {
           const savedForm = JSON.parse(saved);
           setFormData(savedForm);
-          // Don't remove from sessionStorage yet — will remove after story created
+          // Don't remove yet — will remove after the story is created or saved as pending payment
           setStep('credits_check');
-        }
+        } catch (_) {}
       }
     } catch (e) {
       setUser(null);
@@ -111,7 +117,7 @@ export default function CreateStory() {
 
     if (!user) {
       // Guest: save form data and show a recap before asking to sign in
-      sessionStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
+      localStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
       setStep('recap');
       return;
     }
@@ -137,7 +143,7 @@ export default function CreateStory() {
         await base44.auth.updateMe({ credits: newCredits });
         setUser(prev => ({ ...prev, credits: newCredits }));
         window.dispatchEvent(new Event('credits-updated'));
-        sessionStorage.removeItem(PENDING_FORM_KEY);
+        localStorage.removeItem(PENDING_FORM_KEY);
         base44.analytics.track({ eventName: 'credits_used', properties: { story_id: savedStory.id } });
         setGeneratedStory(savedStory);
         setStep('success');
@@ -190,7 +196,7 @@ export default function CreateStory() {
       // Save story as pending_payment so it appears in MyStories after purchase
       const savedStory = await base44.entities.Story.create(buildStoryData('pending_payment'));
       base44.analytics.track({ eventName: 'story_saved_pending_payment', properties: { story_id: savedStory.id } });
-      sessionStorage.removeItem(PENDING_FORM_KEY);
+      localStorage.removeItem(PENDING_FORM_KEY);
       navigate(navPath('Pricing'));
     } catch (err) {
       setError(t('create_error_save'));
@@ -200,7 +206,7 @@ export default function CreateStory() {
   };
 
   const resetForm = () => {
-    sessionStorage.removeItem(PENDING_FORM_KEY);
+    localStorage.removeItem(PENDING_FORM_KEY);
     setGeneratedStory(null);
     setStep('form');
     setFormData({ childName: '', childAge: '', gender: '', childImage: '', parentImage: '', parentRelation: '', setting: '', challengeType: '', customChallenge: '', triggerDesc: '', reactionType: '', hobbies: '', contactEmail: '', contactPhone: '', couponCode: '' });
