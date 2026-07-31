@@ -9,6 +9,7 @@ Deno.serve(async (req) => {
     if (!story || !story.story_link) {
       return Response.json({ skipped: true });
     }
+    const isKitaAlef = payload.event?.entity_name === 'KitaAlefStory';
 
     // Use contact_email if available, otherwise fall back to the creator's email
     let recipientEmail = story.contact_email;
@@ -29,6 +30,7 @@ Deno.serve(async (req) => {
       childName: story.child_name,
       storyLink: story.story_link,
       isHebrew,
+      isKitaAlef,
     });
 
     return Response.json({ success: true });

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star } from 'lucide-react';
+import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star, Map } from 'lucide-react';
 import { format } from 'date-fns';
 import StoryReadyNotification from '../components/story/StoryReadyNotification';
 import StoryDisplay from '../components/story/StoryDisplay';
@@ -206,10 +206,22 @@ export default function MyStories() {
                       <p className="text-sm text-gray-500 mb-2">{t('my_story_age')} {story.child_age}</p>
                     ) : null}
                     {story.story_link ? (
-                      <Badge className="bg-green-100 text-green-700 gap-1">
-                        <Sparkles className="w-3 h-3 text-amber-500" />
-                        {t('my_story_ready')}
-                      </Badge>
+                      <div className="space-y-2">
+                        <Badge className="bg-green-100 text-green-700 gap-1">
+                          <Sparkles className="w-3 h-3 text-amber-500" />
+                          {t('my_story_ready')}
+                        </Badge>
+                        {story.source === 'kitaalef' && (
+                          <a
+                            href={`/FeelingsMap?lang=${story.lang || (lang === 'he' ? 'he' : 'en')}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex items-center justify-center gap-1 text-xs font-medium text-pink-600 hover:text-pink-700 bg-pink-50 hover:bg-pink-100 rounded-lg py-1.5 px-2 transition-colors"
+                          >
+                            <Map className="w-3 h-3" />
+                            {lang === 'he' ? 'מפת הרגשות שלי' : 'My Feelings Map'}
+                          </a>
+                        )}
+                      </div>
                     ) : story.payment_status === 'pending_payment' ? (
                       <div className="space-y-2">
                         <Badge className="bg-red-100 text-red-700">

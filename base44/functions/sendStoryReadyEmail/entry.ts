@@ -23,7 +23,7 @@ function buildRawMessage(to, subject, html) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { to, childName, storyLink, isHebrew } = await req.json();
+    const { to, childName, storyLink, isHebrew, isKitaAlef } = await req.json();
     if (!to) return Response.json({ error: 'Missing required fields' }, { status: 400 });
 
     const subject = isHebrew
@@ -34,6 +34,21 @@ Deno.serve(async (req) => {
       ? (isHebrew
           ? `<p style="font-size:15px;font-weight:bold;">לקריאת הסיפור:</p><p><a href="${storyLink}" style="display:inline-block;background:#1e293b;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">לקריאת הסיפור ←</a></p><p style="font-size:14px;color:#64748b;">מומלץ לפתוח את הסיפור במצב אופקי 📖</p>`
           : `<p style="font-size:15px;font-weight:bold;">Read the story here:</p><p><a href="${storyLink}" style="display:inline-block;background:#1e293b;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">Read the story here →</a></p><p style="font-size:14px;color:#64748b;">For the best experience, please open the story in landscape mode 📖</p>`)
+      : '';
+
+    const feelingsMapUrl = isHebrew ? 'https://storyleapai.com/FeelingsMap?lang=he' : 'https://storyleapai.com/FeelingsMap?lang=en';
+    const feelingsMapSection = isKitaAlef
+      ? (isHebrew
+          ? `<div style="margin-top:20px;padding:16px;background:#FFF0F7;border-radius:12px;">
+              <p style="font-size:15px;font-weight:bold;margin:0 0 6px;">🗺️ פעילות בונוס: מפת הרגשות שלי</p>
+              <p style="font-size:14px;color:#475569;margin:0 0 12px;">אחרי שקוראים את הסיפור, אפשר (לא חובה!) לעצור עוד כמה דקות ולמלא יחד עם הילד/ה את "מפת הרגשות שלי בדרך לכיתה א׳", פעילות קצרה ונעימה שעוזרת לזהות רגשות ולהתכונן ביחד. זו לא חובה, פשוט תוספת אם יש זמן וכוח.</p>
+              <p><a href="${feelingsMapUrl}" style="display:inline-block;background:#FF6FB5;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:15px;">למפת הרגשות שלי ←</a></p>
+            </div>`
+          : `<div style="margin-top:20px;padding:16px;background:#EAF8FD;border-radius:12px;">
+              <p style="font-size:15px;font-weight:bold;margin:0 0 6px;">🗺️ Bonus activity: My Feelings Map</p>
+              <p style="font-size:14px;color:#475569;margin:0 0 12px;">After reading the story, you can (optionally!) take a few more minutes together with your child to fill out "My Feelings Map on the Way to Kindergarten," a short, gentle activity that helps identify feelings and prepare together. It's not required, just a little extra if you have the time and energy.</p>
+              <p><a href="${feelingsMapUrl}" style="display:inline-block;background:#4FC3E8;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:15px;">Go to My Feelings Map →</a></p>
+            </div>`)
       : '';
 
     const body = isHebrew
@@ -69,6 +84,7 @@ Deno.serve(async (req) => {
           </ul>
 
           ${linkSection}
+          ${feelingsMapSection}
 
           <p style="font-size:15px;margin-top:24px;">תודה שבחרתם ב-StoryLeap 💛<br/><br/>צוות StoryLeap</p>
         </div>`
@@ -106,6 +122,7 @@ Deno.serve(async (req) => {
           </ul>
 
           ${linkSection}
+          ${feelingsMapSection}
 
           <p style="font-size:15px;margin-top:24px;">Thank you for choosing StoryLeap 💛<br/><br/>The StoryLeap Team</p>
         </div>`;

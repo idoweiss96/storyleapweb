@@ -177,7 +177,7 @@ export default function KitaAlefStory() {
         window.dispatchEvent(new Event('credits-updated'));
         sessionStorage.removeItem(PENDING_KEY);
         base44.analytics.track({ eventName: 'kita_alef_credits_used', properties: { story_id: id } });
-        navigate(`/FeelingsMap?lang=${lang}`);
+        navigate('/MyStories');
       } else {
         setError(isEn ? 'An error occurred. Please try again.' : 'אירעה שגיאה ביצירת הסיפור. נסו שוב.');
       }
