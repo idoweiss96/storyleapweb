@@ -11,7 +11,9 @@ const HEADERS = [
   'Gender',
   'Biggest Strength',
   'Parent - Strength you see in them',
-  'Has Photo?',
+  "Has Child's Photo?",
+  "Child's Photo Link",
+  'Photo Consent',
   // Page 2 - Feelings
   'Feelings about starting 1st grade',
   'Parent - What feeling comes up for you',
@@ -23,7 +25,8 @@ const HEADERS = [
   'Parent - What that person thinks about 1st grade',
   'Friends from kindergarten also going to 1st grade',
   'Older sibling - What they said',
-  'Family Photos',
+  'Family Photo - Relationship',
+  'Family Photo - Link',
   // Page 4 - What do you love?
   'What they love doing most',
   'Hero/heroine they love',
@@ -38,6 +41,10 @@ const HEADERS = [
   'Parent - Additional wish',
   'What they think their parent wishes for them',
   'Parent - The moment to tell them directly',
+  'Contact Email',
+  'Contact Phone',
+  'Story Link',
+  'Email Sent',
 ];
 
 Deno.serve(async (req) => {

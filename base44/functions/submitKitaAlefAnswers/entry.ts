@@ -26,6 +26,16 @@ function getFamilyPhotoPair(photo, otherLabel, noRelationLabel) {
   return [relation, p.photo];
 }
 
+// Row layout (0-based) — MUST match the real headers already in the live sheets:
+// 0 Timestamp, 1 User Email, 2 Child's Name, 3 Gender, 4 Child's Photo Link, 5 Photo Consent,
+// 6 Biggest Strength, 7 Parent - Strength, 8 Feelings before, 9 Parent - Feelings,
+// 10 Scary things, 11 Separation feelings, 12 Parent - Separation help,
+// 13 Favorite person, 14 Parent - Favorite person, 15 Gan friends, 16 Sibling experience,
+// 17 Family Photo - Relationship, 18 Family Photo - Link,
+// 19 Activities, 20 Hero, 21 Comfort,
+// 22 Looking forward, 23 Parent - Looking forward, 24 One worry, 25 Visited school,
+// 26 Wish self, 27 Parent - Wish self, 28 Wish parent, 29 Parent - Wish parent,
+// 30 Contact Email, 31 Contact Phone, 32 Story Link, 33 Email Sent
 function answersToRow(answers, userEmail, lang) {
   const isEn = lang === 'en';
   const now = new Date().toLocaleString(isEn ? 'en-US' : 'he-IL');
@@ -38,10 +48,10 @@ function answersToRow(answers, userEmail, lang) {
     // Page 1
     formatValue(answers.name),
     formatValue(answers.gender),
-    formatValue(answers.strength),
-    formatValue(answers.strength_parent),
     answers.photo || '',
     answers.photo_consent ? (isEn ? 'Yes' : 'כן') : (isEn ? 'No' : 'לא'),
+    formatValue(answers.strength),
+    formatValue(answers.strength_parent),
     // Page 2
     formatValue(answers.feelings_before),
     formatValue(answers.feelings_before_parent),
