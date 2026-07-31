@@ -398,8 +398,8 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
             }
               <p className="text-xs text-slate-500 max-w-xs leading-relaxed">
                 {isHe ?
-              'ניתן להעלות תמונה אחת בלבד של אמא או אבא 📸' :
-              'You may upload only one photo of a mom or dad 📸'}
+              'ניתן להעלות תמונה אחת בלבד של אחד ההורים 📸' :
+              'You may upload only one photo of one of the parents 📸'}
               </p>
 
               {formData.parentImage &&
