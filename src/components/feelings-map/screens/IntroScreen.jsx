@@ -1,28 +1,47 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
+
+const TIP_EMOJIS = ['💬', '💗', '👂', '🤍'];
 
 export default function IntroScreen({ text, onStart }) {
   return (
     <div>
-      <div className="rounded-3xl p-9 px-7 text-center shadow-lg" style={{ background: 'linear-gradient(135deg, #F5CFC3 0%, #FFD6EC 40%, #DADCF8 75%, #B8EBF7 100%)' }}>
-        <p className="text-sm font-semibold mb-1.5" style={{ color: '#1A1A6E' }}>{text.eyebrow}</p>
-        <h1 className="text-2xl font-bold mb-3" style={{ color: '#1A1A6E' }}>{text.introTitle}</h1>
-        <p className="text-base text-[#1a1a2e]/85">{text.introBody}</p>
+      <div
+        className="bg-white rounded-[24px] p-6 shadow-xl"
+        style={{ boxShadow: '0 10px 40px rgba(255,111,181,0.15), 0 4px 20px rgba(79,195,232,0.1)' }}
+      >
+        <div className="flex justify-center mb-4">
+          <span
+            className="px-4 py-1.5 rounded-[20px] text-white text-sm font-medium"
+            style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
+          >
+            {text.eyebrow}
+          </span>
+        </div>
+        <h1 className="text-xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>{text.introTitle}</h1>
+        <p className="text-[13px] text-center leading-relaxed" style={{ color: '#1a1a2e', opacity: 0.85 }}>
+          {text.introBody}
+        </p>
       </div>
-      <div className="bg-white rounded-2xl shadow-sm border border-[#ede9f8] p-5 mt-4">
-        <ul className="space-y-0">
+
+      <div className="mt-4 rounded-2xl p-4 border" style={{ background: '#FFF8EC', borderColor: '#F5C842' }}>
+        <ul className="space-y-1.5">
           {text.tips.map((tip, i) => (
-            <li key={i} className={`flex items-start gap-2.5 text-[15px] text-[#1a1a2e]/90 py-2.5 ${i > 0 ? 'border-t border-[#2D2F33]/[0.08]' : ''}`}>
-              <span className="flex-none w-1.5 h-1.5 rounded-full mt-2" style={{ background: '#1A1A6E' }} />
+            <li key={i} className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
+              <span>{TIP_EMOJIS[i] || '💡'}</span>
               <span>{tip}</span>
             </li>
           ))}
         </ul>
       </div>
+
       <div className="mt-6">
-        <Button onClick={onStart} className="w-full h-14 rounded-full text-white font-semibold text-base shadow-lg" style={{ background: '#1A1A6E' }}>
+        <button
+          onClick={onStart}
+          className="w-full py-3.5 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
+          style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)' }}
+        >
           {text.startBtn}
-        </Button>
+        </button>
       </div>
     </div>
   );
