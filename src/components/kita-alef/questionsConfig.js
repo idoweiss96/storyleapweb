@@ -30,19 +30,19 @@ const PAGES_HE = [
           { emoji: '🎉', label: 'סופר מתרגש' },
           { emoji: '😊', label: 'בסדר גמור' },
           { emoji: '🤔', label: 'לא בטוח/ה' },
-          { emoji: '😬', label: 'קצת מפחד/ת' },
-          { emoji: '😰', label: 'מפחד/ת' },
+          { emoji: '😬', label: 'קצת חושש/ת' },
+          { emoji: '😰', label: 'חושש/ת מאוד' },
         ],
         parentField: { label: 'הורה — שתפו גם אתם: איזה רגש מגיע אליכם?' }
       },
       {
         key: 'scary_things', tag: 'together', question: 'ממה את/ה קצת חושש/חוששת?', type: 'chips', multi: true,
-        showIf: { dependsOn: 'feelings_before', values: ['לא בטוח/ה', 'קצת מפחד/ת', 'מפחד/ת'] },
+        showIf: { dependsOn: 'feelings_before', values: ['לא בטוח/ה', 'קצת חושש/ת', 'חושש/ת מאוד'] },
         options: ['פרידה מאמא/אבא', 'לא למצוא חברים', 'שהלמידה תהיה קשה', 'המורה', 'לא לדעת לקרוא', 'שום דבר, הכל בסדר!']
       },
       {
         key: 'separation_feelings', tag: 'together', question: 'איך מרגישים בפרידות?', type: 'emoji',
-        showIf: { dependsOn: 'feelings_before', values: ['לא בטוח/ה', 'קצת מפחד/ת', 'מפחד/ת'] },
+        showIf: { dependsOn: 'feelings_before', values: ['לא בטוח/ה', 'קצת חושש/ת', 'חושש/ת מאוד'] },
         options: [
           { emoji: '😎', label: 'קל לי' },
           { emoji: '🙂', label: 'קצת קשה' },
@@ -116,7 +116,7 @@ const PAGES_HE = [
       },
       {
         key: 'one_worry', tag: 'together', question: 'איזה דבר אחד קצת מדאיג?', type: 'textarea',
-        showIf: { dependsOn: 'feelings_before', values: ['קצת מפחד/ת', 'מפחד/ת'] },
+        showIf: { dependsOn: 'feelings_before', values: ['קצת חושש/ת', 'חושש/ת מאוד'] },
         hint: 'כתבו יחד...'
       },
       {
@@ -188,19 +188,19 @@ const PAGES_EN = [
           { emoji: '🎉', label: 'Super excited' },
           { emoji: '😊', label: 'Fine' },
           { emoji: '🤔', label: 'Not sure' },
-          { emoji: '😬', label: 'A little scared' },
-          { emoji: '😰', label: 'Scared' },
+          { emoji: '😬', label: 'A little worried' },
+          { emoji: '😰', label: 'Very worried' },
         ],
         parentField: { label: 'Parent — share too: what feeling comes up for you?' }
       },
       {
         key: 'scary_things', tag: 'together', question: 'What are you a little worried about?', type: 'chips', multi: true,
-        showIf: { dependsOn: 'feelings_before', values: ['Not sure', 'A little scared', 'Scared'] },
+        showIf: { dependsOn: 'feelings_before', values: ['Not sure', 'A little worried', 'Very worried'] },
         options: ['Separation from mom/dad', 'Not making friends', 'That learning will be hard', 'The teacher', 'Not knowing how to read', "Nothing, it's all fine!"]
       },
       {
         key: 'separation_feelings', tag: 'together', question: 'How do separations feel?', type: 'emoji',
-        showIf: { dependsOn: 'feelings_before', values: ['Not sure', 'A little scared', 'Scared'] },
+        showIf: { dependsOn: 'feelings_before', values: ['Not sure', 'A little worried', 'Very worried'] },
         options: [
           { emoji: '😎', label: 'Easy for me' },
           { emoji: '🙂', label: 'A little hard' },
@@ -274,7 +274,7 @@ const PAGES_EN = [
       },
       {
         key: 'one_worry', tag: 'together', question: 'What one thing is a bit worrying?', type: 'textarea',
-        showIf: { dependsOn: 'feelings_before', values: ['A little scared', 'Scared'] },
+        showIf: { dependsOn: 'feelings_before', values: ['A little worried', 'Very worried'] },
         hint: 'Write together...'
       },
       {
