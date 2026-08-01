@@ -36,7 +36,7 @@ const PAGES_HE = [
         parentField: { label: 'הורה — שתפו גם אתם: איזה רגש מגיע אליכם?' }
       },
       {
-        key: 'scary_things', tag: 'together', question: 'מה נראה קצת מפחיד?', type: 'chips', multi: true,
+        key: 'scary_things', tag: 'together', question: 'ממה את/ה קצת חושש/חוששת?', type: 'chips', multi: true,
         showIf: { dependsOn: 'feelings_before', values: ['לא בטוח/ה', 'קצת מפחד/ת', 'מפחד/ת'] },
         options: ['פרידה מאמא/אבא', 'לא למצוא חברים', 'שהלמידה תהיה קשה', 'המורה', 'לא לדעת לקרוא', 'שום דבר, הכל בסדר!']
       },
@@ -194,7 +194,7 @@ const PAGES_EN = [
         parentField: { label: 'Parent — share too: what feeling comes up for you?' }
       },
       {
-        key: 'scary_things', tag: 'together', question: 'What seems a little scary?', type: 'chips', multi: true,
+        key: 'scary_things', tag: 'together', question: 'What are you a little worried about?', type: 'chips', multi: true,
         showIf: { dependsOn: 'feelings_before', values: ['Not sure', 'A little scared', 'Scared'] },
         options: ['Separation from mom/dad', 'Not making friends', 'That learning will be hard', 'The teacher', 'Not knowing how to read', "Nothing, it's all fine!"]
       },
