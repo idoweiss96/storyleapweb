@@ -26,7 +26,7 @@ export default function IntroScreen({ text, onStart }) {
       <div className="mt-4 rounded-2xl p-4 border" style={{ background: '#FFF8EC', borderColor: '#F5C842' }}>
         <ul className="space-y-1.5">
           {text.tips.map((tip, i) => (
-            <li key={i} className="flex items-start gap-2 text-[12.5px]" style={{ color: '#7A5000' }}>
+            <li key={i} className="flex items-start gap-2 text-[12.5px]" style={{ color: '#1a1a2e' }}>
               <span>{TIP_EMOJIS[i] || '💡'}</span>
               <span>{tip}</span>
             </li>

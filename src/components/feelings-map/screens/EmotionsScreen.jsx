@@ -28,7 +28,7 @@ export default function EmotionsScreen({ text, isEn, emotions, state, toggle, up
           />
         </div>
       )}
-      <div className="rounded-2xl px-4 py-3.5 text-sm mt-4 border" style={{ background: '#FFF8EC', borderColor: '#F5C842', color: '#7A5000' }}>
+      <div className="rounded-2xl px-4 py-3.5 text-sm mt-4 border" style={{ background: '#FFF8EC', borderColor: '#F5C842', color: '#1a1a2e' }}>
         {text.emotionsNote}
       </div>
       <Button onClick={onNext} disabled={!hasSelection} className="w-full h-14 rounded-full text-white font-semibold text-base mt-6" style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)' }}>
