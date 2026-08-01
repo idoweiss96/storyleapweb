@@ -37,12 +37,12 @@ const PAGES_HE = [
       },
       {
         key: 'scary_things', tag: 'together', question: 'מה נראה קצת מפחיד?', type: 'chips', multi: true,
-        showIf: { dependsOn: 'feelings_before', values: ['קצת מפחד/ת', 'מפחד/ת'] },
+        showIf: { dependsOn: 'feelings_before', values: ['לא בטוח/ה', 'קצת מפחד/ת', 'מפחד/ת'] },
         options: ['פרידה מאמא/אבא', 'לא למצוא חברים', 'שהלמידה תהיה קשה', 'המורה', 'לא לדעת לקרוא', 'שום דבר, הכל בסדר!']
       },
       {
         key: 'separation_feelings', tag: 'together', question: 'איך מרגישים בפרידות?', type: 'emoji',
-        showIf: { dependsOn: 'feelings_before', values: ['קצת מפחד/ת', 'מפחד/ת'] },
+        showIf: { dependsOn: 'feelings_before', values: ['לא בטוח/ה', 'קצת מפחד/ת', 'מפחד/ת'] },
         options: [
           { emoji: '😎', label: 'קל לי' },
           { emoji: '🙂', label: 'קצת קשה' },
@@ -195,12 +195,12 @@ const PAGES_EN = [
       },
       {
         key: 'scary_things', tag: 'together', question: 'What seems a little scary?', type: 'chips', multi: true,
-        showIf: { dependsOn: 'feelings_before', values: ['A little scared', 'Scared'] },
+        showIf: { dependsOn: 'feelings_before', values: ['Not sure', 'A little scared', 'Scared'] },
         options: ['Separation from mom/dad', 'Not making friends', 'That learning will be hard', 'The teacher', 'Not knowing how to read', "Nothing, it's all fine!"]
       },
       {
         key: 'separation_feelings', tag: 'together', question: 'How do separations feel?', type: 'emoji',
-        showIf: { dependsOn: 'feelings_before', values: ['A little scared', 'Scared'] },
+        showIf: { dependsOn: 'feelings_before', values: ['Not sure', 'A little scared', 'Scared'] },
         options: [
           { emoji: '😎', label: 'Easy for me' },
           { emoji: '🙂', label: 'A little hard' },
