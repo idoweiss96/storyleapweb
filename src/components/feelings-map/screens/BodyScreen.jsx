@@ -15,7 +15,7 @@ export default function BodyScreen({ text, isEn, body, state, toggle, onBack, on
           <OptionCard key={b.id} item={b} selected={state.bodyFeelings.includes(b.id)} onClick={() => toggle('bodyFeelings', b.id)} />
         ))}
       </div>
-      <Button onClick={onNext} className="w-full h-14 rounded-full text-white font-semibold text-base mt-6" style={{ background: 'linear-gradient(135deg, #4FC3E8, #6BB6E8)' }}>
+      <Button onClick={onNext} className="w-full h-14 rounded-full text-white font-semibold text-base mt-6" style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)' }}>
         {hasSelection ? text.next : text.bodySkip}
       </Button>
     </div>

@@ -24,7 +24,7 @@ export default function StoryScreen({ text, isEn, storyCards, state, toggle, upd
           className="rounded-xl border-2 border-[#ede9f8] focus-visible:ring-0 focus-visible:border-[#1A1A6E]"
         />
       </div>
-      <Button onClick={onNext} className="w-full h-14 rounded-full text-white font-semibold text-base mt-6" style={{ background: 'linear-gradient(135deg, #4FC3E8, #6BB6E8)' }}>
+      <Button onClick={onNext} className="w-full h-14 rounded-full text-white font-semibold text-base mt-6" style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)' }}>
         {text.next}
       </Button>
     </div>
