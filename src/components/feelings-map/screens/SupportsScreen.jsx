@@ -27,7 +27,7 @@ export default function SupportsScreen({ text, isEn, supports, state, toggle, up
           />
         </div>
       )}
-      <Button onClick={onNext} className="w-full h-14 rounded-full text-white font-semibold text-base mt-6" style={{ background: '#1A1A6E' }}>
+      <Button onClick={onNext} className="w-full h-14 rounded-full text-white font-semibold text-base mt-6" style={{ background: 'linear-gradient(135deg, #4FC3E8, #6BB6E8)' }}>
         {text.next}
       </Button>
     </div>

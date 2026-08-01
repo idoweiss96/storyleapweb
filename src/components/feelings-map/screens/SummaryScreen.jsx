@@ -87,7 +87,7 @@ export default function SummaryScreen({ text, content, state, onRestart, onRetur
       <p className="text-center text-sm text-[#1a1a2e]/60 mt-5 mb-1 print:hidden">{text.closingText}</p>
 
       <div className="flex flex-col gap-2.5 mt-5 print:hidden">
-        <Button onClick={() => window.print()} className="w-full h-12 rounded-full text-white font-semibold" style={{ background: '#1A1A6E' }}>
+        <Button onClick={() => window.print()} className="w-full h-12 rounded-full text-white font-semibold" style={{ background: 'linear-gradient(135deg, #4FC3E8, #6BB6E8)' }}>
           <Printer className="w-4 h-4 me-2" />{text.printBtn}
         </Button>
         <Button onClick={onRestart} variant="ghost" className="w-full h-11 rounded-full text-[#1a1a2e]/65">
