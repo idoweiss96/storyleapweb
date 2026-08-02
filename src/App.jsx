@@ -22,6 +22,7 @@ import DesignSystem from './pages/DesignSystem';
 import ExportSamples from './pages/ExportSamples';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
+import FAQ from './pages/FAQ';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -87,6 +88,7 @@ const AuthenticatedApp = () => {
       <Route path="/ExportSamples" element={<LayoutWrapper currentPageName="ExportSamples"><ExportSamples /></LayoutWrapper>} />
       <Route path="/PrivacyPolicy" element={<LayoutWrapper currentPageName="PrivacyPolicy"><PrivacyPolicy /></LayoutWrapper>} />
       <Route path="/TermsOfUse" element={<LayoutWrapper currentPageName="TermsOfUse"><TermsOfUse /></LayoutWrapper>} />
+      <Route path="/FAQ" element={<LayoutWrapper currentPageName="FAQ"><FAQ /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
