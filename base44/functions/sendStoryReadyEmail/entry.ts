@@ -23,8 +23,15 @@ function buildRawMessage(to, subject, html) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { to, childName, storyLink, isHebrew, isKitaAlef } = await req.json();
+    const { to, childName, storyLink, isHebrew, isKitaAlef, story_id, entity_type } = await req.json();
     if (!to) return Response.json({ error: 'Missing required fields' }, { status: 400 });
+
+    // Route the email link through our own tracked redirect (instead of linking straight to the
+    // external flipbook) so we can detect when the parent actually opens the story, not just when
+    // this email was sent. Falls back to the raw link if no story_id/entity_type was provided.
+    const trackedLink = (story_id && entity_type)
+      ? `https://storyleapai.com/functions/openStoryLink?id=${story_id}&type=${entity_type}`
+      : storyLink;
 
     const subject = isHebrew
       ? `✨ הסיפור האישי של ${childName} מוכן!`
@@ -32,8 +39,8 @@ Deno.serve(async (req) => {
 
     const linkSection = storyLink
       ? (isHebrew
-          ? `<p style="font-size:15px;font-weight:bold;">לקריאת הסיפור:</p><p><a href="${storyLink}" style="display:inline-block;background:#1e293b;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">לקריאת הסיפור ←</a></p><p style="font-size:14px;color:#64748b;">מומלץ לפתוח את הסיפור במצב אופקי 📖</p>`
-          : `<p style="font-size:15px;font-weight:bold;">Read the story here:</p><p><a href="${storyLink}" style="display:inline-block;background:#1e293b;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">Read the story here →</a></p><p style="font-size:14px;color:#64748b;">For the best experience, please open the story in landscape mode 📖</p>`)
+          ? `<p style="font-size:15px;font-weight:bold;">לקריאת הסיפור:</p><p><a href="${trackedLink}" style="display:inline-block;background:#1e293b;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">לקריאת הסיפור ←</a></p><p style="font-size:14px;color:#64748b;">מומלץ לפתוח את הסיפור במצב אופקי 📖</p>`
+          : `<p style="font-size:15px;font-weight:bold;">Read the story here:</p><p><a href="${trackedLink}" style="display:inline-block;background:#1e293b;color:white;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">Read the story here →</a></p><p style="font-size:14px;color:#64748b;">For the best experience, please open the story in landscape mode 📖</p>`)
       : '';
 
     const feelingsMapUrl = isHebrew ? 'https://storyleapai.com/FeelingsMap?lang=he' : 'https://storyleapai.com/FeelingsMap?lang=en';

@@ -87,25 +87,35 @@ async function processSheet(base44, spreadsheetId, sheetName, isHebrew, accessTo
       continue;
     }
 
+    // Find the matching Story record first so we can pass its id into the email for click-tracking,
+    // and persist the submission language for the later feedback-survey trigger.
+    let target = null;
+    try {
+      const matches = await base44.asServiceRole.entities.Story.filter({ contact_email: contactEmail, child_name: childName });
+      target = matches.find(s => !s.story_link) || null;
+    } catch (e) {
+      console.error('[checkStoryLinksAndNotify] Failed to look up matching Story record:', e.message);
+    }
+
     await base44.asServiceRole.functions.invoke('sendStoryReadyEmail', {
       to: contactEmail,
       childName,
       storyLink,
       isHebrew,
+      story_id: target?.id,
+      entity_type: 'story',
     });
 
     await markEmailSent(spreadsheetId, sheetName, rowNumber, accessToken);
 
     // Also write the link back onto the matching Story record so it shows up
     // as ready in the parent's "My Stories" area, not just via email.
-    try {
-      const matches = await base44.asServiceRole.entities.Story.filter({ contact_email: contactEmail, child_name: childName });
-      const target = matches.find(s => !s.story_link);
-      if (target) {
-        await base44.asServiceRole.entities.Story.update(target.id, { story_link: storyLink });
+    if (target) {
+      try {
+        await base44.asServiceRole.entities.Story.update(target.id, { story_link: storyLink, lang: isHebrew ? 'he' : 'en' });
+      } catch (e) {
+        console.error('[checkStoryLinksAndNotify] Failed to sync story_link to Story entity:', e.message);
       }
-    } catch (e) {
-      console.error('[checkStoryLinksAndNotify] Failed to sync story_link to Story entity:', e.message);
     }
 
     sent++;

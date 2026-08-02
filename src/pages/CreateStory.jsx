@@ -106,7 +106,7 @@ export default function CreateStory() {
     challenge_type: formData.challengeType, custom_challenge: formData.challengeType === 'other' ? (formData.customChallenge || null) : null, trigger_desc: formData.triggerDesc || null,
     reaction_type: formData.reactionType || null, hobbies: formData.hobbies || null,
     contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
-    content: null, story_link: null, payment_status: paymentStatus,
+    content: null, story_link: null, payment_status: paymentStatus, lang,
   });
 
   // Step 1: User clicks "המשך ליצירת הספר"

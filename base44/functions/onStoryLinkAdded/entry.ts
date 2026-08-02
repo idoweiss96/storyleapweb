@@ -31,6 +31,8 @@ Deno.serve(async (req) => {
       storyLink: story.story_link,
       isHebrew,
       isKitaAlef,
+      story_id: payload.event?.entity_id,
+      entity_type: isKitaAlef ? 'kita' : 'story',
     });
 
     return Response.json({ success: true });

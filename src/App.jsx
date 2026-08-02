@@ -23,6 +23,7 @@ import ExportSamples from './pages/ExportSamples';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import FAQ from './pages/FAQ';
+import FeedbackSurvey from './pages/FeedbackSurvey';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -89,6 +90,7 @@ const AuthenticatedApp = () => {
       <Route path="/PrivacyPolicy" element={<LayoutWrapper currentPageName="PrivacyPolicy"><PrivacyPolicy /></LayoutWrapper>} />
       <Route path="/TermsOfUse" element={<LayoutWrapper currentPageName="TermsOfUse"><TermsOfUse /></LayoutWrapper>} />
       <Route path="/FAQ" element={<LayoutWrapper currentPageName="FAQ"><FAQ /></LayoutWrapper>} />
+      <Route path="/FeedbackSurvey" element={<LayoutWrapper currentPageName="FeedbackSurvey"><FeedbackSurvey /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

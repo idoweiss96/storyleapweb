@@ -1,0 +1,91 @@
+{
+  "name": "FeedbackSurvey",
+  "type": "object",
+  "properties": {
+    "story_id": {
+      "type": "string",
+      "description": "ID of the related Story or KitaAlefStory entity"
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": [
+        "story",
+        "kita"
+      ],
+      "description": "Which entity story_id refers to"
+    },
+    "child_name": {
+      "type": "string",
+      "description": "Child's name, for matching feedback to the right order"
+    },
+    "lang": {
+      "type": "string",
+      "enum": [
+        "he",
+        "en"
+      ],
+      "description": "Language the survey was answered in"
+    },
+    "overall_rating": {
+      "type": "number",
+      "description": "Overall story rating, 1-5"
+    },
+    "fit_rating": {
+      "type": "string",
+      "description": "How well the story matched the child and their challenge"
+    },
+    "opened_conversation": {
+      "type": "string",
+      "description": "Did the story open a meaningful conversation (yes/somewhat/no)"
+    },
+    "child_enjoyment": {
+      "type": "number",
+      "description": "How much the child enjoyed the story, 1-5"
+    },
+    "best_part": {
+      "type": "string",
+      "description": "What worked best about the story"
+    },
+    "improvement": {
+      "type": "string",
+      "description": "What could be improved"
+    },
+    "nps_score": {
+      "type": "number",
+      "description": "Likelihood to recommend StoryLeap, 0-10"
+    },
+    "use_again": {
+      "type": "string",
+      "description": "Would use StoryLeap again (yes/maybe/no)"
+    },
+    "other_comments": {
+      "type": "string",
+      "description": "Anything else the parent wanted to share"
+    }
+  },
+  "required": [
+    "child_name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
