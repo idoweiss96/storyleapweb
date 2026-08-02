@@ -35,6 +35,7 @@ export default async function(req) {
       child_enjoyment: answers.child_enjoyment,
       best_part: answers.best_part,
       improvement: answers.improvement,
+      missing_or_recommendation: answers.missing_or_recommendation,
       nps_score: answers.nps_score,
       use_again: answers.use_again,
       other_comments: answers.other_comments,
@@ -54,6 +55,7 @@ export default async function(req) {
       <p><strong>Child enjoyment (1-5):</strong> ${answers.child_enjoyment ?? '-'}</p>
       <p><strong>What worked best:</strong> ${answers.best_part || '-'}</p>
       <p><strong>What could improve:</strong> ${answers.improvement || '-'}</p>
+      <p><strong>What was missing / recommendation:</strong> ${answers.missing_or_recommendation || '-'}</p>
       <p><strong>Recommend likelihood (0-10):</strong> ${answers.nps_score ?? '-'}</p>
       <p><strong>Would use again:</strong> ${answers.use_again ?? '-'}</p>
       <p><strong>Additional comments:</strong> ${answers.other_comments || '-'}</p>

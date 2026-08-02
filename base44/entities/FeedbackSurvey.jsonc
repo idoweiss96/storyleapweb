@@ -50,6 +50,10 @@
       "type": "string",
       "description": "What could be improved"
     },
+    "missing_or_recommendation": {
+      "type": "string",
+      "description": "What was missing for the parent, or what they would recommend adding to the experience"
+    },
     "nps_score": {
       "type": "number",
       "description": "Likelihood to recommend StoryLeap, 0-10"

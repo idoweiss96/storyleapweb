@@ -18,6 +18,7 @@ const content = {
     q4: 'עד כמה הילד/ה נהנה/תה מהסיפור?',
     q5: 'מה עבד הכי טוב בסיפור?',
     q6: 'מה היינו יכולים לשפר?',
+    q6b: 'מה היה חסר לכם בחוויה, או מה הייתם ממליצים לנו להוסיף?',
     q7: 'עד כמה סביר שתמליצו על StoryLeap להורה אחר? (0-10)',
     q8: 'האם תרצו להשתמש שוב ב-StoryLeap לאתגר או אירוע אחר בעתיד?',
     q8opts: [['yes', 'כן'], ['maybe', 'אולי'], ['no', 'לא']],
@@ -38,6 +39,7 @@ const content = {
     q4: 'How much did your child enjoy the story?',
     q5: 'What worked best about the story?',
     q6: 'What could we improve?',
+    q6b: 'What was missing for you, or what would you recommend we add to the experience?',
     q7: 'How likely are you to recommend StoryLeap to another parent? (0-10)',
     q8: 'Would you like to use StoryLeap again for a different challenge or milestone?',
     q8opts: [['yes', 'Yes'], ['maybe', 'Maybe'], ['no', 'No']],
@@ -103,6 +105,7 @@ export default function FeedbackSurvey() {
     child_enjoyment: 0,
     best_part: '',
     improvement: '',
+    missing_or_recommendation: '',
     nps_score: null,
     use_again: '',
     other_comments: '',
@@ -176,6 +179,11 @@ export default function FeedbackSurvey() {
         <div className="space-y-2">
           <p className="font-semibold text-slate-800">{c.q6}</p>
           <Textarea value={answers.improvement} onChange={(e) => update('improvement', e.target.value)} className="rounded-xl" rows={2} />
+        </div>
+
+        <div className="space-y-2">
+          <p className="font-semibold text-slate-800">{c.q6b}</p>
+          <Textarea value={answers.missing_or_recommendation} onChange={(e) => update('missing_or_recommendation', e.target.value)} className="rounded-xl" rows={2} />
         </div>
 
         <div className="space-y-2">
