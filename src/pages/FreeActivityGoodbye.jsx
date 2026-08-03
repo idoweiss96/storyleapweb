@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { attachEmailOptIn } from '@/lib/freeActivityEmailOptIn';
+import { useLanguage } from '@/components/LanguageContext';
+import { GOODBYE_RITUAL_CONTENT, GOODBYE_PARENT_LINES_EN, GOODBYE_CHILD_LINES_EN } from '@/lib/goodbyeRitualContent';
 
 const LOGO_URL = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg';
 
@@ -78,7 +80,7 @@ const STYLE = `
 
   .fa-goodbye .opts{display:flex;flex-direction:column;gap:10px;margin:4px 0 18px}
   .fa-goodbye .opt{
-    display:flex;align-items:center;gap:12px;width:100%;text-align:right;
+    display:flex;align-items:center;gap:12px;width:100%;text-align:start;
     font-family:var(--body);font-size:16.5px;color:var(--charcoal);
     background:#fff;border:1.5px solid var(--line);border-radius:var(--r-sm);
     padding:15px 16px;cursor:pointer;transition:border-color .18s,background .18s,transform .12s;
@@ -179,7 +181,7 @@ const STYLE = `
   .fa-goodbye .row-k{font-size:13.5px;color:rgba(26,26,46,.55);margin-bottom:2px}
   .fa-goodbye .row-v{font-size:17px;color:var(--charcoal);line-height:1.5}
   .fa-goodbye .row-v.quote{font-family:var(--display);font-size:19px;line-height:1.45;color:var(--royal)}
-  .fa-goodbye .row-v ul{margin:4px 0 0;padding:0 18px 0 0}
+  .fa-goodbye .row-v ul{margin:4px 0 0;padding-inline-start:18px;padding-inline-end:0}
   .fa-goodbye .row-v li{margin-bottom:3px}
   .fa-goodbye .empty{color:rgba(26,26,46,.38)}
 
@@ -191,7 +193,7 @@ const STYLE = `
 
   .fa-goodbye .howto{margin-top:18px}
   .fa-goodbye .howto h3{font-family:var(--display);font-size:19px;color:var(--royal);margin:0 0 10px;font-weight:700}
-  .fa-goodbye .howto ul{margin:0;padding:0 20px 0 0;font-size:15.5px;color:rgba(26,26,46,.78)}
+  .fa-goodbye .howto ul{margin:0;padding-inline-start:20px;padding-inline-end:0;font-size:15.5px;color:rgba(26,26,46,.78)}
   .fa-goodbye .howto li{margin-bottom:7px}
 
   .fa-goodbye .actions{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0}
@@ -251,7 +253,8 @@ const STYLE = `
   }
 `;
 
-const BODY_HTML = `
+function buildBodyHtml(T) {
+  return `
 <div class="wrap">
 
   <div class="brandbar noprint"><img src="${LOGO_URL}" alt="StoryLeap"></div>
@@ -263,238 +266,243 @@ const BODY_HTML = `
 
   <div class="card">
 
-    <!-- 1. פתיחה -->
     <section class="screen active" id="s0">
-      <h1>טקס הפרידה שלנו</h1>
-      <p class="lede">בונים יחד פרידה קבועה, קצרה ומרגיעה לקראת כיתה א׳.</p>
-      <p>רגע הפרידה בשער הוא אחד הרגעים הגדולים של היום. כשהוא צפוי, קצר וברור — קל יותר להיכנס פנימה, וקל יותר גם להורה ללכת.</p>
-      <p>בפעילות הקצרה הזו תבנו יחד, הורה וילד/ה, טקס פרידה קטן שהוא שלכם בלבד: איך נפרדים, מה אומרים, ומה עושים אם קצת קשה. בסוף תקבלו כרטיס אישי להדפסה או לתלייה על המקרר.</p>
+      <h1>${T.s0.h1}</h1>
+      <p class="lede">${T.s0.lede}</p>
+      <p>${T.s0.p1}</p>
+      <p>${T.s0.p2}</p>
       <div class="chips">
-        <span class="chip">3–5 דקות</span>
-        <span class="chip">יחד עם הילד/ה</span>
-        <span class="chip">בסוף: כרטיס אישי</span>
+        <span class="chip">${T.s0.chips[0]}</span>
+        <span class="chip">${T.s0.chips[1]}</span>
+        <span class="chip">${T.s0.chips[2]}</span>
       </div>
-      <div class="nav"><button class="btn btn-primary" data-go="1">בואו נתחיל</button></div>
+      <div class="nav"><button class="btn btn-primary" data-go="1">${T.s0.btn}</button></div>
     </section>
 
-    <!-- 2. שם -->
     <section class="screen" id="s1">
-      <h2>קודם כול, למי בונים את הטקס?</h2>
-      <p class="sub">אפשר לשאול את הילד/ה איך הוא או היא אוהבים שקוראים להם.</p>
+      <h2>${T.s1.h2}</h2>
+      <p class="sub">${T.s1.sub}</p>
 
       <div class="field">
-        <label class="f" for="name">מה השם של הילד או הילדה?</label>
-        <input type="text" id="name" placeholder="שם או כינוי" autocomplete="off">
+        <label class="f" for="name">${T.s1.nameLabel}</label>
+        <input type="text" id="name" placeholder="${T.s1.namePh}" autocomplete="off">
       </div>
 
       <div class="field">
-        <label class="f">כדי שהמשפטים יהיו מדויקים</label>
-        <div class="seg" id="segChild" role="group" aria-label="מגדר הילד או הילדה">
-          <button type="button" data-v="boy">ילד</button>
-          <button type="button" data-v="girl">ילדה</button>
-          <button type="button" data-v="neutral" aria-pressed="true">בלי לציין</button>
+        <label class="f">${T.s1.genderLabel}</label>
+        <div class="seg" id="segChild" role="group" aria-label="${T.s1.genderAria}">
+          <button type="button" data-v="boy">${T.s1.genderBoy}</button>
+          <button type="button" data-v="girl">${T.s1.genderGirl}</button>
+          <button type="button" data-v="neutral" aria-pressed="true">${T.s1.genderNeutral}</button>
         </div>
       </div>
 
       <div class="field">
-        <label class="f">מי נפרד/ת בשער?</label>
-        <div class="seg" id="segParent" role="group" aria-label="מי נפרד בשער">
-          <button type="button" data-v="mom">אמא</button>
-          <button type="button" data-v="dad">אבא</button>
-          <button type="button" data-v="parent" aria-pressed="true">מבוגר אחר</button>
+        <label class="f">${T.s1.parentLabel}</label>
+        <div class="seg" id="segParent" role="group" aria-label="${T.s1.parentAria}">
+          <button type="button" data-v="mom">${T.s1.parentMom}</button>
+          <button type="button" data-v="dad">${T.s1.parentDad}</button>
+          <button type="button" data-v="parent" aria-pressed="true">${T.s1.parentOther}</button>
         </div>
       </div>
 
       <div class="nav">
-        <button class="btn btn-ghost" data-go="0">חזרה</button>
-        <button class="btn btn-primary" data-go="2" id="nameNext" disabled>המשך</button>
+        <button class="btn btn-ghost" data-go="0">${T.navBack}</button>
+        <button class="btn btn-primary" data-go="2" id="nameNext" disabled>${T.s1.next}</button>
       </div>
     </section>
 
-    <!-- 3. איך נפרדים -->
     <section class="screen" id="s2">
-      <h2>איך נפרדים?</h2>
-      <p class="sub">בוחרים פעולה אחת שתחזור על עצמה בכל בוקר.</p>
+      <h2>${T.s2.h2}</h2>
+      <p class="sub">${T.s2.sub}</p>
       <div class="opts" id="optsGoodbye"></div>
       <div class="field hidden" id="goodbyeOtherWrap">
-        <input type="text" id="goodbyeOther" placeholder="הפעולה שבחרתם" autocomplete="off">
+        <input type="text" id="goodbyeOther" placeholder="${T.s2.otherPh}" autocomplete="off">
       </div>
       <div class="tip">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <span><strong>למה זה עוזר:</strong> פעולה קצרה שחוזרת בכל בוקר הופכת את הפרידה לצפויה. עדיף משהו שאפשר לעשות גם כשממהרים.</span>
+        <span>${T.s2.tip}</span>
       </div>
       <div class="nav">
-        <button class="btn btn-ghost" data-go="1">חזרה</button>
-        <button class="btn btn-primary" data-go="3" id="goodbyeNext" disabled>המשך</button>
+        <button class="btn btn-ghost" data-go="1">${T.navBack}</button>
+        <button class="btn btn-primary" data-go="3" id="goodbyeNext" disabled>${T.s2.next}</button>
       </div>
     </section>
 
-    <!-- 4. משפט ההורה -->
     <section class="screen" id="s3">
-      <h2>מה ההורה אומר?</h2>
-      <p class="sub">משפט אחד, קצר, שנאמר בכל בוקר באותה הצורה.</p>
+      <h2>${T.s3.h2}</h2>
+      <p class="sub">${T.s3.sub}</p>
       <div class="opts" id="optsParent"></div>
       <div class="field hidden" id="parentOtherWrap">
-        <input type="text" id="parentOther" placeholder="המשפט שלכם" autocomplete="off">
+        <input type="text" id="parentOther" placeholder="${T.s3.otherPh}" autocomplete="off">
       </div>
       <div class="tip">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <span><strong>למה זה עוזר:</strong> אותו משפט, באותו הסדר, כל יום. החזרתיות היא מה שמרגיע — לא ההסבר הארוך.</span>
+        <span>${T.s3.tip}</span>
       </div>
       <div class="nav">
-        <button class="btn btn-ghost" data-go="2">חזרה</button>
-        <button class="btn btn-primary" data-go="4" id="parentNext" disabled>המשך</button>
+        <button class="btn btn-ghost" data-go="2">${T.navBack}</button>
+        <button class="btn btn-primary" data-go="4" id="parentNext" disabled>${T.s3.next}</button>
       </div>
     </section>
 
-    <!-- 5. משפט הילד -->
     <section class="screen" id="s4">
-      <h2 id="childQ">משפט האומץ</h2>
-      <p class="sub">משפט שאפשר להגיד לעצמך בשקט, גם כשאף אחד לא שומע.</p>
+      <h2 id="childQ">${T.s4.titleDefault}</h2>
+      <p class="sub">${T.s4.sub}</p>
       <div class="opts" id="optsChild"></div>
       <div class="field hidden" id="childOtherWrap">
-        <input type="text" id="childOther" placeholder="המשפט שבחרנו" autocomplete="off">
+        <input type="text" id="childOther" placeholder="${T.s4.otherPh}" autocomplete="off">
       </div>
       <div class="tip">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <span><strong>טיפ:</strong> תנו לילד/ה לבחור. משפט שנבחר לבד נזכר טוב יותר מאשר משפט שקיבלנו.</span>
+        <span>${T.s4.tip}</span>
       </div>
       <div class="nav">
-        <button class="btn btn-ghost" data-go="3">חזרה</button>
-        <button class="btn btn-primary" data-go="5" id="childNext" disabled>המשך</button>
+        <button class="btn btn-ghost" data-go="3">${T.navBack}</button>
+        <button class="btn btn-primary" data-go="5" id="childNext" disabled>${T.s4.next}</button>
       </div>
     </section>
 
-    <!-- 6. מה עוזר אם קשה -->
     <section class="screen" id="s5">
-      <h2>ואם יהיה קצת קשה?</h2>
-      <p class="sub">בוחרים עד שלושה דברים שיעזרו ברגע עצמו.</p>
+      <h2>${T.s5.h2}</h2>
+      <p class="sub">${T.s5.sub}</p>
       <div class="opts" id="optsHelp"></div>
       <div class="field hidden" id="helpOtherWrap">
-        <input type="text" id="helpOther" placeholder="מה עוד יעזור לי?" autocomplete="off">
+        <input type="text" id="helpOther" placeholder="${T.s5.otherPh}" autocomplete="off">
       </div>
       <div class="tip">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <span><strong>למה עד שלושה:</strong> ברגע של התרגשות קשה לזכור רשימה. שניים־שלושה דברים ברורים עובדים טוב יותר.</span>
+        <span>${T.s5.tip}</span>
       </div>
       <div class="nav">
-        <button class="btn btn-ghost" data-go="4">חזרה</button>
-        <button class="btn btn-primary" data-go="6" id="helpNext" disabled>המשך</button>
+        <button class="btn btn-ghost" data-go="4">${T.navBack}</button>
+        <button class="btn btn-primary" data-go="6" id="helpNext" disabled>${T.s5.next}</button>
       </div>
     </section>
 
-    <!-- 7. אחרי בית הספר -->
     <section class="screen" id="s6">
-      <h2>מה קורה אחר כך?</h2>
-      <p class="sub">לדעת מה מחכה בסוף היום מקטין הרבה מאי־הוודאות.</p>
+      <h2>${T.s6.h2}</h2>
+      <p class="sub">${T.s6.sub}</p>
 
       <div class="field">
-        <label class="f" for="pickup">מי יאסוף אותי?</label>
-        <input type="text" id="pickup" placeholder="אמא, אבא, סבתא…" autocomplete="off">
+        <label class="f" for="pickup">${T.s6.pickupLabel}</label>
+        <input type="text" id="pickup" placeholder="${T.s6.pickupPh}" autocomplete="off">
         <div class="quicks" data-target="pickup">
-          <button type="button" class="quick">אמא</button>
-          <button type="button" class="quick">אבא</button>
-          <button type="button" class="quick">סבא או סבתא</button>
-          <button type="button" class="quick">צהרון</button>
+          ${T.s6.pickupQuick.map((q) => `<button type="button" class="quick">${q}</button>`).join('')}
         </div>
       </div>
 
       <div class="field">
-        <label class="f" for="first">מה הדבר הראשון שנעשה כשניפגש?</label>
-        <input type="text" id="first" placeholder="חיבוק גדול, לספר על היום…" autocomplete="off">
+        <label class="f" for="first">${T.s6.firstLabel}</label>
+        <input type="text" id="first" placeholder="${T.s6.firstPh}" autocomplete="off">
         <div class="quicks" data-target="first">
-          <button type="button" class="quick">חיבוק גדול</button>
-          <button type="button" class="quick">לספר על היום</button>
-          <button type="button" class="quick">לאכול משהו טעים</button>
-          <button type="button" class="quick">לשחק קצת</button>
+          ${T.s6.firstQuick.map((q) => `<button type="button" class="quick">${q}</button>`).join('')}
         </div>
       </div>
 
       <div class="nav">
-        <button class="btn btn-ghost" data-go="5">חזרה</button>
-        <button class="btn btn-primary" data-go="7">לכרטיס שלנו</button>
+        <button class="btn btn-ghost" data-go="5">${T.navBack}</button>
+        <button class="btn btn-primary" data-go="7">${T.s6.next}</button>
       </div>
     </section>
 
-    <!-- 8. סיכום -->
     <section class="screen" id="s7">
       <div class="ritual" id="ritual">
         <div class="ritual-head">
-          <div class="ritual-eyebrow">טקס הפרידה של</div>
+          <div class="ritual-eyebrow">${T.s7.eyebrow}</div>
           <h2 class="ritual-title" id="sumName">—</h2>
-          <div class="ritual-sub">הטקס הקבוע שלנו לבוקר של כיתה א׳</div>
+          <div class="ritual-sub">${T.s7.sub}</div>
         </div>
 
         <div class="rows">
-          <div class="row"><div class="num">1</div><div><div class="row-k">איך נפרדים</div><div class="row-v" id="sum1"></div></div></div>
-          <div class="row"><div class="num">2</div><div><div class="row-k" id="sumk2">מה ההורה אומר</div><div class="row-v quote" id="sum2"></div></div></div>
-          <div class="row"><div class="num">3</div><div><div class="row-k" id="sumk3">מה אני אומר/ת לעצמי</div><div class="row-v quote" id="sum3"></div></div></div>
-          <div class="row"><div class="num">4</div><div><div class="row-k">מה עוזר לי אם קשה</div><div class="row-v" id="sum4"></div></div></div>
-          <div class="row"><div class="num">5</div><div><div class="row-k">מי אוסף אותי</div><div class="row-v" id="sum5"></div></div></div>
-          <div class="row"><div class="num">6</div><div><div class="row-k">מה נעשה כשניפגש</div><div class="row-v" id="sum6"></div></div></div>
+          <div class="row"><div class="num">1</div><div><div class="row-k">${T.s7.rowGoodbye}</div><div class="row-v" id="sum1"></div></div></div>
+          <div class="row"><div class="num">2</div><div><div class="row-k" id="sumk2">${T.s7.rowParentDefault}</div><div class="row-v quote" id="sum2"></div></div></div>
+          <div class="row"><div class="num">3</div><div><div class="row-k" id="sumk3">${T.s7.rowChildDefault}</div><div class="row-v quote" id="sum3"></div></div></div>
+          <div class="row"><div class="num">4</div><div><div class="row-k">${T.s7.rowHelp}</div><div class="row-v" id="sum4"></div></div></div>
+          <div class="row"><div class="num">5</div><div><div class="row-k">${T.s7.rowPickup}</div><div class="row-v" id="sum5"></div></div></div>
+          <div class="row"><div class="num">6</div><div><div class="row-k">${T.s7.rowFirst}</div><div class="row-v" id="sum6"></div></div></div>
         </div>
 
         <div class="warmnote">
-          <strong>הפרידה לא צריכה להיות מושלמת. היא צריכה להיות קבועה.</strong><br>
-          כשעושים את אותו הטקס בכל בוקר, הגוף לומד לאט־לאט שאחרי הפרידה תמיד מגיעה הפגישה מחדש. גם בוקר עם דמעות הוא בוקר בסדר גמור.
+          <strong>${T.s7.warmStrong}</strong><br>
+          ${T.s7.warmText}
         </div>
 
         <div class="howto">
-          <h3>איך משתמשים בכרטיס</h3>
+          <h3>${T.s7.howtoTitle}</h3>
           <ul>
-            <li>תרגלו את הטקס בבית פעם או פעמיים לפני היום הראשון.</li>
-            <li>אמרו את אותו המשפט, באותו הסדר, בכל בוקר.</li>
-            <li>שמרו על פרידה קצרה — להאריך אותה בדרך כלל מקשה, לא מקל.</li>
-            <li>אל תלכו בלי להיפרד, גם כשזה מפתה.</li>
-            <li>אם היה בוקר קשה, חזרו אל הכרטיס בערב ודברו עליו יחד.</li>
+            ${T.s7.howtoItems.map((i) => `<li>${i}</li>`).join('')}
           </ul>
         </div>
       </div>
 
       <div class="actions noprint">
-        <button class="btn btn-ghost" id="btnPrint">להדפסה</button>
-        <button class="btn btn-ghost" id="btnSave">שמירה</button>
-        <button class="btn btn-ghost" id="btnRestart">להתחיל מחדש</button>
+        <button class="btn btn-ghost" id="btnPrint">${T.s7.btnPrint}</button>
+        <button class="btn btn-ghost" id="btnSave">${T.s7.btnSave}</button>
+        <button class="btn btn-ghost" id="btnRestart">${T.s7.btnRestart}</button>
       </div>
 
       <div class="savebox hidden noprint" id="savebox">
-        <textarea id="savetext" readonly aria-label="הטקס שלנו כטקסט"></textarea>
+        <textarea id="savetext" readonly aria-label="${T.s7.savetextAria}"></textarea>
         <div class="nav" style="margin-top:10px">
-          <button class="btn btn-quiet" id="btnCopy">להעתקה</button>
-          <button class="btn btn-quiet" id="btnCloseSave">סגירה</button>
+          <button class="btn btn-quiet" id="btnCopy">${T.s7.btnCopy}</button>
+          <button class="btn btn-quiet" id="btnCloseSave">${T.s7.btnCloseSave}</button>
         </div>
       </div>
 
       <div class="cta noprint">
-        <p>כשהילד פוגש את עצמו בתוך סיפור אישי, ההכנה הרגשית יכולה להרגיש טבעית, בטוחה וקרובה יותר.</p>
-        <a class="btn" href="/CreateStory" id="ctaLink">לגלות את הסיפור האישי של StoryLeap</a>
+        <p>${T.s7.ctaText}</p>
+        <a class="btn" href="/CreateStory" id="ctaLink">${T.s7.ctaLink}</a>
       </div>
 
       <div class="card optin-card noprint" data-fa-optin>
         <div data-fa-optin-body>
-          <p class="hint">רוצים שנשלח לכם עותק, או עוד פעילויות בחינם כאלה? השאירו מייל (לגמרי אופציונלי)</p>
+          <p class="hint">${T.s7.optinHint}</p>
           <form class="optin-form" data-fa-optin-form>
-            <input type="email" data-fa-optin-email placeholder="האימייל שלכם">
-            <button type="submit" class="btn btn-ghost">שליחה</button>
+            <input type="email" data-fa-optin-email placeholder="${T.s7.optinPh}">
+            <button type="submit" class="btn btn-ghost">${T.s7.optinSubmit}</button>
           </form>
-          <button type="button" data-fa-optin-skip class="btn-quiet">לא תודה, אולי בפעם אחרת</button>
+          <button type="button" data-fa-optin-skip class="btn-quiet">${T.s7.optinSkip}</button>
         </div>
-        <p data-fa-optin-thanks style="display:none;margin:0;font-size:15px;color:rgba(26,26,46,.75)">תודה! נהיה בקשר.</p>
+        <p data-fa-optin-thanks style="display:none;margin:0;font-size:15px;color:rgba(26,26,46,.75)">${T.s7.optinThanks}</p>
       </div>
 
-      <p class="disclaimer noprint">
-        StoryLeap הוא כלי יצירתי לתמיכה רגשית. הוא אינו טיפול, אינו אבחון ואינו תחליף לייעוץ מקצועי.
-        אם הקושי בפרידה נמשך לאורך זמן, מתגבר, או משפיע על השינה, האכילה או התפקוד — כדאי להתייעץ עם היועצת החינוכית או עם איש מקצוע.
-      </p>
+      <p class="disclaimer noprint">${T.s7.disclaimer}</p>
     </section>
 
   </div>
 </div>
 `;
+}
 
-const SCRIPT_SRC = `
+function buildScriptSrc(T, lang) {
+  const D = {
+    isHe: lang === 'he',
+    s7: T.s7,
+    fallback: T.fallback,
+    sumNameFallback: T.sumNameFallback,
+    stepLabelTpl: T.stepLabel('{{n}}', '{{total}}'),
+    childQTitleTpl: T.s4.titleWithName('{{name}}'),
+    childQTitleDefault: T.s4.titleDefault,
+    GOODBYE: T.GOODBYE,
+    HELP: T.HELP,
+    parentOtherLabel: T.parentOtherLabel,
+    childOtherLabel: T.childOtherLabel,
+    parentLinesEn: lang === 'en' ? GOODBYE_PARENT_LINES_EN : null,
+    childLinesEn: lang === 'en' ? GOODBYE_CHILD_LINES_EN : null,
+    parentWordMom: lang === 'he' ? 'מה אמא אומרת' : "What Mom says",
+    parentWordDad: lang === 'he' ? 'מה אבא אומר' : "What Dad says",
+    childWordBoy: lang === 'he' ? 'מה אני אומר לעצמי' : T.s7.rowChildDefault,
+    childWordGirl: lang === 'he' ? 'מה אני אומרת לעצמי' : T.s7.rowChildDefault,
+    downloadFileName: T.downloadFileName,
+  };
+  const dataJson = JSON.stringify(D);
+
+  return `
 (function(){
   "use strict";
+
+  var D = ${dataJson};
 
   var state = {
     name:"", childG:"neutral", parentR:"parent",
@@ -511,6 +519,7 @@ const SCRIPT_SRC = `
   var CHECK = '<span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>';
 
   function parentLines(){
+    if(!D.isHe){ return D.parentLinesEn; }
     var m = state.parentR, c = state.childG;
     var nifrad = m==="mom" ? "נפרדת" : m==="dad" ? "נפרד" : "נפרד/ת";
     var somech = m==="mom" ? "סומכת" : m==="dad" ? "סומך" : "סומך/ת";
@@ -525,11 +534,12 @@ const SCRIPT_SRC = `
       {id:"p2", t:at+" "+batuach+", "+ahuv+" ו"+muchan+"."},
       {id:"p3", t:"גם אם יהיה קצת קשה, "+at+" לא לבד."},
       {id:"p4", t:"אני "+somech+" "+alecha+". "+at+" "+yachol+"."},
-      {id:"other", t:"משפט משלנו"}
+      {id:"other", t:D.parentOtherLabel}
     ];
   }
 
   function childLines(){
+    if(!D.isHe){ return D.childLinesEn; }
     var c = state.childG, m = state.parentR;
     var yachol = c==="boy" ? "יכול" : c==="girl" ? "יכולה" : "יכול/ה";
     var batuach = c==="boy" ? "בטוח" : c==="girl" ? "בטוחה" : "בטוח/ה";
@@ -539,28 +549,12 @@ const SCRIPT_SRC = `
       {id:"c2", t:back},
       {id:"c3", t:"אני "+batuach+"."},
       {id:"c4", t:"אני אנסה, גם אם קצת קשה לי."},
-      {id:"other", t:"משפט משלנו"}
+      {id:"other", t:D.childOtherLabel}
     ];
   }
 
-  var GOODBYE = [
-    {id:"g1", t:"חיבוק"},
-    {id:"g2", t:"נשיקה"},
-    {id:"g3", t:"כיף"},
-    {id:"g4", t:"תנועת יד סודית", n:"משהו קטן שרק אנחנו מכירים"},
-    {id:"g5", t:"לחיצת אומץ", n:"לחיצת יד חזקה שנותנת כוח"},
-    {id:"other", t:"משהו אחר"}
-  ];
-
-  var HELP = [
-    {id:"h1", t:"לקחת נשימה עמוקה"},
-    {id:"h2", t:"לשים יד על הלב"},
-    {id:"h3", t:"לזכור את המשפט שלי"},
-    {id:"h4", t:"לפנות למורה"},
-    {id:"h5", t:"להחזיק משהו קטן שמזכיר את הבית"},
-    {id:"h6", t:"לחשוב על מה נעשה כשניפגש"},
-    {id:"other", t:"משהו אחר"}
-  ];
+  var GOODBYE = D.GOODBYE;
+  var HELP = D.HELP;
 
   function $(id){ return document.getElementById(id); }
   function esc(s){ return String(s).replace(/[&<>"]/g, function(ch){
@@ -592,7 +586,7 @@ const SCRIPT_SRC = `
     if(n >= 1 && n <= 6){
       p.classList.add("on");
       $("fill").style.width = (n/TOTAL*100) + "%";
-      $("steplabel").textContent = "שלב " + n + " מתוך " + TOTAL;
+      $("steplabel").textContent = D.stepLabelTpl.replace("{{n}}", n).replace("{{total}}", TOTAL);
     } else {
       p.classList.remove("on");
     }
@@ -600,7 +594,7 @@ const SCRIPT_SRC = `
     if(n === 3) renderOpts($("optsParent"), parentLines(), state.parentLine, false);
     if(n === 4){
       renderOpts($("optsChild"), childLines(), state.childLine, false);
-      $("childQ").textContent = state.name ? ("משפט האומץ של " + state.name) : "משפט האומץ";
+      $("childQ").textContent = state.name ? D.childQTitleTpl.replace("{{name}}", state.name) : D.childQTitleDefault;
     }
     if(n === 7) buildSummary();
 
@@ -694,47 +688,47 @@ const SCRIPT_SRC = `
   }
 
   function buildSummary(){
-    var name = state.name || "הילד/ה";
+    var name = state.name || D.sumNameFallback;
     $("sumName").textContent = name;
 
-    var parentWord = state.parentR === "mom" ? "מה אמא אומרת" : state.parentR === "dad" ? "מה אבא אומר" : "מה ההורה אומר";
+    var parentWord = state.parentR === "mom" ? D.parentWordMom : state.parentR === "dad" ? D.parentWordDad : D.s7.rowParentDefault;
     $("sumk2").textContent = parentWord;
-    $("sumk3").textContent = state.childG === "boy" ? "מה אני אומר לעצמי" :
-                             state.childG === "girl" ? "מה אני אומרת לעצמי" : "מה אני אומר/ת לעצמי";
+    $("sumk3").textContent = D.isHe
+      ? (state.childG === "boy" ? "מה אני אומר לעצמי" : state.childG === "girl" ? "מה אני אומרת לעצמי" : "מה אני אומר/ת לעצמי")
+      : D.s7.rowChildDefault;
 
-    fill($("sum1"), textOf(GOODBYE, state.goodbye, state.goodbyeOther), "נשלים בפעם הבאה");
-    fill($("sum2"), textOf(parentLines(), state.parentLine, state.parentOther), "נשלים בפעם הבאה");
-    fill($("sum3"), textOf(childLines(), state.childLine, state.childOther), "נשלים בפעם הבאה");
+    fill($("sum1"), textOf(GOODBYE, state.goodbye, state.goodbyeOther), D.fallback);
+    fill($("sum2"), textOf(parentLines(), state.parentLine, state.parentOther), D.fallback);
+    fill($("sum3"), textOf(childLines(), state.childLine, state.childOther), D.fallback);
 
     var helps = state.help.map(function(id){ return textOf(HELP, id, state.helpOther); }).filter(Boolean);
     if(helps.length){
       $("sum4").innerHTML = "<ul>" + helps.map(function(h){ return "<li>"+esc(h)+"</li>"; }).join("") + "</ul>";
       $("sum4").classList.remove("empty");
     } else {
-      $("sum4").textContent = "נשלים בפעם הבאה";
+      $("sum4").textContent = D.fallback;
       $("sum4").classList.add("empty");
     }
 
-    fill($("sum5"), state.pickup, "נשלים בפעם הבאה");
-    fill($("sum6"), state.first, "נשלים בפעם הבאה");
+    fill($("sum5"), state.pickup, D.fallback);
+    fill($("sum6"), state.first, D.fallback);
   }
 
   function asText(){
-    var name = state.name || "הילד/ה";
+    var name = state.name || D.sumNameFallback;
     var helps = state.help.map(function(id){ return textOf(HELP, id, state.helpOther); }).filter(Boolean);
     var L = [];
-    L.push("טקס הפרידה של " + name);
-    L.push("הטקס הקבוע שלנו לבוקר של כיתה א׳");
+    L.push(D.s7.eyebrow + " " + name);
+    L.push(D.s7.sub);
     L.push("");
-    L.push("1. איך נפרדים: " + (textOf(GOODBYE, state.goodbye, state.goodbyeOther) || "—"));
-    L.push("2. מה ההורה אומר: " + (textOf(parentLines(), state.parentLine, state.parentOther) || "—"));
-    L.push("3. מה אני אומר/ת לעצמי: " + (textOf(childLines(), state.childLine, state.childOther) || "—"));
-    L.push("4. מה עוזר לי אם קשה: " + (helps.length ? helps.join(" · ") : "—"));
-    L.push("5. מי אוסף אותי: " + (state.pickup || "—"));
-    L.push("6. מה נעשה כשניפגש: " + (state.first || "—"));
+    L.push("1. " + D.s7.rowGoodbye + ": " + (textOf(GOODBYE, state.goodbye, state.goodbyeOther) || "—"));
+    L.push("2. " + $("sumk2").textContent + ": " + (textOf(parentLines(), state.parentLine, state.parentOther) || "—"));
+    L.push("3. " + $("sumk3").textContent + ": " + (textOf(childLines(), state.childLine, state.childOther) || "—"));
+    L.push("4. " + D.s7.rowHelp + ": " + (helps.length ? helps.join(" · ") : "—"));
+    L.push("5. " + D.s7.rowPickup + ": " + (state.pickup || "—"));
+    L.push("6. " + D.s7.rowFirst + ": " + (state.first || "—"));
     L.push("");
-    L.push("הפרידה לא צריכה להיות מושלמת. היא צריכה להיות קבועה.");
-    L.push("StoryLeap — כלי יצירתי לתמיכה רגשית. אינו טיפול ואינו אבחון.");
+    L.push(D.s7.warmStrong);
     return L.join("\\n");
   }
 
@@ -749,7 +743,7 @@ const SCRIPT_SRC = `
       var url = URL.createObjectURL(blob);
       var a = document.createElement("a");
       a.href = url;
-      a.download = "goodbye-ritual.txt";
+      a.download = D.downloadFileName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -762,8 +756,8 @@ const SCRIPT_SRC = `
   $("btnCopy").addEventListener("click", function(){
     var ta = $("savetext");
     ta.removeAttribute("readonly"); ta.select();
-    try{ document.execCommand("copy"); this.textContent = "הועתק"; }
-    catch(e){ this.textContent = "אפשר לסמן ולהעתיק ידנית"; }
+    try{ document.execCommand("copy"); this.textContent = D.s7.btnCopyDone; }
+    catch(e){ this.textContent = D.s7.btnCopyManual; }
     ta.setAttribute("readonly","readonly");
   });
   $("btnCloseSave").addEventListener("click", function(){ $("savebox").classList.add("hidden"); });
@@ -788,25 +782,29 @@ const SCRIPT_SRC = `
   });
 })();
 `;
+}
 
 export default function FreeActivityGoodbye() {
+  const { lang } = useLanguage();
   const ref = useRef(null);
+  const isHe = lang === 'he';
+  const T = GOODBYE_RITUAL_CONTENT[isHe ? 'he' : 'en'];
 
   useEffect(() => {
     const container = ref.current;
     const script = document.createElement('script');
-    script.textContent = SCRIPT_SRC;
+    script.textContent = buildScriptSrc(T, isHe ? 'he' : 'en');
     container.appendChild(script);
     attachEmailOptIn(container, 'goodbye_ritual');
     return () => {
       script.remove();
     };
-  }, []);
+  }, [lang]);
 
   return (
-    <div className="fa-goodbye" dir="rtl">
+    <div className="fa-goodbye" dir={isHe ? 'rtl' : 'ltr'}>
       <style dangerouslySetInnerHTML={{ __html: STYLE }} />
-      <div ref={ref} dangerouslySetInnerHTML={{ __html: BODY_HTML }} />
+      <div key={lang} ref={ref} dangerouslySetInnerHTML={{ __html: buildBodyHtml(T) }} />
     </div>
   );
 }
