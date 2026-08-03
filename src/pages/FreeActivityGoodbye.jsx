@@ -229,12 +229,25 @@ const STYLE = `
   }
 
   @media print{
+    .fa-goodbye, .fa-goodbye *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important}
     .fa-goodbye{background:#fff}
     .fa-goodbye .noprint{display:none!important}
     .fa-goodbye .wrap{max-width:100%;padding:0}
     .fa-goodbye .card{border:0;box-shadow:none;padding:0;background:transparent}
-    .fa-goodbye .ritual{box-shadow:none;border:1px solid #ddd;background:#fff}
+    .fa-goodbye .ritual{
+      box-shadow:none;
+      border:1px solid rgba(26,26,110,.15);
+      background:linear-gradient(165deg,#FFFDFB 0%,#FFF0F7 55%,#EAF8FD 100%);
+      padding:18px 20px 16px;
+      page-break-inside:avoid;break-inside:avoid;
+    }
     .fa-goodbye .ritual::before{display:none}
+    .fa-goodbye .ritual-title{font-size:26px}
+    .fa-goodbye .ritual-head{padding-bottom:12px}
+    .fa-goodbye .row{padding:9px 0;page-break-inside:avoid;break-inside:avoid}
+    .fa-goodbye .warmnote{background:#FFF8EC;border:1px solid #F5C842;padding:12px 14px;margin-top:14px;page-break-inside:avoid;break-inside:avoid}
+    .fa-goodbye .howto{page-break-inside:avoid;break-inside:avoid;margin-top:12px}
+    @page{margin:12mm}
   }
 `;
 

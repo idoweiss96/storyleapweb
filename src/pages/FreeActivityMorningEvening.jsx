@@ -221,13 +221,15 @@ const STYLE = `
 .fa-me #printRoot{display:none}
 @media print{
   @page{size:A4;margin:12mm}
+  .fa-me, .fa-me *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;color-adjust:exact !important}
   .fa-me .app,.fa-me .toast{display:none !important}
   .fa-me #printRoot{display:block !important}
   .fa-me .board{border:1px solid rgba(26,26,46,.18) !important;border-radius:14px;padding:18px 20px;
-    break-inside:avoid;page-break-inside:avoid;margin:0 0 12mm}
+    break-inside:avoid;page-break-inside:avoid;margin:0 0 12mm;box-shadow:none}
   .fa-me .board .brow{break-inside:avoid;page-break-inside:avoid;padding:7px 0}
+  .fa-me .board .sect{margin:14px 0 8px;break-after:avoid;page-break-after:avoid}
+  .fa-me .board .goal{break-inside:avoid;page-break-inside:avoid}
   .fa-me .board .btitle{font-size:20px}
-  .fa-me .board .sect{margin:14px 0 8px}
   .fa-me .pagebreak{break-after:page;page-break-after:always}
 }
 @media (prefers-reduced-motion:reduce){.fa-me *{transition:none !important;animation:none !important}}

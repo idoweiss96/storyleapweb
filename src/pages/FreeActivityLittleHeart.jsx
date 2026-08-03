@@ -178,6 +178,7 @@ const CSS = `
 .sl-sheet-title { display: none; }
 
 @media print {
+  .sl, .sl * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
   .sl-ui { display: none !important; }
   .sl-print { display: block !important; }
   .sl { background: #fff !important; padding: 0 !important; min-height: 0; }
@@ -186,7 +187,7 @@ const CSS = `
   .sl-page { page-break-after: always; break-after: page; }
   .sl-page:last-child { page-break-after: auto; break-after: auto; }
   .sl-row { display: flex; flex-wrap: wrap; gap: 6mm; align-content: flex-start; }
-  .slc { box-shadow: none !important; }
+  .slc { box-shadow: none !important; page-break-inside: avoid; break-inside: avoid; }
   .sl-cut { outline: 0.2mm dashed rgba(26,26,46,.35); outline-offset: 1.5mm; }
 }
 `;
