@@ -176,7 +176,7 @@ export default function Home() {
             {lang === 'he' ? 'בלי הרשמה, בלי תשלום, פשוט לעשות יחד' : 'No signup, no payment, just do it together'}
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
           <Link to="/FreeActivityGoodbye">
             <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer">
               <CardContent className="p-6 text-center">
@@ -197,6 +197,18 @@ export default function Home() {
                 </h4>
                 <p className="text-slate-500 text-sm">
                   {lang === 'he' ? 'בונים לוח שגרה אישי להדפסה לבוקר ולערב' : 'Build a printable personal routine board'}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/FreeActivityLittleHeart">
+            <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <h4 className="text-lg font-bold text-slate-800 mb-2">
+                  {lang === 'he' ? 'לב קטן מהבית' : 'A Little Heart from Home'}
+                </h4>
+                <p className="text-slate-500 text-sm">
+                  {lang === 'he' ? 'יוצרים יחד כרטיס, מכתב או ציור לקחת בתיק' : 'Create a card, letter, or drawing to take along'}
                 </p>
               </CardContent>
             </Card>

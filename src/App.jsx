@@ -26,6 +26,7 @@ import FAQ from './pages/FAQ';
 import FeedbackSurvey from './pages/FeedbackSurvey';
 import FreeActivityGoodbye from './pages/FreeActivityGoodbye';
 import FreeActivityMorningEvening from './pages/FreeActivityMorningEvening';
+import FreeActivityLittleHeart from './pages/FreeActivityLittleHeart';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -95,6 +96,7 @@ const AuthenticatedApp = () => {
       <Route path="/FeedbackSurvey" element={<LayoutWrapper currentPageName="FeedbackSurvey"><FeedbackSurvey /></LayoutWrapper>} />
       <Route path="/FreeActivityGoodbye" element={<LayoutWrapper currentPageName="FreeActivityGoodbye"><FreeActivityGoodbye /></LayoutWrapper>} />
       <Route path="/FreeActivityMorningEvening" element={<LayoutWrapper currentPageName="FreeActivityMorningEvening"><FreeActivityMorningEvening /></LayoutWrapper>} />
+      <Route path="/FreeActivityLittleHeart" element={<LayoutWrapper currentPageName="FreeActivityLittleHeart"><FreeActivityLittleHeart /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

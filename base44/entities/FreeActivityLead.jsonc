@@ -10,7 +10,8 @@
       "type": "string",
       "enum": [
         "goodbye_ritual",
-        "morning_evening"
+        "morning_evening",
+        "little_heart"
       ],
       "description": "Which free activity this lead came from"
     }
