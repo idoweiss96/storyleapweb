@@ -10,21 +10,20 @@ import { base44 } from "@/api/base44Client";
 /* ---------------------------- design tokens ---------------------------- */
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Frank+Ruhl+Libre:wght@400;500;700&display=swap');
-
 .sl {
-  --royal: #02198B;
-  --charcoal: #2D2F33;
-  --cream: #FFF7F1;
-  --blush: #F6D2D6;
-  --peach: #F5CFC3;
-  --lavender: #DADCF8;
-  --sky: #DDE8FF;
-  --mist: #F7F8FB;
-  --line: rgba(2,25,139,0.10);
-  --shadow: 0 12px 40px rgba(45,47,51,0.08);
-  --body: 'Heebo', 'Arial Hebrew', 'Segoe UI', Arial, sans-serif;
-  --display: 'Frank Ruhl Libre', 'Times New Roman', Georgia, serif;
+  --royal: #1A1A6E;
+  --charcoal: #1a1a2e;
+  --cream: #FFF0F7;
+  --blush: #FFD6EC;
+  --peach: #FFF8EC;
+  --lavender: #A89BE8;
+  --sky: #EAF8FD;
+  --mist: #FAFAFE;
+  --grad: linear-gradient(135deg, #FF6FB5, #4FC3E8);
+  --line: #ede9f8;
+  --shadow: 0 4px 20px rgba(255,111,181,.08), 0 2px 10px rgba(79,195,232,.06);
+  --body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --display: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
   direction: rtl;
   text-align: right;
@@ -50,9 +49,9 @@ const CSS = `
 .sl-top { padding: 22px 0 8px; }
 .sl-brand { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .sl-logo { font-family: var(--display); font-weight: 700; font-size: 19px; color: var(--royal); letter-spacing: .2px; direction: ltr; }
-.sl-stepnum { font-size: 13px; color: rgba(45,47,51,.55); font-variant-numeric: tabular-nums; }
-.sl-bar { margin-top: 12px; height: 6px; border-radius: 999px; background: rgba(2,25,139,.09); overflow: hidden; }
-.sl-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(270deg, var(--royal), #4b5fd0); transition: width .45s cubic-bezier(.4,0,.2,1); }
+.sl-stepnum { font-size: 13px; color: rgba(26,26,46,.55); font-variant-numeric: tabular-nums; }
+.sl-bar { margin-top: 12px; height: 6px; border-radius: 999px; background: rgba(26,26,110,.09); overflow: hidden; }
+.sl-bar-fill { height: 100%; border-radius: 999px; background: var(--royal); transition: width .45s cubic-bezier(.4,0,.2,1); }
 
 /* panels */
 .sl-panel { margin-top: 22px; animation: slIn .35s ease both; }
@@ -62,9 +61,9 @@ const CSS = `
 .sl-eyebrow { font-size: 13px; font-weight: 500; color: var(--royal); opacity: .75; margin: 0 0 8px; }
 .sl-h1 { font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1.25; margin: 0 0 12px; color: var(--royal); }
 .sl-h2 { font-family: var(--display); font-weight: 700; font-size: 24px; line-height: 1.3; margin: 0 0 10px; color: var(--charcoal); }
-.sl-p { font-size: 16.5px; line-height: 1.75; margin: 0 0 14px; color: rgba(45,47,51,.86); }
-.sl-hint { font-size: 14px; line-height: 1.65; color: rgba(45,47,51,.6); margin: 0 0 14px; }
-.sl-note { font-size: 13.5px; line-height: 1.6; color: rgba(45,47,51,.66); background: rgba(255,255,255,.66); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; margin: 14px 0; }
+.sl-p { font-size: 16.5px; line-height: 1.75; margin: 0 0 14px; color: rgba(26,26,46,.86); }
+.sl-hint { font-size: 14px; line-height: 1.65; color: rgba(26,26,46,.6); margin: 0 0 14px; }
+.sl-note { font-size: 13.5px; line-height: 1.6; color: #7A5000; background: #FFF8EC; border: 1.5px solid #F5C842; border-radius: 16px; padding: 12px 14px; margin: 14px 0; font-weight: 500; }
 
 /* cards / options */
 .sl-grid { display: grid; gap: 12px; }
@@ -78,16 +77,16 @@ const CSS = `
   transition: transform .18s ease, border-color .18s ease, background .18s ease;
   color: var(--charcoal);
 }
-.sl-opt:hover { transform: translateY(-1px); border-color: rgba(2,25,139,.28); }
+.sl-opt:hover { transform: translateY(-1px); border-color: rgba(26,26,110,.28); }
 .sl-opt[aria-pressed="true"], .sl-opt.on {
-  border-color: var(--royal); background: #fff;
-  box-shadow: 0 8px 28px rgba(2,25,139,.10);
+  border-color: var(--royal); background: #FFD6EC;
+  box-shadow: 0 4px 20px rgba(255,111,181,.18);
 }
 .sl-opt-t { font-size: 16.5px; font-weight: 500; display: block; }
-.sl-opt-d { font-size: 14px; color: rgba(45,47,51,.62); display: block; margin-top: 3px; line-height: 1.55; }
+.sl-opt-d { font-size: 14px; color: rgba(26,26,46,.62); display: block; margin-top: 3px; line-height: 1.55; }
 .sl-tick {
   flex: 0 0 auto; width: 24px; height: 24px; border-radius: 999px;
-  border: 1.5px solid rgba(2,25,139,.22); display: grid; place-items: center;
+  border: 1.5px solid rgba(26,26,110,.22); display: grid; place-items: center;
   color: #fff; font-size: 13px; line-height: 1;
 }
 .sl-opt.on .sl-tick, .sl-opt[aria-pressed="true"] .sl-tick { background: var(--royal); border-color: var(--royal); }
@@ -98,31 +97,32 @@ const CSS = `
   border-radius: 999px; padding: 10px 16px; font-size: 15px; color: var(--charcoal);
   transition: all .16s ease;
 }
-.sl-chip:hover { border-color: rgba(2,25,139,.3); }
-.sl-chip.on { background: var(--royal); border-color: var(--royal); color: #fff; }
+.sl-chip:hover { border-color: rgba(26,26,110,.3); }
+.sl-chip.on { background: var(--grad); border-color: transparent; color: #fff; }
 .sl-chip.on::before { content: "✓ "; }
 
 /* inputs */
-.sl-label { display: block; font-size: 14.5px; font-weight: 500; margin: 0 0 7px; color: rgba(45,47,51,.8); }
+.sl-label { display: block; font-size: 14.5px; font-weight: 500; margin: 0 0 7px; color: rgba(26,26,46,.8); }
 .sl-input, .sl-area {
   width: 100%; font-family: var(--body); font-size: 17px; color: var(--charcoal);
   background: #fff; border: 1.5px solid var(--line); border-radius: 16px;
   padding: 14px 16px; direction: rtl; text-align: right; line-height: 1.7;
 }
 .sl-area { min-height: 150px; resize: vertical; }
-.sl-input:focus, .sl-area:focus { border-color: var(--royal); outline: none; box-shadow: 0 0 0 3px rgba(2,25,139,.10); }
-.sl-count { font-size: 13px; color: rgba(45,47,51,.55); margin-top: 6px; }
+.sl-input:focus, .sl-area:focus { border-color: var(--royal); outline: none; box-shadow: 0 0 0 3px rgba(26,26,110,.10); }
+.sl-count { font-size: 13px; color: rgba(26,26,46,.55); margin-top: 6px; }
 .sl-warn { font-size: 13.5px; line-height: 1.6; color: #7a3d1f; background: #FBEDE6; border: 1px solid rgba(122,61,31,.18); border-radius: 14px; padding: 11px 13px; margin-top: 10px; }
 
 /* nav */
 .sl-nav { display: flex; gap: 12px; margin-top: 26px; align-items: center; }
 .sl-btn {
   border: none; border-radius: 999px; padding: 15px 30px; font-size: 16.5px;
-  font-weight: 600; background: var(--royal); color: #fff; transition: opacity .18s, transform .18s;
+  font-weight: 600; background: var(--grad); color: #fff; transition: opacity .18s, transform .18s;
+  box-shadow: 0 8px 22px rgba(255,111,181,.25);
 }
 .sl-btn:hover:not(:disabled) { transform: translateY(-1px); }
 .sl-btn:disabled { opacity: .35; cursor: not-allowed; }
-.sl-btn.ghost { background: transparent; color: var(--royal); border: 1.5px solid rgba(2,25,139,.22); }
+.sl-btn.ghost { background: transparent; color: var(--royal); border: 1.5px solid rgba(26,26,110,.22); }
 .sl-btn.wide { width: 100%; }
 .sl-btn.sm { padding: 11px 20px; font-size: 15px; }
 
@@ -134,17 +134,17 @@ const CSS = `
   background: rgba(255,255,255,.78); display: grid; place-items: center; gap: 2px;
   padding: 8px; transition: all .16s ease; color: var(--royal);
 }
-.sl-sym span { font-size: 11.5px; color: rgba(45,47,51,.6); }
-.sl-sym.on { border-color: var(--royal); background: #fff; box-shadow: 0 8px 24px rgba(2,25,139,.12); }
+.sl-sym span { font-size: 11.5px; color: rgba(26,26,46,.6); }
+.sl-sym.on { border-color: var(--royal); background: #fff; box-shadow: 0 8px 24px rgba(26,26,110,.12); }
 .sl-sym.on span { color: var(--royal); font-weight: 500; }
 
 /* style previews */
 .sl-styleopt { border: 1.5px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.7); padding: 14px; text-align: right; width: 100%; transition: all .18s ease; }
-.sl-styleopt.on { border-color: var(--royal); box-shadow: 0 10px 30px rgba(2,25,139,.12); background: #fff; }
+.sl-styleopt.on { border-color: var(--royal); box-shadow: 0 10px 30px rgba(26,26,110,.12); background: #fff; }
 .sl-mini { height: 108px; border-radius: 14px; overflow: hidden; margin-bottom: 11px; }
 
 /* image / drawing */
-.sl-drop { border: 1.5px dashed rgba(2,25,139,.28); border-radius: 20px; padding: 26px 18px; text-align: center; background: rgba(255,255,255,.6); }
+.sl-drop { border: 1.5px dashed rgba(26,26,110,.28); border-radius: 20px; padding: 26px 18px; text-align: center; background: rgba(255,255,255,.6); }
 .sl-thumb { width: 100%; max-height: 260px; object-fit: contain; border-radius: 16px; background: #fff; border: 1px solid var(--line); }
 .sl-canvas { width: 100%; touch-action: none; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; display: block; }
 .sl-tools { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
@@ -154,24 +154,24 @@ const CSS = `
 .sl-scaler { transform-origin: top center; }
 
 /* CTA */
-.sl-cta { margin-top: 30px; border-radius: 26px; padding: 24px; background: linear-gradient(135deg, #FFF7F1 0%, #F7F8FB 45%, #DDE8FF 100%); border: 1px solid var(--line); }
-.sl-foot { margin-top: 26px; font-size: 12.5px; color: rgba(45,47,51,.5); line-height: 1.7; }
+.sl-cta { margin-top: 30px; border-radius: 26px; padding: 24px; background: linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%); border: 1px solid var(--line); }
+.sl-foot { margin-top: 26px; font-size: 12.5px; color: rgba(26,26,46,.5); line-height: 1.7; }
 
 /* modal */
-.sl-modal-bg { position: fixed; inset: 0; background: rgba(45,47,51,.42); display: grid; place-items: center; padding: 20px; z-index: 50; }
-.sl-modal { background: #fff; border-radius: 24px; padding: 24px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(45,47,51,.2); }
+.sl-modal-bg { position: fixed; inset: 0; background: rgba(26,26,46,.42); display: grid; place-items: center; padding: 20px; z-index: 50; }
+.sl-modal { background: #fff; border-radius: 24px; padding: 24px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(26,26,46,.2); }
 
 /* ======================= printable card styles ======================= */
 .slc {
   position: relative; overflow: hidden; display: flex; flex-direction: column;
-  direction: rtl; text-align: right; color: #2D2F33;
+  direction: rtl; text-align: right; color: #1a1a2e;
   background: #fff; page-break-inside: avoid; break-inside: avoid;
 }
 .slc-title { margin: 0; line-height: 1.2; }
 .slc-msg { margin: 0; white-space: pre-wrap; overflow-wrap: break-word; }
 .slc-sign { margin: 0; }
 .slc-label { font-size: 2.6mm; letter-spacing: .3mm; opacity: .62; margin: 0 0 1.5mm; }
-.slc-blank { flex: 1; border: 0.4mm dashed rgba(2,25,139,.30); border-radius: 3mm; }
+.slc-blank { flex: 1; border: 0.4mm dashed rgba(26,26,110,.30); border-radius: 3mm; }
 
 /* print sheet */
 .sl-print { display: none; }
@@ -187,7 +187,7 @@ const CSS = `
   .sl-page:last-child { page-break-after: auto; break-after: auto; }
   .sl-row { display: flex; flex-wrap: wrap; gap: 6mm; align-content: flex-start; }
   .slc { box-shadow: none !important; }
-  .sl-cut { outline: 0.2mm dashed rgba(45,47,51,.35); outline-offset: 1.5mm; }
+  .sl-cut { outline: 0.2mm dashed rgba(26,26,46,.35); outline-offset: 1.5mm; }
 }
 `;
 
@@ -379,13 +379,13 @@ const LETTER_SAMPLES = (name) => [
 
 const STYLE_TOKENS = {
   soft: {
-    bg: "#FFF7F1",
-    ink: "#2D2F33",
-    accent: "#02198B",
+    bg: "#FFF0F7",
+    ink: "#1a1a2e",
+    accent: "#1A1A6E",
     display: "'Frank Ruhl Libre', Georgia, serif",
     body: "'Heebo', Arial, sans-serif",
     radius: "5mm",
-    border: "0.35mm solid rgba(2,25,139,0.16)",
+    border: "0.35mm solid rgba(26,26,110,0.16)",
     pad: "7mm",
     titleSize: "6.2mm",
     titleWeight: 700,
@@ -393,16 +393,16 @@ const STYLE_TOKENS = {
     msgWeight: 400,
     lh: 1.55,
     deco: true,
-    halo: "#F6D2D6",
+    halo: "#FFD6EC",
   },
   quiet: {
     bg: "#FFFFFF",
-    ink: "#2D2F33",
-    accent: "#02198B",
+    ink: "#1a1a2e",
+    accent: "#1A1A6E",
     display: "'Heebo', Arial, sans-serif",
     body: "'Heebo', Arial, sans-serif",
     radius: "2mm",
-    border: "0.3mm solid rgba(45,47,51,0.20)",
+    border: "0.3mm solid rgba(26,26,46,0.20)",
     pad: "9mm",
     titleSize: "4.6mm",
     titleWeight: 500,
@@ -414,12 +414,12 @@ const STYLE_TOKENS = {
   },
   grown: {
     bg: "#FFFFFF",
-    ink: "#2D2F33",
-    accent: "#02198B",
+    ink: "#1a1a2e",
+    accent: "#1A1A6E",
     display: "'Heebo', Arial, sans-serif",
     body: "'Heebo', Arial, sans-serif",
     radius: "3mm",
-    border: "0.3mm solid rgba(2,25,139,0.22)",
+    border: "0.3mm solid rgba(26,26,110,0.22)",
     pad: "6mm",
     titleSize: "5mm",
     titleWeight: 700,
@@ -461,7 +461,7 @@ function Card({ data, formatId, side = "front", forPrint = false }) {
     padding: st.pad,
     fontFamily: st.body,
     color: st.ink,
-    boxShadow: forPrint ? "none" : "0 12px 40px rgba(45,47,51,0.10)",
+    boxShadow: forPrint ? "none" : "0 12px 40px rgba(26,26,46,0.10)",
   };
 
   /* ---------- back side ---------- */
@@ -530,7 +530,7 @@ function Card({ data, formatId, side = "front", forPrint = false }) {
   const Media = media ? (
     <div style={{
       width: "100%", height: isFolded ? "30mm" : "22mm", borderRadius: "3mm",
-      overflow: "hidden", background: "#fff", border: "0.25mm solid rgba(45,47,51,.12)", marginBottom: "3mm",
+      overflow: "hidden", background: "#fff", border: "0.25mm solid rgba(26,26,46,.12)", marginBottom: "3mm",
     }}>
       <img src={media} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
     </div>
@@ -574,7 +574,7 @@ function Card({ data, formatId, side = "front", forPrint = false }) {
           <span style={{ fontSize: st.titleSize, fontWeight: st.titleWeight, letterSpacing: ".2mm" }}>{name || "הלב הקטן שלי"}</span>
           <span style={{ color: st.accent, opacity: .8 }}><Symbol id={data.mainSymbol} size={22} stroke={1.2} /></span>
         </div>
-        <div style={{ height: "0.25mm", background: "rgba(45,47,51,.18)", marginBottom: "4mm" }} />
+        <div style={{ height: "0.25mm", background: "rgba(26,26,46,.18)", marginBottom: "4mm" }} />
         {Media}
         <p className="slc-msg" style={{ fontSize: msgSize, fontWeight: st.msgWeight, lineHeight: st.lh }}>{msg}</p>
         <div style={{ flex: 1 }} />
@@ -598,7 +598,7 @@ function Card({ data, formatId, side = "front", forPrint = false }) {
       <div style={{ display: "flex", alignItems: "center", gap: "3.5mm", marginBottom: "3mm" }}>
         <div style={{
           width: "13mm", height: "13mm", borderRadius: "999px", flex: "0 0 auto",
-          background: `radial-gradient(circle at 35% 30%, ${st.halo}, #DADCF8)`,
+          background: `radial-gradient(circle at 35% 30%, ${st.halo}, #EAF8FD)`,
           display: "grid", placeItems: "center", color: st.accent,
         }}>
           <Symbol id={data.mainSymbol} size={28} stroke={1.3} />
@@ -635,42 +635,42 @@ const Corner = ({ st }) => (
 function MiniPreview({ id }) {
   if (id === "soft") {
     return (
-      <div style={{ height: "100%", background: "#FFF7F1", borderRadius: 14, padding: 12, display: "flex", flexDirection: "column", gap: 6 }}>
+      <div style={{ height: "100%", background: "#FFF0F7", borderRadius: 14, padding: 12, display: "flex", flexDirection: "column", gap: 6 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 26, height: 26, borderRadius: 999, background: "radial-gradient(circle at 35% 30%, #F6D2D6, #DADCF8)", display: "grid", placeItems: "center", color: "#02198B" }}>
+          <div style={{ width: 26, height: 26, borderRadius: 999, background: "radial-gradient(circle at 35% 30%, #FFD6EC, #EAF8FD)", display: "grid", placeItems: "center", color: "#1A1A6E" }}>
             <Symbol id="heart" size={15} />
           </div>
-          <div style={{ fontFamily: "'Frank Ruhl Libre', serif", fontWeight: 700, color: "#02198B", fontSize: 15 }}>נועם</div>
+          <div style={{ fontWeight: 700, color: "#1A1A6E", fontSize: 15 }}>נועם</div>
         </div>
-        <div style={{ height: 5, background: "rgba(45,47,51,.16)", borderRadius: 3, width: "92%" }} />
-        <div style={{ height: 5, background: "rgba(45,47,51,.16)", borderRadius: 3, width: "78%" }} />
-        <div style={{ height: 5, background: "rgba(45,47,51,.16)", borderRadius: 3, width: "60%" }} />
+        <div style={{ height: 5, background: "rgba(26,26,46,.16)", borderRadius: 3, width: "92%" }} />
+        <div style={{ height: 5, background: "rgba(26,26,46,.16)", borderRadius: 3, width: "78%" }} />
+        <div style={{ height: 5, background: "rgba(26,26,46,.16)", borderRadius: 3, width: "60%" }} />
       </div>
     );
   }
   if (id === "quiet") {
     return (
-      <div style={{ height: "100%", background: "#fff", border: "1px solid rgba(45,47,51,.16)", borderRadius: 8, padding: 14, display: "flex", flexDirection: "column", gap: 9 }}>
+      <div style={{ height: "100%", background: "#fff", border: "1px solid rgba(26,26,46,.16)", borderRadius: 8, padding: 14, display: "flex", flexDirection: "column", gap: 9 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontSize: 13, color: "#2D2F33" }}>נועם</div>
-          <div style={{ color: "#02198B", opacity: .8 }}><Symbol id="star" size={14} /></div>
+          <div style={{ fontSize: 13, color: "#1a1a2e" }}>נועם</div>
+          <div style={{ color: "#1A1A6E", opacity: .8 }}><Symbol id="star" size={14} /></div>
         </div>
-        <div style={{ height: 1, background: "rgba(45,47,51,.18)" }} />
-        <div style={{ height: 4, background: "rgba(45,47,51,.13)", borderRadius: 3, width: "86%" }} />
-        <div style={{ height: 4, background: "rgba(45,47,51,.13)", borderRadius: 3, width: "66%" }} />
+        <div style={{ height: 1, background: "rgba(26,26,46,.18)" }} />
+        <div style={{ height: 4, background: "rgba(26,26,46,.13)", borderRadius: 3, width: "86%" }} />
+        <div style={{ height: 4, background: "rgba(26,26,46,.13)", borderRadius: 3, width: "66%" }} />
       </div>
     );
   }
   return (
-    <div style={{ height: "100%", background: "#fff", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(2,25,139,.2)", display: "flex", flexDirection: "column" }}>
-      <div style={{ background: "#02198B", color: "#fff", padding: "7px 12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <div style={{ height: "100%", background: "#fff", borderRadius: 10, overflow: "hidden", border: "1px solid rgba(26,26,110,.2)", display: "flex", flexDirection: "column" }}>
+      <div style={{ background: "#1A1A6E", color: "#fff", padding: "7px 12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span style={{ fontSize: 14, fontWeight: 700 }}>נועם</span>
         <Symbol id="kite" size={14} stroke={1.7} />
       </div>
       <div style={{ padding: 12, display: "flex", flexDirection: "column", gap: 6 }}>
-        <div style={{ height: 5, background: "rgba(45,47,51,.18)", borderRadius: 3, width: "90%" }} />
-        <div style={{ height: 5, background: "rgba(45,47,51,.18)", borderRadius: 3, width: "72%" }} />
-        <div style={{ height: 3, background: "#02198B", opacity: .6, width: 34, marginTop: 4 }} />
+        <div style={{ height: 5, background: "rgba(26,26,46,.18)", borderRadius: 3, width: "90%" }} />
+        <div style={{ height: 5, background: "rgba(26,26,46,.18)", borderRadius: 3, width: "72%" }} />
+        <div style={{ height: 3, background: "#1A1A6E", opacity: .6, width: 34, marginTop: 4 }} />
       </div>
     </div>
   );
@@ -831,8 +831,8 @@ export default function FreeActivityLittleHeart() {
         <div style={{ textAlign: "center", padding: "10px 0 4px" }}>
           <div style={{
             width: 96, height: 96, borderRadius: 999, margin: "0 auto 20px",
-            background: "radial-gradient(circle at 30% 75%, #F5CFC3 0%, #F6D2D6 35%, #DADCF8 70%, #DDE8FF 100%)",
-            display: "grid", placeItems: "center", color: "#02198B", boxShadow: "0 12px 40px rgba(45,47,51,.10)",
+            background: "linear-gradient(135deg, #FF6FB5, #4FC3E8)",
+            display: "grid", placeItems: "center", color: "#1A1A6E", boxShadow: "0 12px 40px rgba(26,26,46,.10)",
           }}>
             <Symbol id="heart" size={44} stroke={1.3} />
           </div>
@@ -1439,7 +1439,7 @@ function DrawingBuilder({ d, set }) {
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     strokes.current.forEach((s) => {
-      ctx.strokeStyle = s.tool === "eraser" ? "#fff" : "#02198B";
+      ctx.strokeStyle = s.tool === "eraser" ? "#fff" : "#1A1A6E";
       ctx.lineWidth = s.tool === "eraser" ? 22 : 3;
       ctx.beginPath();
       s.pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
