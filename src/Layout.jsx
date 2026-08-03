@@ -106,7 +106,7 @@ function LayoutInner({ children, currentPageName }) {
   const navItems = user ? authNavItems : publicNavItems;
 
   return (
-    <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e62ec3a0d_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center top', backgroundAttachment: 'scroll', backgroundRepeat: 'no-repeat'}}>
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="site-shell min-h-screen" style={{backgroundImage: 'url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e62ec3a0d_generated_image.png)', backgroundSize: 'cover', backgroundPosition: 'center top', backgroundAttachment: 'scroll', backgroundRepeat: 'no-repeat'}}>
       <style>{`
         @keyframes twinkle {
           0%, 100% { opacity: 0.2; transform: scale(0.7); }
@@ -137,13 +137,17 @@ function LayoutInner({ children, currentPageName }) {
         .star-drift-4 { animation: drift 8s ease-in-out infinite 0.8s; }
         .star-drift-5 { animation: drift 6.5s ease-in-out infinite 1.8s; }
         .star-drift-6 { animation: drift 7.5s ease-in-out infinite 3s; }
+        @media print {
+          .site-chrome, .site-decor { display: none !important; }
+          .site-shell { background: none !important; background-image: none !important; }
+        }
       `}</style>
 
       {/* Mobile pink top overlay */}
-      <div className="md:hidden fixed inset-x-0 top-0 h-64 pointer-events-none z-0" style={{background: 'linear-gradient(to bottom, rgba(255,182,213,0.45) 0%, rgba(255,209,230,0.25) 50%, transparent 100%)'}}></div>
+      <div className="site-decor md:hidden fixed inset-x-0 top-0 h-64 pointer-events-none z-0" style={{background: 'linear-gradient(to bottom, rgba(255,182,213,0.45) 0%, rgba(255,209,230,0.25) 50%, transparent 100%)'}}></div>
 
       {/* Floating Stars Layer */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <div className="site-decor fixed inset-0 pointer-events-none overflow-hidden z-0">
         {/* Float stars */}
         <div className="star-float-1 absolute text-yellow-300" style={{top:'8%', left:'12%', fontSize:'14px'}}>✦</div>
         <div className="star-float-2 absolute text-pink-300" style={{top:'15%', right:'18%', fontSize:'10px'}}>★</div>
@@ -187,7 +191,7 @@ function LayoutInner({ children, currentPageName }) {
         <div className="star-twinkle-delay absolute text-blue-300" style={{top:'96%', left:'70%', fontSize:'8px'}}>✦</div>
       </div>
 
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-slate-200/60">
+      <header className="site-chrome sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-slate-200/60">
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Link to={navPathFor('Home', location.pathname, lang)} className="flex items-center gap-2 group">
@@ -268,7 +272,7 @@ function LayoutInner({ children, currentPageName }) {
         {children}
       </main>
 
-      <footer className="border-t border-slate-200/60 bg-white/60 mt-auto">
+      <footer className="site-chrome border-t border-slate-200/60 bg-white/60 mt-auto">
         <div className="max-w-6xl mx-auto px-4 py-6 text-center">
           <div className="flex items-center justify-center gap-4 mb-3">
             <Link to="/PrivacyPolicy" className="text-sm text-slate-500 hover:text-slate-700 underline">
@@ -296,7 +300,7 @@ function LayoutInner({ children, currentPageName }) {
           onClose={() => setSignupBonusPopup(null)}
         />
       )}
-      <FloatingGift />
+      <div className="site-chrome"><FloatingGift /></div>
       <LocalizedAlternates />
       <CanonicalUrl />
     </div>
