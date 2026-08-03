@@ -1,0 +1,39 @@
+{
+  "name": "FreeActivityLead",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Parent's email, left optionally at the end of a free activity"
+    },
+    "activity": {
+      "type": "string",
+      "enum": [
+        "goodbye_ritual",
+        "morning_evening"
+      ],
+      "description": "Which free activity this lead came from"
+    }
+  },
+  "required": [
+    "email"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

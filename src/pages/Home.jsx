@@ -166,6 +166,44 @@ export default function Home() {
         </Link>
       </section>
 
+      {/* Free Activities Section */}
+      <section className="py-8">
+        <div className="text-center mb-6">
+          <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-1">
+            {lang === 'he' ? 'פעילויות חינמיות לקראת כיתה א׳' : 'Free Activities for Starting School'}
+          </h3>
+          <p className="text-slate-500 text-sm">
+            {lang === 'he' ? 'בלי הרשמה, בלי תשלום, פשוט לעשות יחד' : 'No signup, no payment, just do it together'}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+          <Link to="/FreeActivityGoodbye">
+            <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <h4 className="text-lg font-bold text-slate-800 mb-2">
+                  {lang === 'he' ? 'טקס הפרידה שלנו' : 'Our Goodbye Ritual'}
+                </h4>
+                <p className="text-slate-500 text-sm">
+                  {lang === 'he' ? 'בונים יחד פרידה קבועה ומרגיעה לשער בית הספר' : 'Build a calm, consistent goodbye routine together'}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/FreeActivityMorningEvening">
+            <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <h4 className="text-lg font-bold text-slate-800 mb-2">
+                  {lang === 'he' ? 'הבוקר והערב שלי' : 'My Morning and Evening'}
+                </h4>
+                <p className="text-slate-500 text-sm">
+                  {lang === 'he' ? 'בונים לוח שגרה אישי להדפסה לבוקר ולערב' : 'Build a printable personal routine board'}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="py-12 hidden md:block">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

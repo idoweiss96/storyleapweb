@@ -24,6 +24,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import FAQ from './pages/FAQ';
 import FeedbackSurvey from './pages/FeedbackSurvey';
+import FreeActivityGoodbye from './pages/FreeActivityGoodbye';
+import FreeActivityMorningEvening from './pages/FreeActivityMorningEvening';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -91,6 +93,8 @@ const AuthenticatedApp = () => {
       <Route path="/TermsOfUse" element={<LayoutWrapper currentPageName="TermsOfUse"><TermsOfUse /></LayoutWrapper>} />
       <Route path="/FAQ" element={<LayoutWrapper currentPageName="FAQ"><FAQ /></LayoutWrapper>} />
       <Route path="/FeedbackSurvey" element={<LayoutWrapper currentPageName="FeedbackSurvey"><FeedbackSurvey /></LayoutWrapper>} />
+      <Route path="/FreeActivityGoodbye" element={<LayoutWrapper currentPageName="FreeActivityGoodbye"><FreeActivityGoodbye /></LayoutWrapper>} />
+      <Route path="/FreeActivityMorningEvening" element={<LayoutWrapper currentPageName="FreeActivityMorningEvening"><FreeActivityMorningEvening /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
