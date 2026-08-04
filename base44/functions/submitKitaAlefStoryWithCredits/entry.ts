@@ -85,6 +85,12 @@ Deno.serve(async (req) => {
       child_name: story.child_name,
     }).catch(() => {});
 
+    // Update the Kita Alef sheet's Payment Status column, now that payment is confirmed
+    base44.asServiceRole.functions.invoke('updateKitaAlefSheetPaymentStatus', {
+      story_id,
+      lang: effectiveLang,
+    }).catch(() => {});
+
     return Response.json({ success: true, credits_remaining: currentCredits - 110 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

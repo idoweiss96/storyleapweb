@@ -52,7 +52,6 @@ export default function Questionnaire({ answers, setAnswers }) {
     if (!isPageValid()) { setPageError(pageErrorMsg); return; }
     setPageError('');
     setCreating(true);
-    base44.functions.invoke('submitKitaAlefAnswers', { answers, lang }).catch(() => {});
     try { sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers, lang })); } catch (_) {}
     try {
       const saved = await base44.entities.KitaAlefStory.create({
@@ -65,6 +64,7 @@ export default function Questionnaire({ answers, setAnswers }) {
         story_link: null,
         payment_status: 'draft',
       });
+      base44.functions.invoke('submitKitaAlefAnswers', { answers, lang, story_id: saved.id }).catch(() => {});
       navigate(`/KitaAlefStory?story_id=${saved.id}&lang=${lang}`);
     } catch (e) {
       navigate('/KitaAlefStory');

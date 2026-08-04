@@ -35,8 +35,9 @@ function getFamilyPhotoPair(photo, otherLabel, noRelationLabel) {
 // 19 Activities, 20 Hero, 21 Comfort,
 // 22 Looking forward, 23 Parent - Looking forward, 24 One worry, 25 Visited school,
 // 26 Wish self, 27 Parent - Wish self, 28 Wish parent, 29 Parent - Wish parent,
-// 30 Contact Email, 31 Contact Phone, 32 Story Link, 33 Email Sent
-function answersToRow(answers, userEmail, lang) {
+// 30 Contact Email, 31 Contact Phone, 32 Story Link, 33 Email Sent,
+// 34 Internal ID (story_id, used to update payment status later), 35 Payment Status
+function answersToRow(answers, userEmail, lang, storyId) {
   const isEn = lang === 'en';
   const now = new Date().toLocaleString(isEn ? 'en-US' : 'he-IL');
   const otherLabel = isEn ? OTHER_LABEL_EN : OTHER_LABEL_HE;
@@ -83,6 +84,8 @@ function answersToRow(answers, userEmail, lang) {
     '', // Contact phone — filled in later once collected on the details step
     '', // Story link — filled in later once the story is ready
     '', // Email sent — filled in by the notification automation
+    storyId || '',
+    isEn ? 'Pending Payment' : 'ממתין לתשלום',
   ];
 }
 
@@ -90,7 +93,7 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
-    const { answers, lang } = body;
+    const { answers, lang, story_id } = body;
 
     if (!answers) {
       return Response.json({ error: 'No answers provided' }, { status: 400 });
@@ -107,7 +110,7 @@ Deno.serve(async (req) => {
       userEmail = user?.email || '';
     } catch (_) {}
 
-    const row = answersToRow(answers, userEmail, lang);
+    const row = answersToRow(answers, userEmail, lang, story_id);
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
     const response = await fetch(
