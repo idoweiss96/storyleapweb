@@ -114,9 +114,15 @@ export default function Home() {
             <p className="text-lg md:text-xl text-slate-500 mb-8 leading-relaxed whitespace-pre-line">
                {t('hero_subtitle')}
              </p>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 text-amber-700 text-sm font-semibold mb-6 border border-amber-100">
-              <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-              {lang === 'he' ? 'סיפור מותאם אישית מ-₪110' : 'Personalized story from $40'}
+            <div className="flex flex-col items-center gap-2 mb-6">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200">
+                ☀️ {lang === 'he' ? 'מבצע חופש גדול' : 'Summer Sale'}
+              </div>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 text-amber-700 text-sm font-semibold border border-amber-100">
+                <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
+                <span className="line-through text-amber-400">{lang === 'he' ? '₪110' : '$40'}</span>
+                <span className="font-bold">{lang === 'he' ? '₪70' : '$25'}</span>
+              </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={createPageUrl('CreateStory')}>

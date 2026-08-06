@@ -46,10 +46,10 @@ function parseAmountFromDisplay(display) {
 // dynamic PayPal order flow as everything else (see note above on Hosted Buttons).
 const HOSTED_BUTTONS = {
   he: {
-    full: { amount: '110', currency: 'ILS', display: '₪110' },
+    full: { amount: '70', currency: 'ILS', display: '₪70', original: '₪110' },
   },
   en: {
-    full: { amount: '40', currency: 'USD', display: '$40' },
+    full: { amount: '25', currency: 'USD', display: '$25', original: '$40' },
   },
 };
 
@@ -95,7 +95,7 @@ export default function Pricing() {
     }
     // Default: dynamic pricing from the CreditPackage in the DB (Hebrew only; no fixed payment link)
     if (langKey === 'he' && selectedPackage) {
-      return { package_id: selectedPackage.id, currency: 'ILS', display: `₪${selectedPackage.price}` };
+      return { package_id: selectedPackage.id, currency: 'ILS', display: `₪${selectedPackage.price}`, original: '₪110' };
     }
     return HOSTED_BUTTONS[langKey].full;
   }, [hostedButtonCode, appliedCoupon, isHe, selectedPackage]);
@@ -508,7 +508,17 @@ export default function Pricing() {
               )}
 
               <div className="text-center mb-6">
-                <p className="text-3xl font-bold text-slate-800">{btnConfig.display}</p>
+                {btnConfig.original && (
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold mb-3">
+                    ☀️ {isHe ? 'מבצע חופש גדול' : 'Summer Sale'}
+                  </div>
+                )}
+                <div className="flex items-center justify-center gap-3">
+                  {btnConfig.original && (
+                    <span className="text-xl text-slate-400 line-through">{btnConfig.original}</span>
+                  )}
+                  <p className="text-3xl font-bold text-slate-800">{btnConfig.display}</p>
+                </div>
                 {promoApplied && (
                   <p className="text-green-600 text-sm font-medium mt-1">
                     {isHe ? '🎉 קוד הנחה הופעל!' : '🎉 Discount applied!'}
