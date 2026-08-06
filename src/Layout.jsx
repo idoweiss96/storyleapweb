@@ -49,6 +49,13 @@ function LayoutInner({ children, currentPageName }) {
       if (!currentUser.onboarding_completed) {
         setShowOnboarding(true);
       }
+      // Record last login once per browser session (not on every page load)
+      try {
+        if (!sessionStorage.getItem('sl_login_recorded')) {
+          sessionStorage.setItem('sl_login_recorded', '1');
+          base44.auth.updateMe({ last_login: new Date().toISOString() });
+        }
+      } catch (_) {}
     } catch (e) {}
   };
 

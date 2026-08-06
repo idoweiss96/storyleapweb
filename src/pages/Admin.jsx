@@ -15,6 +15,7 @@ import CouponManager from '../components/admin/CouponManager';
 import KitaAlefStoryList from '../components/admin/KitaAlefStoryList';
 import CustomersTab from '../components/admin/CustomersTab';
 import CustomerDetailDialog from '../components/admin/CustomerDetailDialog';
+import CustomerActivityChart from '../components/admin/CustomerActivityChart';
 import { aggregateCustomers } from '@/lib/customerAggregation';
 
 export default function Admin() {
@@ -265,6 +266,8 @@ export default function Admin() {
           </CardContent>
         </Card>
       </div>
+
+      <CustomerActivityChart users={users} />
 
       <CustomersTab customers={customers} onSelect={setSelectedCustomerEmail} />
 
