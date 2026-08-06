@@ -65,6 +65,7 @@ export default function Pricing() {
   const [creditsPopup, setCreditsPopup] = useState(null);
   const [bonusPopup, setBonusPopup] = useState(null);
   const [paypalError, setPaypalError] = useState('');
+  const [paypalRetryNonce, setPaypalRetryNonce] = useState(0);
   const [paypalClientId, setPaypalClientId] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [giftMode, setGiftMode] = useState(false);
@@ -353,7 +354,6 @@ export default function Pricing() {
     const components = 'buttons';
     const sdkCurrency = btnConfig.currency;
     const scriptKey = `${paypalClientId}-${sdkCurrency}-${components}`;
-    const existingScript = document.querySelector(`script[data-paypal-sdk="${scriptKey}"]`);
 
     if (containerRef.current) containerRef.current.innerHTML = '';
     isRenderedRef.current = false;
@@ -362,7 +362,6 @@ export default function Pricing() {
       if (cancelled) return;
       renderRegular();
     };
-    const sdkReady = window.paypal?.Buttons;
 
     // Cleanup: runs on unmount and before every rerender of this effect.
     // Closes any live button instance, invalidates pending async renders/timeouts,
@@ -378,25 +377,50 @@ export default function Pricing() {
       isRenderedRef.current = false;
     };
 
-    // If the right SDK is already loaded, just re-render
-    if (sdkReady && existingScript) {
+    // Loads the SDK script for scriptKey, retrying automatically on network/script
+    // errors instead of dead-ending on a single failure (up to 3 attempts, backing off).
+    const loadScript = (attempt = 0) => {
+      if (cancelled) return;
+      // Clear out scripts for a different client/currency, but never tear down one
+      // that's already loading for this exact key (that was the source of the race
+      // condition — removing an in-flight script made it error out spuriously).
+      document.querySelectorAll('script[data-paypal-sdk]').forEach((s) => {
+        if (s.getAttribute('data-paypal-sdk') !== scriptKey) s.remove();
+      });
+      try { if (!document.querySelector(`script[data-paypal-sdk="${scriptKey}"]`)) delete window.paypal; } catch (_) {}
+
+      const script = document.createElement('script');
+      script.setAttribute('data-paypal-sdk', scriptKey);
+      script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&components=${components}&currency=${sdkCurrency}&disable-funding=venmo,credit&enable-funding=paylater`;
+      script.onload = () => { setPaypalError(''); setTimeout(() => tryRender(), 300); };
+      script.onerror = () => {
+        script.remove();
+        if (cancelled) return;
+        if (attempt < 2) {
+          setTimeout(() => loadScript(attempt + 1), 1000 * (attempt + 1));
+        } else {
+          setPaypalError(isHe ? 'לא ניתן להתחבר ל-PayPal כרגע. מנסים שוב אוטומטית...' : "Can't connect to PayPal right now. Retrying automatically...");
+          setTimeout(() => { if (!cancelled) { setPaypalError(''); loadScript(0); } }, 5000);
+        }
+      };
+      document.body.appendChild(script);
+    };
+
+    const existingScript = document.querySelector(`script[data-paypal-sdk="${scriptKey}"]`);
+    if (window.paypal?.Buttons && existingScript) {
+      // SDK already loaded for this exact client/currency — just re-render
       setTimeout(() => tryRender(), 50);
-      return cleanup;
+    } else if (existingScript) {
+      // Script tag present but still mid-load (e.g. from a fast-following rerender) —
+      // wait for it instead of recreating it.
+      existingScript.addEventListener('load', () => { setPaypalError(''); setTimeout(() => tryRender(), 50); }, { once: true });
+      existingScript.addEventListener('error', () => loadScript(0), { once: true });
+    } else {
+      loadScript(0);
     }
-
-    // Need to reload SDK — remove old scripts and window.paypal
-    document.querySelectorAll('script[data-paypal-sdk]').forEach(s => s.remove());
-    try { delete window.paypal; } catch (_) {}
-
-    const script = document.createElement('script');
-    script.setAttribute('data-paypal-sdk', scriptKey);
-    script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&components=${components}&currency=${sdkCurrency}&disable-funding=venmo,credit&enable-funding=paylater`;
-    script.onload = () => setTimeout(() => tryRender(), 300);
-    script.onerror = () => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh');
-    document.body.appendChild(script);
     return cleanup;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [btnConfig, giftMode, paypalClientId, isAuthed]);
+  }, [btnConfig, giftMode, paypalClientId, isAuthed, paypalRetryNonce]);
 
   const applyPromoCode = async (rawCode) => {
     setPromoError('');
@@ -573,8 +597,11 @@ export default function Pricing() {
               )}
 
               {paypalError && (
-                <div className="mb-4 p-3 bg-red-50 rounded-xl border border-red-200">
+                <div className="mb-4 p-3 bg-red-50 rounded-xl border border-red-200 flex items-center justify-between gap-3">
                   <p className="text-sm text-red-600">{paypalError}</p>
+                  <Button variant="outline" size="sm" onClick={() => { setPaypalError(''); setPaypalRetryNonce((n) => n + 1); }} className="shrink-0 border-red-300 text-red-600 hover:bg-red-100">
+                    {isHe ? 'ניסיון חדש' : 'Retry'}
+                  </Button>
                 </div>
               )}
 
