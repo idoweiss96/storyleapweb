@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { LogIn, X } from 'lucide-react';
 import { useLanguage } from '../LanguageContext';
+import { trackEvent } from '@/lib/posthog';
 
 export default function LoginPromptModal({ onClose }) {
   const { lang } = useLanguage();
   const isHe = lang === 'he';
+
+  useEffect(() => {
+    trackEvent('login_register_reached');
+  }, []);
 
   const handleLogin = () => {
     // After login, we return to CreateStory with a flag to resume

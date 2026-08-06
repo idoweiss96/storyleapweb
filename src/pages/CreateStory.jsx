@@ -13,6 +13,7 @@ import StoryForm from '../components/story/StoryForm';
 import LoginPromptModal from '../components/story/LoginPromptModal';
 import { useLanguage } from '../components/LanguageContext';
 import { useNavPath } from '@/lib/useNavPath';
+import { trackEvent } from '@/lib/posthog';
 
 // Uses localStorage (not sessionStorage) so the saved questionnaire survives a
 // registration/email-verification flow that continues in a new tab.
@@ -43,6 +44,7 @@ export default function CreateStory() {
 
   useEffect(() => {
     initPage();
+    trackEvent('questionnaire_started');
   }, []);
 
   const initPage = async () => {
@@ -118,6 +120,7 @@ export default function CreateStory() {
     if (!user) {
       // Guest: save form data and show a recap before asking to sign in
       localStorage.setItem(PENDING_FORM_KEY, JSON.stringify(formData));
+      trackEvent('questionnaire_recap_reached');
       setStep('recap');
       return;
     }
@@ -274,7 +277,7 @@ export default function CreateStory() {
                 </h3>
                 <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                   {formData.childImage && (
-                    <div className="flex justify-center pb-2">
+                    <div className="flex justify-center pb-2 ph-no-capture">
                       <img src={formData.childImage} alt={formData.childName} className="w-20 h-20 rounded-xl object-cover border-2 border-white shadow" />
                     </div>
                   )}
@@ -308,12 +311,12 @@ export default function CreateStory() {
                   )}
                   <div className="flex justify-between text-sm pt-2 border-t border-slate-200">
                     <span className="text-slate-500">{t('form_email')}</span>
-                    <span className="font-semibold text-slate-800">{formData.contactEmail}</span>
+                    <span className="font-semibold text-slate-800 ph-mask">{formData.contactEmail}</span>
                   </div>
                 </div>
 
                 <Button
-                  onClick={() => setShowLoginModal(true)}
+                  onClick={() => { trackEvent('login_register_reached'); setShowLoginModal(true); }}
                   className="w-full h-14 text-lg rounded-xl bg-slate-800 hover:bg-slate-700 shadow-lg transition-all mb-3"
                 >
                   {isHe ? 'הכל נכון, המשך להתחברות' : "Looks good, continue to Sign In"}

@@ -70,7 +70,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
           value={value || ''}
           onChange={(e) => onAnswerChange(key, e.target.value)}
           rows={3}
-          className="w-full px-4 py-3 rounded-[10px] border bg-kita-input-bg text-kita-text focus:outline-none resize-none transition-colors"
+          className="w-full px-4 py-3 rounded-[10px] border bg-kita-input-bg text-kita-text focus:outline-none resize-none transition-colors ph-mask"
           style={{ borderColor: '#F0E8F5' }}
           placeholder={question.hint || placeholder}
         />
@@ -132,7 +132,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
           <button
             onClick={() => fileRef.current?.click()}
             disabled={isUploading}
-            className="w-24 h-24 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden transition-colors disabled:opacity-60"
+            className="w-24 h-24 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden transition-colors disabled:opacity-60 ph-no-capture"
             style={{ borderColor: '#FF6FB5' }}
           >
             {isUploading ? (
@@ -216,7 +216,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
             value={parentValue || ''}
             onChange={(e) => onAnswerChange(`${key}_parent`, e.target.value)}
             rows={2}
-            className="w-full px-4 py-3 rounded-[10px] border bg-kita-input-bg text-kita-text focus:outline-none resize-none transition-colors"
+            className="w-full px-4 py-3 rounded-[10px] border bg-kita-input-bg text-kita-text focus:outline-none resize-none transition-colors ph-mask"
             style={{ borderColor: '#F0E8F5' }}
             placeholder={placeholder}
           />

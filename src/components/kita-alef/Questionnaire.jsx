@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
@@ -6,6 +6,7 @@ import { base44 } from '@/api/base44Client';
 import { getPages } from './questionsConfig';
 import { useLanguage } from '@/components/LanguageContext';
 import QuestionCard from './QuestionCard';
+import { trackEvent } from '@/lib/posthog';
 
 export default function Questionnaire({ answers, setAnswers }) {
   const { lang } = useLanguage();
@@ -17,6 +18,10 @@ export default function Questionnaire({ answers, setAnswers }) {
   const page = pages[pageIdx];
   const progress = ((pageIdx + 1) / pages.length) * 100;
   const isEn = lang === 'en';
+
+  useEffect(() => {
+    trackEvent('kita_questionnaire_started');
+  }, []);
 
   const handleAnswer = (key, val) => {
     setAnswers(prev => ({ ...prev, [key]: val }));
@@ -39,6 +44,7 @@ export default function Questionnaire({ answers, setAnswers }) {
   const goNext = () => {
     if (!isPageValid()) { setPageError(pageErrorMsg); return; }
     setPageError('');
+    trackEvent('kita_questionnaire_step_completed', { step: pageIdx + 1 });
     setPageIdx(pageIdx + 1);
   };
 
@@ -51,6 +57,7 @@ export default function Questionnaire({ answers, setAnswers }) {
     if (creating) return;
     if (!isPageValid()) { setPageError(pageErrorMsg); return; }
     setPageError('');
+    trackEvent('kita_questionnaire_completed');
     setCreating(true);
     try { sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers, lang })); } catch (_) {}
     try {

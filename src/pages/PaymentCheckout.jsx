@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, ShieldCheck, AlertCircle, ArrowRight, Star } from 'lucide-react';
+import { trackEvent } from '@/lib/posthog';
 
 const PAYPAL_CLIENT_ID = 'BAAp7sBZcp1O2D_XYhhyHfg20nzgXC1O3hN8Dr6-8EFfnkGkpYKC8fTivDyIm91hiaKIFhxTilvzExmmXU';
 const STORY_PRICE_ILS = 45;
@@ -28,6 +29,7 @@ export default function PaymentCheckout() {
     setStoryId(sid);
     setChildName(name);
     base44.analytics.track({ eventName: 'redirected_to_payment', properties: { story_id: sid } });
+    trackEvent('purchase_screen_reached', { story_id: sid });
     loadPaypalAndRender(sid);
   }, []);
 
@@ -53,8 +55,8 @@ export default function PaymentCheckout() {
     const script = document.createElement('script');
     script.setAttribute('data-paypal-checkout', 'true');
     script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=ILS&disable-funding=venmo,credit`;
-    script.onload = () => tryRender();
-    script.onerror = () => { setError('שגיאה בטעינת PayPal, נסו לרענן את הדף'); setStatus('failed'); };
+    script.onload = () => { trackEvent('paypal_button_loaded'); tryRender(); };
+    script.onerror = () => { trackEvent('paypal_button_failed'); setError('שגיאה בטעינת PayPal, נסו לרענן את הדף'); setStatus('failed'); };
     document.body.appendChild(script);
   };
 
@@ -78,6 +80,7 @@ export default function PaymentCheckout() {
           });
           if (res.data?.success) {
             base44.analytics.track({ eventName: 'payment_completed', properties: { story_id: sid } });
+            trackEvent('payment_completed', { type: 'story', story_id: sid });
             setStatus('success');
             setTimeout(() => navigate(`/PaymentSuccess?story_id=${sid}`), 1500);
           } else {

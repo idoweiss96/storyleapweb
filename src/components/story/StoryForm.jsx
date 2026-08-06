@@ -8,6 +8,7 @@ import { Sparkles, Loader2, Upload, X, ChevronRight, ChevronLeft, Check } from '
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../LanguageContext';
 import TermsOfUseModal from './TermsOfUseModal';
+import { trackEvent } from '@/lib/posthog';
 
 async function convertHeicToJpeg(file) {
   return new Promise((resolve, reject) => {
@@ -211,6 +212,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
     }
     setStepError('');
     setDirection(1);
+    trackEvent('questionnaire_step_completed', { step: formStep + 1 });
     nextStep();
   };
   const handlePrev = () => { setStepError(''); setDirection(-1); prevStep(); };
@@ -323,7 +325,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
                 {t('form_image')} <span className="text-red-500">*</span>
               </Label>
               {formData.childImage ?
-            <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2" style={{ borderColor: PURPLE }}>
+            <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 ph-no-capture" style={{ borderColor: PURPLE }}>
                   <img src={formData.childImage} alt="Child" className="w-full h-full object-cover" />
                   <button type="button" onClick={removeImage} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600">
                     <X className="w-4 h-4" />
@@ -399,7 +401,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
                 {isHe ? 'תמונת הורה (אופציונלי)' : "Parent's Photo (optional)"}
               </Label>
               {formData.parentImage ?
-            <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2" style={{ borderColor: PURPLE }}>
+            <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 ph-no-capture" style={{ borderColor: PURPLE }}>
                   <img src={formData.parentImage} alt="Parent" className="w-full h-full object-cover" />
                   <button type="button" onClick={removeParentImage} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600">
                     <X className="w-4 h-4" />
@@ -544,16 +546,16 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
                 <Input
               value={formData.customChallenge || ''}
               onChange={(e) => {
-                const words = e.target.value.trim().split(/\s+/).filter(Boolean);
-                if (words.length <= 4) {
-                  handleChange('customChallenge', e.target.value);
-                } else {
-                  // Allow only first 4 words
-                  handleChange('customChallenge', words.slice(0, 4).join(' '));
-                }
+              const words = e.target.value.trim().split(/\s+/).filter(Boolean);
+              if (words.length <= 4) {
+                handleChange('customChallenge', e.target.value);
+              } else {
+                // Allow only first 4 words
+                handleChange('customChallenge', words.slice(0, 4).join(' '));
+              }
               }}
               placeholder={isHe ? 'למשל: קנאה באח, מעבר גן...' : 'e.g.: sibling rivalry, new school...'}
-              className="h-12 rounded-xl"
+              className="h-12 rounded-xl ph-mask"
               style={{ borderColor: `${PURPLE}40` }} />
             
                 <p className="text-xs text-slate-400">
@@ -570,7 +572,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               value={formData.triggerDesc}
               onChange={(e) => handleChange('triggerDesc', e.target.value)}
               placeholder={t('form_trigger_ph')}
-              className="rounded-xl resize-none"
+              className="rounded-xl resize-none ph-mask"
               style={{ borderColor: `${PURPLE}30` }}
               rows={2} />
             
@@ -624,7 +626,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               value={formData.hobbies}
               onChange={(e) => handleChange('hobbies', e.target.value)}
               placeholder={t('form_hobbies_ph')}
-              className="rounded-xl resize-none"
+              className="rounded-xl resize-none ph-mask"
               style={{ borderColor: `${PURPLE}30` }}
               rows={2} />
             
@@ -643,7 +645,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
                   onChange={(e) => handleChange('contactEmail', e.target.value)}
                   onBlur={() => setEmailTouched(true)}
                   placeholder="your@email.com"
-                  className="h-11 rounded-xl"
+                  className="h-11 rounded-xl ph-mask"
                   style={{ borderColor: emailTouched && !isEmailValid ? '#ef4444' : `${PURPLE}30` }} />
                   {emailTouched && !isEmailValid && (
                     <p className="text-xs text-red-500 mt-1">

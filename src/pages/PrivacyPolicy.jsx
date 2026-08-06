@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
-import { ShieldCheck, Camera, Mail } from 'lucide-react';
+import { ShieldCheck, Camera, Mail, BarChart3 } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 
 export default function PrivacyPolicy() {
@@ -55,6 +55,18 @@ export default function PrivacyPolicy() {
               {isHe
                 ? 'תמונת הילד/ה שאתם מעלים משמשת רק כהשראה ליצירת האיורים והדמות בסיפור האישי שלכם, ואינה מתפרסמת, אינה משותפת עם צדדים שלישיים ואינה נשמרת לשימוש בכל סיפור אחר מלבד הסיפור שביקשתם. אתם יכולים לבקש מחיקה של התמונה בכל שלב על ידי פנייה אלינו.'
                 : 'The photo you upload is used solely to inspire the illustrations and character in your own personalized story. It is never published, never shared with third parties, and is not reused for any story other than the one you requested. You may ask us to delete the photo at any time by contacting us.'}
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-violet-500" />
+              {isHe ? 'ניתוח שימוש ושיפור המוצר' : 'Usage Analytics & Product Improvement'}
+            </h2>
+            <p>
+              {isHe
+                ? 'אנחנו משתמשים בכלי אנליטיקס אנונימי כדי להבין איך משתמשים באתר ולשפר את החוויה, כולל הקלטות מסך אנונימיות של הגלישה. פרטים רגישים כמו תמונת הילד/ה וכתובת המייל תמיד מוסתרים (מטושטשים) בהקלטות הללו ואינם ניתנים לצפייה.'
+                : 'We use anonymized analytics tools to understand how the site is used and to improve the experience, including anonymized session recordings of browsing activity. Sensitive details such as your child\'s photo and your email address are always hidden (masked) in these recordings and cannot be viewed.'}
             </p>
           </section>
 

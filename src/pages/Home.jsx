@@ -9,6 +9,7 @@ import { useLanguage } from '../components/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
 import StoryGallery from '@/components/home/StoryGallery';
+import { trackEvent } from '@/lib/posthog';
 
 function TestimonialsCarousel() {
   const { t } = useLanguage();
@@ -80,6 +81,10 @@ export default function Home() {
   const { t, lang } = useLanguage();
   const location = useLocation();
   const kitaAlefPath = navPathFor('KitaAlef', location.pathname, lang);
+
+  useEffect(() => {
+    trackEvent('homepage_viewed');
+  }, []);
 
   const features = [
   { icon: Wand2, title: t('feature1_title'), description: t('feature1_desc'), bg: 'bg-blue-50', iconColor: 'text-blue-600' },

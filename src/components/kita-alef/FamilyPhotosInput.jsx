@@ -42,7 +42,7 @@ export default function FamilyPhotosInput({ value, onChange }) {
       <button
         onClick={() => fileRef.current?.click()}
         disabled={isUploading}
-        className="w-16 h-16 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden shrink-0 transition-colors disabled:opacity-60"
+        className="w-16 h-16 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden shrink-0 transition-colors disabled:opacity-60 ph-no-capture"
         style={{ borderColor: '#FF6FB5' }}
       >
         {isUploading ? (

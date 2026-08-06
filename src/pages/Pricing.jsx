@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
+import { trackEvent } from '@/lib/posthog';
 
 // Special test codes — routed through the same dynamic PayPal order flow as everything
 // else (createCreditsOrder), NOT a PayPal Hosted Button. Hosted Buttons carry their own
@@ -114,6 +115,11 @@ export default function Pricing() {
     }
   };
 
+  // Track once the guest sign-in/register prompt is actually shown on this page
+  useEffect(() => {
+    if (isAuthed === false) trackEvent('login_register_reached');
+  }, [isAuthed]);
+
   // Handle PayPal redirect return on mobile
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -189,6 +195,10 @@ export default function Pricing() {
     };
     capture();
   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    trackEvent('purchase_screen_reached');
   }, []);
 
   useEffect(() => {
@@ -268,7 +278,10 @@ export default function Pricing() {
           });
           console.log('[MetaPixelDiag] path=desktop-story success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
           if (res.data?.success) {
-            if (!res.data.already_processed) trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
+            if (!res.data.already_processed) {
+              trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
+              trackEvent('payment_completed', { type: 'story' });
+            }
             localStorage.removeItem('pendingStoryId');
             window.dispatchEvent(new Event('credits-updated'));
             navigate('/PaymentSuccess?story_id=' + pendingStoryId);
@@ -283,6 +296,7 @@ export default function Pricing() {
             console.log('[MetaPixelDiag] path=desktop-gift success:', res.data?.success, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success) {
               trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
+              trackEvent('payment_completed', { type: 'gift' });
               setGiftSuccess({ code: res.data.code, recipient: recipientEmailRef.current });
             } else {
               setPaypalError(isHe ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
@@ -295,6 +309,7 @@ export default function Pricing() {
             console.log('[MetaPixelDiag] path=desktop-credits success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success && !res.data.already_processed) {
               trackPurchaseOnce(data.orderID, res.data.amount, res.data.currency);
+              trackEvent('payment_completed', { type: 'credits' });
               await base44.auth.updateMe({ credits: res.data.new_total });
               setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
               const added = res.data.credits_added || 110;
@@ -392,13 +407,14 @@ export default function Pricing() {
       const script = document.createElement('script');
       script.setAttribute('data-paypal-sdk', scriptKey);
       script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&components=${components}&currency=${sdkCurrency}&disable-funding=venmo,credit&enable-funding=paylater`;
-      script.onload = () => { setPaypalError(''); setTimeout(() => tryRender(), 300); };
+      script.onload = () => { setPaypalError(''); trackEvent('paypal_button_loaded'); setTimeout(() => tryRender(), 300); };
       script.onerror = () => {
         script.remove();
         if (cancelled) return;
         if (attempt < 2) {
           setTimeout(() => loadScript(attempt + 1), 1000 * (attempt + 1));
         } else {
+          trackEvent('paypal_button_failed');
           setPaypalError(isHe ? 'לא ניתן להתחבר ל-PayPal כרגע. מנסים שוב אוטומטית...' : "Can't connect to PayPal right now. Retrying automatically...");
           setTimeout(() => { if (!cancelled) { setPaypalError(''); loadScript(0); } }, 5000);
         }
@@ -526,7 +542,7 @@ export default function Pricing() {
 
               {giftMode && (
                 <div className="mb-6 max-w-xs mx-auto">
-                  <Input type="email" placeholder={isHe ? 'מייל מקבל/ת המתנה' : 'Recipient email'} value={recipientEmail} onChange={(e) => setRecipientEmail(e.target.value)} className="text-sm" />
+                  <Input type="email" placeholder={isHe ? 'מייל מקבל/ת המתנה' : 'Recipient email'} value={recipientEmail} onChange={(e) => setRecipientEmail(e.target.value)} className="text-sm ph-mask" />
                   <p className="text-xs text-slate-400 mt-1 text-center">{isHe ? 'הקוד יישלח למייל זה לאחר התשלום' : 'The gift code will be sent to this email after payment'}</p>
                 </div>
               )}

@@ -11,6 +11,7 @@ import FloatingGift from './components/FloatingGift';
 import LocalizedAlternates from '@/components/SEO/LocalizedAlternates';
 import CanonicalUrl from '@/components/SEO/CanonicalUrl';
 import { LanguageProvider, useLanguage } from './components/LanguageContext';
+import { initPostHog, trackPageview, stopTracking, resumeTracking } from '@/lib/posthog';
 
 // New brand logo URL
 const LOGO_URL = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg';
@@ -31,6 +32,19 @@ function LayoutInner({ children, currentPageName }) {
     window.addEventListener('credits-updated', handleCreditsUpdate);
     return () => window.removeEventListener('credits-updated', handleCreditsUpdate);
   }, []);
+
+  // PostHog: tracked on every page except System Management (Admin), which is excluded
+  // from analytics/session recording since it's only the app owner's own activity.
+  useEffect(() => {
+    initPostHog().then(() => {
+      if (currentPageName === 'Admin') {
+        stopTracking();
+      } else {
+        resumeTracking();
+        trackPageview(location.pathname);
+      }
+    });
+  }, [currentPageName, location.pathname]);
 
   const loadUser = async () => {
     try {
