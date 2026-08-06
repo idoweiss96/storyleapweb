@@ -8,6 +8,7 @@ import { Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell, ChevronRig
 import { useLanguage } from '../components/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
+import StoryGallery from '@/components/home/StoryGallery';
 
 function TestimonialsCarousel() {
   const { t } = useLanguage();
@@ -134,6 +135,9 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* Gallery Section */}
+      <StoryGallery />
 
       {/* Kita Alef Special Banner */}
       <section className="py-4">
@@ -265,31 +269,6 @@ export default function Home() {
             </CardContent>
           </Card>
         </motion.div>
-      </section>
-
-      {/* Gallery Section */}
-      <section className="py-12">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">{t('gallery_title')}</h2>
-          <p className="text-slate-500">{t('gallery_subtitle')}</p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/ee44ec4b5_image4.png',
-          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/aacd843f4_image52.png',
-          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/dd316698e_image51.png',
-          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/0e345ce30_image5.png',
-          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/e38dd71a8_image54.png',
-          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/ad2824198_image53.png',
-          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/83af1df79_image1.png',
-          'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/465dd64af_image3.png'].
-          map((src, i) =>
-          <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.07 }}
-          className="aspect-square overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer">
-              <img src={src} alt={`gallery ${i + 1}`} className="w-full h-full object-cover" />
-            </motion.div>
-          )}
-        </div>
       </section>
 
       {/* Testimonials Carousel */}
