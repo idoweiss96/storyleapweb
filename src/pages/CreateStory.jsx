@@ -237,7 +237,7 @@ export default function CreateStory() {
         <p className="text-gray-600">{t('create_subtitle')}</p>
       </div>
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false}>
 
         {/* SUCCESS */}
         {step === 'success' && generatedStory && (
@@ -273,6 +273,11 @@ export default function CreateStory() {
                   {isHe ? '✅ בואו נאשר את הפרטים לפני שממשיכים' : "✅ Let's confirm your details before continuing"}
                 </h3>
                 <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                  {formData.childImage && (
+                    <div className="flex justify-center pb-2">
+                      <img src={formData.childImage} alt={formData.childName} className="w-20 h-20 rounded-xl object-cover border-2 border-white shadow" />
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500">{t('form_child_name')}</span>
                     <span className="font-semibold text-slate-800">{formData.childName}</span>
@@ -288,6 +293,22 @@ export default function CreateStory() {
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500">{t('form_challenge')}</span>
                     <span className="font-semibold text-slate-800">{challengeLabels[formData.challengeType] || formData.challengeType}</span>
+                  </div>
+                  {formData.triggerDesc && (
+                    <div className="flex justify-between text-sm gap-4">
+                      <span className="text-slate-500 shrink-0">{t('form_trigger')}</span>
+                      <span className="font-semibold text-slate-800 text-right">{formData.triggerDesc}</span>
+                    </div>
+                  )}
+                  {formData.hobbies && (
+                    <div className="flex justify-between text-sm gap-4">
+                      <span className="text-slate-500 shrink-0">{t('form_hobbies')}</span>
+                      <span className="font-semibold text-slate-800 text-right">{formData.hobbies}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-sm pt-2 border-t border-slate-200">
+                    <span className="text-slate-500">{t('form_email')}</span>
+                    <span className="font-semibold text-slate-800">{formData.contactEmail}</span>
                   </div>
                 </div>
 

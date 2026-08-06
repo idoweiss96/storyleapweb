@@ -5,8 +5,8 @@ import { createPageUrl } from '../utils';
 import { useLanguage } from '@/components/LanguageContext';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 18 },
-  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.55, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] } })
+  hidden: { opacity: 0.4, y: 10 },
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.35, delay: i * 0.03, ease: [0.22, 1, 0.36, 1] } })
 };
 
 const content = {
@@ -43,7 +43,7 @@ const content = {
       { tag: 'השלב הבא', title: 'ארגז הכלים של המטפל', desc: 'התרחבות לסרטונים, יצירות ומשחקים. פלטפורמה חכמה להקצאת משימות.' },
       { tag: 'החזון שלנו ל-10 שנים', title: 'המנחה הרגשי', desc: 'פלטפורמה שלמה המלווה משפחות בכל שלב ומחברת בין מטפלים והורים.' },
     ],
-    closing: 'לא יצאנו לדרך הזו כי זיהינו הזדמנות עסקית טובה. התחלנו כי ראינו ילדים שזקוקים לעזרה, והורים שמשתוקקים לתת אותה, וידענו שאנחנו יכולים לבנות את הגשר ביניהם.',
+    closing: 'הצטרפו אלינו לבנות את הגשר הזה, סיפור אחד בכל פעם.',
     closingCta: 'התחילו את המסע המשותף',
   },
   en: {
@@ -79,7 +79,7 @@ const content = {
       { tag: 'Next Step', title: "A Therapist's Toolkit", desc: 'Expanding into videos, art, and games. A smart platform to assign tasks.' },
       { tag: 'Our 10-Year Vision', title: 'The Emotional Navigator', desc: 'A full platform that guides families and connects therapists and parents.' },
     ],
-    closing: 'We did not start this because it was a good market opportunity. We started because we saw children who needed help, and parents who wanted to give it, and knew we could build the bridge between them.',
+    closing: 'Join us in building that bridge, one story at a time.',
     closingCta: 'Start the shared journey',
   }
 };

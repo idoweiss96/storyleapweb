@@ -255,7 +255,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
         )}
       </div>
 
-      <AnimatePresence mode="wait" custom={direction}>
+      <AnimatePresence initial={false} custom={direction}>
         {/* STEP 1: Child Info */}
         {formStep === 0 &&
         <motion.div

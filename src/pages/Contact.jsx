@@ -59,7 +59,7 @@ export default function Contact() {
       </div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <Card className="border-0 shadow-xl shadow-slate-100">
+        <Card className="border-0 shadow-2xl shadow-slate-300/60 bg-white/95 backdrop-blur-sm ring-1 ring-slate-100">
           <CardContent className="p-8">
             {submitted ?
             <div className="text-center py-8">
