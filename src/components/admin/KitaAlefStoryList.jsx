@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Pencil, Check, ExternalLink, Search, Image, Download, BookOpen } from 'lucide-react';
 import { format } from 'date-fns';
 
-export default function KitaAlefStoryList() {
+export default function KitaAlefStoryList({ onSelectCustomer }) {
   const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingStory, setEditingStory] = useState(null);
@@ -125,7 +125,13 @@ export default function KitaAlefStoryList() {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell className="text-sm text-gray-500">{story.contact_email || '-'}</TableCell>
+                    <TableCell className="text-sm text-gray-500">
+                      {story.contact_email ? (
+                        <button onClick={() => onSelectCustomer?.(story.contact_email)} className="underline hover:text-slate-800">
+                          {story.contact_email}
+                        </button>
+                      ) : '-'}
+                    </TableCell>
                     <TableCell>
                       {story.payment_status === 'paid' ? (
                         <Badge className="bg-green-100 text-green-700"><Check className="w-3 h-3 ml-1" />שולם</Badge>

@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
+import { computeAutoTagsForStories } from '../../shared/customerTags.ts';
 
 const SPREADSHEET_ID_EN = '1vDfEGbVfwplAgHTTYREauRxUgX-fxa5uJJZXenotZac';
 const SHEET_NAME_EN = 'Questionnaire';
@@ -24,7 +25,7 @@ function detectLanguage(story) {
   return isHebrew(story.child_name) || isHebrew(story.trigger_desc) || isHebrew(story.hobbies) ? 'he' : 'en';
 }
 
-function storyToRow(story, lang, userEmail) {
+function storyToRow(story, lang, userEmail, tags) {
   const createdDate = story.created_date ? new Date(story.created_date).toLocaleString('he-IL') : '';
   const genderMap = lang === 'he' ? genderMapHE : genderMapEN;
   const settingMap = lang === 'he' ? settingMapHE : settingMapEN;
@@ -59,6 +60,7 @@ function storyToRow(story, lang, userEmail) {
     story.contact_phone || '',
     '', // Story Link — filled in later once the story is ready
     '', // Email Sent — filled in by the notification automation
+    (tags || []).join(', '),
   ];
 }
 
@@ -79,7 +81,24 @@ Deno.serve(async (req) => {
     const lang = detectLanguage(storyData);
     const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
     const sheetName = lang === 'he' ? SHEET_NAME_HE : SHEET_NAME_EN;
-    const row = storyToRow(storyData, lang, storyData.contact_email || storyData.created_by || storyData.user_email);
+
+    let tags = [];
+    try {
+      const email = storyData.contact_email;
+      if (email) {
+        const [customerTags, priorStories] = await Promise.all([
+          base44.asServiceRole.entities.CustomerTag.filter({ email }),
+          base44.asServiceRole.entities.Story.filter({ contact_email: email }),
+        ]);
+        const auto = computeAutoTagsForStories(priorStories.length ? priorStories : [storyData]);
+        const manual = customerTags[0]?.tags || [];
+        tags = Array.from(new Set([...manual, ...auto]));
+      }
+    } catch (e) {
+      console.error('[addStoryToSheet] Tag lookup failed (non-fatal):', e.message);
+    }
+
+    const row = storyToRow(storyData, lang, storyData.contact_email || storyData.created_by || storyData.user_email, tags);
 
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {

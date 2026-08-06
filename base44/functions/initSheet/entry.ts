@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { buildTagsMapForStories } from '../../shared/customerTags.ts';
 
 const SPREADSHEET_ID_EN = '1-LZ-ai2LdJ4BoTTdSacDRl-L0LpcIEg5JrCKK6txLxg';
 const SPREADSHEET_ID_HE = '1yT2WdAlyjpp8gciT4iZYEL122FyrliTin3MEcTvvr20';
@@ -18,6 +19,7 @@ const HEADERS_HE = [
   'טלפון',
   'קישור לתמונה',
   'קישור לסיפור',
+  'תגיות',
 ];
 
 const HEADERS_EN = [
@@ -34,6 +36,7 @@ const HEADERS_EN = [
   'Phone',
   'Image Link',
   'Story Link',
+  'Tags',
 ];
 
 const genderMapHE = { boy: 'בן', girl: 'בת', other: 'אחר' };
@@ -60,13 +63,14 @@ function detectLanguage(story) {
   return isHebrew(d.child_name) || isHebrew(d.trigger_desc) || isHebrew(d.hobbies) ? 'he' : 'en';
 }
 
-function storyToRow(story, lang) {
+function storyToRow(story, lang, tagsMap) {
   const d = getFields(story);
   const createdDate = story.created_date ? new Date(story.created_date).toLocaleDateString('he-IL') : '';
   const genderMap = lang === 'he' ? genderMapHE : genderMapEN;
   const settingMap = lang === 'he' ? settingMapHE : settingMapEN;
   const challengeMap = lang === 'he' ? challengeMapHE : challengeMapEN;
   const reactionMap = lang === 'he' ? reactionMapHE : reactionMapEN;
+  const tags = tagsMap.get((d.contact_email || '').toLowerCase()) || [];
   return [
     createdDate,
     d.child_name || '',
@@ -81,6 +85,7 @@ function storyToRow(story, lang) {
     d.contact_phone || '',
     d.child_image_url || '',
     d.story_link || '',
+    tags.join(', '),
   ];
 }
 
@@ -120,14 +125,18 @@ Deno.serve(async (req) => {
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
-    const stories = await base44.asServiceRole.entities.Story.list('-created_date', 200);
+    const [stories, customerTags] = await Promise.all([
+      base44.asServiceRole.entities.Story.list('-created_date', 200),
+      base44.asServiceRole.entities.CustomerTag.list(),
+    ]);
+    const tagsMap = buildTagsMapForStories(stories, customerTags);
 
     const heStories = stories.filter(s => detectLanguage(s) === 'he');
     const enStories = stories.filter(s => detectLanguage(s) === 'en');
 
     await Promise.all([
-      writeToSheet(SPREADSHEET_ID_HE, heStories.map(s => storyToRow(s, 'he')), HEADERS_HE, accessToken),
-      writeToSheet(SPREADSHEET_ID_EN, enStories.map(s => storyToRow(s, 'en')), HEADERS_EN, accessToken),
+      writeToSheet(SPREADSHEET_ID_HE, heStories.map(s => storyToRow(s, 'he', tagsMap)), HEADERS_HE, accessToken),
+      writeToSheet(SPREADSHEET_ID_EN, enStories.map(s => storyToRow(s, 'en', tagsMap)), HEADERS_EN, accessToken),
     ]);
 
     return Response.json({ success: true, hebrew: heStories.length, english: enStories.length });

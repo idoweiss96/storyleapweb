@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +13,9 @@ import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageContext';
 import CouponManager from '../components/admin/CouponManager';
 import KitaAlefStoryList from '../components/admin/KitaAlefStoryList';
+import CustomersTab from '../components/admin/CustomersTab';
+import CustomerDetailDialog from '../components/admin/CustomerDetailDialog';
+import { aggregateCustomers } from '@/lib/customerAggregation';
 
 export default function Admin() {
   const { t } = useLanguage();
@@ -36,6 +39,11 @@ export default function Admin() {
   const [searchUsers, setSearchUsers] = useState('');
   const [viewingImage, setViewingImage] = useState(null);
   const [showAllStories, setShowAllStories] = useState(false);
+  const [kitaStories, setKitaStories] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [coupons, setCoupons] = useState([]);
+  const [customerTags, setCustomerTags] = useState([]);
+  const [selectedCustomerEmail, setSelectedCustomerEmail] = useState(null);
 
   const settingLabels = { space: t('setting_space'), forest: t('setting_forest'), castle: t('setting_castle'), sports: t('setting_sports'), real_life: t('setting_real_life') };
   const challengeLabels = { fears: t('ch_fears'), social_difficulty: t('ch_social'), changes: t('ch_changes'), emotional_regulation: t('ch_emotional'), separation_anxiety: t('ch_separation'), self_confidence: t('ch_confidence'), sleep_issues: t('ch_sleep') };
@@ -44,18 +52,37 @@ export default function Admin() {
 
   useEffect(() => { loadData(); }, []);
 
+  const customers = useMemo(() => aggregateCustomers({ stories, kitaStories, users, orders, coupons, customerTags }), [stories, kitaStories, users, orders, coupons, customerTags]);
+  const tagsByEmail = useMemo(() => {
+    const map = new Map();
+    customers.forEach((c) => map.set(c.email.toLowerCase(), c.allTags));
+    return map;
+  }, [customers]);
+  const selectedCustomer = customers.find((c) => c.email.toLowerCase() === (selectedCustomerEmail || '').toLowerCase()) || null;
+  const reloadCustomerTags = async () => {
+    setCustomerTags(await base44.entities.CustomerTag.list('-created_date'));
+  };
+
   const loadData = async () => {
     try {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       if (currentUser.role === 'admin') {
         setIsAdmin(true);
-        const [allStories, allUsers] = await Promise.all([
+        const [allStories, allUsers, allKitaStories, allOrders, allCoupons, allCustomerTags] = await Promise.all([
           base44.entities.Story.list('-created_date'),
-          base44.entities.User.list('-created_date')
+          base44.entities.User.list('-created_date'),
+          base44.entities.KitaAlefStory.list('-created_date'),
+          base44.entities.Order.list('-created_date'),
+          base44.entities.Coupon.list('-created_date'),
+          base44.entities.CustomerTag.list('-created_date'),
         ]);
         setStories(allStories);
         setUsers(allUsers);
+        setKitaStories(allKitaStories);
+        setOrders(allOrders);
+        setCoupons(allCoupons);
+        setCustomerTags(allCustomerTags);
       }
     } catch (e) {
       base44.auth.redirectToLogin(window.location.href);
@@ -67,7 +94,7 @@ export default function Admin() {
   const exportToCSV = () => {
     setIsExporting(true);
     try {
-      const headers = [t('field_date'), t('field_name'), t('field_age'), t('field_gender'), t('field_setting'), t('field_challenge'), t('field_trigger'), t('field_reaction'), t('field_hobbies'), t('form_email'), t('form_phone'), 'Content'];
+      const headers = [t('field_date'), t('field_name'), t('field_age'), t('field_gender'), t('field_setting'), t('field_challenge'), t('field_trigger'), t('field_reaction'), t('field_hobbies'), t('form_email'), t('form_phone'), 'Content', 'Tags'];
       const rows = stories.map(story => [
         story.created_date ? format(new Date(story.created_date), 'dd/MM/yyyy HH:mm') : '',
         story.child_name || '', story.child_age || '',
@@ -76,7 +103,8 @@ export default function Admin() {
         challengeLabels[story.challenge_type] || story.challenge_type || '',
         story.trigger_desc || '', reactionLabels[story.reaction_type] || story.reaction_type || '',
         story.hobbies || '', story.contact_email || '', story.contact_phone || '',
-        (story.content || '').replace(/"/g, '""').replace(/\n/g, ' ')
+        (story.content || '').replace(/"/g, '""').replace(/\n/g, ' '),
+        (tagsByEmail.get((story.contact_email || '').toLowerCase()) || []).join('; ')
       ]);
       const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(row => row.map(cell => `"${cell}"`).join(','))].join('\n');
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -238,7 +266,9 @@ export default function Admin() {
         </Card>
       </div>
 
-      <KitaAlefStoryList />
+      <CustomersTab customers={customers} onSelect={setSelectedCustomerEmail} />
+
+      <KitaAlefStoryList onSelectCustomer={setSelectedCustomerEmail} />
 
       <Card className="border-0 shadow-xl shadow-slate-100 mb-8">
         <CardHeader>
@@ -300,7 +330,13 @@ export default function Admin() {
                       </TableCell>
                       <TableCell>{settingLabels[story.setting] || story.setting}</TableCell>
                       <TableCell>{challengeLabels[story.challenge_type] || story.challenge_type}</TableCell>
-                      <TableCell className="text-sm text-gray-500">{story.contact_email || '-'}</TableCell>
+                      <TableCell className="text-sm text-gray-500">
+                        {story.contact_email ? (
+                          <button onClick={() => setSelectedCustomerEmail(story.contact_email)} className="underline hover:text-slate-800">
+                            {story.contact_email}
+                          </button>
+                        ) : '-'}
+                      </TableCell>
                       <TableCell>
                         {story.story_link ? (
                           <Badge className="bg-green-100 text-green-700"><Check className="w-3 h-3 ml-1" />{t('admin_done')}</Badge>
@@ -378,7 +414,11 @@ export default function Admin() {
                 ).map((u) => (
                   <TableRow key={u.id}>
                     <TableCell className="font-medium">{u.full_name || '-'}</TableCell>
-                    <TableCell className="text-sm text-gray-500">{u.email}</TableCell>
+                    <TableCell className="text-sm text-gray-500">
+                      <button onClick={() => setSelectedCustomerEmail(u.email)} className="underline hover:text-slate-800">
+                        {u.email}
+                      </button>
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
@@ -483,6 +523,8 @@ export default function Admin() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <CustomerDetailDialog customer={selectedCustomer} onClose={() => setSelectedCustomerEmail(null)} onTagsSaved={reloadCustomerTags} />
     </div>
   );
 }
