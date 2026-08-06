@@ -45,6 +45,8 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
   const [showTerms, setShowTerms] = useState(false);
   const [formStep, setFormStep] = useState(0); // 0-3 for 4 steps
   const [stepError, setStepError] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
+  const isEmailValid = /\S+@\S+\.\S+/.test(formData.contactEmail || '');
 
   const genders = [
   { value: 'boy', label: t('gender_boy'), emoji: '👦' },
@@ -146,14 +148,36 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
     if (formStep > 0) setFormStep(formStep - 1);
   };
 
+  // Step 1 error is built dynamically from only the fields actually missing.
+  const getMissingStep0Fields = () => {
+    const missing = [];
+    if (!formData.childName) missing.push(isHe ? 'שם' : 'name');
+    if (!formData.childAge) missing.push(isHe ? 'גיל' : 'age');
+    if (!formData.gender) missing.push(isHe ? 'מגדר' : 'gender');
+    if (!formData.childImage) missing.push(isHe ? 'תמונת הילד/ה' : "child's photo");
+    else if (!formData.imageConsent) missing.push(isHe ? 'אישור השימוש בתמונה' : 'photo consent');
+    if (formData.parentImage && !formData.parentRelation) missing.push(isHe ? 'מי מופיע/ה בתמונת ההורה' : 'who is in the parent photo');
+    return missing;
+  };
+
   const stepErrorMessages = isHe
-    ? ['נא למלא שם, גיל, מגדר, להעלות תמונה עם אישור השימוש, ואם הועלתה תמונת הורה — לבחור מי בתמונה', 'נא לבחור תפאורה לסיפור', 'נא לבחור אתגר רגשי (ותיאור קצר אם נבחרה האפשרות "אחר")', 'נא להזין כתובת מייל תקינה']
-    : ['Please fill in name, age, gender, upload a photo with consent, and — if a parent photo was uploaded — select who is in it', 'Please choose a story setting', 'Please choose an emotional challenge (and a short description if "Other" is selected)', 'Please enter a valid email address'];
+    ? [null, 'נא לבחור תפאורה לסיפור', 'נא לבחור אתגר רגשי (ותיאור קצר אם נבחרה האפשרות "אחר")', null]
+    : [null, 'Please choose a story setting', 'Please choose an emotional challenge (and a short description if "Other" is selected)', null];
+
+  const buildStepErrorMessage = (step) => {
+    if (step === 0) {
+      const missing = getMissingStep0Fields();
+      if (missing.length === 0) return '';
+      return isHe ? `נא למלא: ${missing.join(', ')}` : `Please fill in: ${missing.join(', ')}`;
+    }
+    return stepErrorMessages[step] || '';
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isStepValid(formStep)) {
-      setStepError(stepErrorMessages[formStep]);
+      if (formStep === 3) setEmailTouched(true);
+      setStepError(buildStepErrorMessage(formStep));
       return;
     }
     setStepError('');
@@ -182,7 +206,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
   };
   const handleNext = () => {
     if (!isStepValid(formStep)) {
-      setStepError(stepErrorMessages[formStep]);
+      setStepError(buildStepErrorMessage(formStep));
       return;
     }
     setStepError('');
@@ -192,7 +216,7 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
   const handlePrev = () => { setStepError(''); setDirection(-1); prevStep(); };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} noValidate className="space-y-6">
       {/* Progress Bar */}
       <div className="flex items-center justify-between gap-2 mb-2">
         {stepLabels.map((label, i) =>
@@ -617,11 +641,15 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
                   type="email"
                   value={formData.contactEmail}
                   onChange={(e) => handleChange('contactEmail', e.target.value)}
+                  onBlur={() => setEmailTouched(true)}
                   placeholder="your@email.com"
                   className="h-11 rounded-xl"
-                  style={{ borderColor: `${PURPLE}30` }}
-                  required />
-                
+                  style={{ borderColor: emailTouched && !isEmailValid ? '#ef4444' : `${PURPLE}30` }} />
+                  {emailTouched && !isEmailValid && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {isHe ? 'נא להזין כתובת מייל תקינה' : 'Please enter a valid email address'}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label className="font-medium" style={{ color: DARK }}>{t('form_phone')}</Label>

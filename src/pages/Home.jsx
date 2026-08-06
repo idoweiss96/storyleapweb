@@ -113,6 +113,10 @@ export default function Home() {
             <p className="text-lg md:text-xl text-slate-500 mb-8 leading-relaxed whitespace-pre-line">
                {t('hero_subtitle')}
              </p>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 text-amber-700 text-sm font-semibold mb-6 border border-amber-100">
+              <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
+              {lang === 'he' ? 'סיפור מותאם אישית מ-₪110' : 'Personalized story from $40'}
+            </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={createPageUrl('CreateStory')}>
                 <Button size="lg" className="h-14 px-8 text-lg rounded-xl text-white shadow-lg shadow-slate-200 transition-all hover:bg-[#BAD1FA] hover:text-slate-800 hover:shadow-blue-200 bg-[#ffc157]">

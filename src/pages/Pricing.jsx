@@ -57,6 +57,7 @@ export default function Pricing() {
   const { lang, isHe: langIsHe } = useLanguage();
   const navigate = useNavigate();
   const [hasPendingStory, setHasPendingStory] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(null); // null = still checking
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoError, setPromoError] = useState('');
@@ -201,10 +202,8 @@ export default function Pricing() {
 
     const init = async () => {
       const authed = await base44.auth.isAuthenticated();
-      if (!authed) {
-        base44.auth.redirectToLogin(window.location.pathname);
-        return;
-      }
+      setIsAuthed(authed);
+      if (!authed) return;
 
       const pendingId = localStorage.getItem('pendingStoryId');
       if (pendingId) {
@@ -244,7 +243,7 @@ export default function Pricing() {
 
   // Render PayPal Buttons
   useEffect(() => {
-    if (!paypalClientId) return;
+    if (!paypalClientId || !isAuthed) return;
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
     isRenderedRef.current = false;
@@ -397,7 +396,7 @@ export default function Pricing() {
     document.body.appendChild(script);
     return cleanup;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [btnConfig, giftMode, paypalClientId]);
+  }, [btnConfig, giftMode, paypalClientId, isAuthed]);
 
   const applyPromoCode = async (rawCode) => {
     setPromoError('');
@@ -577,16 +576,29 @@ export default function Pricing() {
                 </div>
               )}
 
-              {/* PayPal Button */}
+              {/* PayPal Button — purchase itself requires signing in, browsing pricing does not */}
               <div className="max-w-xs mx-auto mt-4">
-                {giftMode && !recipientEmail && (
+                {isAuthed === false && (
+                  <div className="p-4 bg-slate-50 rounded-xl text-center space-y-3">
+                    <p className="text-sm text-slate-500">
+                      {isHe ? 'יש להתחבר או להירשם כדי להשלים את הרכישה' : 'Sign in or register to complete your purchase'}
+                    </p>
+                    <Button
+                      onClick={() => base44.auth.redirectToLogin(window.location.href)}
+                      className="w-full h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-white"
+                    >
+                      {isHe ? 'התחברות / הרשמה לרכישה' : 'Sign in / Register to purchase'}
+                    </Button>
+                  </div>
+                )}
+                {isAuthed && giftMode && !recipientEmail && (
                   <div className="p-4 bg-slate-50 rounded-xl text-center">
                     <p className="text-sm text-slate-400">
                       {isHe ? 'הזינו מייל של מקבל/ת המתנה כדי להמשיך' : 'Enter recipient email to continue'}
                     </p>
                   </div>
                 )}
-                {(!giftMode || recipientEmail) && (
+                {isAuthed && (!giftMode || recipientEmail) && (
                   <div ref={containerRef} />
                 )}
               </div>
