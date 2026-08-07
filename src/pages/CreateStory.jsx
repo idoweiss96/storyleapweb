@@ -375,7 +375,7 @@ export default function CreateStory() {
                   {isHe ? 'הכל נכון, המשך להתחברות' : "Looks good, continue to Sign In"}
                 </Button>
 
-                <FreePreviewOffer previewState={previewState} onRequest={handleRequestPreview} isHe={isHe} />
+                <FreePreviewOffer previewState={previewState} onRequest={handleRequestPreview} isHe={isHe} childName={formData.childName} />
 
                 <button
                   onClick={() => setStep('form')}
@@ -494,7 +494,7 @@ export default function CreateStory() {
                   </div>
                 )}
 
-                <FreePreviewOffer previewState={previewState} onRequest={handleRequestPreview} isHe={isHe} />
+                <FreePreviewOffer previewState={previewState} onRequest={handleRequestPreview} isHe={isHe} childName={formData.childName} />
 
                 <button
                   onClick={() => { setStep('form'); setError(''); }}
