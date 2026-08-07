@@ -274,6 +274,12 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               {t('form_child_info')}
             </h3>
 
+            <p className="text-sm px-4 py-2.5 rounded-xl border border-dashed" style={{ color: PURPLE, borderColor: `${PURPLE}40`, background: `${PURPLE}08` }}>
+              {isHe
+                ? 'לא בטוחים עדיין? אין צורך להתחייב עכשיו, בסוף השאלון תוכלו לקבל תצוגה מקדימה חינמית של 2 העמודים הראשונים לפני שמחליטים.'
+                : "Not ready to commit? You can get a free preview of the first 2 pages before deciding, at the end of this questionnaire."}
+            </p>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label className="font-medium" style={{ color: DARK }}>{t('form_child_name')}</Label>
