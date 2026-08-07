@@ -72,14 +72,37 @@ async function processSheet(base44, spreadsheetId, sheetName, isHebrew, accessTo
 
   let sent = 0;
   let skipped = 0;
+  let previewSynced = 0;
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
     const status = (row[COL_STATUS] || '').trim();
+    const upgradedLink = (row[COL_UPGRADED_LINK] || '').trim();
+
+    // Preview rows: sync the AA link into the matching StoryPreview record so the
+    // "preview is ready" email (triggered by StoryPreview.preview_link changing) goes out,
+    // even when an admin pastes the link directly into the sheet instead of via the Admin UI.
+    if (status === 'preview' && upgradedLink) {
+      const previewEmail = (row[COL_CONTACT_EMAIL] || '').trim();
+      const previewChildName = (row[COL_CHILD_NAME] || '').trim();
+      if (previewEmail) {
+        try {
+          const matches = await base44.asServiceRole.entities.StoryPreview.filter({ contact_email: previewEmail, child_name: previewChildName });
+          const target = matches.find(p => !p.preview_link);
+          if (target) {
+            await base44.asServiceRole.entities.StoryPreview.update(target.id, { preview_link: upgradedLink });
+            previewSynced++;
+          }
+        } catch (e) {
+          console.error('[checkStoryLinksAndNotify] Failed to sync preview link:', e.message);
+        }
+      }
+    }
+
     // Rows upgraded from a free preview to "paid" carry their full-story link in column AA
     // instead of the usual Story Link column (V), since that's the single link field the
     // builder tracks for those customers (preview link, then overwritten with the real one).
-    const storyLink = (row[COL_STORY_LINK] || '').trim() || (status === 'paid' ? (row[COL_UPGRADED_LINK] || '').trim() : '');
+    const storyLink = (row[COL_STORY_LINK] || '').trim() || (status === 'paid' ? upgradedLink : '');
     const alreadySent = isMarkedSent(row[COL_EMAIL_SENT]);
 
     // Only fire on the empty -> filled transition: a link is present and it hasn't been notified yet.
@@ -128,7 +151,7 @@ async function processSheet(base44, spreadsheetId, sheetName, isHebrew, accessTo
     sent++;
   }
 
-  return { sent, skipped };
+  return { sent, skipped, previewSynced };
 }
 
 async function processKitaAlefSheet(base44, spreadsheetId, sheetName, accessToken, kitaStories) {
