@@ -274,17 +274,6 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               {t('form_child_info')}
             </h3>
 
-            <div className="px-4 py-3 rounded-xl border border-dashed" style={{ borderColor: `${PURPLE}40`, background: `${PURPLE}08` }}>
-              <p className="text-sm font-semibold mb-0.5" style={{ color: PURPLE }}>
-                {isHe ? '✨ הצצה לקסם' : '✨ A Peek at the Magic'}
-              </p>
-              <p className="text-sm" style={{ color: DARK }}>
-                {isHe
-                  ? 'לא חייבים להחליט עכשיו. תוכלו לקבל הצצה חינמית לשני העמודים הראשונים של הסיפור, לפני שממשיכים לספר המלא.'
-                  : 'No need to decide yet. Get a free peek at the first two pages of the story before continuing to the full book.'}
-              </p>
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label className="font-medium" style={{ color: DARK }}>{t('form_child_name')}</Label>
@@ -463,6 +452,17 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
                   </div>
                 </div>
             }
+            </div>
+
+            <div className="px-4 py-3 rounded-xl border border-dashed" style={{ borderColor: `${PURPLE}40`, background: `${PURPLE}08` }}>
+              <p className="text-sm font-semibold mb-0.5" style={{ color: PURPLE }}>
+                {isHe ? 'הצצה לקסם ✨' : 'A Peek at the Magic ✨'}
+              </p>
+              <p className="text-sm" style={{ color: DARK }}>
+                {isHe
+                  ? 'לפני שממשיכים לרכישה, תוכלו להציץ בשני העמודים הראשונים של הסיפור האישי שלכם- ללא התחייבות.'
+                  : "Before continuing to purchase, you can peek at the first two pages of your personalized story, no commitment."}
+              </p>
             </div>
           </motion.div>
         }
