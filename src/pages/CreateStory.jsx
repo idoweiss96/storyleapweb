@@ -494,6 +494,8 @@ export default function CreateStory() {
                   </div>
                 )}
 
+                <FreePreviewOffer previewState={previewState} onRequest={handleRequestPreview} isHe={isHe} />
+
                 <button
                   onClick={() => { setStep('form'); setError(''); }}
                   className="w-full text-sm text-slate-400 hover:text-slate-600 pt-4 mt-2 border-t border-slate-100"
