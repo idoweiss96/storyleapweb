@@ -453,17 +453,6 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
                 </div>
             }
             </div>
-
-            <div className="px-4 py-3 rounded-xl border border-dashed" style={{ borderColor: `${PURPLE}40`, background: `${PURPLE}08` }}>
-              <p className="text-sm font-semibold mb-0.5" style={{ color: PURPLE }}>
-                {isHe ? 'הצצה לקסם ✨' : 'A Peek at the Magic ✨'}
-              </p>
-              <p className="text-sm" style={{ color: DARK }}>
-                {isHe
-                  ? 'לפני שממשיכים לרכישה, תוכלו להציץ בשני העמודים הראשונים של הסיפור האישי שלכם- ללא התחייבות.'
-                  : "Before continuing to purchase, you can peek at the first two pages of your personalized story, no commitment."}
-              </p>
-            </div>
           </motion.div>
         }
 
@@ -678,12 +667,16 @@ export default function StoryForm({ formData, setFormData, onSubmit, isLoading }
               </div>
             </div>
 
-            {/* Summary */}
-            
-
-
-
-
+            <div className="px-4 py-3 rounded-xl border border-dashed" style={{ borderColor: `${PURPLE}40`, background: `${PURPLE}08` }}>
+              <p className="text-sm font-semibold mb-0.5" style={{ color: PURPLE }}>
+                {isHe ? 'הצצה לקסם ✨' : 'A Peek at the Magic ✨'}
+              </p>
+              <p className="text-sm" style={{ color: DARK }}>
+                {isHe
+                  ? 'לפני שממשיכים לרכישה, תוכלו להציץ בשני העמודים הראשונים של הסיפור האישי שלכם- ללא התחייבות.'
+                  : "Before continuing to purchase, you can peek at the first two pages of your personalized story, no commitment."}
+              </p>
+            </div>
 
 
 
