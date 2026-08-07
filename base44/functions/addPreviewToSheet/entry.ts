@@ -27,9 +27,9 @@ function detectLanguage(preview) {
   return isHebrew(preview.child_name) || isHebrew(preview.trigger_desc) || isHebrew(preview.hobbies) ? 'he' : 'en';
 }
 
-// Column order matches addStoryToSheet's storyToRow exactly, so preview rows
-// line up under the same headers in the Questionnaire/שאלון sheets.
-function previewToRow(preview, lang, tag) {
+// Column order matches addStoryToSheet's storyToRow exactly (through column W), plus the
+// builder's own Z ("סטטוס") and AA ("קישור לתצוגה מקדימה") columns used to track preview/paid state.
+function previewToRow(preview, lang) {
   const createdDate = preview.created_date ? new Date(preview.created_date).toLocaleString('he-IL') : '';
   const genderMap = lang === 'he' ? genderMapHE : genderMapEN;
   const settingMap = lang === 'he' ? settingMapHE : settingMapEN;
@@ -41,8 +41,8 @@ function previewToRow(preview, lang, tag) {
     '', // Order ID
     '', // User Email
     '', // Price
-    '', // Currency
     '', // Credits Used
+    '', // Credits Used (kept for column alignment)
     preview.child_name || '',
     preview.child_age || '',
     genderMap[preview.gender] || preview.gender || '',
@@ -57,20 +57,28 @@ function previewToRow(preview, lang, tag) {
     preview.hobbies || '',
     preview.contact_email || '',
     preview.contact_phone || '',
-    preview.preview_link || '',
+    '', // Story Link (column V) — not used for previews, reserved for direct full-story purchases
     '', // Email Sent
-    tag,
+    '', // (unused)
+    '', // (unused note column)
+    'preview', // Z — סטטוס
+    preview.preview_link || '', // AA — קישור לתצוגה מקדימה
   ];
 }
 
 function colLetter(index) {
-  // 0-indexed column -> spreadsheet letter (A, B, ... X)
-  return String.fromCharCode('A'.charCodeAt(0) + index);
+  // 0-indexed column -> spreadsheet letter (A, B, ... Z, AA)
+  if (index < 26) return String.fromCharCode('A'.charCodeAt(0) + index);
+  return 'A' + String.fromCharCode('A'.charCodeAt(0) + (index - 26));
 }
+
+const COL_STATUS = 25; // Z
+const COL_PREVIEW_LINK = 26; // AA
+const COL_CONTACT_EMAIL = 19; // T
 
 async function findExistingRow(spreadsheetId, sheetName, accessToken, contactEmail) {
   const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A2:X`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A2:AA`,
     { headers: { 'Authorization': `Bearer ${accessToken}` } }
   );
   if (!res.ok) return null;
@@ -78,30 +86,23 @@ async function findExistingRow(spreadsheetId, sheetName, accessToken, contactEma
   const rows = json.values || [];
   for (let i = rows.length - 1; i >= 0; i--) {
     const row = rows[i];
-    const email = (row[19] || '').toLowerCase();
-    const tag = row[23] || '';
-    if (email === (contactEmail || '').toLowerCase() && tag.includes('Preview Requested') && !tag.includes('Preview Sent')) {
+    const email = (row[COL_CONTACT_EMAIL] || '').toLowerCase();
+    const status = (row[COL_STATUS] || '').trim();
+    if (email === (contactEmail || '').toLowerCase() && status === 'preview') {
       return i + 2; // +2: header row + 1-indexing
     }
   }
   return null;
 }
 
-async function updateRowToSent(spreadsheetId, sheetName, accessToken, rowNumber, previewLink) {
-  const storyLinkCol = colLetter(21);
-  const tagsCol = colLetter(23);
+async function updatePreviewLinkCell(spreadsheetId, sheetName, accessToken, rowNumber, previewLink) {
+  const col = colLetter(COL_PREVIEW_LINK);
   await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchUpdate`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!${col}${rowNumber}?valueInputOption=USER_ENTERED`,
     {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        valueInputOption: 'USER_ENTERED',
-        data: [
-          { range: `${sheetName}!${storyLinkCol}${rowNumber}`, values: [[previewLink || '']] },
-          { range: `${sheetName}!${tagsCol}${rowNumber}`, values: [['Preview Sent']] },
-        ],
-      }),
+      body: JSON.stringify({ values: [[previewLink || '']] }),
     }
   );
 }
@@ -134,26 +135,28 @@ export default async function(req) {
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
-    // On update, only act when the preview just became "ready" (link added) —
-    // find its existing "Preview Requested" row and flip it to "Preview Sent".
+    // On update, only act when the preview link was just added (status -> "ready") —
+    // find its existing row (status column Z = "preview") and fill in the link column AA.
+    // Z stays "preview" here; it only becomes "paid" once the full story is purchased (see addStoryToSheet).
     if (eventType === 'update' && preview.status === 'ready') {
       const rowNumber = await findExistingRow(spreadsheetId, sheetName, accessToken, preview.contact_email);
       if (rowNumber) {
-        await updateRowToSent(spreadsheetId, sheetName, accessToken, rowNumber, preview.preview_link);
-        return Response.json({ success: true, action: 'updated', row: rowNumber });
+        await updatePreviewLinkCell(spreadsheetId, sheetName, accessToken, rowNumber, preview.preview_link);
+        return Response.json({ success: true, action: 'updated_link', row: rowNumber });
       }
-      // No matching row found (e.g. it was never logged) — append a fresh "Preview Sent" row instead.
-      const row = previewToRow(preview, lang, 'Preview Sent');
+      // No matching row found (e.g. it was never logged) — append a fresh row with the link already set.
+      const row = previewToRow(preview, lang);
+      row[26] = preview.preview_link || '';
       const res = await appendRow(spreadsheetId, sheetName, accessToken, row);
       if (!res.ok) {
         const err = await res.text();
         return Response.json({ error: err }, { status: 500 });
       }
-      return Response.json({ success: true, action: 'appended_sent' });
+      return Response.json({ success: true, action: 'appended_with_link' });
     }
 
-    // Create (or any other update) — append a "Preview Requested" row.
-    const row = previewToRow(preview, lang, 'Preview Requested');
+    // Create (or any other update) — append a row with status "preview" in column Z.
+    const row = previewToRow(preview, lang);
     const res = await appendRow(spreadsheetId, sheetName, accessToken, row);
     if (!res.ok) {
       const err = await res.text();

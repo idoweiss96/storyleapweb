@@ -4,17 +4,20 @@ const SPREADSHEET_ID_HE = '1hEBop1uM-ldASUKGQWNFShCPlO5xZ2R7SwFOZ7EtN30';
 const SHEET_NAME_HE = 'שאלון';
 const SPREADSHEET_ID_EN = '1vDfEGbVfwplAgHTTYREauRxUgX-fxa5uJJZXenotZac';
 const SHEET_NAME_EN = 'Questionnaire';
-const RANGE = 'A2:W'; // skip header row
+const RANGE = 'A2:AA'; // skip header row
 
 // Row layout (0-based), matching the headers already defined in the Questionnaire/שאלון sheets:
 // 0 Timestamp, 1 Language, 2 Order ID, 3 User Email, 4 Price, 5 Currency, 6 Credits Used,
 // 7 Child's Name, 8 Age, 9 Gender, 10 Child's Photo Link, 11 Parent Consent, 12 Parent's Photo Link,
 // 13 Whose Photo, 14 Story World, 15 Emotional Challenge, 16 Trigger Description, 17 Child's Reaction,
-// 18 What the Child Loves, 19 Contact Email, 20 Contact Phone, 21 Story Link, 22 Email Sent
+// 18 What the Child Loves, 19 Contact Email, 20 Contact Phone, 21 Story Link, 22 Email Sent,
+// 25 Status (Z, "preview"/"paid"), 26 Preview/Story Link (AA)
 const COL_CHILD_NAME = 7;
 const COL_CONTACT_EMAIL = 19;
 const COL_STORY_LINK = 21;
 const COL_EMAIL_SENT = 22; // column W
+const COL_STATUS = 25; // Z
+const COL_UPGRADED_LINK = 26; // AA — used for rows upgraded from a free preview to a paid story
 
 // Kita Alef (Hebrew) / Kindergarten (English) sheets — these are a SEPARATE pair of sheets from the
 // regular questionnaire above, and were previously not being polled at all, which is why story links
@@ -72,7 +75,11 @@ async function processSheet(base44, spreadsheetId, sheetName, isHebrew, accessTo
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
-    const storyLink = (row[COL_STORY_LINK] || '').trim();
+    const status = (row[COL_STATUS] || '').trim();
+    // Rows upgraded from a free preview to "paid" carry their full-story link in column AA
+    // instead of the usual Story Link column (V), since that's the single link field the
+    // builder tracks for those customers (preview link, then overwritten with the real one).
+    const storyLink = (row[COL_STORY_LINK] || '').trim() || (status === 'paid' ? (row[COL_UPGRADED_LINK] || '').trim() : '');
     const alreadySent = isMarkedSent(row[COL_EMAIL_SENT]);
 
     // Only fire on the empty -> filled transition: a link is present and it hasn't been notified yet.
