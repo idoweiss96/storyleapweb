@@ -52,28 +52,42 @@ export default function CreateStory() {
   const initPage = async () => {
     setIsLoading(true);
     try {
-      const currentUser = await base44.auth.me();
-      // Sync credits from DB via backend function
+      const urlParams = new URLSearchParams(window.location.search);
+      const previewId = urlParams.get('previewId');
+
+      let currentUser = null;
       try {
-        const res = await base44.functions.invoke('getUserCredits', {});
-        if (res.data?.credits !== undefined) {
-          currentUser.credits = res.data.credits;
+        currentUser = await base44.auth.me();
+      } catch (_) {
+        currentUser = null;
+      }
+
+      // Guest arriving from a "Continue the story" preview email link — send them to
+      // login/register first, then return here with the same previewId so they land
+      // straight on the purchase flow for that story instead of a blank questionnaire.
+      if (previewId && !currentUser) {
+        const returnUrl = `${window.location.origin}${window.location.pathname}?previewId=${previewId}`;
+        base44.auth.redirectToLogin(returnUrl);
+        return;
+      }
+
+      if (currentUser) {
+        // Sync credits from DB via backend function
+        try {
+          const res = await base44.functions.invoke('getUserCredits', {});
+          if (res.data?.credits !== undefined) {
+            currentUser.credits = res.data.credits;
+          }
+        } catch (_) {}
+        if (currentUser.credits === undefined || currentUser.credits === null) {
+          await base44.auth.updateMe({ credits: 0 });
+          currentUser.credits = 0;
         }
-      } catch (_) {}
-      if (currentUser.credits === undefined || currentUser.credits === null) {
-        await base44.auth.updateMe({ credits: 0 });
-        currentUser.credits = 0;
       }
       setUser(currentUser);
 
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('resume') === '1') {
-        window.history.replaceState({}, '', window.location.pathname);
-      }
-
       // "Continue the story" from a preview email / My Stories — prefill the questionnaire
       // from the saved preview record so the parent never has to re-enter their answers.
-      const previewId = urlParams.get('previewId');
       if (previewId) {
         window.history.replaceState({}, '', window.location.pathname);
         try {
@@ -87,11 +101,15 @@ export default function CreateStory() {
               triggerDesc: p.trigger_desc || '', reactionType: p.reaction_type || '', hobbies: p.hobbies || '',
               contactEmail: p.contact_email || '', contactPhone: p.contact_phone || '', couponCode: '',
             });
-            setStep(currentUser ? 'credits_check' : 'recap');
+            setStep('credits_check');
             setIsLoading(false);
             return;
           }
         } catch (_) {}
+      }
+
+      if (urlParams.get('resume') === '1') {
+        window.history.replaceState({}, '', window.location.pathname);
       }
 
       // Restore any questionnaire saved before a login/registration redirect.

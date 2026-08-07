@@ -40,6 +40,7 @@ export default async function(req) {
           </div>
           <p style="font-size:15px;margin-top:24px;">רוצים לדעת איך הסיפור נגמר?</p>
           <p><a href="${continueUrl}" style="display:inline-block;background:#FDB654;color:#1e293b;font-weight:bold;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">להמשך הסיפור ←</a></p>
+          <p style="font-size:13px;color:#64748b;margin-top:8px;">התחברו עם אותו מייל שבו ביקשתם את התצוגה המקדימה כדי להמשיך.</p>
           <p style="font-size:15px;margin-top:24px;">תודה שבחרתם ב-StoryLeap 💛<br/><br/>צוות StoryLeap</p>
         </div>`
       : `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1e293b;line-height:1.8;">
@@ -53,6 +54,7 @@ export default async function(req) {
           </div>
           <p style="font-size:15px;margin-top:24px;">Want to find out how the story continues?</p>
           <p><a href="${continueUrl}" style="display:inline-block;background:#FDB654;color:#1e293b;font-weight:bold;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:16px;">Continue the story →</a></p>
+          <p style="font-size:13px;color:#64748b;margin-top:8px;">Log in with the same email you used to request this preview to continue.</p>
           <p style="font-size:15px;margin-top:24px;">Thank you for choosing StoryLeap 💛<br/><br/>The StoryLeap Team</p>
         </div>`;
 
