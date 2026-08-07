@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { useLanguage } from '../components/LanguageContext';
 import CouponManager from '../components/admin/CouponManager';
 import KitaAlefStoryList from '../components/admin/KitaAlefStoryList';
+import StoryPreviewList from '../components/admin/StoryPreviewList';
 import CustomersTab from '../components/admin/CustomersTab';
 import CustomerDetailDialog from '../components/admin/CustomerDetailDialog';
 import CustomerActivityChart from '../components/admin/CustomerActivityChart';
@@ -41,6 +42,7 @@ export default function Admin() {
   const [viewingImage, setViewingImage] = useState(null);
   const [showAllStories, setShowAllStories] = useState(false);
   const [kitaStories, setKitaStories] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [orders, setOrders] = useState([]);
   const [coupons, setCoupons] = useState([]);
   const [customerTags, setCustomerTags] = useState([]);
@@ -53,7 +55,7 @@ export default function Admin() {
 
   useEffect(() => { loadData(); }, []);
 
-  const customers = useMemo(() => aggregateCustomers({ stories, kitaStories, users, orders, coupons, customerTags }), [stories, kitaStories, users, orders, coupons, customerTags]);
+  const customers = useMemo(() => aggregateCustomers({ stories, kitaStories, previews, users, orders, coupons, customerTags }), [stories, kitaStories, previews, users, orders, coupons, customerTags]);
   const tagsByEmail = useMemo(() => {
     const map = new Map();
     customers.forEach((c) => map.set(c.email.toLowerCase(), c.allTags));
@@ -70,10 +72,11 @@ export default function Admin() {
       setUser(currentUser);
       if (currentUser.role === 'admin') {
         setIsAdmin(true);
-        const [allStories, allUsers, allKitaStories, allOrders, allCoupons, allCustomerTags] = await Promise.all([
+        const [allStories, allUsers, allKitaStories, allPreviews, allOrders, allCoupons, allCustomerTags] = await Promise.all([
           base44.entities.Story.list('-created_date'),
           base44.entities.User.list('-created_date'),
           base44.entities.KitaAlefStory.list('-created_date'),
+          base44.entities.StoryPreview.list('-created_date'),
           base44.entities.Order.list('-created_date'),
           base44.entities.Coupon.list('-created_date'),
           base44.entities.CustomerTag.list('-created_date'),
@@ -81,6 +84,7 @@ export default function Admin() {
         setStories(allStories);
         setUsers(allUsers);
         setKitaStories(allKitaStories);
+        setPreviews(allPreviews);
         setOrders(allOrders);
         setCoupons(allCoupons);
         setCustomerTags(allCustomerTags);
@@ -272,6 +276,8 @@ export default function Admin() {
       <CustomersTab customers={customers} onSelect={setSelectedCustomerEmail} />
 
       <KitaAlefStoryList onSelectCustomer={setSelectedCustomerEmail} />
+
+      <StoryPreviewList onSelectCustomer={setSelectedCustomerEmail} />
 
       <Card className="border-0 shadow-xl shadow-slate-100 mb-8">
         <CardHeader>

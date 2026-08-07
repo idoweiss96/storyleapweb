@@ -1,0 +1,157 @@
+{
+  "name": "StoryPreview",
+  "type": "object",
+  "properties": {
+    "child_name": {
+      "type": "string",
+      "description": "Child's name"
+    },
+    "child_age": {
+      "type": "number",
+      "description": "Child's age"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "boy",
+        "girl",
+        "other"
+      ],
+      "description": "Gender"
+    },
+    "child_image_url": {
+      "type": "string",
+      "description": "Child's photo"
+    },
+    "parent_image_url": {
+      "type": "string",
+      "description": "Parent's photo (optional)"
+    },
+    "parent_relation": {
+      "type": "string",
+      "enum": [
+        "mom",
+        "dad"
+      ],
+      "description": "Who is in the parent photo"
+    },
+    "setting": {
+      "type": "string",
+      "enum": [
+        "space",
+        "forest",
+        "castle",
+        "sports",
+        "real_life"
+      ],
+      "description": "Story setting"
+    },
+    "challenge_type": {
+      "type": "string",
+      "enum": [
+        "fears",
+        "social_difficulty",
+        "changes",
+        "emotional_regulation",
+        "separation_anxiety",
+        "self_confidence",
+        "sleep_issues",
+        "other"
+      ],
+      "description": "Emotional challenge"
+    },
+    "custom_challenge": {
+      "type": "string",
+      "description": "Custom challenge description when 'other' is selected"
+    },
+    "trigger_desc": {
+      "type": "string",
+      "description": "Trigger description"
+    },
+    "reaction_type": {
+      "type": "string",
+      "enum": [
+        "outburst",
+        "withdrawal",
+        "attention_seeking",
+        "crying",
+        "aggression",
+        "avoidance"
+      ],
+      "description": "Child's typical reaction"
+    },
+    "hobbies": {
+      "type": "string",
+      "description": "Child's hobbies and interests"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Parent's email (one free preview allowed per email)"
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Parent's phone (optional)"
+    },
+    "content": {
+      "type": "string",
+      "description": "AI-generated preview content (first two pages only)"
+    },
+    "preview_link": {
+      "type": "string",
+      "description": "Heyzine flipbook link for the preview, pasted by an admin once ready"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "requested",
+        "ready"
+      ],
+      "default": "requested",
+      "description": "Preview status, kept distinct from a full Story's payment status"
+    },
+    "lang": {
+      "type": "string",
+      "enum": [
+        "he",
+        "en"
+      ],
+      "description": "Language the preview was requested in"
+    }
+  },
+  "required": [
+    "child_name",
+    "contact_email"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "data.contact_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

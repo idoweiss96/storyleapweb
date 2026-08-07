@@ -5,7 +5,7 @@ import { computeAutoTags, mergeTags } from './customerTags';
 // Order/Coupon redemptions). Purely a read-side aggregation — it never writes
 // back to Story/KitaAlefStory/Order/Coupon, per the "don't change how credits,
 // coupons or payment status work" requirement.
-export function aggregateCustomers({ stories = [], kitaStories = [], users = [], orders = [], coupons = [], customerTags = [] }) {
+export function aggregateCustomers({ stories = [], kitaStories = [], previews = [], users = [], orders = [], coupons = [], customerTags = [] }) {
   const byEmail = new Map();
 
   const ensure = (rawEmail) => {
@@ -18,6 +18,7 @@ export function aggregateCustomers({ stories = [], kitaStories = [], users = [],
         credits: 0,
         stories: [],
         kitaStories: [],
+        previews: [],
         coupons: [],
         hasGiftedCredits: false,
         manualTags: [],
@@ -29,6 +30,7 @@ export function aggregateCustomers({ stories = [], kitaStories = [], users = [],
 
   stories.forEach((s) => { const c = ensure(s.contact_email); if (c) c.stories.push(s); });
   kitaStories.forEach((s) => { const c = ensure(s.contact_email); if (c) c.kitaStories.push(s); });
+  previews.forEach((p) => { const c = ensure(p.contact_email); if (c) c.previews.push(p); });
 
   users.forEach((u) => {
     const c = ensure(u.email);
@@ -57,7 +59,7 @@ export function aggregateCustomers({ stories = [], kitaStories = [], users = [],
 
   return Array.from(byEmail.values())
     .map((c) => {
-      const autoTags = computeAutoTags({ stories: c.stories, kitaStories: c.kitaStories, hasGiftedCredits: c.hasGiftedCredits });
+      const autoTags = computeAutoTags({ stories: c.stories, kitaStories: c.kitaStories, previews: c.previews, hasGiftedCredits: c.hasGiftedCredits });
       return { ...c, autoTags, allTags: mergeTags(c.manualTags, autoTags) };
     })
     .sort((a, b) => (b.stories.length + b.kitaStories.length) - (a.stories.length + a.kitaStories.length));

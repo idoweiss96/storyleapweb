@@ -8,10 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star, Map } from 'lucide-react';
+import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star, Map, Mail } from 'lucide-react';
 import { format } from 'date-fns';
 import StoryReadyNotification from '../components/story/StoryReadyNotification';
 import StoryDisplay from '../components/story/StoryDisplay';
+import PreviewCard from '../components/story/PreviewCard';
 import { useLanguage } from '../components/LanguageContext';
 import { useNavPath } from '@/lib/useNavPath';
 import { toast } from 'sonner';
@@ -21,6 +22,7 @@ export default function MyStories() {
   const { t, lang } = useLanguage();
   const navPath = useNavPath();
   const [stories, setStories] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStory, setSelectedStory] = useState(null);
@@ -88,6 +90,12 @@ export default function MyStories() {
         console.log('[MyStories] direct query fallback, count:', userStories.length);
       }
       setStories(userStories);
+
+      // Match any free preview requests made with this email, even if requested before login
+      try {
+        const previewsRes = await base44.functions.invoke('getUserPreviews', {});
+        setPreviews(previewsRes.data?.previews || []);
+      } catch (_) {}
     } catch (e) {
       console.error('[MyStories] loadStories error:', e);
       base44.auth.redirectToLogin(window.location.href);
@@ -161,6 +169,16 @@ export default function MyStories() {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('my_stories_title')}</h1>
         <p className="text-gray-600">{t('my_stories_subtitle')}</p>
       </div>
+
+      {previews.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+          {previews.map((preview, index) => (
+            <motion.div key={preview.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}>
+              <PreviewCard preview={preview} lang={lang} onContinue={(p) => navigate(navPath('CreateStory') + `?previewId=${p.id}`)} />
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {stories.length === 0 ? (
         <Card className="border-0 shadow-xl shadow-violet-50 max-w-md mx-auto">

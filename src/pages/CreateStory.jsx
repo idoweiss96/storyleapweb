@@ -7,10 +7,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, AlertCircle, Loader2, ShoppingCart, Tag } from 'lucide-react';
+import { Sparkles, AlertCircle, Loader2, ShoppingCart, Tag, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 import StoryForm from '../components/story/StoryForm';
 import LoginPromptModal from '../components/story/LoginPromptModal';
+import FreePreviewOffer from '../components/story/FreePreviewOffer';
 import { useLanguage } from '../components/LanguageContext';
 import { useNavPath } from '@/lib/useNavPath';
 import { trackEvent } from '@/lib/posthog';
@@ -34,6 +35,7 @@ export default function CreateStory() {
   const [isCreating, setIsCreating] = useState(false);
   const [couponStatus, setCouponStatus] = useState(null); // null | 'validating' | 'valid' | 'invalid'
   const [couponMessage, setCouponMessage] = useState('');
+  const [previewState, setPreviewState] = useState(null); // null | 'sending' | 'sent' | 'already_used' | 'error'
   const [formData, setFormData] = useState({
     childName: '', childAge: '', gender: '', childImage: '',
     parentImage: '', parentRelation: '',
@@ -67,6 +69,29 @@ export default function CreateStory() {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('resume') === '1') {
         window.history.replaceState({}, '', window.location.pathname);
+      }
+
+      // "Continue the story" from a preview email / My Stories — prefill the questionnaire
+      // from the saved preview record so the parent never has to re-enter their answers.
+      const previewId = urlParams.get('previewId');
+      if (previewId) {
+        window.history.replaceState({}, '', window.location.pathname);
+        try {
+          const res = await base44.functions.invoke('getStoryPreview', { id: previewId });
+          const p = res.data?.preview;
+          if (p) {
+            setFormData({
+              childName: p.child_name || '', childAge: p.child_age ? String(p.child_age) : '', gender: p.gender || '',
+              childImage: p.child_image_url || '', parentImage: p.parent_image_url || '', parentRelation: p.parent_relation || '',
+              setting: p.setting || '', challengeType: p.challenge_type || '', customChallenge: p.custom_challenge || '',
+              triggerDesc: p.trigger_desc || '', reactionType: p.reaction_type || '', hobbies: p.hobbies || '',
+              contactEmail: p.contact_email || '', contactPhone: p.contact_phone || '', couponCode: '',
+            });
+            setStep(currentUser ? 'credits_check' : 'recap');
+            setIsLoading(false);
+            return;
+          }
+        } catch (_) {}
       }
 
       // Restore any questionnaire saved before a login/registration redirect.
@@ -157,6 +182,34 @@ export default function CreateStory() {
       setError(t('create_error_save'));
     } finally {
       setIsCreating(false);
+    }
+  };
+
+  // Low-friction alternative to purchasing: email the first two pages of the story for free.
+  // Limited to one per email address, enforced server-side.
+  const handleRequestPreview = async () => {
+    setPreviewState('sending');
+    try {
+      const res = await base44.functions.invoke('requestStoryPreview', {
+        childName: formData.childName, childAge: formData.childAge, gender: formData.gender,
+        childImageUrl: formData.childImage || null, parentImageUrl: formData.parentImage || null,
+        parentRelation: formData.parentImage ? (formData.parentRelation || null) : null,
+        setting: formData.setting, challengeType: formData.challengeType,
+        customChallenge: formData.challengeType === 'other' ? (formData.customChallenge || null) : null,
+        triggerDesc: formData.triggerDesc || null, reactionType: formData.reactionType || null,
+        hobbies: formData.hobbies || null, contactEmail: formData.contactEmail, contactPhone: formData.contactPhone || null,
+        lang,
+      });
+      if (res.data?.success) {
+        setPreviewState('sent');
+        trackEvent('free_preview_requested');
+      } else if (res.data?.reason === 'already_used') {
+        setPreviewState('already_used');
+      } else {
+        setPreviewState('error');
+      }
+    } catch (err) {
+      setPreviewState('error');
     }
   };
 
@@ -321,6 +374,9 @@ export default function CreateStory() {
                 >
                   {isHe ? 'הכל נכון, המשך להתחברות' : "Looks good, continue to Sign In"}
                 </Button>
+
+                <FreePreviewOffer previewState={previewState} onRequest={handleRequestPreview} isHe={isHe} />
+
                 <button
                   onClick={() => setStep('form')}
                   className="w-full text-sm text-slate-400 hover:text-slate-600"

@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Star, Tag, X, Plus, BookOpen, Ticket, Loader2 } from 'lucide-react';
+import { Star, Tag, X, Plus, BookOpen, Ticket, Loader2, Mail, ExternalLink } from 'lucide-react';
 import { format } from 'date-fns';
 import { FIXED_TAG_OPTIONS } from '@/lib/customerTags';
 
@@ -98,6 +98,34 @@ export default function CustomerDetailDialog({ customer, onClose, onTagsSaved })
                   <div key={i} className="text-sm text-gray-600 flex items-center gap-2">
                     <Badge variant="outline">{c.code}</Badge>
                     {c.coupon?.is_gift && <span className="text-xs text-amber-600">gift</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Story Previews */}
+          {customer.previews.length > 0 && (
+            <div>
+              <p className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1.5"><Mail className="w-4 h-4" /> Story Previews ({customer.previews.length})</p>
+              <div className="space-y-2">
+                {customer.previews.map((p) => (
+                  <div key={p.id} className="flex items-center justify-between text-sm border border-slate-100 rounded-lg px-3 py-2">
+                    <div>
+                      <span className="font-medium">{p.child_name || '-'}</span>
+                      <span className="text-gray-400 mx-1.5">·</span>
+                      <span className="text-gray-400">{p.created_date ? format(new Date(p.created_date), 'dd/MM/yyyy') : '-'}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Badge className={p.status === 'ready' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}>
+                        {p.status === 'ready' ? 'Preview Sent' : 'Preview Requested'}
+                      </Badge>
+                      {p.preview_link && (
+                        <a href={p.preview_link} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-800">
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
