@@ -390,6 +390,21 @@ export default function KitaAlefStory() {
                         {isEn ? `You currently have ${userCredits} credits` : `יש לך כרגע ${userCredits} קרדיטים`}
                       </p>
                     </div>
+                    <div className="p-4 rounded-xl border" style={{ background: '#EAF8FD', borderColor: '#B8EBF7' }}>
+                      <p className="font-semibold mb-1 text-sm" style={{ color: '#1A1A6E' }}>
+                        {isEn ? '📬 What happens after payment?' : '📬 מה קורה אחרי התשלום?'}
+                      </p>
+                      <p className="text-sm text-slate-600 leading-relaxed">
+                        {isEn
+                          ? "You'll receive the full digital book by email, at the address you entered, within less than 24 hours."
+                          : 'תקבלו את הספר הדיגיטלי המלא למייל שהזנתם, תוך פחות מ-24 שעות.'}
+                      </p>
+                      <p className="text-sm text-slate-600 leading-relaxed mt-2">
+                        {isEn
+                          ? 'In the meantime, enjoy three free activities together to get ready for starting school: "Our Goodbye Ritual," "My Morning and Evening," and "A Little Heart from Home." You\'ll find them on our homepage, right under the Starting School Special.'
+                          : 'עד אז, אתם מוזמנים ליהנות יחד משלוש פעילויות חינמיות לקראת כיתה א\': "טקס הפרידה שלנו", "הבוקר והערב שלי" ו"לב קטן מהבית". אפשר למצוא אותן בדף הבית שלנו, מתחת לספיישל של כיתה א\'.'}
+                      </p>
+                    </div>
                     <Button
                       onClick={handleBuyCredits}
                       disabled={isCreating}
