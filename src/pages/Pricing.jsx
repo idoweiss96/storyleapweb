@@ -232,13 +232,16 @@ export default function Pricing() {
     init();
   }, []);
 
-  // Load the real PayPal REST client ID (same credential used server-side for order create/capture)
+  // Load the real PayPal REST client ID (same credential used server-side for order create/capture).
+  // Only once the visitor is confirmed logged in — anonymous visitors have no payment context yet,
+  // so we must not attempt this (and must not show a PayPal error) before they sign in.
   useEffect(() => {
+    if (!isAuthed) return;
     base44.functions.invoke('getPaypalClientId', {})
       .then((res) => { if (res.data?.client_id) setPaypalClientId(res.data.client_id); })
       .catch(() => setPaypalError(isHe ? 'שגיאה בטעינת PayPal, נסו לרענן את הדף' : 'Failed to load PayPal, please refresh'));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAuthed]);
 
   // Load CreditPackage from DB for dynamic (non-fixed-link) pricing
   useEffect(() => {
