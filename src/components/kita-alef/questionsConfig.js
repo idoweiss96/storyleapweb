@@ -3,8 +3,8 @@ const PAGES_HE = [
     id: 1,
     title: 'מי אתה/את?',
     questions: [
-      { key: 'name', question: 'מה השם שלך?', type: 'text' },
-      { key: 'gender', question: 'מי אתה/את?', type: 'chips', options: ['ילד', 'ילדה', 'אחר/ת'] },
+      { key: 'name', tag: 'child', question: 'מה השם שלך?', type: 'text' },
+      { key: 'gender', tag: 'child', question: 'מי אתה/את?', type: 'chips', options: ['ילד', 'ילדה', 'אחר/ת'] },
       {
         key: 'strength', tag: 'child', question: 'מה הכוח הכי גדול שלך?', type: 'emoji',
         options: [
@@ -161,8 +161,8 @@ const PAGES_EN = [
     id: 1,
     title: 'Who are you?',
     questions: [
-      { key: 'name', question: "What's your name?", type: 'text' },
-      { key: 'gender', question: 'Are you a boy or a girl?', type: 'chips', options: ['Boy', 'Girl', 'Other'] },
+      { key: 'name', tag: 'child', question: "What's your name?", type: 'text' },
+      { key: 'gender', tag: 'child', question: 'Are you a boy or a girl?', type: 'chips', options: ['Boy', 'Girl', 'Other'] },
       {
         key: 'strength', tag: 'child', question: "What's your biggest strength?", type: 'emoji',
         options: [
