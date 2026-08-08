@@ -3,8 +3,8 @@ const PAGES_HE = [
     id: 1,
     title: 'מי אתה/את?',
     questions: [
-      { key: 'name', tag: 'together', question: 'מה השם שלך?', type: 'text' },
-      { key: 'gender', tag: 'together', question: 'מי אתה/את?', type: 'chips', options: ['ילד', 'ילדה', 'אחר/ת'] },
+      { key: 'name', question: 'מה השם שלך?', type: 'text' },
+      { key: 'gender', question: 'מי אתה/את?', type: 'chips', options: ['ילד', 'ילדה', 'אחר/ת'] },
       {
         key: 'strength', tag: 'child', question: 'מה הכוח הכי גדול שלך?', type: 'emoji',
         options: [
@@ -17,7 +17,7 @@ const PAGES_HE = [
         ],
         parentField: { label: 'הורה: ספרו לילד/ה מה הכוח שאתם רואים בו/בה ♥' }
       },
-      { key: 'photo', tag: 'together', question: 'תמונה שלך', type: 'photo', required: true, consent: true },
+      { key: 'photo', question: 'תמונה שלך', type: 'photo', required: true, consent: true },
     ]
   },
   {
@@ -161,8 +161,8 @@ const PAGES_EN = [
     id: 1,
     title: 'Who are you?',
     questions: [
-      { key: 'name', tag: 'together', question: "What's your name?", type: 'text' },
-      { key: 'gender', tag: 'together', question: 'Are you a boy or a girl?', type: 'chips', options: ['Boy', 'Girl', 'Other'] },
+      { key: 'name', question: "What's your name?", type: 'text' },
+      { key: 'gender', question: 'Are you a boy or a girl?', type: 'chips', options: ['Boy', 'Girl', 'Other'] },
       {
         key: 'strength', tag: 'child', question: "What's your biggest strength?", type: 'emoji',
         options: [
@@ -175,7 +175,7 @@ const PAGES_EN = [
         ],
         parentField: { label: "Parent: tell your child what strength you see in them ♥" }
       },
-      { key: 'photo', tag: 'together', question: 'Your photo', type: 'photo', required: true, consent: true },
+      { key: 'photo', question: 'Your photo', type: 'photo', required: true, consent: true },
     ]
   },
   {
