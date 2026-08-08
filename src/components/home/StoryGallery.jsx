@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../LanguageContext';
 
 const GALLERY_ITEMS = [
-  { src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/ee44ec4b5_image4.png', he: 'כיתה א׳ ראשונה', en: 'Starting first grade' },
+  { src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/ee44ec4b5_image4.png', he: 'התחלת גן', en: 'Starting kindergarten' },
   { src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/aacd843f4_image52.png', he: 'התמודדות עם מעבר דירה', en: 'Coping with a big move' },
   { src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/dd316698e_image51.png', he: 'הכרת חברים חדשים', en: 'Making new friends' },
   { src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/0e345ce30_image5.png', he: 'רגשות גדולים לפני השינה', en: 'Big feelings before bedtime' },
