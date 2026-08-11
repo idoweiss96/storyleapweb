@@ -39,7 +39,7 @@ export default function ContactScreen({ onSubmit }) {
           {isEn ? 'A few details before we start' : 'עוד כמה פרטים לפני שמתחילים'}
         </h2>
         <p className="text-sm text-center mb-2" style={{ color: '#6b6b8a' }}>
-          {isEn ? "We'll send the finished story here" : 'לכאן נשלח את הסיפור המוכן'}
+          {isEn ? "We'll send the finished story here" : 'נשלח למייל את הסיפור המוכן'}
         </p>
 
         {error && (
