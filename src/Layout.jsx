@@ -112,6 +112,7 @@ function LayoutInner({ children, currentPageName }) {
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
     { name: 'Contact', label: t('nav_contact'), icon: Mail },
     { name: 'Vision', label: lang === 'he' ? 'החזון שלנו' : 'Our Vision', icon: Sparkles },
+    { name: 'OurMethods', label: 'Our Methods', icon: BookOpen, path: '/our-methods' },
   ];
 
   const authNavItems = [
@@ -121,6 +122,7 @@ function LayoutInner({ children, currentPageName }) {
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
     { name: 'Contact', label: t('nav_contact'), icon: Mail },
     { name: 'Vision', label: lang === 'he' ? 'החזון שלנו' : 'Our Vision', icon: Sparkles },
+    { name: 'OurMethods', label: 'Our Methods', icon: BookOpen, path: '/our-methods' },
     ...(user?.role === 'admin' ? [{ name: 'Admin', label: t('nav_admin'), icon: Home }] : []),
   ];
 
@@ -224,7 +226,7 @@ function LayoutInner({ children, currentPageName }) {
                 const Icon = item.icon;
                 const isActive = currentPageName === item.name;
                 return (
-                  <Link key={item.name} to={navPathFor(item.name, location.pathname, lang)}
+                  <Link key={item.name} to={item.path || navPathFor(item.name, location.pathname, lang)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${isActive ? 'bg-slate-100 text-slate-800 font-medium' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}>
                     <Icon className="w-4 h-4" />
                     <span className="text-sm">{item.label}</span>
@@ -276,7 +278,7 @@ function LayoutInner({ children, currentPageName }) {
                   const Icon = item.icon;
                   const isActive = currentPageName === item.name;
                   return (
-                    <Link key={item.name} to={navPathFor(item.name, location.pathname, lang)} onClick={() => setMobileMenuOpen(false)}
+                    <Link key={item.name} to={item.path || navPathFor(item.name, location.pathname, lang)} onClick={() => setMobileMenuOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-slate-100 text-slate-800 font-medium' : 'text-slate-600 hover:bg-slate-50'}`}>
                       <Icon className="w-5 h-5" />
                       <span>{item.label}</span>

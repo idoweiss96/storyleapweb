@@ -15,6 +15,7 @@ import PaymentCheckout from './pages/PaymentCheckout';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancel from './pages/PaymentCancel';
 import Vision from './pages/Vision';
+import OurMethods from './pages/OurMethods';
 import KitaAlef from './pages/KitaAlef';
 import KitaAlefStory from './pages/KitaAlefStory';
 import FeelingsMap from './pages/FeelingsMap';
@@ -85,6 +86,7 @@ const AuthenticatedApp = () => {
       <Route path="/PaymentSuccess" element={<LayoutWrapper currentPageName="PaymentSuccess"><PaymentSuccess /></LayoutWrapper>} />
       <Route path="/PaymentCancel" element={<LayoutWrapper currentPageName="PaymentCancel"><PaymentCancel /></LayoutWrapper>} />
       <Route path="/Vision" element={<LayoutWrapper currentPageName="Vision"><Vision /></LayoutWrapper>} />
+      <Route path="/our-methods" element={<LayoutWrapper currentPageName="OurMethods"><OurMethods /></LayoutWrapper>} />
       <Route path="/KitaAlef" element={<LayoutWrapper currentPageName="KitaAlef"><KitaAlef /></LayoutWrapper>} />
       <Route path="/KitaAlefStory" element={<LayoutWrapper currentPageName="KitaAlefStory"><KitaAlefStory /></LayoutWrapper>} />
       <Route path="/FeelingsMap" element={<LayoutWrapper currentPageName="FeelingsMap"><FeelingsMap /></LayoutWrapper>} />
