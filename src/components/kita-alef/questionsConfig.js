@@ -1,26 +1,23 @@
+export const INTRO_QUESTIONS_HE = [
+  { key: 'name', tag: 'child', question: 'מה השם שלך?', type: 'text' },
+  { key: 'gender', tag: 'child', question: 'מי אתה/את?', type: 'chips', options: ['ילד', 'ילדה', 'אחר/ת'] },
+  {
+    key: 'strength', tag: 'child', question: 'מה הכוח הכי גדול שלך?', type: 'emoji',
+    options: [
+      { emoji: '🤝', label: 'לעזור' },
+      { emoji: '🎨', label: 'ליצור' },
+      { emoji: '😄', label: 'להצחיק' },
+      { emoji: '💡', label: 'לחשוב' },
+      { emoji: '🏃', label: 'לזוז מהר' },
+      { emoji: '🤗', label: 'לאהוב' },
+    ],
+    parentField: { label: 'הורה: ספרו לילד/ה מה הכוח שאתם רואים בו/בה ♥' }
+  },
+];
+
 const PAGES_HE = [
   {
     id: 1,
-    title: 'מי אתה/את?',
-    questions: [
-      { key: 'name', tag: 'child', question: 'מה השם שלך?', type: 'text' },
-      { key: 'gender', tag: 'child', question: 'מי אתה/את?', type: 'chips', options: ['ילד', 'ילדה', 'אחר/ת'] },
-      {
-        key: 'strength', tag: 'child', question: 'מה הכוח הכי גדול שלך?', type: 'emoji',
-        options: [
-          { emoji: '🤝', label: 'לעזור' },
-          { emoji: '🎨', label: 'ליצור' },
-          { emoji: '😄', label: 'להצחיק' },
-          { emoji: '💡', label: 'לחשוב' },
-          { emoji: '🏃', label: 'לזוז מהר' },
-          { emoji: '🤗', label: 'לאהוב' },
-        ],
-        parentField: { label: 'הורה: ספרו לילד/ה מה הכוח שאתם רואים בו/בה ♥' }
-      },
-    ]
-  },
-  {
-    id: 2,
     title: 'רגשות',
     questions: [
       {
@@ -53,7 +50,7 @@ const PAGES_HE = [
     ]
   },
   {
-    id: 3,
+    id: 2,
     title: 'מי חשוב לך?',
     questions: [
       {
@@ -72,7 +69,7 @@ const PAGES_HE = [
     ]
   },
   {
-    id: 4,
+    id: 3,
     title: 'מה אוהבים?',
     questions: [
       {
@@ -97,7 +94,7 @@ const PAGES_HE = [
     ]
   },
   {
-    id: 5,
+    id: 4,
     title: 'כיתה א׳',
     questions: [
       {
@@ -124,7 +121,7 @@ const PAGES_HE = [
     ]
   },
   {
-    id: 6,
+    id: 5,
     title: 'משאלות',
     questions: [
       {
@@ -153,7 +150,7 @@ const PAGES_HE = [
     ]
   },
   {
-    id: 7,
+    id: 6,
     title: 'תמונות',
     questions: [
       { key: 'photo', question: 'תמונה שלך', type: 'photo', required: true, consent: true },
@@ -162,29 +159,26 @@ const PAGES_HE = [
   },
 ];
 
+export const INTRO_QUESTIONS_EN = [
+  { key: 'name', tag: 'child', question: "What's your name?", type: 'text' },
+  { key: 'gender', tag: 'child', question: 'Are you a boy or a girl?', type: 'chips', options: ['Boy', 'Girl', 'Other'] },
+  {
+    key: 'strength', tag: 'child', question: "What's your biggest strength?", type: 'emoji',
+    options: [
+      { emoji: '🤝', label: 'Helping' },
+      { emoji: '🎨', label: 'Creating' },
+      { emoji: '😄', label: 'Making people laugh' },
+      { emoji: '💡', label: 'Thinking' },
+      { emoji: '🏃', label: 'Running fast' },
+      { emoji: '🤗', label: 'Loving' },
+    ],
+    parentField: { label: "Parent: tell your child what strength you see in them ♥" }
+  },
+];
+
 const PAGES_EN = [
   {
     id: 1,
-    title: 'Who are you?',
-    questions: [
-      { key: 'name', tag: 'child', question: "What's your name?", type: 'text' },
-      { key: 'gender', tag: 'child', question: 'Are you a boy or a girl?', type: 'chips', options: ['Boy', 'Girl', 'Other'] },
-      {
-        key: 'strength', tag: 'child', question: "What's your biggest strength?", type: 'emoji',
-        options: [
-          { emoji: '🤝', label: 'Helping' },
-          { emoji: '🎨', label: 'Creating' },
-          { emoji: '😄', label: 'Making people laugh' },
-          { emoji: '💡', label: 'Thinking' },
-          { emoji: '🏃', label: 'Running fast' },
-          { emoji: '🤗', label: 'Loving' },
-        ],
-        parentField: { label: "Parent: tell your child what strength you see in them ♥" }
-      },
-    ]
-  },
-  {
-    id: 2,
     title: 'Feelings',
     questions: [
       {
@@ -217,7 +211,7 @@ const PAGES_EN = [
     ]
   },
   {
-    id: 3,
+    id: 2,
     title: 'Who matters to you?',
     questions: [
       {
@@ -236,7 +230,7 @@ const PAGES_EN = [
     ]
   },
   {
-    id: 4,
+    id: 3,
     title: 'What do you love?',
     questions: [
       {
@@ -261,7 +255,7 @@ const PAGES_EN = [
     ]
   },
   {
-    id: 5,
+    id: 4,
     title: 'Kindergarten',
     questions: [
       {
@@ -288,7 +282,7 @@ const PAGES_EN = [
     ]
   },
   {
-    id: 6,
+    id: 5,
     title: 'Wishes',
     questions: [
       {
@@ -317,7 +311,7 @@ const PAGES_EN = [
     ]
   },
   {
-    id: 7,
+    id: 6,
     title: 'Photos',
     questions: [
       { key: 'photo', question: 'Your photo', type: 'photo', required: true, consent: true },
@@ -328,6 +322,10 @@ const PAGES_EN = [
 
 export function getPages(lang) {
   return lang === 'en' ? PAGES_EN : PAGES_HE;
+}
+
+export function getIntroQuestions(lang) {
+  return lang === 'en' ? INTRO_QUESTIONS_EN : INTRO_QUESTIONS_HE;
 }
 
 export const PAGES = PAGES_HE;

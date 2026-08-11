@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/components/LanguageContext';
+import QuestionCard from './QuestionCard';
+import { getIntroQuestions } from './questionsConfig';
 
-export default function ContactScreen({ onSubmit }) {
+export default function ContactScreen({ answers, setAnswers, onSubmit }) {
   const { lang } = useLanguage();
   const isEn = lang === 'en';
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const introQuestions = getIntroQuestions(lang);
+  const [email, setEmail] = useState(answers.contact_email || '');
+  const [phone, setPhone] = useState(answers.contact_phone || '');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const handleAnswer = (key, val) => {
+    setAnswers(prev => ({ ...prev, [key]: val }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,6 +48,10 @@ export default function ContactScreen({ onSubmit }) {
         <p className="text-sm text-center mb-2" style={{ color: '#6b6b8a' }}>
           {isEn ? "We'll send the finished story here" : 'נשלח למייל את הסיפור המוכן'}
         </p>
+
+        {introQuestions.map(q => (
+          <QuestionCard key={q.key} question={q} answers={answers} onAnswerChange={handleAnswer} />
+        ))}
 
         {error && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">{error}</p>

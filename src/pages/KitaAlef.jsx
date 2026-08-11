@@ -19,12 +19,13 @@ export default function KitaAlef() {
   // Save a partial record as soon as contact details are collected, so an abandoned
   // questionnaire still leaves a row with email/phone for remarketing/follow-up.
   const handleContactSubmit = async (email, phone) => {
-    setAnswers(prev => ({ ...prev, contact_email: email, contact_phone: phone }));
+    const merged = { ...answers, contact_email: email, contact_phone: phone };
+    setAnswers(merged);
     try {
       const partial = await base44.entities.KitaAlefStory.create({
-        child_name: '',
-        gender: '',
-        answers: { contact_email: email, contact_phone: phone },
+        child_name: merged.name || '',
+        gender: merged.gender || '',
+        answers: merged,
         lang,
         contact_email: email,
         contact_phone: phone,
@@ -40,7 +41,7 @@ export default function KitaAlef() {
   return (
     <div>
       {step === 'home' && <HomeScreen onStart={() => setStep('contact')} />}
-      {step === 'contact' && <ContactScreen onSubmit={handleContactSubmit} />}
+      {step === 'contact' && <ContactScreen answers={answers} setAnswers={setAnswers} onSubmit={handleContactSubmit} />}
       {step === 'questionnaire' && (
         <Questionnaire answers={answers} setAnswers={setAnswers} storyId={storyId} />
       )}
