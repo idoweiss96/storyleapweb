@@ -65,6 +65,11 @@
     "other_comments": {
       "type": "string",
       "description": "Anything else the parent wanted to share"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description"
     }
   },
   "required": [

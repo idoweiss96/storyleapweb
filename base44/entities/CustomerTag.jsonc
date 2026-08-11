@@ -13,6 +13,11 @@
       },
       "default": [],
       "description": "Manually-added segmentation tags for this customer"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description"
     }
   },
   "required": [

@@ -59,6 +59,11 @@
     "gift_sender_email": {
       "type": "string",
       "description": "\u05de\u05d9\u05d9\u05dc \u05e9\u05d5\u05dc\u05d7 \u05d4\u05de\u05ea\u05e0\u05d4 (\u05d0\u05d5\u05e4\u05e6\u05d9\u05d5\u05e0\u05dc\u05d9)"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description"
     }
   },
   "required": [
