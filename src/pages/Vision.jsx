@@ -80,7 +80,7 @@ const content = {
     roadmapTitle: 'Our Path - Step by Step',
     roadmap: [
       { tag: 'Now', title: 'Personalized Stories', desc: "Personalized storybooks built around each child's real challenge." },
-      { tag: 'Next Step', title: "A Therapist's Toolkit", desc: 'Expanding into videos, art, and games. A smart platform to assign tasks.' },
+      { tag: 'Next Step', title: "Tools for Professionals", desc: 'Expanding into videos, art, and games. A smart platform to assign tasks.' },
       { tag: 'Our 10-Year Vision', title: 'The Emotional Navigator', desc: 'A full platform that guides families and connects therapists and parents.' },
     ],
     closing: 'Join us in building that bridge, one story at a time.',
