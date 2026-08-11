@@ -46,7 +46,7 @@ const CONTENT = {
     readFull: 'קראו את הרעיון המלא',
     methodLabel: 'שיטה',
     takeLabel: 'מה אנחנו לוקחים מזה',
-    notLabel: 'מה אנחנו לא מתחזים להיות',
+    notLabel: 'מה אנחנו לא עושים',
     nextLabel: 'הבא',
     nextLast: 'לראות את זה בסיפור',
     ctaTagline: 'גיבורים קטנים, סיפורים גדולים',
