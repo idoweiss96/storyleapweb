@@ -499,7 +499,7 @@ export default function Pricing() {
             {isHe ? 'סיפור מותאם אישית' : 'Personalized Story'}
           </h1>
           <p className="text-sm text-slate-500 mb-6">
-            {isHe ? 'סיפור טיפולי מותאם לילד/ה שלכם, נשלח תוך 24 שעות' : 'A therapeutic story tailored for your child, delivered within 24 hours'}
+            {isHe ? 'סיפור מותאם אישית לילד/ה שלכם, נשלח תוך 24 שעות' : 'A personalized story tailored for your child, delivered within 24 hours'}
           </p>
         </motion.div>
       </div>
