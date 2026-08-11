@@ -66,7 +66,7 @@ const content = {
     partners: [
       { icon: '👨‍👩‍👧', label: 'The Parent' },
       { icon: '🌱', label: 'The Child' },
-      { icon: '🩺', label: 'The Therapist' },
+      { icon: '🌱', label: 'Professionals (coming soon)' },
     ],
     partnersHighlight: 'The operator at home: guidance, language, and practical tools that continue the emotional work at home, turning good intentions into effective support.',
     partnersCta: 'Join the StoryLeap journey',
