@@ -83,7 +83,8 @@ export default function Questionnaire({ answers, setAnswers, storyId }) {
         const saved = await base44.entities.KitaAlefStory.create({ ...storyData, content: null, story_link: null, payment_status: 'draft' });
         id = saved.id;
       }
-      base44.functions.invoke('submitKitaAlefAnswers', { answers, lang, story_id: id }).catch(() => {});
+      const submitToSheet = () => base44.functions.invoke('submitKitaAlefAnswers', { answers, lang, story_id: id });
+      submitToSheet().catch(() => submitToSheet().catch((err) => console.error('submitKitaAlefAnswers failed twice', err)));
       navigate(`/KitaAlefStory?story_id=${id}&lang=${lang}`);
     } catch (e) {
       navigate('/KitaAlefStory');
