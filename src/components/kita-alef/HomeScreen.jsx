@@ -13,7 +13,7 @@ export default function HomeScreen({ onStart }) {
         { emoji: '⏱', text: 'About 5 minutes' },
       ]
     : [
-        { emoji: '💜', text: 'מבוסס על שיטות טיפול פסיכולוגיות' },
+        { emoji: '💜', text: 'מבוסס על עקרונות מספרות והתפתחות הילד' },
         { emoji: '👨‍👩‍👧', text: 'חוויה משותפת הורה-ילד' },
         { emoji: '⏱', text: 'כ-5 דקות' },
       ];
