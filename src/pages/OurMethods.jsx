@@ -2,6 +2,12 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageContext';
+import PageMeta from '@/components/SEO/PageMeta';
+
+const METHODS_META = {
+  he: { title: 'השיטות שלנו | StoryLeap', description: 'שש שיטות מוכחות, מביבליותרפיה ועד טיפול נרטיבי, שעליהן מבוסס כל סיפור מותאם אישית ב-StoryLeap.' },
+  en: { title: 'Our Methods | StoryLeap', description: 'Six proven approaches, from bibliotherapy to narrative therapy, behind every personalized StoryLeap story.' },
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -82,10 +88,12 @@ function Reveal({ children, className }) {
 export default function OurMethods() {
   const { lang, isRTL } = useLanguage();
   const c = CONTENT[lang] || CONTENT.he;
+  const meta = METHODS_META[lang] || METHODS_META.he;
   const arrow = isRTL ? '←' : '→';
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} className="pb-12">
+      <PageMeta title={meta.title} description={meta.description} />
 
       {/* HERO */}
       <section className="relative py-16 md:py-20 overflow-hidden rounded-[3rem] mb-16" style={{ background: 'rgba(255,255,255,0.55)' }}>

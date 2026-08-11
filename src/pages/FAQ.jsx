@@ -7,6 +7,13 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { HelpCircle } from 'lucide-react';
+import PageMeta from '@/components/SEO/PageMeta';
+import JsonLd from '@/components/SEO/JsonLd';
+
+const META = {
+  he: { title: 'שאלות נפוצות | StoryLeap', description: 'תשובות על יצירת סיפור מותאם אישית ב-StoryLeap: איך זה עובד, מחירים, תשלום, ותמונות הילד/ה.' },
+  en: { title: 'FAQ | StoryLeap', description: "Answers about creating a personalized StoryLeap story: how it works, pricing, payment, and your child's photo." },
+};
 
 const faqData = {
   he: {
@@ -50,9 +57,21 @@ const faqData = {
 export default function FAQ() {
   const { lang, isRTL } = useLanguage();
   const content = faqData[lang] || faqData.he;
+  const meta = META[lang] || META.he;
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: content.items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} className="max-w-3xl mx-auto px-4 py-10">
+      <PageMeta title={meta.title} description={meta.description} />
+      <JsonLd id="faq-schema" data={faqSchema} />
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-100 to-amber-100 mb-4">
           <HelpCircle className="w-7 h-7 text-purple-600" />

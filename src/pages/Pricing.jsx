@@ -11,6 +11,12 @@ import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
 import { trackEvent } from '@/lib/posthog';
+import PageMeta from '@/components/SEO/PageMeta';
+
+const PRICING_META = {
+  he: { title: 'רכישת קרדיטים - סיפור מותאם אישית | StoryLeap', description: 'סיפור מותאם אישית לילד/ה שלכם, נשלח תוך 24 שעות. רכשו קרדיטים בקלות ובאמצעי תשלום מאובטח.' },
+  en: { title: 'Pricing - Personalized Story | StoryLeap', description: 'A personalized story tailored for your child, delivered within 24 hours. Purchase credits securely.' },
+};
 
 // Special test codes — routed through the same dynamic PayPal order flow as everything
 // else (createCreditsOrder), NOT a PayPal Hosted Button. Hosted Buttons carry their own
@@ -491,8 +497,11 @@ export default function Pricing() {
 
   const handleApplyPromo = () => applyPromoCode(promoCode);
 
+  const pricingMeta = PRICING_META[isHe ? 'he' : 'en'];
+
   return (
     <div className="max-w-4xl mx-auto pb-16">
+      <PageMeta title={pricingMeta.title} description={pricingMeta.description} />
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-4xl font-bold text-slate-800 mb-3">

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, Star, ArrowRight } from 'lucide-react';
 import { createPageUrl } from '../utils';
 import { useLanguage } from '@/components/LanguageContext';
+import PageMeta from '@/components/SEO/PageMeta';
 
 const fadeUp = {
   hidden: { opacity: 0.4, y: 10 },
@@ -105,6 +106,7 @@ export default function Vision() {
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} className="pb-12">
+      <PageMeta title={`${c.pageTitle} | StoryLeap`} description={c.pageTagline} />
 
       {/* HERO */}
       <section className="relative py-16 md:py-20 overflow-hidden rounded-[3rem] mb-16" style={{ background: 'rgba(255,255,255,0.55)' }}>

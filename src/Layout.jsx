@@ -10,6 +10,22 @@ import CreditsAddedPopup from './components/story/CreditsAddedPopup';
 import FloatingGift from './components/FloatingGift';
 import LocalizedAlternates from '@/components/SEO/LocalizedAlternates';
 import CanonicalUrl from '@/components/SEO/CanonicalUrl';
+import JsonLd from '@/components/SEO/JsonLd';
+
+const ORG_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'StoryLeap',
+  url: 'https://storyleapai.com',
+  logo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg',
+};
+
+const WEBSITE_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'StoryLeap',
+  url: 'https://storyleapai.com',
+};
 import { LanguageProvider, useLanguage } from './components/LanguageContext';
 import { initPostHog, trackPageview, stopTracking, resumeTracking } from '@/lib/posthog';
 
@@ -326,6 +342,8 @@ function LayoutInner({ children, currentPageName }) {
       <div className="site-chrome"><FloatingGift /></div>
       <LocalizedAlternates />
       <CanonicalUrl />
+      <JsonLd id="org-schema" data={ORG_SCHEMA} />
+      <JsonLd id="website-schema" data={WEBSITE_SCHEMA} />
     </div>
   );
 }
