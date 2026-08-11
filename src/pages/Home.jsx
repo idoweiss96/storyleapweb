@@ -4,7 +4,7 @@ import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell, ChevronRight, ChevronLeft, Quote, Tablet, MessageCircle } from 'lucide-react';
+import { Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell, ChevronRight, ChevronLeft, Quote, Tablet, MessageCircle, Book } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
@@ -128,6 +128,10 @@ export default function Home() {
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/70 text-slate-600" style={{ fontSize: '12.5px' }}>
                 <Tablet className="w-3.5 h-3.5 text-blue-400" />
                 {t('hero_pill_digital')}
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/70 text-slate-600" style={{ fontSize: '12.5px' }}>
+                <Book className="w-3.5 h-3.5 text-emerald-400" />
+                {t('hero_pill_bibliotherapy')}
               </div>
             </div>
             <div className="flex flex-col items-center gap-2 mb-6">
