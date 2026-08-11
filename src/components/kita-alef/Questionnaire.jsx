@@ -23,6 +23,11 @@ export default function Questionnaire({ answers, setAnswers, storyId }) {
     trackEvent('kita_questionnaire_started');
   }, []);
 
+  // Always scroll to the top when a new page is shown (initial load + every Next/Back).
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pageIdx]);
+
   const handleAnswer = (key, val) => {
     setAnswers(prev => ({ ...prev, [key]: val }));
   };
