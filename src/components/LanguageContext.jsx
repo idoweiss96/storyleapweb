@@ -66,7 +66,7 @@ const translations = {
     nav_pricing: 'רכישת קרדיטים', nav_contact: 'צור קשר',
     maya_sample: 'סיפור לדוגמה', maya_title: 'הנסיכה מאיה וענן הבלבול', maya_btn: 'קרא את הסיפור',
     cta_desc: 'צרו עכשיו סיפור אישי המותאם לעולם של הילד שלכם!',
-    pricing_badge: 'הצעה מיוחדת', pricing_title: 'סיפור מותאם אישית ✨', pricing_subtitle: 'סיפור טיפולי מותאם לילד/ה שלכם, נשלח תוך 24 שעות',
+    pricing_badge: 'הצעה מיוחדת', pricing_title: 'סיפור מותאם אישית ✨', pricing_subtitle: 'סיפור מותאם אישית לילד/ה שלכם, נשלח תוך 24 שעות',
     pricing_old_price: '₪45', pricing_new_price: '₪15', pricing_discount: '67% הנחה',
     pricing_buy_now: 'רכישה עכשיו', pricing_choose_payment: 'בחרו אמצעי תשלום:',
     pricing_promo_placeholder: 'קוד פרומו (אופציונלי)', pricing_promo_apply: 'החל', pricing_promo_valid: '🎉 קוד הנחה הופעל! מחיר מיוחד: ₪15', pricing_promo_invalid: 'קוד פרומו לא תקין',
