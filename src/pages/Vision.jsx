@@ -60,7 +60,7 @@ const content = {
     believe: [
       { icon: '📖', title: 'Every Child, Their Story', desc: 'Children are not a template. Every child carries a unique emotional world.' },
       { icon: '👨‍👩‍👧', title: 'Parents Are the Anchor', desc: 'The struggle comes from a lack of tools and guidance, never from a lack of love.' },
-      { icon: '🩺', title: 'Technology for Therapists', desc: 'We give professionals technology that reaches more families.' },
+      { icon: '🌉', title: 'A Bridge to Professionals', desc: 'Our long-term vision includes giving professionals technology that helps them reach more families.' },
     ],
     partnersTitle: 'One journey, three partners',
     partners: [
