@@ -8,7 +8,7 @@ import { useLanguage } from '@/components/LanguageContext';
 import QuestionCard from './QuestionCard';
 import { trackEvent } from '@/lib/posthog';
 
-export default function Questionnaire({ answers, setAnswers }) {
+export default function Questionnaire({ answers, setAnswers, storyId }) {
   const { lang } = useLanguage();
   const navigate = useNavigate();
   const pages = getPages(lang);
@@ -61,18 +61,25 @@ export default function Questionnaire({ answers, setAnswers }) {
     setCreating(true);
     try { sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers, lang })); } catch (_) {}
     try {
-      const saved = await base44.entities.KitaAlefStory.create({
+      const storyData = {
         child_name: answers.name || '',
         gender: answers.gender || '',
         child_image_url: answers.photo || null,
         answers,
         lang,
-        content: null,
-        story_link: null,
-        payment_status: 'draft',
-      });
-      base44.functions.invoke('submitKitaAlefAnswers', { answers, lang, story_id: saved.id }).catch(() => {});
-      navigate(`/KitaAlefStory?story_id=${saved.id}&lang=${lang}`);
+        contact_email: answers.contact_email || '',
+        contact_phone: answers.contact_phone || '',
+      };
+      let id = storyId;
+      if (id) {
+        // A partial record already exists from the contact step — update it instead of duplicating.
+        await base44.entities.KitaAlefStory.update(id, storyData);
+      } else {
+        const saved = await base44.entities.KitaAlefStory.create({ ...storyData, content: null, story_link: null, payment_status: 'draft' });
+        id = saved.id;
+      }
+      base44.functions.invoke('submitKitaAlefAnswers', { answers, lang, story_id: id }).catch(() => {});
+      navigate(`/KitaAlefStory?story_id=${id}&lang=${lang}`);
     } catch (e) {
       navigate('/KitaAlefStory');
     } finally {

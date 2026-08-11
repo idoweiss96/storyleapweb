@@ -80,8 +80,8 @@ function answersToRow(answers, userEmail, lang, storyId) {
     formatValue(answers.wish_self_parent),
     formatValue(answers.wish_parent),
     formatValue(answers.wish_parent_parent),
-    '', // Contact email — filled in later once collected on the details step
-    '', // Contact phone — filled in later once collected on the details step
+    formatValue(answers.contact_email),
+    formatValue(answers.contact_phone),
     '', // Story link — filled in later once the story is ready
     '', // Email sent — filled in by the notification automation
     storyId || '',

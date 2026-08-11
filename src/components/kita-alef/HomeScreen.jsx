@@ -20,20 +20,22 @@ export default function HomeScreen({ onStart }) {
 
   const SECTIONS = isEn
     ? [
-        { emoji: '🧒', title: 'Who are you?', desc: 'Getting to know each other: name, personal strength, and a photo.' },
+        { emoji: '🧒', title: 'Who are you?', desc: 'Getting to know each other: name and personal strength.' },
         { emoji: '💭', title: 'Feelings', desc: 'Emotions before starting kindergarten, things that might be a bit scary, and moments of separation.' },
-        { emoji: '👨‍👩‍👧', title: 'Who matters to you?', desc: 'Close people, friends, and photos of family members.' },
+        { emoji: '👨‍👩‍👧', title: 'Who matters to you?', desc: 'Close people and friends.' },
         { emoji: '🎨', title: 'What do you love?', desc: 'Hobbies, heroes, and what helps when things feel uncomfortable.' },
         { emoji: '🎒', title: 'Kindergarten', desc: 'Expectations, small worries, and visiting the school.' },
         { emoji: '🌟', title: 'Wishes', desc: "Wishes from the child and from you for the coming year." },
+        { emoji: '📸', title: 'Photos', desc: 'Your photo and family photos, to prepare the story.' },
       ]
     : [
-        { emoji: '🧒', title: 'מי אתה/את?', desc: 'היכרות: שם, כוח אישי ותמונה.' },
+        { emoji: '🧒', title: 'מי אתה/את?', desc: 'היכרות: שם וכוח אישי.' },
         { emoji: '💭', title: 'רגשות', desc: 'תחושות לפני העלייה לכיתה א׳, דברים שאולי קצת מפחידים ורגעי פרידה.' },
-        { emoji: '👨‍👩‍👧', title: 'מי חשוב לך?', desc: 'אנשים קרובים, חברים ותמונות של בני המשפחה.' },
+        { emoji: '👨‍👩‍👧', title: 'מי חשוב לך?', desc: 'אנשים קרובים וחברים.' },
         { emoji: '🎨', title: 'מה אוהבים?', desc: 'תחביבים, גיבורים ומה שעוזר כשלא נעים.' },
         { emoji: '🎒', title: 'כיתה א׳', desc: 'ציפיות, דאגות קטנות וביקור בבית הספר.' },
         { emoji: '🌟', title: 'משאלות', desc: 'איחולים של הילד/ה ושלכם לקראת השנה.' },
+        { emoji: '📸', title: 'תמונות', desc: 'תמונה שלך ותמונות משפחה, לקראת הכנת הסיפור.' },
       ];
 
   const introText = isEn

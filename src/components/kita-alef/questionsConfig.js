@@ -17,7 +17,6 @@ const PAGES_HE = [
         ],
         parentField: { label: 'הורה: ספרו לילד/ה מה הכוח שאתם רואים בו/בה ♥' }
       },
-      { key: 'photo', question: 'תמונה שלך', type: 'photo', required: true, consent: true },
     ]
   },
   {
@@ -70,7 +69,6 @@ const PAGES_HE = [
       },
       { key: 'gan_friends', tag: 'together', question: 'יש חברים מהגן שגם עולים לכיתה א׳?', type: 'textarea' },
       { key: 'sibling_experience', tag: 'together', question: 'יש אח/ות גדול/ה שעבר/ה את זה? מה הוא/היא אמר/ה?', type: 'textarea' },
-      { key: 'family_photos', tag: 'together', question: 'תמונות של בני משפחה (אופציונלי)', type: 'family_photos' },
     ]
   },
   {
@@ -154,6 +152,14 @@ const PAGES_HE = [
       },
     ]
   },
+  {
+    id: 7,
+    title: 'תמונות',
+    questions: [
+      { key: 'photo', question: 'תמונה שלך', type: 'photo', required: true, consent: true },
+      { key: 'family_photos', tag: 'together', question: 'תמונות של בני משפחה (אופציונלי)', type: 'family_photos' },
+    ]
+  },
 ];
 
 const PAGES_EN = [
@@ -175,7 +181,6 @@ const PAGES_EN = [
         ],
         parentField: { label: "Parent: tell your child what strength you see in them ♥" }
       },
-      { key: 'photo', question: 'Your photo', type: 'photo', required: true, consent: true },
     ]
   },
   {
@@ -228,7 +233,6 @@ const PAGES_EN = [
       },
       { key: 'gan_friends', tag: 'together', question: 'Are there friends from kindergarten also going to kindergarten?', type: 'textarea' },
       { key: 'sibling_experience', tag: 'together', question: 'Is there an older sibling who went through this? What did they say?', type: 'textarea' },
-      { key: 'family_photos', tag: 'together', question: 'Photos of family members (optional)', type: 'family_photos' },
     ]
   },
   {
@@ -310,6 +314,14 @@ const PAGES_EN = [
         ],
         parentField: { label: 'Parent: this is the moment to tell them directly ♥' }
       },
+    ]
+  },
+  {
+    id: 7,
+    title: 'Photos',
+    questions: [
+      { key: 'photo', question: 'Your photo', type: 'photo', required: true, consent: true },
+      { key: 'family_photos', tag: 'together', question: 'Photos of family members (optional)', type: 'family_photos' },
     ]
   },
 ];

@@ -54,6 +54,7 @@ export default function KitaAlefStory() {
       }
 
       let restored = false;
+      let localContactEmail = '';
 
       // Priority 1: durable DB record by story_id (survives refresh, new tab, cleared sessionStorage)
       if (urlStoryId) {
@@ -62,8 +63,9 @@ export default function KitaAlefStory() {
           if (record) {
             setStoryId(record.id);
             setAnswers(record.answers || pending?.answers || {});
-            setContactEmail(record.contact_email || pending?.contactEmail || '');
-            setContactPhone(record.contact_phone || pending?.contactPhone || '');
+            localContactEmail = record.contact_email || pending?.contactEmail || record.answers?.contact_email || '';
+            setContactEmail(localContactEmail);
+            setContactPhone(record.contact_phone || pending?.contactPhone || record.answers?.contact_phone || '');
             // Language priority: record.lang > answers.lang > url lang > pending.lang
             const recLang = record.lang || record.answers?.lang || urlLang || pending?.lang || null;
             if (recLang) setResolvedLang(recLang);
@@ -75,8 +77,9 @@ export default function KitaAlefStory() {
       // Priority 2/3: sessionStorage fallback (backwards compatibility)
       if (!restored && pending) {
         setAnswers(pending.answers || {});
-        setContactEmail(pending.contactEmail || '');
-        setContactPhone(pending.contactPhone || '');
+        localContactEmail = pending.contactEmail || pending.answers?.contact_email || '';
+        setContactEmail(localContactEmail);
+        setContactPhone(pending.contactPhone || pending.answers?.contact_phone || '');
         const pendingLang = urlLang || pending.lang || null;
         if (pendingLang) setResolvedLang(pendingLang);
         restored = true;
@@ -102,6 +105,10 @@ export default function KitaAlefStory() {
         const qs = urlParams.toString();
         window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''));
         if (restored) setStep('credits_check');
+      } else if (localContactEmail) {
+        // Contact details were already collected at the start of the questionnaire —
+        // skip straight to the credits step instead of asking for them again.
+        setStep('credits_check');
       }
     } catch (e) {
       setUser(null);

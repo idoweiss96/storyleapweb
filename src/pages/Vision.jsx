@@ -12,8 +12,10 @@ const fadeUp = {
 const content = {
   he: {
     heroBadge: '✨ StoryLeap',
+    pageTitle: 'החזון שלנו',
+    pageTagline: 'עולם שבו שום הורה לא מרגיש חסר ביטחון, ושום ילד לא מתמודד עם הקשיים שלו לבד.',
     heroTitle: 'גיבורים קטנים, סיפורים גדולים',
-    heroSubtitle: 'בימים הראשונים של המלחמה ראינו הורים שמחפשים דרך לעזור לילדים שלהם ולא תמיד ידעו איך. ידענו שטכנולוגיה יכולה לעשות יותר, אז התחלנו לבנות את הגשר בין העולם הרגשי לבית.',
+    heroSubtitle: 'בימים הראשונים שלנו ראינו הורים שמחפשים דרך לעזור לילדים שלהם ברגעים קשים ורגשיים, ולא תמיד ידעו איך. ידענו שטכנולוגיה יכולה לעשות יותר, אז התחלנו לבנות את הגשר בין העולם הרגשי לבית.',
     heroMission: 'לא יצאנו לדרך הזו כי זיהינו הזדמנות עסקית טובה. התחלנו כי ראינו ילדים שזקוקים לעזרה, והורים שמשתוקקים לתת אותה, וידענו שאנחנו יכולים לבנות את הגשר ביניהם.',
     heroCta: 'צרו את הסיפור שלכם עכשיו',
     believeTitle: 'במה אנחנו מאמינים',
@@ -43,11 +45,13 @@ const content = {
       { tag: 'השלב הבא', title: 'ארגז הכלים של המטפל', desc: 'התרחבות לסרטונים, יצירות ומשחקים. פלטפורמה חכמה להקצאת משימות.' },
       { tag: 'החזון שלנו ל-10 שנים', title: 'המנחה הרגשי', desc: 'פלטפורמה שלמה המלווה משפחות בכל שלב ומחברת בין מטפלים והורים.' },
     ],
-    closing: 'הצטרפו אלינו לבנות את הגשר הזה, סיפור אחד בכל פעם.',
+    closing: 'הצטרפו אלינו לבנות את הגשר הזה, סיפור אחר סיפור.',
     closingCta: 'התחילו את המסע המשותף',
   },
   en: {
     heroBadge: '✨ StoryLeap',
+    pageTitle: 'Our Vision',
+    pageTagline: 'A world where no parent feels unsure, and no child faces their challenges alone.',
     heroTitle: "Little heroes, big stories",
     heroSubtitle: 'In our early days, we saw parents searching for ways to help their children through hard, emotional moments, not always knowing how. We knew technology could do more, so we set out to build a bridge between the emotional world and home.',
     heroMission: 'We did not start this because it was a good market opportunity. We started because we saw children who needed help, and parents who wanted to give it, and knew we could build the bridge between them.',
@@ -115,9 +119,15 @@ export default function Vision() {
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium mb-6" style={{ background: '#DCEEFA', color: '#1C2A48' }}>
             {c.heroBadge}
           </span>
-          <h1 className="text-3xl md:text-5xl font-black mb-5 leading-tight" style={{ color: '#1C2A48' }}>
-            {c.heroTitle}
+          <h1 className="text-3xl md:text-5xl font-black mb-4 leading-tight" style={{ color: '#1C2A48' }}>
+            {c.pageTitle}
           </h1>
+          <p className="text-base md:text-lg mb-8 leading-relaxed font-medium" style={{ color: '#63738A' }}>
+            {c.pageTagline}
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 leading-tight" style={{ color: '#1C2A48' }}>
+            {c.heroTitle}
+          </h2>
           <p className="text-base md:text-lg mb-8 leading-relaxed" style={{ color: '#63738A' }}>
             {c.heroSubtitle}
           </p>
