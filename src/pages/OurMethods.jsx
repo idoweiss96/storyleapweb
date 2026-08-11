@@ -19,7 +19,7 @@ const CONTENT = {
     readFull: 'Read the full idea',
     methodLabel: 'Method',
     takeLabel: 'What we take from this',
-    notLabel: "What we don't claim",
+    notLabel: "What We Don't Do",
     nextLabel: 'Next',
     nextLast: 'See it in a story',
     ctaTagline: 'Little heroes, big stories',
