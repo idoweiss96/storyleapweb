@@ -91,7 +91,7 @@ const translations = {
     feature3_title: 'Emotional Connection', feature3_desc: 'Creating moments that bring children and loved ones closer, encouraging deep conversations and bonding',
     feature4_title: 'Guided conversations', feature4_desc: 'Every story includes parent guiding questions to open up real emotional talks',
     hero_pill_stories: '200+ stories created so far', hero_pill_digital: 'Digital story, ready in a few hours',
-    hero_pill_bibliotherapy: 'Based in child therapy principles',
+    hero_pill_bibliotherapy: 'Based in child development principles',
     badge_new: 'New',
     gallery_title: 'Our Story Gallery ✨', gallery_subtitle: 'A peek into the magical worlds we created',
     testimonials_title: 'What Parents Say 💬', testimonials_subtitle: 'Real experiences from parents who already created stories',
