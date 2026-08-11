@@ -112,7 +112,7 @@ function LayoutInner({ children, currentPageName }) {
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
     { name: 'Contact', label: t('nav_contact'), icon: Mail },
     { name: 'Vision', label: lang === 'he' ? 'החזון שלנו' : 'Our Vision', icon: Sparkles },
-    { name: 'OurMethods', label: 'Our Methods', icon: BookOpen, path: '/our-methods' },
+    { name: 'OurMethods', label: lang === 'he' ? 'השיטות שלנו' : 'Our Methods', icon: BookOpen, path: '/our-methods' },
   ];
 
   const authNavItems = [
@@ -122,7 +122,7 @@ function LayoutInner({ children, currentPageName }) {
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
     { name: 'Contact', label: t('nav_contact'), icon: Mail },
     { name: 'Vision', label: lang === 'he' ? 'החזון שלנו' : 'Our Vision', icon: Sparkles },
-    { name: 'OurMethods', label: 'Our Methods', icon: BookOpen, path: '/our-methods' },
+    { name: 'OurMethods', label: lang === 'he' ? 'השיטות שלנו' : 'Our Methods', icon: BookOpen, path: '/our-methods' },
     ...(user?.role === 'admin' ? [{ name: 'Admin', label: t('nav_admin'), icon: Home }] : []),
   ];
 
