@@ -4,7 +4,7 @@ import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell, ChevronRight, ChevronLeft, Quote } from 'lucide-react';
+import { Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell, ChevronRight, ChevronLeft, Quote, Tablet, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
@@ -89,7 +89,8 @@ export default function Home() {
   const features = [
   { icon: Wand2, title: t('feature1_title'), description: t('feature1_desc'), bg: 'bg-blue-50', iconColor: 'text-blue-600' },
   { icon: Dumbbell, title: t('feature2_title'), description: t('feature2_desc'), bg: 'bg-rose-50', iconColor: 'text-rose-500' },
-  { icon: Heart, title: t('feature3_title'), description: t('feature3_desc'), bg: 'bg-amber-50', iconColor: 'text-amber-500' }];
+  { icon: Heart, title: t('feature3_title'), description: t('feature3_desc'), bg: 'bg-amber-50', iconColor: 'text-amber-500' },
+  { icon: MessageCircle, title: t('feature4_title'), description: t('feature4_desc'), bg: 'bg-indigo-50', iconColor: 'text-indigo-500', isNew: true }];
 
 
   return (
@@ -119,6 +120,16 @@ export default function Home() {
             <p className="text-lg md:text-xl text-slate-500 mb-8 leading-relaxed whitespace-pre-line">
                {t('hero_subtitle')}
              </p>
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/70 text-slate-600" style={{ fontSize: '12.5px' }}>
+                <Star className="w-3.5 h-3.5 text-amber-400" />
+                {t('hero_pill_stories')}
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/70 text-slate-600" style={{ fontSize: '12.5px' }}>
+                <Tablet className="w-3.5 h-3.5 text-blue-400" />
+                {t('hero_pill_digital')}
+              </div>
+            </div>
             <div className="flex flex-col items-center gap-2 mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200">
                 ☀️ {lang === 'he' ? 'מבצע חופש גדול' : 'Summer Sale'}
@@ -236,13 +247,18 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 hidden md:block">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: index * 0.1 }}>
-                <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl hover:shadow-slate-200 transition-all duration-300">
+              <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: index * 0.1 }} className="relative">
+                {feature.isNew && (
+                  <span className="absolute -top-3 left-4 z-10 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-800">
+                    {t('badge_new')}
+                  </span>
+                )}
+                <Card className={`h-full shadow-lg shadow-slate-100 hover:shadow-xl hover:shadow-slate-200 transition-all duration-300 ${feature.isNew ? 'border-2 border-blue-300' : 'border-0'}`}>
                   <CardContent className="p-6 text-center">
                     <div className={`w-14 h-14 rounded-2xl ${feature.bg} flex items-center justify-center mx-auto mb-4`}>
                       <Icon className={`w-7 h-7 ${feature.iconColor}`} />
