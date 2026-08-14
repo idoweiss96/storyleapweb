@@ -48,6 +48,28 @@ const content = {
     ],
     closing: 'הצטרפו אלינו לבנות את הגשר הזה, סיפור אחר סיפור.',
     closingCta: 'התחילו את המסע המשותף',
+    teamTitle: 'תכירו את הצוות',
+    team: [
+      {
+        name: 'עומר קראדי',
+        role: 'מייסד שותף ומנכ"ל',
+        bio: 'עומר מוביל את הצד העסקי של StoryLeap, מאסטרטגיה ושותפויות ועד איתור הזדמנויות חדשות לצמיחה ולהבאת StoryLeap למשפחות נוספות.',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/f3288d468_WhatsAppImage2026-08-12at1114561.jpeg',
+      },
+      {
+        name: 'ליטל פלוטקין',
+        role: 'מייסדת שותפה וראשת מוצר',
+        bio: 'ליטל מובילה את המוצר וחוויית המשתמש. עם רקע בממשק אדם מחשב ומחקר UX, היא מתמקדת בהבנת הצרכים של הורים וילדים והפיכתם לחוויה פשוטה ומשמעותית.',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/213be887f_WhatsAppImage2026-08-12at111456.jpeg',
+      },
+      {
+        name: 'עידו וייס',
+        role: 'מייסד שותף וראש טכנולוגיות',
+        bio: 'עידו מוביל את הטכנולוגיה מאחורי StoryLeap. הוא אחראי על בניית הפלטפורמה ופיתוחה, והפיכת הרעיונות שלנו למוצר שעובד, צומח, ומגיע למשפחות.',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/df53739e1_WhatsAppImage2026-08-12at1114562.jpeg',
+      },
+    ],
+    teamClosing: 'יחד אנחנו משלבים עסקים, מוצר, מחקר וטכנולוגיה, למטרה אחת משותפת, ליצור כלים שעוזרים להורים ולילדים להתחבר, לדבר, ולגדול יחד.',
   },
   en: {
     heroBadge: '✨ StoryLeap',
@@ -86,6 +108,28 @@ const content = {
     ],
     closing: 'Join us in building that bridge, one story at a time.',
     closingCta: 'Start the shared journey',
+    teamTitle: 'Meet the Team',
+    team: [
+      {
+        name: 'Omer Karadi',
+        role: 'Co-Founder & CEO',
+        bio: 'Omer leads the business side of StoryLeap, from strategy and partnerships to finding new opportunities to grow and bring StoryLeap to more families.',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/f3288d468_WhatsAppImage2026-08-12at1114561.jpeg',
+      },
+      {
+        name: 'Lital Plotkin',
+        role: 'Co-Founder & Product Lead',
+        bio: 'Lital leads the product and user experience. With a background in Human-Computer Interaction and UX research, she focuses on understanding parents and children and turning their needs into a simple and meaningful experience.',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/213be887f_WhatsAppImage2026-08-12at111456.jpeg',
+      },
+      {
+        name: 'Ido Weiss',
+        role: 'Co-Founder & Tech Lead',
+        bio: 'Ido leads the technology behind StoryLeap. He is responsible for building and developing the platform and turning our ideas into a product that works, grows, and reaches families.',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/df53739e1_WhatsAppImage2026-08-12at1114562.jpeg',
+      },
+    ],
+    teamClosing: 'Together, we combine business, product, research, and technology, with one shared goal: creating tools that help parents and children connect, talk, and grow together.',
   }
 };
 
@@ -224,8 +268,28 @@ export default function Vision() {
         ))}
       </motion.div>
 
+      {/* MEET THE TEAM */}
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={10} className="text-center mb-10">
+        <h2 className="text-2xl md:text-3xl font-bold" style={{ color: '#1C2A48' }}>{c.teamTitle}</h2>
+      </motion.div>
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={10.5} className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        {c.team.map((member) => (
+          <div key={member.name} className="rounded-2xl p-7 text-center bg-white/70 backdrop-blur-sm" style={{ boxShadow: '0 10px 40px rgba(28,42,72,0.06)' }}>
+            <div className="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden">
+              <img src={member.photo} alt={member.name} className="w-full h-full object-cover scale-110" />
+            </div>
+            <h3 className="text-lg font-bold mb-1" style={{ color: '#1C2A48' }}>{member.name}</h3>
+            <div className="text-sm font-semibold mb-3" style={{ color: '#63738A' }}>{member.role}</div>
+            <p className="text-sm leading-relaxed" style={{ color: '#63738A' }}>{member.bio}</p>
+          </div>
+        ))}
+      </motion.div>
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={11} className="text-center max-w-2xl mx-auto mb-20">
+        <p className="text-sm leading-relaxed" style={{ color: '#63738A' }}>{c.teamClosing}</p>
+      </motion.div>
+
       {/* CLOSING */}
-      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={10} className="text-center max-w-xl mx-auto">
+      <motion.div variants={fadeUp} initial="hidden" animate="show" custom={12} className="text-center max-w-xl mx-auto">
         <p className="text-lg italic leading-relaxed mb-8" style={{ color: '#63738A' }}>{c.closing}</p>
         <CtaButton to={createPageUrl('CreateStory')}>{c.closingCta}</CtaButton>
       </motion.div>
