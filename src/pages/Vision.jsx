@@ -51,22 +51,22 @@ const content = {
     teamTitle: 'תכירו את הצוות',
     team: [
       {
-        name: 'עומר קראדי',
-        role: 'מייסד שותף ומנכ"ל',
-        bio: 'עומר מוביל את הצד העסקי של StoryLeap, מאסטרטגיה ושותפויות ועד איתור הזדמנויות חדשות לצמיחה ולהבאת StoryLeap למשפחות נוספות.',
-        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/f3288d468_WhatsAppImage2026-08-12at1114561.jpeg',
-      },
-      {
         name: 'ליטל פלוטקין',
         role: 'מייסדת שותפה וראשת מוצר',
         bio: 'ליטל מובילה את המוצר וחוויית המשתמש. עם רקע בממשק אדם מחשב ומחקר UX, היא מתמקדת בהבנת הצרכים של הורים וילדים והפיכתם לחוויה פשוטה ומשמעותית.',
         photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/213be887f_WhatsAppImage2026-08-12at111456.jpeg',
       },
       {
+        name: 'עומר קראדי',
+        role: 'מייסד שותף ומנכ"ל',
+        bio: 'עומר מוביל את הצד העסקי של StoryLeap, מאסטרטגיה ושותפויות ועד איתור הזדמנויות חדשות לצמיחה ולהבאת StoryLeap למשפחות נוספות.',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/b95570782_WhatsAppImage2026-08-12at1114562.jpeg',
+      },
+      {
         name: 'עידו וייס',
         role: 'מייסד שותף וראש טכנולוגיות',
         bio: 'עידו מוביל את הטכנולוגיה מאחורי StoryLeap. הוא אחראי על בניית הפלטפורמה ופיתוחה, והפיכת הרעיונות שלנו למוצר שעובד, צומח, ומגיע למשפחות.',
-        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/df53739e1_WhatsAppImage2026-08-12at1114562.jpeg',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/f3288d468_WhatsAppImage2026-08-12at1114561.jpeg',
       },
     ],
     teamClosing: 'יחד אנחנו משלבים עסקים, מוצר, מחקר וטכנולוגיה, למטרה אחת משותפת, ליצור כלים שעוזרים להורים ולילדים להתחבר, לדבר, ולגדול יחד.',
@@ -111,22 +111,22 @@ const content = {
     teamTitle: 'Meet the Team',
     team: [
       {
-        name: 'Omer Karadi',
-        role: 'Co-Founder & CEO',
-        bio: 'Omer leads the business side of StoryLeap, from strategy and partnerships to finding new opportunities to grow and bring StoryLeap to more families.',
-        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/f3288d468_WhatsAppImage2026-08-12at1114561.jpeg',
-      },
-      {
         name: 'Lital Plotkin',
         role: 'Co-Founder & Product Lead',
         bio: 'Lital leads the product and user experience. With a background in Human-Computer Interaction and UX research, she focuses on understanding parents and children and turning their needs into a simple and meaningful experience.',
         photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/213be887f_WhatsAppImage2026-08-12at111456.jpeg',
       },
       {
+        name: 'Omer Karadi',
+        role: 'Co-Founder & CEO',
+        bio: 'Omer leads the business side of StoryLeap, from strategy and partnerships to finding new opportunities to grow and bring StoryLeap to more families.',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/b95570782_WhatsAppImage2026-08-12at1114562.jpeg',
+      },
+      {
         name: 'Ido Weiss',
         role: 'Co-Founder & Tech Lead',
         bio: 'Ido leads the technology behind StoryLeap. He is responsible for building and developing the platform and turning our ideas into a product that works, grows, and reaches families.',
-        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/df53739e1_WhatsAppImage2026-08-12at1114562.jpeg',
+        photo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/f3288d468_WhatsAppImage2026-08-12at1114561.jpeg',
       },
     ],
     teamClosing: 'Together, we combine business, product, research, and technology, with one shared goal: creating tools that help parents and children connect, talk, and grow together.',
