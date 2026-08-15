@@ -507,8 +507,11 @@ export default function Pricing() {
           <h1 className="text-4xl font-bold text-slate-800 mb-3">
             {isHe ? 'סיפור מותאם אישית' : 'Personalized Story'}
           </h1>
-          <p className="text-sm text-slate-500 mb-6">
-            {isHe ? 'סיפור מותאם אישית לילד/ה שלכם, נשלח תוך 24 שעות' : 'A personalized story tailored for your child, delivered within 24 hours'}
+          <p className="text-sm text-slate-500 mb-1">
+            {isHe ? 'סיפור מותאם אישית לילד/ה שלכם, מוכן תוך שעות בודדות' : 'A personalized story, made for your child, ready within a few hours'}
+          </p>
+          <p className="text-xs text-slate-400 mb-6">
+            {isHe ? 'תקבלו אותו כסיפור דיגיטלי, ישירות למייל שלכם' : "You'll receive it as a digital story, delivered straight to your email"}
           </p>
         </motion.div>
       </div>
