@@ -36,6 +36,12 @@ export default function CreateStory() {
   const [couponStatus, setCouponStatus] = useState(null); // null | 'validating' | 'valid' | 'invalid'
   const [couponMessage, setCouponMessage] = useState('');
   const [previewState, setPreviewState] = useState(null); // null | 'sending' | 'sent' | 'already_used' | 'error'
+  const [fromChip] = useState(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const val = urlParams.get('from');
+    const validKeys = ['chip_new', 'chip_fear', 'chip_moving', 'chip_friendship', 'chip_separation', 'chip_emotions', 'chip_other'];
+    return validKeys.includes(val) ? val : null;
+  });
   const [formData, setFormData] = useState({
     childName: '', childAge: '', gender: '', childImage: '',
     parentImage: '', parentRelation: '',
@@ -307,6 +313,9 @@ export default function CreateStory() {
             <Sparkles className="w-6 h-6 text-white" />
           </div>
         </motion.div>
+        {fromChip && (
+          <p className="text-sm font-semibold text-blue-600 mb-2">{t('helping_with')} {t(fromChip)}</p>
+        )}
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('create_title')}</h1>
         <p className="text-gray-600">{t('create_subtitle')}</p>
       </div>

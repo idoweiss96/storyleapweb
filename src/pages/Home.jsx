@@ -140,7 +140,7 @@ export default function Home() {
               <p className="text-base font-semibold text-slate-700 mb-4">{t('hero_chips_title')}</p>
               <div className="flex flex-wrap items-center justify-center gap-2 max-w-xl mx-auto">
                 {['chip_new', 'chip_fear', 'chip_moving', 'chip_friendship', 'chip_separation', 'chip_emotions', 'chip_other'].map((key) => (
-                  <Link key={key} to={createPageUrl('CreateStory')}>
+                  <Link key={key} to={`${createPageUrl('CreateStory')}?from=${key}`}>
                     <span className="inline-flex items-center px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-700 text-sm font-medium hover:border-slate-400 hover:bg-slate-50 transition-colors">
                       {t(key)}
                     </span>
