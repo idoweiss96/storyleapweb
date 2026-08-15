@@ -111,14 +111,10 @@ export default function Home() {
                {lang === 'he' ? 'סיפורי העצמה לילדים' : t('hero_badge')}
               </div>
             <h1 className="text-4xl md:text-6xl font-bold text-slate-800 mb-6 leading-tight">
-              {t('hero_title1')}
-              <br />
-              <span className="bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
-                 {t('hero_title2')}
-               </span>
+              {t('hero_headline')}
             </h1>
             <p className="text-lg md:text-xl text-slate-500 mb-8 leading-relaxed whitespace-pre-line">
-               {t('hero_subtitle')}
+               {t('hero_headline_sub')}
              </p>
             <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/70 text-slate-600" style={{ fontSize: '12.5px' }}>
@@ -128,10 +124,6 @@ export default function Home() {
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/70 text-slate-600" style={{ fontSize: '12.5px' }}>
                 <Tablet className="w-3.5 h-3.5 text-blue-400" />
                 {t('hero_pill_digital')}
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/70 text-slate-600" style={{ fontSize: '12.5px' }}>
-                <Book className="w-3.5 h-3.5 text-emerald-400" />
-                {t('hero_pill_bibliotherapy')}
               </div>
             </div>
             <div className="flex flex-col items-center gap-2 mb-6">
@@ -144,20 +136,21 @@ export default function Home() {
                 <span className="font-bold">{lang === 'he' ? '₪70' : '$25'}</span>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to={createPageUrl('CreateStory')}>
-                <Button size="lg" className="h-14 px-8 text-lg rounded-xl text-white shadow-lg shadow-slate-200 transition-all hover:bg-[#BAD1FA] hover:text-slate-800 hover:shadow-blue-200 bg-[#ffc157]">
-                  <Sparkles className="w-5 h-5 ml-2" />
-                  {t('hero_cta_new')}
-                </Button>
-              </Link>
-              <Link to={createPageUrl('MyStories')}>
-                <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-xl border-2 border-slate-200 text-slate-700 hover:bg-slate-50">
-                  <BookOpen className="w-5 h-5 ml-2" />
-                  {t('hero_cta_mine')}
-                </Button>
-              </Link>
+            <div className="mb-4">
+              <p className="text-base font-semibold text-slate-700 mb-4">{t('hero_chips_title')}</p>
+              <div className="flex flex-wrap items-center justify-center gap-2 max-w-xl mx-auto">
+                {['chip_new', 'chip_fear', 'chip_moving', 'chip_friendship', 'chip_separation', 'chip_emotions', 'chip_other'].map((key) => (
+                  <Link key={key} to={createPageUrl('CreateStory')}>
+                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-700 text-sm font-medium hover:border-slate-400 hover:bg-slate-50 transition-colors">
+                      {t(key)}
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
+            <Link to={createPageUrl('MyStories')} className="inline-block text-sm text-slate-400 underline hover:text-slate-600">
+              {t('hero_cta_mine')}
+            </Link>
           </motion.div>
         </div>
       </section>
