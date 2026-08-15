@@ -121,7 +121,9 @@ export default function CreateStory() {
       // Restore any questionnaire saved before a login/registration redirect.
       // Checked on every visit (not just when a resume=1 param is present) so the
       // answers are recovered even if verification finished in a different tab.
-      const saved = localStorage.getItem(PENDING_FORM_KEY);
+      // Skipped when arriving fresh from a Hero chip, so the user always lands on
+      // the actual questionnaire form instead of an old saved summary.
+      const saved = urlParams.get('from') ? null : localStorage.getItem(PENDING_FORM_KEY);
       if (saved) {
         try {
           const savedForm = JSON.parse(saved);
