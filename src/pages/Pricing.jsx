@@ -12,6 +12,8 @@ import { base44 } from '@/api/base44Client';
 import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
 import { trackEvent } from '@/lib/posthog';
 import PageMeta from '@/components/SEO/PageMeta';
+import QuickCheckIn from '@/components/pricing/QuickCheckIn';
+import FreeActivitiesHighlight from '@/components/pricing/FreeActivitiesHighlight';
 
 const PRICING_META = {
   he: { title: 'רכישת קרדיטים - סיפור מותאם אישית | StoryLeap', description: 'סיפור מותאם אישית לילד/ה שלכם, נשלח תוך 24 שעות. רכשו קרדיטים בקלות ובאמצעי תשלום מאובטח.' },
@@ -517,6 +519,11 @@ export default function Pricing() {
       </div>
 
       <div className="max-w-2xl mx-auto">
+        <QuickCheckIn />
+        <FreeActivitiesHighlight />
+      </div>
+
+      <div id="purchase-block" className="max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
           <Card className="border-0 shadow-2xl shadow-slate-200">
             <CardContent className="p-12 text-center">
