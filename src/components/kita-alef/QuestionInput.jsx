@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import FamilyPhotosInput from './FamilyPhotosInput';
 import TermsOfUseModal from '@/components/story/TermsOfUseModal';
 import { useLanguage } from '@/components/LanguageContext';
+import { Tag } from './QuestionCard';
 
 export default function QuestionInput({ question, answers, onAnswerChange }) {
   const { lang } = useLanguage();
@@ -211,6 +212,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
       {/* Parent field */}
       {question.parentField && (
         <div className="mt-3 pt-3" style={{ borderTop: '1px solid #F0E8F5' }}>
+          <div className="mb-2"><Tag tag="parent" isEn={isEn} /></div>
           <p className="text-xs mb-2" style={{ color: '#FF6FB5' }}>{question.parentField.label}</p>
           <textarea
             value={parentValue || ''}

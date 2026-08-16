@@ -2,7 +2,7 @@ import React from 'react';
 import QuestionInput from './QuestionInput';
 import { useLanguage } from '@/components/LanguageContext';
 
-function Tag({ tag, isEn }) {
+export function Tag({ tag, isEn }) {
   if (tag === 'together') {
     return (
       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-[20px] text-white text-xs font-medium" style={{ background: 'linear-gradient(135deg, #4FC3E8, #6BB6E8)' }}>
@@ -14,6 +14,13 @@ function Tag({ tag, isEn }) {
     return (
       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-[20px] text-xs font-medium" style={{ background: '#FFD6EC', color: '#C4407A' }}>
         {isEn ? '🌟 Child answers' : '🌟 הילד/ה עונה'}
+      </span>
+    );
+  }
+  if (tag === 'parent') {
+    return (
+      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-[20px] text-xs font-medium" style={{ background: '#E8DFFB', color: '#6B46C1' }}>
+        {isEn ? '💜 Parent answers' : '💜 ההורה עונה'}
       </span>
     );
   }
