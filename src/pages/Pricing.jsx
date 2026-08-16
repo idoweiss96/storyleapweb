@@ -12,8 +12,6 @@ import { base44 } from '@/api/base44Client';
 import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
 import { trackEvent } from '@/lib/posthog';
 import PageMeta from '@/components/SEO/PageMeta';
-import QuickCheckIn from '@/components/pricing/QuickCheckIn';
-import FreeActivitiesHighlight from '@/components/pricing/FreeActivitiesHighlight';
 
 const PRICING_META = {
   he: { title: 'רכישת קרדיטים - סיפור מותאם אישית | StoryLeap', description: 'סיפור מותאם אישית לילד/ה שלכם, נשלח תוך 24 שעות. רכשו קרדיטים בקלות ובאמצעי תשלום מאובטח.' },
@@ -516,11 +514,6 @@ export default function Pricing() {
             {isHe ? 'תקבלו אותו כסיפור דיגיטלי, ישירות למייל שלכם' : "You'll receive it as a digital story, delivered straight to your email"}
           </p>
         </motion.div>
-      </div>
-
-      <div className="max-w-2xl mx-auto">
-        <QuickCheckIn />
-        <FreeActivitiesHighlight />
       </div>
 
       <div id="purchase-block" className="max-w-2xl mx-auto">
