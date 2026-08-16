@@ -6,17 +6,21 @@ import { base44 } from '@/api/base44Client';
 import { getPages } from './questionsConfig';
 import { useLanguage } from '@/components/LanguageContext';
 import QuestionCard from './QuestionCard';
+import ProgressBar from './ProgressBar';
 import { trackEvent } from '@/lib/posthog';
 
-export default function Questionnaire({ answers, setAnswers, storyId }) {
+export default function Questionnaire({ answers, setAnswers }) {
   const { lang } = useLanguage();
   const navigate = useNavigate();
   const pages = getPages(lang);
   const [pageIdx, setPageIdx] = useState(0);
   const [creating, setCreating] = useState(false);
   const [pageError, setPageError] = useState('');
+  const [contactEmail, setContactEmail] = useState(answers.contact_email || '');
+  const [contactPhone, setContactPhone] = useState(answers.contact_phone || '');
+  const [contactError, setContactError] = useState('');
   const page = pages[pageIdx];
-  const progress = ((pageIdx + 1) / pages.length) * 100;
+  const isLastPage = pageIdx === pages.length - 1;
   const isEn = lang === 'en';
 
   useEffect(() => {
@@ -58,32 +62,43 @@ export default function Questionnaire({ answers, setAnswers, storyId }) {
     setPageIdx(pageIdx - 1);
   };
 
+  const validateContactEmail = () => {
+    if (contactEmail && !/\S+@\S+\.\S+/.test(contactEmail)) {
+      setContactError(isEn ? 'Please enter a valid email' : 'נא למלא מייל תקין');
+    }
+  };
+
   const handleFinish = async () => {
     if (creating) return;
     if (!isPageValid()) { setPageError(pageErrorMsg); return; }
+    if (!contactEmail || !/\S+@\S+\.\S+/.test(contactEmail)) {
+      setContactError(isEn ? 'Please enter a valid email' : 'נא למלא מייל תקין');
+      return;
+    }
+    if (!contactPhone) {
+      setContactError(isEn ? 'Please enter a phone number' : 'נא למלא מספר טלפון');
+      return;
+    }
     setPageError('');
+    setContactError('');
     trackEvent('kita_questionnaire_completed');
     setCreating(true);
-    try { sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers, lang })); } catch (_) {}
+    const mergedAnswers = { ...answers, contact_email: contactEmail, contact_phone: contactPhone };
+    setAnswers(mergedAnswers);
+    try { sessionStorage.setItem('storyLeap_kitaAlefPending', JSON.stringify({ answers: mergedAnswers, lang })); } catch (_) {}
     try {
       const storyData = {
-        child_name: answers.name || '',
-        gender: answers.gender || '',
-        child_image_url: answers.photo || null,
-        answers,
+        child_name: mergedAnswers.name || '',
+        gender: mergedAnswers.gender || '',
+        child_image_url: mergedAnswers.photo || null,
+        answers: mergedAnswers,
         lang,
-        contact_email: answers.contact_email || '',
-        contact_phone: answers.contact_phone || '',
+        contact_email: contactEmail,
+        contact_phone: contactPhone,
       };
-      let id = storyId;
-      if (id) {
-        // A partial record already exists from the contact step — update it instead of duplicating.
-        await base44.entities.KitaAlefStory.update(id, storyData);
-      } else {
-        const saved = await base44.entities.KitaAlefStory.create({ ...storyData, content: null, story_link: null, payment_status: 'draft' });
-        id = saved.id;
-      }
-      const submitToSheet = () => base44.functions.invoke('submitKitaAlefAnswers', { answers, lang, story_id: id });
+      const saved = await base44.entities.KitaAlefStory.create({ ...storyData, content: null, story_link: null, payment_status: 'draft' });
+      const id = saved.id;
+      const submitToSheet = () => base44.functions.invoke('submitKitaAlefAnswers', { answers: mergedAnswers, lang, story_id: id });
       submitToSheet().catch(() => submitToSheet().catch((err) => console.error('submitKitaAlefAnswers failed twice', err)));
       navigate(`/KitaAlefStory?story_id=${id}&lang=${lang}`);
     } catch (e) {
@@ -96,24 +111,7 @@ export default function Questionnaire({ answers, setAnswers, storyId }) {
   return (
     <div className="min-h-[75vh] rounded-3xl px-4 py-6" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
       <div className="max-w-lg mx-auto">
-        {/* Progress bar */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium" style={{ color: '#4FC3E8' }}>
-              {isEn ? `Page ${pageIdx + 1} of ${pages.length}` : `עמוד ${pageIdx + 1} מתוך ${pages.length}`}
-            </span>
-            <span className="text-sm font-semibold" style={{ color: '#FF6FB5' }}>{page.title}</span>
-          </div>
-          <div className="h-2.5 bg-white rounded-full overflow-hidden shadow-inner">
-            <motion.div
-              className="h-full rounded-full"
-              style={{ background: 'linear-gradient(to left, #4FC3E8, #FF6FB5)' }}
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ type: 'spring', stiffness: 200, damping: 30 }}
-            />
-          </div>
-        </div>
+        <ProgressBar step={pageIdx + 2} total={pages.length + 1} label={page.title} isEn={isEn} />
 
         {/* Questions */}
         <AnimatePresence mode="wait">
@@ -135,6 +133,45 @@ export default function Questionnaire({ answers, setAnswers, storyId }) {
           </motion.div>
         </AnimatePresence>
 
+        {/* Contact details — collected at the end of the questionnaire, right before story creation */}
+        {isLastPage && (
+          <div className="mt-4 rounded-3xl border bg-white p-4 space-y-3" style={{ borderColor: '#F0E8F5', boxShadow: '0 4px 20px rgba(255,111,181,0.08), 0 2px 10px rgba(79,195,232,0.06)' }}>
+            <p className="text-sm font-medium" style={{ color: '#1A1A6E' }}>
+              {isEn ? 'Almost done! Where should we send the story?' : 'עוד רגע וסיימנו! לאן נשלח את הסיפור?'}
+            </p>
+            <div>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: '#1A1A6E' }}>
+                {isEn ? 'Email' : 'מייל'} <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                value={contactEmail}
+                onChange={(e) => { setContactEmail(e.target.value); setContactError(''); }}
+                onBlur={validateContactEmail}
+                placeholder="your@email.com"
+                className="w-full px-4 py-3 rounded-[10px] border bg-kita-input-bg focus:outline-none"
+                style={{ borderColor: '#F0E8F5' }}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: '#1A1A6E' }}>
+                {isEn ? 'Phone' : 'טלפון'} <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="tel"
+                value={contactPhone}
+                onChange={(e) => { setContactPhone(e.target.value); setContactError(''); }}
+                placeholder="050-0000000"
+                className="w-full px-4 py-3 rounded-[10px] border bg-kita-input-bg focus:outline-none"
+                style={{ borderColor: '#F0E8F5' }}
+              />
+            </div>
+            {contactError && (
+              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">{contactError}</p>
+            )}
+          </div>
+        )}
+
         {/* Error */}
         {pageError && (
           <div className="mt-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">
@@ -154,7 +191,7 @@ export default function Questionnaire({ answers, setAnswers, storyId }) {
             </button>
           ) : <div />}
 
-          {pageIdx < pages.length - 1 ? (
+          {!isLastPage ? (
             <button
               onClick={goNext}
               className="px-6 py-3 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
