@@ -7,7 +7,7 @@ import { getIntroQuestions, getPages } from './questionsConfig';
 
 // This is the questionnaire's intro step: name/gender/strength questions for the child.
 // Email/phone are collected later, at the end of the questionnaire, right before story creation.
-export default function ContactScreen({ answers, setAnswers, onSubmit }) {
+export default function ContactScreen({ answers, setAnswers, onSubmit, onBack }) {
   const { lang } = useLanguage();
   const isEn = lang === 'en';
   const introQuestions = getIntroQuestions(lang);
@@ -49,6 +49,17 @@ export default function ContactScreen({ answers, setAnswers, onSubmit }) {
         >
           {isEn ? 'Continue →' : 'להמשך ←'}
         </button>
+
+        {onBack && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="w-full py-2.5 rounded-[14px] bg-white border font-medium hover:opacity-80 transition-opacity"
+            style={{ borderColor: '#B8EBF7', color: '#4FC3E8' }}
+          >
+            {isEn ? '← Back' : '→ חזור'}
+          </button>
+        )}
       </motion.form>
     </div>
   );

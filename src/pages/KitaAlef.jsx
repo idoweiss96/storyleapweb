@@ -15,9 +15,16 @@ export default function KitaAlef() {
   return (
     <div>
       {step === 'home' && <HomeScreen onStart={() => setStep('contact')} />}
-      {step === 'contact' && <ContactScreen answers={answers} setAnswers={setAnswers} onSubmit={() => setStep('questionnaire')} />}
+      {step === 'contact' && (
+        <ContactScreen
+          answers={answers}
+          setAnswers={setAnswers}
+          onSubmit={() => setStep('questionnaire')}
+          onBack={() => setStep('home')}
+        />
+      )}
       {step === 'questionnaire' && (
-        <Questionnaire answers={answers} setAnswers={setAnswers} />
+        <Questionnaire answers={answers} setAnswers={setAnswers} onBackToContact={() => setStep('contact')} />
       )}
     </div>
   );

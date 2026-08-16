@@ -9,7 +9,7 @@ import QuestionCard from './QuestionCard';
 import ProgressBar from './ProgressBar';
 import { trackEvent } from '@/lib/posthog';
 
-export default function Questionnaire({ answers, setAnswers }) {
+export default function Questionnaire({ answers, setAnswers, onBackToContact }) {
   const { lang } = useLanguage();
   const navigate = useNavigate();
   const pages = getPages(lang);
@@ -59,6 +59,10 @@ export default function Questionnaire({ answers, setAnswers }) {
 
   const goPrev = () => {
     setPageError('');
+    if (pageIdx === 0) {
+      if (onBackToContact) onBackToContact();
+      return;
+    }
     setPageIdx(pageIdx - 1);
   };
 
@@ -181,15 +185,13 @@ export default function Questionnaire({ answers, setAnswers }) {
 
         {/* Navigation */}
         <div className="flex justify-between mt-8 gap-3">
-          {pageIdx > 0 ? (
-            <button
-              onClick={goPrev}
-              className="px-6 py-3 rounded-[14px] bg-white border font-medium hover:opacity-80 transition-opacity"
-              style={{ borderColor: '#B8EBF7', color: '#4FC3E8' }}
-            >
-              {isEn ? '← Back' : '→ חזור'}
-            </button>
-          ) : <div />}
+          <button
+            onClick={goPrev}
+            className="px-6 py-3 rounded-[14px] bg-white border font-medium hover:opacity-80 transition-opacity"
+            style={{ borderColor: '#B8EBF7', color: '#4FC3E8' }}
+          >
+            {isEn ? '← Back' : '→ חזור'}
+          </button>
 
           {!isLastPage ? (
             <button
