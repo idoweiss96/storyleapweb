@@ -249,6 +249,12 @@ function LayoutInner({ children, currentPageName }) {
                   </Link>
                 );
               })}
+              {!user && (
+                <Link to={navPathFor('MyStories', location.pathname, lang)}
+                  className="text-xs text-slate-400 underline hover:text-slate-600 px-3">
+                  {t('hero_cta_mine')}
+                </Link>
+              )}
             </nav>
 
             <div className="flex items-center gap-2">

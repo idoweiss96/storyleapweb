@@ -11,6 +11,16 @@ import { navPathFor } from '@/lib/marketingRoutes';
 import StoryGallery from '@/components/home/StoryGallery';
 import { trackEvent } from '@/lib/posthog';
 
+const CHIP_ITEMS = [
+  { key: 'chip_new', icon: '🌱', className: 'bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100 hover:border-amber-300' },
+  { key: 'chip_fear', icon: '🌙', className: 'bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100 hover:border-violet-300' },
+  { key: 'chip_moving', icon: '🏠', className: 'bg-sky-50 border-sky-200 text-sky-800 hover:bg-sky-100 hover:border-sky-300' },
+  { key: 'chip_friendship', icon: '🤝', className: 'bg-pink-50 border-pink-200 text-pink-800 hover:bg-pink-100 hover:border-pink-300' },
+  { key: 'chip_separation', icon: '👋', className: 'bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100 hover:border-teal-300' },
+  { key: 'chip_emotions', icon: '💗', className: 'bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100 hover:border-rose-300' },
+  { key: 'chip_other', icon: '✨', className: 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300' },
+];
+
 function TestimonialsCarousel() {
   const { t } = useLanguage();
   const [current, setCurrent] = useState(0);
@@ -136,21 +146,19 @@ export default function Home() {
                 <span className="font-bold">{lang === 'he' ? '₪70' : '$25'}</span>
               </div>
             </div>
-            <div className="mb-4">
+            <div className="mb-4 rounded-2xl bg-white/75 shadow-lg shadow-slate-200/60 px-4 py-6 md:px-8 md:py-8">
               <p className="text-base font-semibold text-slate-700 mb-4">{t('hero_chips_title')}</p>
-              <div className="flex flex-wrap items-center justify-center gap-2 max-w-xl mx-auto">
-                {['chip_new', 'chip_fear', 'chip_moving', 'chip_friendship', 'chip_separation', 'chip_emotions', 'chip_other'].map((key) => (
-                  <Link key={key} to={key === 'chip_moving' ? '/MovingHouse' : `${createPageUrl('CreateStory')}?from=${key}`}>
-                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-700 text-sm font-medium hover:border-slate-400 hover:bg-slate-50 transition-colors">
-                      {t(key)}
+              <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-xl mx-auto">
+                {CHIP_ITEMS.map((chip) => (
+                  <Link key={chip.key} to={chip.key === 'chip_moving' ? '/MovingHouse' : `${createPageUrl('CreateStory')}?from=${chip.key}`}>
+                    <span className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 hover:scale-105 ${chip.className}`}>
+                      <span>{chip.icon}</span>
+                      {t(chip.key)}
                     </span>
                   </Link>
                 ))}
               </div>
             </div>
-            <Link to={createPageUrl('MyStories')} className="inline-block text-sm text-slate-400 underline hover:text-slate-600">
-              {t('hero_cta_mine')}
-            </Link>
           </motion.div>
         </div>
       </section>
