@@ -97,7 +97,7 @@ const translations = {
     hero_badge: 'Magic stories for children', hero_title1: 'Every child deserves', hero_title2: 'their own story',
     hero_subtitle: "Empowering children's emotional growth through personalized stories.\nEvery story is a unique adventure written just for them.",
     hero_cta_new: 'Create a New Story', hero_cta_mine: 'My Stories',
-    feature1_title: 'Personalized Stories', feature1_desc: 'Every story is written especially for your child with the name and characters you chose',
+    feature1_title: 'Personalized for Your Child', feature1_desc: 'A story, activities, and parent guidance, all built around what your child is going through right now',
     feature2_title: 'Empowerment', feature2_desc: 'Helping children identify and talk about their feelings so they feel seen, safe, and understood',
     feature3_title: 'Emotional Connection', feature3_desc: 'Creating moments that bring children and loved ones closer, encouraging deep conversations and bonding',
     feature4_title: 'Guided conversations', feature4_desc: 'Every story includes parent guiding questions to open up real emotional talks',
