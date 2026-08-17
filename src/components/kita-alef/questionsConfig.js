@@ -153,7 +153,7 @@ const PAGES_HE = [
     id: 6,
     title: 'תמונות',
     questions: [
-      { key: 'photo', question: 'תמונה שלך', type: 'photo', required: true, consent: true },
+      { key: 'photo', tag: 'child', question: 'תמונה שלך', type: 'photo', required: true, consent: true },
       { key: 'family_photos', tag: 'together', question: 'תמונות של בני משפחה (אופציונלי)', type: 'family_photos' },
     ]
   },
@@ -314,7 +314,7 @@ const PAGES_EN = [
     id: 6,
     title: 'Photos',
     questions: [
-      { key: 'photo', question: 'Your photo', type: 'photo', required: true, consent: true },
+      { key: 'photo', tag: 'child', question: 'Your photo', type: 'photo', required: true, consent: true },
       { key: 'family_photos', tag: 'together', question: 'Photos of family members (optional)', type: 'family_photos' },
     ]
   },
