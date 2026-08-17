@@ -7,6 +7,7 @@ import { getPages } from './questionsConfig';
 import { useLanguage } from '@/components/LanguageContext';
 import QuestionCard from './QuestionCard';
 import ProgressBar from './ProgressBar';
+import SaveScreen from './SaveScreen';
 import { trackEvent } from '@/lib/posthog';
 
 export default function Questionnaire({ answers, setAnswers, onBackToContact }) {
@@ -19,6 +20,8 @@ export default function Questionnaire({ answers, setAnswers, onBackToContact }) 
   const [contactEmail, setContactEmail] = useState(answers.contact_email || '');
   const [contactPhone, setContactPhone] = useState(answers.contact_phone || '');
   const [contactError, setContactError] = useState('');
+  const [savedStoryId, setSavedStoryId] = useState(null);
+  const [showSaveStep, setShowSaveStep] = useState(false);
   const page = pages[pageIdx];
   const isLastPage = pageIdx === pages.length - 1;
   const isEn = lang === 'en';
@@ -104,13 +107,26 @@ export default function Questionnaire({ answers, setAnswers, onBackToContact }) 
       const id = saved.id;
       const submitToSheet = () => base44.functions.invoke('submitKitaAlefAnswers', { answers: mergedAnswers, lang, story_id: id });
       submitToSheet().catch(() => submitToSheet().catch((err) => console.error('submitKitaAlefAnswers failed twice', err)));
-      navigate(`/KitaAlefStory?story_id=${id}&lang=${lang}`);
+      setSavedStoryId(id);
+      setShowSaveStep(true);
     } catch (e) {
       navigate('/KitaAlefStory');
     } finally {
       setCreating(false);
     }
   };
+
+  if (showSaveStep) {
+    return (
+      <SaveScreen
+        childName={answers.name || ''}
+        email={contactEmail}
+        lang={lang}
+        storyId={savedStoryId}
+        onContinue={() => navigate(`/KitaAlefStory?story_id=${savedStoryId}&lang=${lang}`)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-[75vh] rounded-3xl px-4 py-6" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
