@@ -47,14 +47,11 @@ Deno.serve(async (req) => {
 
     const isHebrew = /[\u0590-\u05FF]/.test(story.child_name || '');
 
-    // Mark as generating
-    await base44.asServiceRole.entities.Story.update(story_id, { payment_status: 'story_generating' });
-
-    // 1. Generate story content with AI
-    const storyContent = await generateStoryWithAI(story, base44.asServiceRole);
-
-    // 2. Save content + mark story ready
-    await base44.asServiceRole.entities.Story.update(story_id, { content: storyContent, payment_status: 'story_ready' });
+    // הסיפור נוצר בפייפליין החיצוני (Gemini + Grok, איורים, ספר), לא כאן.
+    // בעבר נוצר כאן טקסט מקביל ב-InvokeLLM ו-payment_status הוקפץ ל-'story_ready',
+    // כך שהכרטיס הכריז "מוכן" בזמן שהספר האמיתי עוד נבנה — וה-content שנוצר
+    // לא הוצג בשום מקום. הסיגנל האמיתי למוכנות הוא story_link, שמגיע מהגיליון.
+    // generateStoryWithAI נשארה בקובץ ולא נמחקה, כדי שאפשר יהיה לחזור אחורה בקלות.
 
     // 3. Update order status to story_ready
     if (order_id) {
