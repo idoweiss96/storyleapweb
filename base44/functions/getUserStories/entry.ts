@@ -1,5 +1,30 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
+const EDIT_SHEET_ID = '1dPdK1zPcDSHOntvl5PYcn-BFyc6qu-8WGojHJ9Y7fiQ';
+
+// {order_id: status} מהשורה האחרונה של כל הזמנה בלשונית edits.
+// כישלון כאן לא מפיל את הרשימה — במקרה הגרוע הכרטיס לא יראה 'מתעדכן'.
+async function fetchEditStatuses(base44) {
+  try {
+    const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${EDIT_SHEET_ID}/values/edits!A2:H`,
+      { headers: { 'Authorization': `Bearer ${accessToken}` } }
+    );
+    if (!res.ok) return {};
+    const rows = (await res.json()).values || [];
+    const byOrder = {};
+    // סריקה קדימה — השורה האחרונה של כל הזמנה גוברת
+    for (const r of rows) {
+      const oid = (r[0] || '').trim();
+      if (oid) byOrder[oid] = { status: (r[3] || '').trim(), story_url: r[6] || '' };
+    }
+    return byOrder;
+  } catch (_) {
+    return {};
+  }
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
