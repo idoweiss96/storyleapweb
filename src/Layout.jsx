@@ -18,6 +18,16 @@ const ORG_SCHEMA = {
   name: 'StoryLeap',
   url: 'https://storyleapai.com',
   logo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg',
+  founder: [
+    { '@type': 'Person', name: 'Lital Plotkin', jobTitle: 'Co-Founder & Product Lead' },
+    { '@type': 'Person', name: 'Omer Karadi', jobTitle: 'Co-Founder & CEO' },
+    { '@type': 'Person', name: 'Ido Weiss', jobTitle: 'Co-Founder & Tech Lead' },
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    url: 'https://storyleapai.com/Contact',
+  },
 };
 
 const WEBSITE_SCHEMA = {
