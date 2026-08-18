@@ -152,7 +152,7 @@ export default function Vision() {
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} className="pb-12">
-      <PageMeta title={`${c.pageTitle} | StoryLeap`} description={c.pageTagline} />
+      <PageMeta title="About StoryLeap | Family Emotional Wellbeing" description="StoryLeap helps parents and children navigate emotional moments together through personalized activities, stories, practical guidance and shared experiences." />
       <BreadcrumbSchema items={[{ name: c.pageTitle, path: location.pathname }]} />
 
       {/* HERO */}
