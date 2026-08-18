@@ -135,7 +135,13 @@ export default function EditStory() {
     return (
       <div className="max-w-md mx-auto text-center py-16">
         <ImageOff className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-        <p className="text-slate-500">{isHe ? 'לא הצלחנו למצוא את הסיפור לעריכה' : "We couldn't find this story to edit"}</p>
+        <p className="text-slate-500">
+          {loadError === 'no_pages'
+            ? (isHe
+                ? 'הסיפור הזה נוצר לפני שאפשרות העריכה נוספה, ולכן אי אפשר לערוך אותו. כתבו לנו ונשמח לעזור.'
+                : 'This story was created before editing was available. Contact us and we will help.')
+            : (isHe ? 'לא הצלחנו למצוא את הסיפור לעריכה' : "We couldn't find this story to edit")}
+        </p>
       </div>
     );
   }
