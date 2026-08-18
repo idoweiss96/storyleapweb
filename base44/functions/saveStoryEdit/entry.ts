@@ -60,7 +60,8 @@ export default async function(req) {
       return Response.json({ error: 'No matching pages found for this order' }, { status: 400 });
     }
 
-    const nowIso = new Date().toISOString();
+    // אותו פורמט שהפייפליין כותב, כדי ששתי המערכות ייראו זהות בגיליון
+    const nowIso = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const data = [];
     applicable.forEach((p) => {
       const rowNum = rowByPage[p.page];
@@ -73,7 +74,7 @@ export default async function(req) {
       {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data }),
+        body: JSON.stringify({ valueInputOption: 'RAW', data }),
       }
     );
     if (!updateRes.ok) {
@@ -86,7 +87,7 @@ export default async function(req) {
     const editedPages = applicable.map((p) => p.page);
     const editRow = [order_id, product, language, 'edit', nowIso, '', '', ''];
     const appendRes = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${EDIT_SHEET_ID}/values/${encodeURIComponent(EDITS_SHEET)}!A1:append?valueInputOption=USER_ENTERED`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${EDIT_SHEET_ID}/values/${encodeURIComponent(EDITS_SHEET)}!A1:append?valueInputOption=RAW`,
       {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
