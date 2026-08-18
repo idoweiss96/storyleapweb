@@ -14,6 +14,12 @@ export default async function(req) {
     const { order_id, product = 'stories', language = 'he' } = await req.json();
     if (!order_id) return Response.json({ error: 'order_id required' }, { status: 400 });
 
+    // הסיפור חייב להיות של המשתמש המחובר. בלי הבדיקה הזו כל משתמש רשום
+    // יכול לקרוא ולדרוס סיפור של משפחה אחרת לפי order_id בלבד.
+    const owned = await base44.asServiceRole.entities.Story.filter({ order_id });
+    const mine = owned.find((s) => s.contact_email === user.email || s.created_by_id === user.id);
+    if (!mine) return Response.json({ error: 'Not found' }, { status: 404 });
+
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
     const res = await fetch(
