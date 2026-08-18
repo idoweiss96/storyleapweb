@@ -16,6 +16,7 @@ const ORG_SCHEMA = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'StoryLeap',
+  description: 'StoryLeap helps families navigate the emotional moments of childhood, including starting school, moving house, a new sibling, a parent traveling, and bedtime fears, with guidance for parents, tools and activities for children, and personalized stories that bring the two together.',
   url: 'https://storyleapai.com',
   logo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg',
   sameAs: [
@@ -39,6 +40,7 @@ const WEBSITE_SCHEMA = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'StoryLeap',
+  description: 'StoryLeap helps families navigate the emotional moments of childhood, including starting school, moving house, a new sibling, a parent traveling, and bedtime fears, with guidance for parents, tools and activities for children, and personalized stories that bring the two together.',
   url: 'https://storyleapai.com',
 };
 import { LanguageProvider, useLanguage } from './components/LanguageContext';

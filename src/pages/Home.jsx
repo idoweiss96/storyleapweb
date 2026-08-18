@@ -13,8 +13,8 @@ import { trackEvent } from '@/lib/posthog';
 import PageMeta from '@/components/SEO/PageMeta';
 
 const HOME_META = {
-  en: { title: 'StoryLeap AI - Personalized Emotional Stories for Kids', description: 'StoryLeap creates personalized, AI-powered stories for your child that help them face fears and emotional challenges.' },
-  he: { title: 'StoryLeap AI - סיפורים מותאמים אישית לילדים', description: 'StoryLeap - צרו סיפורים מקסימים ומותאמים אישית לילדכם באמצעות בינה מלאכותית. סיפורים שעוזרים להתמודד עם חששות ואתגרים רגשיים.' },
+  en: { title: "StoryLeap - Helping Families Through Childhood's Moments", description: 'StoryLeap helps families navigate the emotional moments of childhood, with guidance for parents, tools and activities for children, and personalized stories.' },
+  he: { title: 'סטוריליפ - מלווים משפחות ברגעים הרגשיים של הילדות', description: 'סטוריליפ מלווה משפחות ברגעים הרגשיים של הילדות, בעזרת הכוונה להורים, כלים ופעילויות לילדים, וסיפורים מותאמים אישית.' },
 };
 
 const CHIP_ITEMS = [
