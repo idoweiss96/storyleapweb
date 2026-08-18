@@ -87,16 +87,23 @@ export default function KitaAlefStory() {
 
       // Priority 4: LanguageContext (via resolvedLang || contextLang at render)
 
-      const currentUser = await base44.auth.me();
+      // Fetching the current user must not block the checkout/price screen for guests —
+      // login is only required later, at the actual payment step (matches Pricing page).
+      let currentUser = null;
       try {
-        const res = await base44.functions.invoke('getUserCredits', {});
-        if (res.data?.credits !== undefined) {
-          currentUser.credits = res.data.credits;
+        currentUser = await base44.auth.me();
+        try {
+          const res = await base44.functions.invoke('getUserCredits', {});
+          if (res.data?.credits !== undefined) {
+            currentUser.credits = res.data.credits;
+          }
+        } catch (_) {}
+        if (currentUser.credits === undefined || currentUser.credits === null) {
+          await base44.auth.updateMe({ credits: 0 });
+          currentUser.credits = 0;
         }
-      } catch (_) {}
-      if (currentUser.credits === undefined || currentUser.credits === null) {
-        await base44.auth.updateMe({ credits: 0 });
-        currentUser.credits = 0;
+      } catch (_) {
+        currentUser = null;
       }
       setUser(currentUser);
 
@@ -107,7 +114,7 @@ export default function KitaAlefStory() {
         if (restored) setStep('credits_check');
       } else if (localContactEmail) {
         // Contact details were already collected at the start of the questionnaire —
-        // skip straight to the credits step instead of asking for them again.
+        // skip straight to the checkout/price step (no login required) instead of asking again.
         setStep('credits_check');
       }
     } catch (e) {
@@ -300,7 +307,7 @@ export default function KitaAlefStory() {
 
       <AnimatePresence mode="wait">
         {/* CREDITS CHECK */}
-        {step === 'credits_check' && user && (
+        {step === 'credits_check' && (
           <motion.div key="credits" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <Card className="border-0 shadow-xl" style={{ boxShadow: '0 4px 30px rgba(255,111,181,0.12)' }}>
               <CardContent className="p-8">

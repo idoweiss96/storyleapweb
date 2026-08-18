@@ -56,7 +56,7 @@ export default function MyStories() {
           const refreshedRes = await base44.functions.invoke('getUserStories', {});
           const refreshedStories = refreshedRes.data?.stories || [];
           setStories(refreshedStories);
-          const pendingStory = refreshedStories.find(s => s.payment_status === 'pending_payment');
+          const pendingStory = refreshedStories.find(s => s.payment_status === 'draft');
           setCreditsAddedPopup({ added: 110, total: res.data.new_total, pendingStory });
         } else {
           toast.error(lang === 'he' ? 'שגיאה בעיבוד התשלום' : 'Payment processing error');
@@ -113,7 +113,8 @@ export default function MyStories() {
     }
     setActivatingStoryId(story.id);
     try {
-      const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: story.id });
+      const fnName = story.source === 'kitaalef' ? 'submitKitaAlefStoryWithCredits' : 'submitStoryWithCredits';
+      const result = await base44.functions.invoke(fnName, { story_id: story.id, lang: story.lang });
       if (result.data?.success) {
         const newCredits = result.data.credits_remaining;
         await base44.auth.updateMe({ credits: newCredits });
@@ -240,7 +241,7 @@ export default function MyStories() {
                           </a>
                         )}
                       </div>
-                    ) : story.payment_status === 'pending_payment' ? (
+                    ) : story.payment_status === 'draft' ? (
                       <div className="space-y-2">
                         <Badge className="bg-red-100 text-red-700">
                           <CreditCard className="w-3 h-3 ml-1" />{lang === 'he' ? 'ממתין לתשלום' : 'Pending payment'}
@@ -312,7 +313,7 @@ export default function MyStories() {
                         <a href={selectedStory.story_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet-600 hover:text-violet-800 font-medium">
                           <ExternalLink className="w-4 h-4" />{t('view_story')}
                         </a>
-                      ) : selectedStory.payment_status === 'pending_payment' ? (
+                      ) : selectedStory.payment_status === 'draft' ? (
                         <div className="flex items-center gap-3 flex-wrap">
                           <span className="text-red-600 flex items-center gap-1">
                             <CreditCard className="w-4 h-4" />{lang === 'he' ? 'ממתין לתשלום' : 'Pending payment'}
@@ -410,7 +411,8 @@ export default function MyStories() {
                       setCreditsAddedPopup(null);
                       setActivatingStoryId(story.id);
                       try {
-                        const result = await base44.functions.invoke('submitStoryWithCredits', { story_id: story.id });
+                        const fnName = story.source === 'kitaalef' ? 'submitKitaAlefStoryWithCredits' : 'submitStoryWithCredits';
+                        const result = await base44.functions.invoke(fnName, { story_id: story.id, lang: story.lang });
                         if (result.data?.success) {
                           const newCredits = result.data.credits_remaining;
                           await base44.auth.updateMe({ credits: newCredits });
