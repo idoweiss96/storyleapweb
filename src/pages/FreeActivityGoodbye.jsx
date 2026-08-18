@@ -2,6 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { attachEmailOptIn } from '@/lib/freeActivityEmailOptIn';
 import { useLanguage } from '@/components/LanguageContext';
 import { GOODBYE_RITUAL_CONTENT, GOODBYE_PARENT_LINES_EN, GOODBYE_CHILD_LINES_EN } from '@/lib/goodbyeRitualContent';
+import PageMeta from '@/components/SEO/PageMeta';
+
+const GOODBYE_META = {
+  en: { title: 'Goodbye Ritual for Kids | Free Separation Activity | StoryLeap', description: "Build a calm, personalized goodbye routine for school drop-off. A free interactive tool from StoryLeap to help kids handle separation anxiety." },
+  he: { title: 'טקס הפרידה שלנו | פעילות חינמית להתמודדות עם פרידה | StoryLeap', description: 'בונים יחד טקס פרידה קבוע ומרגיע לשער בית הספר. כלי אינטראקטיבי וחינמי מבית StoryLeap שעוזר לילדים להתמודד עם קושי בפרידה.' },
+};
 
 const LOGO_URL = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg';
 
@@ -803,6 +809,7 @@ export default function FreeActivityGoodbye() {
 
   return (
     <div className="fa-goodbye" dir={isHe ? 'rtl' : 'ltr'}>
+      <PageMeta title={GOODBYE_META[isHe ? 'he' : 'en'].title} description={GOODBYE_META[isHe ? 'he' : 'en'].description} />
       <style dangerouslySetInnerHTML={{ __html: STYLE }} />
       <div key={lang} ref={ref} dangerouslySetInnerHTML={{ __html: buildBodyHtml(T) }} />
     </div>

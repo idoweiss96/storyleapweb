@@ -2,6 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { attachEmailOptIn } from '@/lib/freeActivityEmailOptIn';
 import { useLanguage } from '@/components/LanguageContext';
 import { MORNING_EVENING_CONTENT } from '@/lib/morningEveningContent';
+import PageMeta from '@/components/SEO/PageMeta';
+
+const MORNING_EVENING_META = {
+  en: { title: 'Morning & Evening Routine Builder | Free Printable for Kids | StoryLeap', description: 'Create a personalized, printable morning and evening routine board with your child, building independence step by step. A free tool from StoryLeap.' },
+  he: { title: 'בניית לוח שגרה לבוקר ולערב | כלי חינמי להדפסה | StoryLeap', description: 'בונים יחד עם הילד/ה לוח שגרה אישי ומודפס לבוקר ולערב, שמעודד עצמאות בשלבים. כלי חינמי מבית StoryLeap.' },
+};
 
 const LOGO_URL = 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg';
 
@@ -878,6 +884,7 @@ export default function FreeActivityMorningEvening() {
 
   return (
     <div className="fa-me" dir={isHe ? 'rtl' : 'ltr'}>
+      <PageMeta title={MORNING_EVENING_META[isHe ? 'he' : 'en'].title} description={MORNING_EVENING_META[isHe ? 'he' : 'en'].description} />
       <style dangerouslySetInnerHTML={{ __html: STYLE }} />
       <div key={lang} ref={ref} dangerouslySetInnerHTML={{ __html: BODY_HTML }} />
     </div>

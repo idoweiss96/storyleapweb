@@ -11,6 +11,12 @@ import SupportsScreen from '@/components/feelings-map/screens/SupportsScreen';
 import PowerScreen from '@/components/feelings-map/screens/PowerScreen';
 import ActionScreen from '@/components/feelings-map/screens/ActionScreen';
 import SummaryScreen from '@/components/feelings-map/screens/SummaryScreen';
+import PageMeta from '@/components/SEO/PageMeta';
+
+const FEELINGS_MAP_META = {
+  en: { title: 'Feelings Map | Emotional Check-In Activity for Kids | StoryLeap', description: "A guided follow-up activity to help your child name their feelings, notice body sensations, and choose a helpful next step after their StoryLeap story." },
+  he: { title: 'מפת הרגשות | פעילות מעקב רגשי לילדים | StoryLeap', description: 'פעילות המשך מודרכת שעוזרת לילד/ה לזהות רגשות, לשים לב לתחושות בגוף ולבחור צעד הבא מועיל, בהמשך לסיפור מ-StoryLeap.' },
+};
 
 const INITIAL_STATE = {
   emotions: [], emotionCustom: '', bodyFeelings: [], storyCards: [], storyText: '',
@@ -67,6 +73,7 @@ export default function FeelingsMap() {
   return (
     <div dir={isEn ? 'ltr' : 'rtl'} className="min-h-screen" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
       <div className="max-w-lg mx-auto px-4 py-6">
+        <PageMeta title={FEELINGS_MAP_META[isEn ? 'en' : 'he'].title} description={FEELINGS_MAP_META[isEn ? 'en' : 'he'].description} />
         <ProgressDots screen={screen} />
         <AnimatePresence mode="wait">
           <motion.div

@@ -2,6 +2,12 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useLanguage } from "@/components/LanguageContext";
 import { LITTLE_HEART_CONTENT } from "@/lib/littleHeartContent";
+import PageMeta from "@/components/SEO/PageMeta";
+
+const LITTLE_HEART_META = {
+  en: { title: "A Little Heart from Home | Free Printable Keepsake Card | StoryLeap", description: "Create a personalized letter, photo card, or drawing your child can carry to school for comfort. A free printable keepsake tool from StoryLeap." },
+  he: { title: "לב קטן מהבית | כרטיס פרידה חינמי להדפסה | StoryLeap", description: "יוצרים יחד מכתב, כרטיס עם תמונה או ציור שהילד/ה יכולים לקחת איתם לבית הספר לתחושת ביטחון. כלי חינמי ומודפס מבית StoryLeap." },
+};
 
 /* ------------------------------------------------------------------ *
  *  StoryLeap — "A Little Heart from Home"
@@ -1000,6 +1006,7 @@ export default function FreeActivityLittleHeart() {
 
   return (
     <div className="sl" dir={isHe ? 'rtl' : 'ltr'}>
+      <PageMeta title={LITTLE_HEART_META[isHe ? 'he' : 'en'].title} description={LITTLE_HEART_META[isHe ? 'he' : 'en'].description} />
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
 
       <div className="sl-ui">

@@ -6,7 +6,7 @@ const translations = {
   he: {
     nav_home: 'בית', nav_new_story: 'סיפור חדש', nav_my_stories: 'הסיפורים שלי', nav_credits: 'קרדיטים', nav_admin: 'ניהול',
     login: 'התחברות',
-    footer: '© 2024 StoryLeap - סיפורי קסם לילדים שלכם ✨',
+    footer: '© 2024 StoryLeap - מלווים משפחות ברגעים הרגשיים של הילדות ✨',
     hero_badge: 'מלווים משפחות ברגעים של הילדות', hero_title1: 'כל ילד/ה ראויים', hero_title2: 'לסיפור משלהם',
     hero_subtitle: 'העצמת התפתחותם הרגשית של ילדים באמצעות סיפורים מותאמים אישית.\nכל סיפור הוא הרפתקה ייחודית שנכתבה במיוחד עבורם.',
     hero_cta_new: 'צרו סיפור חדש', hero_cta_mine: 'הסיפורים שלי',
@@ -93,7 +93,7 @@ const translations = {
   en: {
     nav_home: 'Home', nav_new_story: 'New Story', nav_my_stories: 'My Stories', nav_credits: 'Credits', nav_admin: 'Admin',
     login: 'Login',
-    footer: '© 2024 StoryLeap - Magic stories for your children ✨',
+    footer: "© 2024 StoryLeap - Helping families through childhood's moments ✨",
     hero_badge: "Helping families through childhood's moments", hero_title1: 'Every child deserves', hero_title2: 'their own story',
     hero_subtitle: "Empowering children's emotional growth through personalized stories.\nEvery story is a unique adventure written just for them.",
     hero_cta_new: 'Create a New Story', hero_cta_mine: 'My Stories',
