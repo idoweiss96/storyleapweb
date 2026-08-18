@@ -272,13 +272,9 @@ export default function MyStories() {
                           )}
                         </Button>
                       </div>
-                    ) : story.payment_status === 'paid' ? (
+                    ) : (
                        <Badge className="bg-amber-100 text-amber-700">
                           <Clock className="w-3 h-3 ml-1" />{lang === 'he' ? `${story.child_name} נמצא בהכנה` : t('my_story_pending')}
-                        </Badge>
-                      ) : (
-                       <Badge className="bg-slate-100 text-slate-500">
-                          <CreditCard className="w-3 h-3 ml-1" />{lang === 'he' ? 'טרם שולם' : 'Not paid yet'}
                         </Badge>
                       )}
                   </CardContent>
@@ -336,13 +332,9 @@ export default function MyStories() {
                             )}
                           </Button>
                         </div>
-                      ) : selectedStory.payment_status === 'paid' ? (
+                      ) : (
                         <span className="text-amber-600 flex items-center gap-1">
                           <Clock className="w-4 h-4" />{t('story_in_progress')}
-                        </span>
-                      ) : (
-                        <span className="text-slate-500 flex items-center gap-1">
-                          <CreditCard className="w-4 h-4" />{lang === 'he' ? 'טרם שולם' : 'Not paid yet'}
                         </span>
                       )}
                     </td>
