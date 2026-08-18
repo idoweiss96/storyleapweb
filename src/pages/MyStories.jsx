@@ -244,7 +244,7 @@ export default function MyStories() {
                         )}
                         {/* story_link מעיד שהסיפור עבר את הפייפליין. בלעדיו אין לו טקסטים
                             בגיליון העריכה, והמסך היה נפתח ריק. */}
-                        {!story.source && story.order_id && story.story_link && (
+                        {!story.source && story.order_id && story.story_link && !story.edit_pending && (
                           <a
                             href={`/EditStory?order_id=${story.order_id}`}
                             onClick={(e) => e.stopPropagation()}
