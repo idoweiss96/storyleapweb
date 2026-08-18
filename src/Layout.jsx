@@ -18,6 +18,11 @@ const ORG_SCHEMA = {
   name: 'StoryLeap',
   url: 'https://storyleapai.com',
   logo: 'https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg',
+  sameAs: [
+    'https://www.instagram.com/storyleap_il',
+    'https://www.facebook.com/share/17rHYFqgM6/',
+    'https://www.linkedin.com/company/storyleap-ai',
+  ],
   founder: [
     { '@type': 'Person', name: 'Lital Plotkin', jobTitle: 'Co-Founder & Product Lead' },
     { '@type': 'Person', name: 'Omer Karadi', jobTitle: 'Co-Founder & CEO' },
