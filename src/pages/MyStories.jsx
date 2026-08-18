@@ -228,7 +228,9 @@ export default function MyStories() {
                       <div className="space-y-2">
                         <Badge className="bg-green-100 text-green-700 gap-1">
                           <Sparkles className="w-3 h-3 text-amber-500" />
-                          {t('my_story_ready')}
+                          {story.edit_pending
+                            ? (lang === 'he' ? 'מתעדכן…' : 'Updating…')
+                            : t('my_story_ready')}
                         </Badge>
                         {story.source === 'kitaalef' && (
                           <a
