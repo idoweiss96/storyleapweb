@@ -1,5 +1,14 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
+function generateOrderId(lang) {
+  const now = new Date();
+  const y = String(now.getFullYear()).slice(-2);
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `PV-${lang === 'he' ? 'HE' : 'EN'}-${y}${m}${d}-${rand}`;
+}
+
 async function generatePreviewContent(story, base44ServiceRole) {
   const settingMap = { space: 'Space', forest: 'Magical Forest', castle: 'Castle', sports: 'Sports', real_life: 'Real Life' };
   const challengeMap = { fears: 'Fears', social_difficulty: 'Social Difficulty', changes: 'Changes', emotional_regulation: 'Emotional Regulation', separation_anxiety: 'Separation Anxiety', self_confidence: 'Self Confidence', sleep_issues: 'Sleep Issues', other: story.custom_challenge || 'a personal challenge' };
@@ -72,6 +81,7 @@ export default async function(req) {
       content,
       status: 'requested',
       lang: lang || null,
+      order_id: generateOrderId(lang || 'he'),
     });
 
     return Response.json({ success: true, preview_id: created.id });

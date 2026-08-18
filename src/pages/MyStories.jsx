@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star, Map, Mail } from 'lucide-react';
+import { BookOpen, Plus, Sparkles, ExternalLink, Clock, CreditCard, Star, Map, Mail, Pencil } from 'lucide-react';
 import { format } from 'date-fns';
 import StoryReadyNotification from '../components/story/StoryReadyNotification';
 import StoryDisplay from '../components/story/StoryDisplay';
@@ -238,6 +238,16 @@ export default function MyStories() {
                           >
                             <Map className="w-3 h-3" />
                             {lang === 'he' ? 'מפת הרגשות שלי' : 'My Feelings Map'}
+                          </a>
+                        )}
+                        {!story.source && story.order_id && (
+                          <a
+                            href={`/EditStory?order_id=${story.order_id}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex items-center justify-center gap-1 text-xs font-medium text-violet-600 hover:text-violet-700 bg-violet-50 hover:bg-violet-100 rounded-lg py-1.5 px-2 transition-colors"
+                          >
+                            <Pencil className="w-3 h-3" />
+                            {lang === 'he' ? 'ערוך סיפור' : 'Edit story'}
                           </a>
                         )}
                       </div>

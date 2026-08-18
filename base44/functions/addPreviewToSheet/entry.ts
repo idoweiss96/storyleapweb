@@ -38,7 +38,7 @@ function previewToRow(preview, lang) {
   return [
     createdDate,
     lang === 'he' ? 'עברית' : 'English',
-    '', // Order ID
+    preview.order_id || '',
     '', // User Email
     '', // Price
     '', // Credits Used

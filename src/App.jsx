@@ -31,6 +31,8 @@ import HeFAQ from './pages/HeFAQ';
 import FreeActivityGoodbye from './pages/FreeActivityGoodbye';
 import FreeActivityMorningEvening from './pages/FreeActivityMorningEvening';
 import FreeActivityLittleHeart from './pages/FreeActivityLittleHeart';
+import EditStory from './pages/EditStory';
+import StoryRedirect from './pages/StoryRedirect';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -105,6 +107,8 @@ const AuthenticatedApp = () => {
       <Route path="/FreeActivityGoodbye" element={<LayoutWrapper currentPageName="FreeActivityGoodbye"><FreeActivityGoodbye /></LayoutWrapper>} />
       <Route path="/FreeActivityMorningEvening" element={<LayoutWrapper currentPageName="FreeActivityMorningEvening"><FreeActivityMorningEvening /></LayoutWrapper>} />
       <Route path="/FreeActivityLittleHeart" element={<LayoutWrapper currentPageName="FreeActivityLittleHeart"><FreeActivityLittleHeart /></LayoutWrapper>} />
+      <Route path="/EditStory" element={<LayoutWrapper currentPageName="EditStory"><EditStory /></LayoutWrapper>} />
+      <Route path="/story/:order_id" element={<LayoutWrapper currentPageName="StoryRedirect"><StoryRedirect /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

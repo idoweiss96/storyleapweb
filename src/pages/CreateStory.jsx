@@ -20,6 +20,15 @@ import { trackEvent } from '@/lib/posthog';
 // registration/email-verification flow that continues in a new tab.
 const PENDING_FORM_KEY = 'storyLeap_pendingFormData';
 
+function generateOrderId(lang) {
+  const now = new Date();
+  const y = String(now.getFullYear()).slice(-2);
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `SL-${lang === 'he' ? 'HE' : 'EN'}-${y}${m}${d}-${rand}`;
+}
+
 // Steps: 'form' | 'credits_check' | 'success'
 export default function CreateStory() {
   const navigate = useNavigate();
@@ -160,6 +169,7 @@ export default function CreateStory() {
     reaction_type: formData.reactionType || null, hobbies: formData.hobbies || null,
     contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
     content: null, story_link: null, payment_status: paymentStatus, lang,
+    order_id: generateOrderId(lang),
   });
 
   // Step 1: User clicks "המשך ליצירת הספר"

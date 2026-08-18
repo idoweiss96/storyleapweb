@@ -39,7 +39,7 @@ function storyToRow(story, lang, userEmail, tags) {
   return [
     createdDate,
     lang === 'he' ? 'עברית' : 'English',
-    '', // Order ID — not tracked for credit-funded stories
+    story.order_id || '',
     userEmail || '',
     '', // Price — not tracked for credit-funded stories
     '', // Currency — not tracked for credit-funded stories
