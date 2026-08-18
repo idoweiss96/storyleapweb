@@ -20,6 +20,12 @@ export default async function(req) {
       return Response.json({ error: 'order_id and pages required' }, { status: 400 });
     }
 
+    // הסיפור חייב להיות של המשתמש המחובר. בלי הבדיקה הזו כל משתמש רשום
+    // יכול לקרוא ולדרוס סיפור של משפחה אחרת לפי order_id בלבד.
+    const owned = await base44.asServiceRole.entities.Story.filter({ order_id });
+    const mine = owned.find((s) => s.contact_email === user.email || s.created_by_id === user.id);
+    if (!mine) return Response.json({ error: 'Not found' }, { status: 404 });
+
     // Safety rule 1: an empty cell tells the pipeline "leave this page alone" — never send blank text.
     const nonEmpty = pages.filter((p) => p && Number.isInteger(p.page) && String(p.text || '').trim().length > 0);
     if (nonEmpty.length === 0) {
