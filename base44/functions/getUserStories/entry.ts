@@ -44,7 +44,19 @@ Deno.serve(async (req) => {
     const merged = [...userStories, ...userKitaStories]
       .sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
 
-    return Response.json({ stories: merged });
+    // מצב עריכה לכל סיפור: 'edit' או 'running' = הפייפליין בונה עכשיו
+    const editStatuses = await fetchEditStatuses(base44);
+    const withStatus = merged.map((s) => {
+      const e = s.order_id ? editStatuses[s.order_id] : null;
+      if (!e) return s;
+      return {
+        ...s,
+        edit_status: e.status,
+        edit_pending: e.status === 'edit' || e.status === 'running',
+      };
+    });
+
+    return Response.json({ stories: withStatus });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
