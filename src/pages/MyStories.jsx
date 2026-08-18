@@ -272,7 +272,11 @@ export default function MyStories() {
                           )}
                         </Button>
                       </div>
-                    ) : (
+                    ) : story.content ? (
+                       <Badge className="bg-blue-100 text-blue-700">
+                          <BookOpen className="w-3 h-3 ml-1" />{lang === 'he' ? 'הסיפור מוכן לקריאה' : 'Ready to read'}
+                        </Badge>
+                      ) : (
                        <Badge className="bg-amber-100 text-amber-700">
                           <Clock className="w-3 h-3 ml-1" />{lang === 'he' ? `${story.child_name} נמצא בהכנה` : t('my_story_pending')}
                         </Badge>
@@ -332,6 +336,10 @@ export default function MyStories() {
                             )}
                           </Button>
                         </div>
+                      ) : selectedStory.content ? (
+                        <span className="text-blue-600 flex items-center gap-1">
+                          <BookOpen className="w-4 h-4" />{lang === 'he' ? 'הסיפור מוכן לקריאה' : 'Ready to read'}
+                        </span>
                       ) : (
                         <span className="text-amber-600 flex items-center gap-1">
                           <Clock className="w-4 h-4" />{t('story_in_progress')}
