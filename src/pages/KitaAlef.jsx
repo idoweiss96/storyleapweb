@@ -20,7 +20,10 @@ export default function KitaAlef() {
 
   return (
     <div>
-      <PageMeta title="Starting First Grade | Emotional Preparation for Kids | StoryLeap" description="The move to first grade brings big feelings for kids and parents alike. StoryLeap offers guidance and a personalized story to help your child feel ready and supported." />
+      <PageMeta
+        title={lang === 'he' ? 'הכנה רגשית לכיתה א׳ | כלים להורים ולילדים | StoryLeap' : 'Starting First Grade | Emotional Preparation for Kids | StoryLeap'}
+        description={lang === 'he' ? 'המעבר לכיתה א׳ מביא איתו הרבה רגשות, גם להורים וגם לילדים. StoryLeap מציעה הדרכה וסיפור מותאם אישית שעוזרים לילד להרגיש מוכן ובטוח.' : 'The move to first grade brings big feelings for kids and parents alike. StoryLeap offers guidance and a personalized story to help your child feel ready and supported.'}
+      />
       <BreadcrumbSchema items={[{ name: lang === 'he' ? 'הכנה לכיתה א׳' : 'Getting Ready for First Grade', path: location.pathname }]} />
       {step === 'home' && <HomeScreen onStart={() => setStep('contact')} />}
       {step === 'contact' && (

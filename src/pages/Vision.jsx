@@ -16,6 +16,8 @@ const content = {
     heroBadge: '✨ StoryLeap',
     pageTitle: 'החזון שלנו',
     pageTagline: 'עולם שבו שום הורה לא מרגיש חסר ביטחון, ושום ילד לא מתמודד עם הקשיים שלו לבד.',
+    metaTitle: 'אודות StoryLeap | חזון, ערכים והצוות שמאחורי המיזם',
+    metaDescription: 'הכירו את החזון של StoryLeap, האמונות שמנחות אותנו והצוות שבונה כלים שעוזרים למשפחות לנווט רגעים רגשיים בילדות.',
     heroTitle: 'גיבורים קטנים, סיפורים גדולים',
     heroSubtitle: 'בימים הראשונים שלנו ראינו הורים שמחפשים דרך לעזור לילדים שלהם ברגעים קשים ורגשיים, ולא תמיד ידעו איך. ידענו שטכנולוגיה יכולה לעשות יותר, אז התחלנו לבנות את הגשר בין העולם הרגשי לבית.',
     heroMission: 'לא יצאנו לדרך הזו כי זיהינו הזדמנות עסקית טובה. התחלנו כי ראינו ילדים שזקוקים לעזרה, והורים שמשתוקקים לתת אותה, וידענו שאנחנו יכולים לבנות את הגשר ביניהם.',
@@ -76,6 +78,8 @@ const content = {
     heroBadge: '✨ StoryLeap',
     pageTitle: 'Our Vision',
     pageTagline: 'A world where no parent feels unsure, and no child faces their challenges alone.',
+    metaTitle: 'About StoryLeap | Family Emotional Wellbeing',
+    metaDescription: 'StoryLeap helps parents and children navigate emotional moments together through personalized activities, stories, practical guidance and shared experiences.',
     heroTitle: "Little heroes, big stories",
     heroSubtitle: 'In our early days, we saw parents searching for ways to help their children through hard, emotional moments, not always knowing how. We knew technology could do more, so we set out to build a bridge between the emotional world and home.',
     heroMission: 'We did not start this because it was a good market opportunity. We started because we saw children who needed help, and parents who wanted to give it, and knew we could build the bridge between them.',
@@ -152,7 +156,7 @@ export default function Vision() {
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} className="pb-12">
-      <PageMeta title="About StoryLeap | Family Emotional Wellbeing" description="StoryLeap helps parents and children navigate emotional moments together through personalized activities, stories, practical guidance and shared experiences." />
+      <PageMeta title={c.metaTitle} description={c.metaDescription} />
       <BreadcrumbSchema items={[{ name: c.pageTitle, path: location.pathname }]} />
 
       {/* HERO */}
