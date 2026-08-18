@@ -1,21 +1,25 @@
 # StoryLeap
 
-> StoryLeap creates personalized emotional-support stories for children ages 3-9. Parents fill out a short questionnaire about their child (name, age, an emotional challenge such as fears, separation anxiety, or social difficulty), and StoryLeap generates a custom illustrated story that helps open a real conversation between parent and child.
+> StoryLeap creates personalized, AI-powered emotional stories for children ages 3-9. Parents fill out a short questionnaire about their child (an emotional challenge such as fears, social difficulty, separation anxiety, or starting school), and StoryLeap generates a story built around that specific child, designed to open a meaningful conversation between parent and child. Content is available in English and Hebrew (Hebrew pages live under /he/*).
 
-## Key facts
-- Product: AI-generated, personalized children's stories addressing specific emotional challenges (fears, social difficulties, coping with change, separation anxiety, self-confidence, sleep issues).
-- Audience: parents of children ages 3-9.
-- Approach: draws on bibliotherapy, narrative therapy, CBT, developmental psychology, storytelling craft, and positive psychology (see /our-methods) — not a clinical or therapeutic service.
-- Languages: available in Hebrew and English.
-- Pricing: credit-based purchase, paid via PayPal; current pricing is shown at /pricing without requiring sign-in.
-- Delivery: stories are typically ready within 24 hours of payment, delivered by email and viewable in the user's account under "My Stories".
+For the full plain-text content of every page, see /llms-full.txt
 
 ## Pages
-- Home: https://storyleapai.com/
-- Pricing: https://storyleapai.com/pricing
-- Our Vision: https://storyleapai.com/vision
-- Our Methods: https://storyleapai.com/our-methods
-- FAQ: https://storyleapai.com/FAQ
-- Contact: https://storyleapai.com/contact
-- Getting Ready for First Grade (Kita Alef): https://storyleapai.com/kitaalef
-- Hebrew homepage: https://storyleapai.com/he
+
+- [Home](https://storyleapai.com/) / [Home (Hebrew)](https://storyleapai.com/he): Landing page, story creation entry points, testimonials, features.
+- [Pricing](https://storyleapai.com/Pricing) / [Hebrew](https://storyleapai.com/he/pricing): Credit purchase for personalized stories.
+- [Our Vision](https://storyleapai.com/Vision) / [Hebrew](https://storyleapai.com/he/about): Company mission, beliefs, roadmap, and team.
+- [Our Methods](https://storyleapai.com/our-methods): The six developmental/therapeutic-adjacent methods behind every story (bibliotherapy, narrative therapy, CBT, developmental psychology, storytelling craft, positive psychology).
+- [FAQ](https://storyleapai.com/FAQ): Common questions about how StoryLeap works, pricing, timing, and photos.
+- [Contact](https://storyleapai.com/Contact) / [Hebrew](https://storyleapai.com/he/contact): Contact form and direct contact details.
+- [Getting Ready for First Grade](https://storyleapai.com/KitaAlef) / [Hebrew](https://storyleapai.com/he/kita-alef): Joint parent-child questionnaire for the transition to first grade/kindergarten.
+- [Moving House](https://storyleapai.com/MovingHouse): Questionnaire for children going through a house move.
+- [Feelings Map](https://storyleapai.com/FeelingsMap): Free follow-up activity to do with a child after reading their story.
+- [Privacy Policy](https://storyleapai.com/PrivacyPolicy): What information is collected and how it's used.
+- [Terms of Use, Purchase & Cancellation](https://storyleapai.com/TermsOfUse): Purchase, delivery time, corrections, and cancellation terms.
+
+## Notes
+
+- Ages served: 3-9.
+- Story delivery time: up to 24 hours after payment.
+- Available languages: Hebrew and English.

@@ -1,0 +1,332 @@
+# StoryLeap — Full Site Content
+
+This file contains the real, plain-text content of every page on storyleapai.com, in both English and Hebrew, for AI assistants and crawlers.
+
+================================================================================
+## Home (English) — https://storyleapai.com/
+================================================================================
+
+Every child deserves their own story
+
+Parenting comes with moments you don't always know how to handle. StoryLeap turns those moments into simple, personalized experiences you and your child can go through together, through stories, activities and practical guidance.
+
+200+ stories created so far. Digital story, ready in a few hours. Based on child development principles.
+
+What is your child going through? Starting something new / Dealing with fear / Moving house / Friendship challenges / Separation / Big emotions / Something else.
+
+Summer Sale: was $40, now $25.
+
+Personalized for Your Child: A story, activities, and parent guidance, all built around what your child is going through right now.
+Empowerment: Helping children identify and talk about their feelings so they feel seen, safe, and understood.
+Emotional Connection: Creating moments that bring children and loved ones closer, encouraging deep conversations and bonding.
+Guided conversations (New): Every story includes parent guiding questions to open up real emotional talks.
+
+Getting Ready for Kindergarten Together — a joint questionnaire for child and parent, 5 minutes.
+
+Free Activities for Starting School (no signup, no payment): Our Goodbye Ritual (build a calm, consistent goodbye routine together). My Morning and Evening (build a printable personal routine board). A Little Heart from Home (create a card, letter, or drawing to take along).
+
+Sample Story: Princess Maya and the Cloud of Confusion.
+
+Testimonials: "We ended up both crying by the end, the good kind. She looked at me and asked 'Mom, do you get scared too?'" — Michal K. "He asked to read it again the next night. After the third time he just started talking on his own." — Dana A. "The story turned it into a conversation between us instead of a meltdown." — Yossi L. "One week after we started reading the story at bedtime, she kissed me goodbye and ran inside." — Rachel M. "The details they put in surprised me: his Lego sets, our dog's name, his best friend." — Ayal D. "After the story he asked if the main character feels lonely. I realized he was talking about himself." — Sara B.
+
+Your data is encrypted & secure. We never share your data. Privacy compliant.
+
+Ready to create magic? Create now a personalized story tailored to your child's world!
+
+================================================================================
+## Home (Hebrew) — https://storyleapai.com/he
+================================================================================
+
+כל ילד/ה ראויים לסיפור משלהם
+
+הורות מגיעה עם רגעים שלא תמיד יודעים איך להתמודד איתם. סטוריליפ הופכת רגעים כאלה לחוויות פשוטות ומותאמות אישית שאתם והילד/ה שלכם עוברים יחד, עם סיפורים, פעילויות והדרכה מעשית.
+
+כבר יצרנו יחד מעל 200 חוויות. סיפור דיגיטלי, מוכן תוך שעות בודדות. מבוסס על עקרונות מתחום הטיפול הרגשי בילדים.
+
+עם מה הילד/ה שלך מתמודד/ת כרגע? מתחילים משהו חדש / מתמודדים עם פחד / עוברים דירה / קשיים חברתיים / פרידה / רגשות גדולים / משהו אחר.
+
+מבצע חופש גדול: במקום ₪110, עכשיו ₪70.
+
+מותאם אישית לילד/ה שלכם: סיפור, פעילויות והכוונה להורים, הכל נבנה סביב מה שהילד/ה שלכם עובר/ת עכשיו.
+העצמה: עוזרים לילדים לזהות ולדבר על רגשותיהם, כדי שירגישו נראים, בטוחים ומובנים.
+חיבור רגשי: יצירת רגעים שמקרבים ילדים ויקיריהם, מעודדים שיחות עמוקות וחיבור.
+שיחה מודרכת (חדש): כל סיפור מגיע עם שאלות מנחות להורה, לפתיחת שיחה רגשית אמיתית.
+
+הכנה לכיתה א׳ ביחד, שאלון משותף לילד ולהורה, 5 דקות.
+
+פעילויות חינמיות לקראת כיתה א׳ (בלי הרשמה, בלי תשלום): טקס הפרידה שלנו, הבוקר והערב שלי, לב קטן מהבית.
+
+סיפור לדוגמה: הנסיכה מאיה וענן הבלבול.
+
+המידע שלכם מוצפן ומאובטח. לא נשתף מידע עם צד שלישי. עמידה בתקני פרטיות.
+
+מוכנים ליצור קסם? צרו עכשיו סיפור אישי המותאם לעולם של הילד שלכם!
+
+================================================================================
+## Pricing (English) — https://storyleapai.com/Pricing
+================================================================================
+
+Personalized Story — a personalized story, made for your child, ready within a few hours. You'll receive it as a digital story, delivered straight to your email.
+
+Purchase Credits: 110 credits, includes one personalized story. Summer Sale price $25 (regularly $40).
+
+Options: Buy for myself, or Send as gift (enter recipient's email; a gift code is emailed to them after payment). Optional promo code field.
+
+Payment via PayPal. Sign in or register required only at the actual purchase step, not to browse pricing. You can purchase credits now and fill in the questionnaire later.
+
+By proceeding to payment you agree to the Terms of Use, Purchase & Cancellation and the Privacy Policy.
+
+================================================================================
+## Pricing (Hebrew) — https://storyleapai.com/he/pricing
+================================================================================
+
+סיפור מותאם אישית, מוכן תוך שעות בודדות. תקבלו אותו כסיפור דיגיטלי, ישירות למייל שלכם.
+
+רכישת קרדיטים: 110 קרדיטים = יצירת סיפור אחד מותאם אישית. מחיר מבצע חופש גדול: ₪70 (במקום ₪110).
+
+אפשרויות: רכישה עבורי, או שליחה כמתנה (מזינים מייל של מקבל/ת המתנה; קוד מתנה נשלח למייל לאחר התשלום). ניתן להזין קוד פרומו.
+
+התשלום מתבצע באמצעות PayPal. התחברות או הרשמה נדרשת רק בשלב הרכישה עצמה, לא כדי לצפות במחירים. אפשר לרכוש קרדיטים עכשיו ולמלא את השאלון מאוחר יותר.
+
+בלחיצה על התשלום אתם מאשרים את תנאי השימוש, הרכישה והביטול ואת מדיניות הפרטיות.
+
+================================================================================
+## Our Vision (English) — https://storyleapai.com/Vision
+================================================================================
+
+A world where no parent feels unsure, and no child faces their challenges alone.
+
+Little heroes, big stories. In our early days, we saw parents searching for ways to help their children through hard, emotional moments, not always knowing how. We knew technology could do more, so we set out to build a bridge between the emotional world and home.
+
+We did not start this because it was a good market opportunity. We started because we saw children who needed help, and parents who wanted to give it, and knew we could build the bridge between them.
+
+What We Believe:
+- Every Child, Their Story: Children are not a template. Every child carries a unique emotional world.
+- Parents Are the Anchor: The struggle comes from a lack of tools and guidance, never from a lack of love.
+- A Bridge to Professionals: Our long-term vision includes giving professionals technology that helps them reach more families.
+
+One journey, three partners: The Parent, The Child, Professionals (coming soon). The operator at home: guidance, language, and practical tools that continue the emotional work at home, turning good intentions into effective support.
+
+The Parent's Journey: From Frustration to Empowerment: Frustrated ("My child is struggling and I do not know what to do") → Relieved ("This is okay. We are not alone in this") → Connected ("I have tools. I can do this with my child") → Empowered ("We grew through this together").
+
+Our Path - Step by Step:
+- Now: Personalized Stories — Personalized storybooks built around each child's real challenge.
+- Next Step: Tools for Professionals — Expanding into videos, art, and games. A smart platform to assign tasks.
+- Our 10-Year Vision: The Emotional Navigator — A full platform that guides families and connects therapists and parents.
+
+Join us in building that bridge, one story at a time.
+
+Meet the Team:
+- Lital Plotkin, Co-Founder & Product Lead — leads product and UX, with a background in Human-Computer Interaction and UX research.
+- Omer Karadi, Co-Founder & CEO — leads the business side, strategy, partnerships, and growth.
+- Ido Weiss, Co-Founder & Tech Lead — leads the technology behind StoryLeap, building and developing the platform.
+
+Together, we combine business, product, research, and technology, with one shared goal: creating tools that help parents and children connect, talk, and grow together.
+
+================================================================================
+## Our Vision (Hebrew) — https://storyleapai.com/he/about
+================================================================================
+
+עולם שבו שום הורה לא מרגיש חסר ביטחון, ושום ילד לא מתמודד עם הקשיים שלו לבד.
+
+גיבורים קטנים, סיפורים גדולים. בימים הראשונים שלנו ראינו הורים שמחפשים דרך לעזור לילדים שלהם ברגעים קשים ורגשיים, ולא תמיד ידעו איך. ידענו שטכנולוגיה יכולה לעשות יותר, אז התחלנו לבנות את הגשר בין העולם הרגשי לבית.
+
+לא יצאנו לדרך הזו כי זיהינו הזדמנות עסקית טובה. התחלנו כי ראינו ילדים שזקוקים לעזרה, והורים שמשתוקקים לתת אותה, וידענו שאנחנו יכולים לבנות את הגשר ביניהם.
+
+במה אנחנו מאמינים:
+- לכל ילד סיפור: ילדים הם לא תבנית. לכל ילד יש עולם רגשי ייחודי משלו.
+- ההורים הם העוגן: הקושי נובע מחוסר כלים והכוונה, לעולם לא מחוסר אהבה.
+- טכנולוגיה למטפלים: מגיעה לאנשי המקצוע טכנולוגיה שתאפשר להגיע ליותר משפחות.
+
+מסע אחד, שלושה שותפים: ההורה, הילד/ה, המטפל/ת. המפעיל בבית: הדרכה, שפה וכלים מעשיים שממשיכים את העבודה הרגשית בבית, ומתרגמים כוונות טובות לתמיכה אפקטיבית.
+
+מסע ההורה: מתסכול לעוצמה: תסכול ("הילד שלי מתקשה ואני לא יודע/ת מה לעשות") → הקלה ("זה בסדר. אנחנו לא לבד בזה") → חיבור ("יש לי כלים. אני יכול/ה לעשות את זה יחד איתו") → העצמה ("צמחנו מזה ביחד").
+
+הדרך שלנו - צעד אחר צעד:
+- עכשיו: סיפורים מותאמים אישית — ספרי ילדים הנבנים סביב האתגר הספציפי.
+- השלב הבא: ארגז הכלים של המטפל — התרחבות לסרטונים, יצירות ומשחקים.
+- החזון שלנו ל-10 שנים: המנחה הרגשי — פלטפורמה שלמה המלווה משפחות בכל שלב ומחברת בין מטפלים והורים.
+
+הצטרפו אלינו לבנות את הגשר הזה, סיפור אחר סיפור.
+
+תכירו את הצוות:
+- ליטל פלוטקין, מייסדת שותפה וראשת מוצר.
+- עומר קראדי, מייסד שותף ומנכ"ל.
+- עידו וייס, מייסד שותף וראש טכנולוגיות.
+
+יחד אנחנו משלבים עסקים, מוצר, מחקר וטכנולוגיה, למטרה אחת משותפת: ליצור כלים שעוזרים להורים ולילדים להתחבר, לדבר, ולגדול יחד.
+
+================================================================================
+## Our Methods (English + Hebrew) — https://storyleapai.com/our-methods
+================================================================================
+
+Every story is built on proven principles. We don't start from a blank page. Every StoryLeap story draws on six methods that professionals already know and trust. This isn't therapy, it's a thoughtful way of telling stories, built from ideas that already work.
+
+1. Bibliotherapy — Stories open a gentler path into feelings that are hard to talk about directly. We use story as a bridge and a starting point for conversation. We don't offer bibliotherapy as treatment.
+2. Narrative Therapy — The child is never the problem; the problem is the problem. Our stories often give a challenge its own shape (a "worry voice", a "grump cloud") so the child can name it. We don't provide narrative therapy.
+3. CBT — What we think shapes what we feel, and what we feel shapes what we do next. Stories show a character notice what happened, what they thought, how it felt, and a next step. We don't provide CBT or clinical treatment.
+4. Developmental Psychology — A five year old and a seven year old understand feelings differently, so stories should too. We adjust language, complexity, and point of view by age. We don't diagnose or assess development.
+5. Storytelling — A real story carries an emotional idea further than any lesson can. We write toward a real narrative arc: desire, obstacle, choice, change.
+6. Positive Psychology — Strength, hope, and connection matter as much as struggle does. Alongside a difficulty, our stories look for an existing strength, a relationship to lean on, and one small believable next step.
+
+(Hebrew: כל סיפור בנוי על עקרונות מוכחים, שש שיטות: ביבליותרפיה, טיפול נרטיבי, טיפול קוגניטיבי התנהגותי, פסיכולוגיה התפתחותית, אומנות הסיפור, ופסיכולוגיה חיובית. זה לא טיפול, זו דרך מחשבתית לספר סיפורים.)
+
+================================================================================
+## FAQ (English) — https://storyleapai.com/FAQ
+================================================================================
+
+What is StoryLeap? StoryLeap creates a personalized story for your child, based on a short questionnaire you fill out, built around your child's specific emotional challenge, designed to open a meaningful conversation between parent and child.
+How does it work? Fill out a short questionnaire, pay with credits, and once the story is ready you'll get an email notification and can view it in your personal area.
+How long does it take? Up to 24 hours from the moment of payment.
+How do I pay? Credit card or PayPal. A personalized story is $25 (Summer Sale, regularly $40). Sign-in required only at the payment step.
+What happens to the photo I upload? Used only to create the personalized story; deleted within one month of upload.
+Can I cancel or get a refund? See Terms of Use, Purchase & Cancellation. Generally possible if creation hasn't started yet.
+What if there's a mistake in the story? Contact us with your order details and we'll review and correct it.
+Where do I see the story once ready? By email (with a direct link) and in "My Stories" on the site.
+Difference between the regular story and the Kindergarten questionnaire? The Kindergarten questionnaire is filled out together by parent and child, focused on the transition to kindergarten, and includes the "Feelings Map" follow-up activity.
+What ages is this for? Ages 3-9.
+Can I give this as a gift? Yes, purchase credits and send them as a gift.
+Is the site available in English? Yes, Hebrew and English.
+How do I contact you? Through the Contact page.
+
+================================================================================
+## FAQ (Hebrew) — https://storyleapai.com/he (shared page)
+================================================================================
+
+מה זה StoryLeap? StoryLeap יוצר סיפור מותאם אישית לילד שלכם, בהתבסס על שאלון קצר, סביב האתגר הרגשי הספציפי של הילד/ה, לפתיחת שיחה משמעותית בין הורה לילד/ה.
+איך זה עובד? ממלאים שאלון קצר, משלמים בקרדיטים, ומקבלים התראה במייל כשהסיפור מוכן.
+כמה זמן זה לוקח? עד 24 שעות מרגע התשלום.
+איך משלמים? כרטיס אשראי או PayPal. סיפור מותאם אישית עולה ₪70 (מבצע חופש גדול, במקום ₪110).
+מה קורה לתמונת הילד/ה? משמשת רק ליצירת הסיפור, ונמחקת תוך חודש מההעלאה.
+אפשר לבטל או לקבל החזר? ראו תנאי השימוש, הרכישה והביטולים.
+מה קורה אם יש טעות בסיפור? פנו אלינו ונתקן.
+איפה רואים את הסיפור? במייל ובאזור האישי, תחת "הסיפורים שלי".
+מה ההבדל בין הסיפור הרגיל לשאלון "הכנה לכיתה א'"? השאלון המשותף להורה ולילד/ה מתמקד במעבר לכיתה א', ומגיע עם "מפת הרגשות".
+לאיזה גילאים זה מתאים? גילאי 3–9.
+אפשר לתת במתנה? כן.
+האתר זמין באנגלית? כן.
+איך יוצרים קשר? דרך עמוד "צור קשר".
+
+================================================================================
+## Contact (English) — https://storyleapai.com/Contact
+================================================================================
+
+Contact Us. We'd love to hear from you! Fill out the form and we'll get back to you soon. Fields: Full Name, Email, Phone (optional), Message. Direct contact: Email hello@storyleapai.com, Phone +972-52-833-0198.
+
+================================================================================
+## Contact (Hebrew) — https://storyleapai.com/he/contact
+================================================================================
+
+צור קשר. נשמח לשמוע מכם! מלאו את הטופס ונחזור אליכם בהקדם. שדות: שם מלא, מייל, טלפון (אופציונלי), הודעה. יצירת קשר ישירה: מייל hello@storyleapai.com, טלפון +972-52-833-0198.
+
+================================================================================
+## Getting Ready for First Grade (English) — https://storyleapai.com/KitaAlef
+================================================================================
+
+Getting Ready for Kindergarten Together. A joint questionnaire for child and parent, 5 minutes, based on child development and storytelling principles.
+
+For parents: This is a time for a fun, shared conversation with your child about starting kindergarten. Ask together, answer together, and add your own perspective in fields marked "Parent". Sections covered:
+- Feelings: Emotions before starting kindergarten, things that might be a bit scary, and moments of separation.
+- Who matters to you?: Close people and friends.
+- What do you love?: Hobbies, heroes, and what helps when things feel uncomfortable.
+- Kindergarten: Expectations, small worries, and visiting the school.
+- Wishes: Wishes from the child and from you for the coming year.
+- Photos: Your photo and family photos, to prepare the story.
+
+Afterward, families can do the free "Feelings Map" activity together.
+
+================================================================================
+## Getting Ready for First Grade (Hebrew) — https://storyleapai.com/he/kita-alef
+================================================================================
+
+הכנה לכיתה א׳ ביחד. שאלון משותף לילד ולהורה, כ-5 דקות, מבוסס על עקרונות מספרות והתפתחות הילד.
+
+להורים: זה הזמן לשיח משותף וכיפי עם הילד/ה לקראת העלייה לכיתה א׳. שאלו יחד, ענו ביחד, והוסיפו את הטעם שלכם בשדות המסומנות "הורה". החלקים:
+- רגשות: תחושות לפני העלייה לכיתה א׳, דברים שאולי קצת מפחידים ורגעי פרידה.
+- מי חשוב לך?: אנשים קרובים וחברים.
+- מה אוהבים?: תחביבים, גיבורים ומה שעוזר כשלא נעים.
+- כיתה א׳: ציפיות, דאגות קטנות וביקור בבית הספר.
+- משאלות: איחולים של הילד/ה ושלכם לקראת השנה.
+- תמונות: תמונה שלך ותמונות משפחה, לקראת הכנת הסיפור.
+
+אחרי הסיפור אפשר לעשות יחד את הפעילות החינמית "מפת הרגשות".
+
+================================================================================
+## Moving House — https://storyleapai.com/MovingHouse
+================================================================================
+
+A questionnaire for children going through a house move, following the same flow as the Getting Ready for First Grade questionnaire: contact details, then a personal questionnaire about the child's name, gender, feelings about moving, and photo. Leads to "[Child]'s story", a personal, heartwarming story about getting ready for the move. Costs 110 credits (₪70 / $25). While waiting, families can try the free "Our Goodbye Ritual" and "A Little Heart from Home" activities.
+
+================================================================================
+## Feelings Map — https://storyleapai.com/FeelingsMap
+================================================================================
+
+My Feelings Map on the Way to Kindergarten. After reading the personal story together, take a few minutes to discover together what your child feels and what can help them start kindergarten feeling safe and confident. Tips: you don't have to answer in words (pointing works too); it's okay to feel a few things at once; first listen and validate, then look for what can help; this isn't a conversation to get right, just a small moment together.
+
+Steps: 1) When I think about starting kindergarten, I feel... (choose from Happy, Excited, Worried, Curious, Confused, Calm, Shy, Proud, Sad, Angry, Frustrated, Lonely, or write your own). 2) Where do I feel this in my body? (tummy, heart, head, throat, hands, legs, whole body, or not sure, and that's okay — skippable). 3) Remembering a moment from the story (favorite moment, most important moment, a moment to remember on the first day, a strength shown, something to try for real). 4) When I feel this way, what can help me? (balloon breathing, five things I can see, a quick hug, a comforting object, drawing what's inside, naming the worry monster, imagining a safe place, moving and shaking it out, knowing what's coming next, talking to a trusted adult, a quiet moment alone, one small step). 5) My power sentence (e.g. "I'm allowed to start slowly", "I don't have to know everything on the first day", "I can ask for help", "A small step is also a brave step"). 6) One small action for tomorrow (choose a morning song, choose the sandwich, make a small note, draw the way to school, pack the bag together, practice a short goodbye ritual, choose a comforting object). Ends with a printable summary card.
+
+(Hebrew version available via the same page with Hebrew text: מפת הרגשות שלי בדרך לכיתה א׳.)
+
+================================================================================
+## Privacy Policy (English) — https://storyleapai.com/PrivacyPolicy
+================================================================================
+
+How we collect and use your information and your child's information.
+
+What information we collect: the parent's name, child's name, age, gender, an email and phone number for contact, and a photo of your child (and in some cases a family photo).
+
+Why we use this information: only to write and create your child's personalized story, to send updates, and to respond to questions. We do not sell or share your information with third parties for marketing.
+
+How your child's photo is used: solely to inspire the illustrations and character in your own personalized story. Never published, never shared with third parties, not reused for any other story. You may request deletion at any time.
+
+Usage Analytics & Product Improvement: we use anonymized analytics, including anonymized session recordings. Sensitive details like your child's photo and email are always masked in recordings.
+
+How to contact us: via the Contact page, anytime, for access, correction, or deletion requests.
+
+================================================================================
+## Privacy Policy (Hebrew) — https://storyleapai.com/he (shared page)
+================================================================================
+
+איך אנחנו אוספים ומשתמשים במידע שלכם ושל הילד/ה שלכם.
+
+איזה מידע אנחנו אוספים: שם ההורה, שם הילד/ה, גיל, מגדר, אימייל וטלפון, ותמונה של הילד/ה (ובמקרים מסוימים תמונת משפחה).
+
+למה אנחנו משתמשים במידע: אך ורק כדי לכתוב את הסיפור המותאם אישית, לשלוח עדכונים ולתת מענה לשאלות. לא מוכרים ולא משתפים לצרכי שיווק.
+
+איך תמונת הילד/ה משמשת אותנו: רק כהשראה ליצירת האיורים והדמות בסיפור. אינה מתפרסמת ואינה משותפת עם צדדים שלישיים. אפשר לבקש מחיקה בכל שלב.
+
+ניתוח שימוש ושיפור המוצר: כלי אנליטיקס אנונימי, כולל הקלטות מסך אנונימיות. תמונת הילד/ה והמייל תמיד מוסתרים בהקלטות.
+
+איך אפשר לפנות אלינו: בעמוד "צור קשר", בכל עת.
+
+================================================================================
+## Terms of Use, Purchase & Cancellation (English) — https://storyleapai.com/TermsOfUse
+================================================================================
+
+What you get, when, and what to do if something isn't right.
+
+What you receive: a therapeutic story personalized for your child, based on the questionnaire, delivered as a digital link you can view, read aloud, and revisit anytime.
+
+When you'll receive the story: typically up to 24 hours from purchase and questionnaire completion; rare short delays are possible, with email updates.
+
+A mistake in the story? Contact us and we'll correct it at no extra cost until you're happy with it.
+
+Cancellation & refunds: full refund as long as story creation hasn't started. Once writing has begun, the purchase can't be cancelled since it's unique digital content created specifically for you. Issues with a received story are fixed per the corrections policy.
+
+How to contact us: via the Contact page, anytime.
+
+================================================================================
+## Terms of Use, Purchase & Cancellation (Hebrew) — https://storyleapai.com/he (shared page)
+================================================================================
+
+מה מקבלים, מתי, ומה עושים אם משהו לא בסדר.
+
+מה מקבלים ברכישה: סיפור טיפולי מותאם אישית לילד/ה, כקישור דיגיטלי לצפייה, הקראה ושמירה לצפייה חוזרת.
+
+מתי מקבלים את הסיפור: בממוצע עד 24 שעות מרגע השלמת הרכישה והשאלון. עיכוב קצר אפשרי במקרים חריגים, עם עדכון במייל.
+
+טעות בסיפור? פנו אלינו ונתקן ללא עלות נוספת עד לשביעות רצונכם.
+
+ביטול והחזר כספי: החזר מלא כל עוד היצירה לא התחילה. מרגע שהכתיבה התחילה, לא ניתן לבטל, מדובר בתוכן דיגיטלי ייחודי שנוצר במיוחד עבורכם.
+
+איך אפשר לפנות אלינו: בעמוד "צור קשר", בכל עת.
