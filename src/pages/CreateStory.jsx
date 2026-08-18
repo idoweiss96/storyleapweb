@@ -285,8 +285,9 @@ export default function CreateStory() {
     setError('');
     setIsCreating(true);
     try {
-      // Save story as pending_payment so it appears in MyStories after purchase
-      const savedStory = await base44.entities.Story.create(buildStoryData('pending_payment'));
+      // Save story as draft so it appears in MyStories after purchase, with an
+      // "activate" button that spends credits once the user has enough
+      const savedStory = await base44.entities.Story.create(buildStoryData('draft'));
       base44.analytics.track({ eventName: 'story_saved_pending_payment', properties: { story_id: savedStory.id } });
       localStorage.removeItem(PENDING_FORM_KEY);
       navigate(navPath('Pricing'));
