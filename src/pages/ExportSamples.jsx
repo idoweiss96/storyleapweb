@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Download, Loader2 } from 'lucide-react';
+import NoIndexMeta from '@/components/SEO/NoIndexMeta';
 
 function downloadBase64Xlsx(base64, filename) {
   const byteChars = atob(base64);
@@ -46,6 +47,7 @@ export default function ExportSamples() {
 
   return (
     <div className="max-w-lg mx-auto py-16">
+      <NoIndexMeta />
       <Card className="border-0 shadow-xl shadow-slate-100">
         <CardContent className="p-8 space-y-4">
           <h1 className="text-xl font-bold text-slate-800">Questionnaire Export Samples</h1>
