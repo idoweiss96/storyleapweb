@@ -45,7 +45,11 @@ export default function EditStory() {
 
       const res = await base44.functions.invoke('getStoryPages', { order_id: orderId, product: 'stories', language: s.lang || 'he' });
       setCover(res.data?.cover || null);
-      setPages((res.data?.pages || []).map((p) => ({ ...p, originalText: p.text })));
+      const loaded = res.data?.pages || [];
+      // סיפור שנוצר לפני שהעריכה עלתה לאוויר — יש לו order_id אבל אין
+      // לו טקסטים בגיליון. עדיף להגיד את זה מאשר להציג מסך ריק.
+      if (loaded.length === 0) { setLoadError('no_pages'); setLoading(false); return; }
+      setPages(loaded.map((p) => ({ ...p, originalText: p.text })));
     } catch (e) {
       setLoadError('load_failed');
     } finally {
