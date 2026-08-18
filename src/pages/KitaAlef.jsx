@@ -5,6 +5,7 @@ import ContactScreen from '@/components/kita-alef/ContactScreen';
 import Questionnaire from '@/components/kita-alef/Questionnaire';
 import { useLanguage } from '@/components/LanguageContext';
 import BreadcrumbSchema from '@/components/SEO/BreadcrumbSchema';
+import PageMeta from '@/components/SEO/PageMeta';
 
 export default function KitaAlef() {
   const [step, setStep] = useState('home');
@@ -19,6 +20,7 @@ export default function KitaAlef() {
 
   return (
     <div>
+      <PageMeta title="Starting First Grade | Emotional Preparation for Kids | StoryLeap" description="The move to first grade brings big feelings for kids and parents alike. StoryLeap offers guidance and a personalized story to help your child feel ready and supported." />
       <BreadcrumbSchema items={[{ name: lang === 'he' ? 'הכנה לכיתה א׳' : 'Getting Ready for First Grade', path: location.pathname }]} />
       {step === 'home' && <HomeScreen onStart={() => setStep('contact')} />}
       {step === 'contact' && (
