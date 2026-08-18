@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,9 +9,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Mail, Phone, Send, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
+import BreadcrumbSchema from '@/components/SEO/BreadcrumbSchema';
 
 export default function Contact() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const location = useLocation();
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -46,6 +49,7 @@ export default function Contact() {
 
   return (
     <div className="max-w-2xl mx-auto pb-16">
+      <BreadcrumbSchema items={[{ name: lang === 'he' ? 'צור קשר' : 'Contact', path: location.pathname }]} />
       {/* Header */}
       <div className="text-center mb-10">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>

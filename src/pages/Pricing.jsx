@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,6 +12,7 @@ import { base44 } from '@/api/base44Client';
 import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
 import { trackEvent } from '@/lib/posthog';
 import PageMeta from '@/components/SEO/PageMeta';
+import BreadcrumbSchema from '@/components/SEO/BreadcrumbSchema';
 
 const PRICING_META = {
   he: { title: 'רכישת קרדיטים - סיפור מותאם אישית | StoryLeap', description: 'סיפור מותאם אישית לילד/ה שלכם, נשלח תוך 24 שעות. רכשו קרדיטים בקלות ובאמצעי תשלום מאובטח.' },
@@ -63,6 +64,7 @@ const HOSTED_BUTTONS = {
 export default function Pricing() {
   const { lang, isHe: langIsHe } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const [hasPendingStory, setHasPendingStory] = useState(false);
   const [isAuthed, setIsAuthed] = useState(null); // null = still checking
   const [promoCode, setPromoCode] = useState('');
@@ -502,6 +504,7 @@ export default function Pricing() {
   return (
     <div className="max-w-4xl mx-auto pb-16">
       <PageMeta title={pricingMeta.title} description={pricingMeta.description} />
+      <BreadcrumbSchema items={[{ name: isHe ? 'רכישת קרדיטים' : 'Pricing', path: location.pathname }]} />
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-4xl font-bold text-slate-800 mb-3">

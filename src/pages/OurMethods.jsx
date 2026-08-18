@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageContext';
 import PageMeta from '@/components/SEO/PageMeta';
+import BreadcrumbSchema from '@/components/SEO/BreadcrumbSchema';
 
 const METHODS_META = {
   he: { title: 'השיטות שלנו | StoryLeap', description: 'שש שיטות מוכחות, מביבליותרפיה ועד טיפול נרטיבי, שעליהן מבוסס כל סיפור מותאם אישית ב-StoryLeap.' },
@@ -90,10 +91,12 @@ export default function OurMethods() {
   const c = CONTENT[lang] || CONTENT.he;
   const meta = METHODS_META[lang] || METHODS_META.he;
   const arrow = isRTL ? '←' : '→';
+  const location = useLocation();
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} className="pb-12">
       <PageMeta title={meta.title} description={meta.description} />
+      <BreadcrumbSchema items={[{ name: lang === 'he' ? 'השיטות שלנו' : 'Our Methods', path: location.pathname }]} />
 
       {/* HERO */}
       <section className="relative py-16 md:py-20 overflow-hidden rounded-[3rem] mb-16" style={{ background: 'rgba(255,255,255,0.55)' }}>

@@ -10,6 +10,12 @@ import { useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
 import StoryGallery from '@/components/home/StoryGallery';
 import { trackEvent } from '@/lib/posthog';
+import PageMeta from '@/components/SEO/PageMeta';
+
+const HOME_META = {
+  en: { title: 'StoryLeap AI - Personalized Emotional Stories for Kids', description: 'StoryLeap creates personalized, AI-powered stories for your child that help them face fears and emotional challenges.' },
+  he: { title: 'StoryLeap AI - סיפורים מותאמים אישית לילדים', description: 'StoryLeap - צרו סיפורים מקסימים ומותאמים אישית לילדכם באמצעות בינה מלאכותית. סיפורים שעוזרים להתמודד עם חששות ואתגרים רגשיים.' },
+};
 
 const CHIP_ITEMS = [
   { key: 'chip_new', icon: '🌱', className: 'bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100 hover:border-amber-300' },
@@ -103,8 +109,11 @@ export default function Home() {
   { icon: MessageCircle, title: t('feature4_title'), description: t('feature4_desc'), bg: 'bg-indigo-50', iconColor: 'text-indigo-500', isNew: true }];
 
 
+  const homeMeta = HOME_META[lang] || HOME_META.en;
+
   return (
     <div className="pb-12">
+      <PageMeta title={homeMeta.title} description={homeMeta.description} />
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">

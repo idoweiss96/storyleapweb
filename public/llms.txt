@@ -1,0 +1,21 @@
+# StoryLeap
+
+> StoryLeap creates personalized emotional-support stories for children ages 3-9. Parents fill out a short questionnaire about their child (name, age, an emotional challenge such as fears, separation anxiety, or social difficulty), and StoryLeap generates a custom illustrated story that helps open a real conversation between parent and child.
+
+## Key facts
+- Product: AI-generated, personalized children's stories addressing specific emotional challenges (fears, social difficulties, coping with change, separation anxiety, self-confidence, sleep issues).
+- Audience: parents of children ages 3-9.
+- Approach: draws on bibliotherapy, narrative therapy, CBT, developmental psychology, storytelling craft, and positive psychology (see /our-methods) — not a clinical or therapeutic service.
+- Languages: available in Hebrew and English.
+- Pricing: credit-based purchase, paid via PayPal; current pricing is shown at /pricing without requiring sign-in.
+- Delivery: stories are typically ready within 24 hours of payment, delivered by email and viewable in the user's account under "My Stories".
+
+## Pages
+- Home: https://storyleapai.com/
+- Pricing: https://storyleapai.com/pricing
+- Our Vision: https://storyleapai.com/vision
+- Our Methods: https://storyleapai.com/our-methods
+- FAQ: https://storyleapai.com/FAQ
+- Contact: https://storyleapai.com/contact
+- Getting Ready for First Grade (Kita Alef): https://storyleapai.com/kitaalef
+- Hebrew homepage: https://storyleapai.com/he

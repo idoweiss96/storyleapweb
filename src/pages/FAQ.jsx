@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { useLanguage } from '@/components/LanguageContext';
 import {
   Accordion,
@@ -9,6 +10,7 @@ import {
 import { HelpCircle } from 'lucide-react';
 import PageMeta from '@/components/SEO/PageMeta';
 import JsonLd from '@/components/SEO/JsonLd';
+import BreadcrumbSchema from '@/components/SEO/BreadcrumbSchema';
 
 const META = {
   he: { title: 'שאלות נפוצות | StoryLeap', description: 'תשובות על יצירת סיפור מותאם אישית ב-StoryLeap: איך זה עובד, מחירים, תשלום, ותמונות הילד/ה.' },
@@ -56,6 +58,7 @@ const faqData = {
 
 export default function FAQ() {
   const { lang, isRTL } = useLanguage();
+  const location = useLocation();
   const content = faqData[lang] || faqData.he;
   const meta = META[lang] || META.he;
   const faqSchema = {
@@ -72,6 +75,7 @@ export default function FAQ() {
     <div dir={isRTL ? 'rtl' : 'ltr'} className="max-w-3xl mx-auto px-4 py-10">
       <PageMeta title={meta.title} description={meta.description} />
       <JsonLd id="faq-schema" data={faqSchema} />
+      <BreadcrumbSchema items={[{ name: lang === 'he' ? 'שאלות נפוצות' : 'FAQ', path: location.pathname }]} />
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-100 to-amber-100 mb-4">
           <HelpCircle className="w-7 h-7 text-purple-600" />

@@ -185,9 +185,12 @@ export function LanguageProvider({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // preferredLang = the user's stored preference (persists, never overwritten by URL routing)
+  // preferredLang = the user's stored preference (persists, never overwritten by URL routing).
+  // Defaults to 'en' to match the site's URL convention (bare routes like "/" and "/FAQ"
+  // are English; Hebrew always lives under "/he/*"). Once a visitor lands on a /he/*
+  // route, the effect below persists 'he' so later shared pages (e.g. FAQ) stay Hebrew too.
   const [preferredLang, setPreferredLang] = useState(() => {
-    try { return localStorage.getItem('sl_lang') || 'he'; } catch { return 'he'; }
+    try { return localStorage.getItem('sl_lang') || 'en'; } catch { return 'en'; }
   });
 
   // effective language: URL-derived language takes priority on explicit marketing routes
