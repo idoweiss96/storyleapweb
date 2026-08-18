@@ -85,6 +85,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
             return (
               <button
                 key={opt.label}
+                type="button"
                 onClick={() => handleEmojiClick(opt)}
                 className="flex flex-col items-center gap-1 p-2 rounded-2xl border-2 transition-all"
                 style={selected
@@ -108,6 +109,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
             return (
               <button
                 key={opt}
+                type="button"
                 onClick={() => handleChipsClick(opt)}
                 className="px-4 py-2 rounded-full text-sm font-medium transition-all"
                 style={selected
@@ -131,6 +133,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
       {type === 'photo' && (
         <div className="flex justify-center">
           <button
+            type="button"
             onClick={() => fileRef.current?.click()}
             disabled={isUploading}
             className="w-24 h-24 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden transition-colors disabled:opacity-60 ph-no-capture"
@@ -147,6 +150,7 @@ export default function QuestionInput({ question, answers, onAnswerChange }) {
           <input ref={fileRef} type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
           {value && (
             <button
+              type="button"
               onClick={() => onAnswerChange(key, null)}
               className="text-xs text-kita-subtext underline self-end ml-2"
             >
