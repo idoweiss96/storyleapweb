@@ -13,6 +13,7 @@ import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
 import { trackEvent } from '@/lib/posthog';
 import PageMeta from '@/components/SEO/PageMeta';
 import BreadcrumbSchema from '@/components/SEO/BreadcrumbSchema';
+import ProductSchema from '@/components/SEO/ProductSchema';
 
 const PRICING_META = {
   he: { title: 'רכישת קרדיטים - סיפור מותאם אישית | StoryLeap', description: 'סיפור מותאם אישית לילד/ה שלכם, נשלח תוך 24 שעות. רכשו קרדיטים בקלות ובאמצעי תשלום מאובטח.' },
@@ -505,6 +506,13 @@ export default function Pricing() {
     <div className="max-w-4xl mx-auto pb-16">
       <PageMeta title={pricingMeta.title} description={pricingMeta.description} />
       <BreadcrumbSchema items={[{ name: isHe ? 'רכישת קרדיטים' : 'Pricing', path: location.pathname }]} />
+      <ProductSchema
+        name={isHe ? 'סיפור מותאם אישית' : 'Personalized Story'}
+        description={pricingMeta.description}
+        price={parseAmountFromDisplay(btnConfig.display)}
+        currency={btnConfig.currency}
+        path={location.pathname}
+      />
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-4xl font-bold text-slate-800 mb-3">
