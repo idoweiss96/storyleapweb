@@ -240,7 +240,9 @@ export default function MyStories() {
                             {lang === 'he' ? 'מפת הרגשות שלי' : 'My Feelings Map'}
                           </a>
                         )}
-                        {!story.source && story.order_id && (
+                        {/* story_link מעיד שהסיפור עבר את הפייפליין. בלעדיו אין לו טקסטים
+                            בגיליון העריכה, והמסך היה נפתח ריק. */}
+                        {!story.source && story.order_id && story.story_link && (
                           <a
                             href={`/EditStory?order_id=${story.order_id}`}
                             onClick={(e) => e.stopPropagation()}
