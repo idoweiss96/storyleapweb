@@ -27,6 +27,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import FAQ from './pages/FAQ';
 import FeedbackSurvey from './pages/FeedbackSurvey';
+import HeFAQ from './pages/HeFAQ';
 import FreeActivityGoodbye from './pages/FreeActivityGoodbye';
 import FreeActivityMorningEvening from './pages/FreeActivityMorningEvening';
 import FreeActivityLittleHeart from './pages/FreeActivityLittleHeart';
@@ -99,6 +100,7 @@ const AuthenticatedApp = () => {
       <Route path="/PrivacyPolicy" element={<LayoutWrapper currentPageName="PrivacyPolicy"><PrivacyPolicy /></LayoutWrapper>} />
       <Route path="/TermsOfUse" element={<LayoutWrapper currentPageName="TermsOfUse"><TermsOfUse /></LayoutWrapper>} />
       <Route path="/FAQ" element={<LayoutWrapper currentPageName="FAQ"><FAQ /></LayoutWrapper>} />
+      <Route path="/he/faq" element={<LayoutWrapper currentPageName="HeFAQ"><HeFAQ /></LayoutWrapper>} />
       <Route path="/FeedbackSurvey" element={<LayoutWrapper currentPageName="FeedbackSurvey"><FeedbackSurvey /></LayoutWrapper>} />
       <Route path="/FreeActivityGoodbye" element={<LayoutWrapper currentPageName="FreeActivityGoodbye"><FreeActivityGoodbye /></LayoutWrapper>} />
       <Route path="/FreeActivityMorningEvening" element={<LayoutWrapper currentPageName="FreeActivityMorningEvening"><FreeActivityMorningEvening /></LayoutWrapper>} />

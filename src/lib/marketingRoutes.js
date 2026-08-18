@@ -7,6 +7,7 @@ const EN_TO_HE = {
   '/vision': '/he/about',
   '/contact': '/he/contact',
   '/kitaalef': '/he/kita-alef',
+  '/faq': '/he/faq',
 };
 
 const HE_TO_EN = Object.fromEntries(
@@ -27,6 +28,7 @@ const EN_CANONICAL = {
   '/vision': ORIGIN + '/vision',
   '/contact': ORIGIN + '/contact',
   '/kitaalef': ORIGIN + '/kitaalef',
+  '/faq': ORIGIN + '/faq',
 };
 
 // Normalize a pathname for language matching only (does not change the browser URL):
@@ -57,6 +59,7 @@ const NAV_EN_PATH = {
   Contact: '/contact',
   Vision: '/vision',
   KitaAlef: '/kitaalef',
+  FAQ: '/faq',
 };
 
 export function isHebrewRoute(pathname) {

@@ -18,11 +18,13 @@ const ROUTE_PAIRS = {
   '/vision':       { en: '/vision',       he: '/he/about' },
   '/contact':      { en: '/contact',      he: '/he/contact' },
   '/kitaalef':     { en: '/kitaalef',     he: '/he/kita-alef' },
+  '/faq':          { en: '/faq',          he: '/he/faq' },
   '/he':           { en: '/',             he: '/he' },
   '/he/pricing':   { en: '/pricing',      he: '/he/pricing' },
   '/he/about':     { en: '/vision',       he: '/he/about' },
   '/he/contact':   { en: '/contact',      he: '/he/contact' },
   '/he/kita-alef': { en: '/kitaalef',     he: '/he/kita-alef' },
+  '/he/faq':       { en: '/faq',          he: '/he/faq' },
 };
 
 function normalizePath(pathname) {

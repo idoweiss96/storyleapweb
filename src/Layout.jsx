@@ -341,7 +341,7 @@ function LayoutInner({ children, currentPageName }) {
             <Link to="/TermsOfUse" className="text-sm text-slate-500 hover:text-slate-700 underline">
               {lang === 'he' ? 'תנאי שימוש, רכישה וביטול' : 'Terms of Use, Purchase & Cancellation'}
             </Link>
-            <Link to="/FAQ" className="text-sm text-slate-500 hover:text-slate-700 underline">
+            <Link to={navPathFor('FAQ', location.pathname, lang)} className="text-sm text-slate-500 hover:text-slate-700 underline">
               {lang === 'he' ? 'שאלות נפוצות' : 'FAQ'}
             </Link>
           </div>
