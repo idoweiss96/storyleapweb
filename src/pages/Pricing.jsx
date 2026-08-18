@@ -17,7 +17,7 @@ import ProductSchema from '@/components/SEO/ProductSchema';
 
 const PRICING_META = {
   he: { title: 'רכישת קרדיטים - סיפור מותאם אישית | StoryLeap', description: 'סיפור מותאם אישית לילד/ה שלכם, נשלח תוך 24 שעות. רכשו קרדיטים בקלות ובאמצעי תשלום מאובטח.' },
-  en: { title: 'Pricing - Personalized Story | StoryLeap', description: 'A personalized story tailored for your child, delivered within 24 hours. Purchase credits securely.' },
+  en: { title: 'StoryLeap Pricing & Credits', description: 'A personalized story tailored for your child, delivered within 24 hours. Purchase credits securely.' },
 };
 
 // Special test codes — routed through the same dynamic PayPal order flow as everything
