@@ -21,7 +21,7 @@ const faqData = {
   he: {
     title: 'שאלות נפוצות',
     items: [
-      { q: 'מה זה StoryLeap?', a: 'StoryLeap יוצר סיפור מותאם אישית לילד שלכם, בהתבסס על שאלון קצר שאתם ממלאים. הסיפור נכתב סביב האתגר הרגשי הספציפי של הילד/ה שלכם, למשל פחדים, קשיים חברתיים, או קושי בפרידות, ומטרתו לפתוח שיחה משמעותית בין הורה לילד/ה.' },
+      { q: 'מה זה StoryLeap?', a: 'StoryLeap מלווה משפחות ברגעים הרגשיים של הילדות, כמו התחלת בית ספר, מעבר דירה, אח או אחות חדשים, הורה שנוסע, או פחדים בשעת השינה. בהתבסס על שאלון קצר שאתם ממלאים, אנו מציעים הכוונה להורים, כלים ופעילויות לילדים, וסיפור מותאם אישית שנכתב סביב האתגר הרגשי הספציפי של הילד/ה שלכם, כדי לפתוח שיחה משמעותית בין הורה לילד/ה.' },
       { q: 'איך זה עובד?', a: 'ממלאים שאלון קצר על הילד/ה, משלמים בקרדיטים, והפרטים עוברים ליצירת הסיפור. ברגע שהסיפור מוכן, תקבלו התראה במייל ותוכלו לראות אותו גם באזור האישי שלכם באתר.' },
       { q: 'כמה זמן לוקח לקבל את הסיפור?', a: 'יצירת הסיפור אורכת עד 24 שעות מרגע התשלום.' },
       { q: 'איך משלמים?', a: 'התשלום מתבצע באמצעות קרדיטים שרוכשים באתר, בכרטיס אשראי או PayPal. סיפור מותאם אישית עולה ₪70 (מבצע חופש גדול, במקום ₪110). ניתן לצפות במחירים המלאים בעמוד רכישת הקרדיטים בלי להתחבר, וההתחברות נדרשת רק בשלב התשלום עצמו.' },
@@ -39,7 +39,7 @@ const faqData = {
   en: {
     title: 'Frequently Asked Questions',
     items: [
-      { q: 'What is StoryLeap?', a: "StoryLeap creates a personalized story for your child, based on a short questionnaire you fill out. The story is built around your child's specific emotional challenge, such as fears, social difficulties, or trouble with separations, designed to open up a meaningful conversation between parent and child." },
+      { q: 'What is StoryLeap?', a: "StoryLeap helps families navigate the emotional moments of childhood, like starting school, moving house, a new sibling, a parent traveling, or bedtime fears. Based on a short questionnaire you fill out, we offer guidance for parents, tools and activities for children, and a personalized story built around your child's specific emotional challenge, designed to open up a meaningful conversation between parent and child." },
       { q: 'How does it work?', a: "Fill out a short questionnaire about your child, pay with credits, and your answers go into creating the story. Once it's ready, you'll get an email notification, and you can also view it in your personal area on the site." },
       { q: 'How long does it take to receive the story?', a: 'Story creation takes up to 24 hours from the moment of payment.' },
       { q: 'How do I pay?', a: 'Payment is made using credits purchased on the site, via credit card or PayPal. A personalized story is $25 (Summer Sale, regularly $40). You can view full pricing on the credits page without signing in, sign in is only required at the actual payment step.' },
