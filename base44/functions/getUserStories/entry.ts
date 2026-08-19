@@ -46,15 +46,26 @@ Deno.serve(async (req) => {
 
     // מצב עריכה לכל סיפור: 'edit' או 'running' = הפייפליין בונה עכשיו
     const editStatuses = await fetchEditStatuses(base44);
-    const withStatus = merged.map((s) => {
+    const withStatus = [];
+
+    for (const s of merged) {
       const e = s.order_id ? editStatuses[s.order_id] : null;
-      if (!e) return s;
-      return {
-        ...s,
-        edit_status: e.status,
-        edit_pending: e.status === 'edit' || e.status === 'running',
-      };
-    });
+      if (!e) { withStatus.push(s); continue; }
+
+      // עריכה שהסתיימה בזמן שההורה לא היה במסך — הקישור בגיליון חדש יותר
+      // מזה שעל הישות. הגיליון הוא מקור האמת; מיישרים את הישות אליו.
+      let story = { ...s };
+      if (e.status === 'done' && e.story_url && e.story_url !== s.story_link) {
+        try {
+          await base44.asServiceRole.entities.Story.update(s.id, { story_link: e.story_url });
+          story.story_link = e.story_url;
+        } catch (_) { /* לא קריטי — ייושר בטעינה הבאה */ }
+      }
+
+      story.edit_status = e.status;
+      story.edit_pending = e.status === 'edit' || e.status === 'running';
+      withStatus.push(story);
+    }
 
     return Response.json({ stories: withStatus });
   } catch (error) {
