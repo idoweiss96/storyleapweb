@@ -9,6 +9,13 @@ import NoIndexMeta from '@/components/SEO/NoIndexMeta';
 export default function EditStory() {
   const urlParams = new URLSearchParams(window.location.search);
   const orderId = urlParams.get('order_id');
+  // Which product this order belongs to. Defaults to 'stories' so every link that was
+  // already sent to a customer keeps working; the questionnaire-based products
+  // (first_grade / moving / hero_story) pass ?product= explicitly and keep their records
+  // in KitaAlefStory rather than Story.
+  const product = urlParams.get('product') || 'stories';
+  const ENTITY_BY_PRODUCT = { stories: 'Story', first_grade: 'KitaAlefStory', moving: 'KitaAlefStory', hero_story: 'KitaAlefStory' };
+  const entityName = ENTITY_BY_PRODUCT[product] || 'Story';
 
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -39,12 +46,12 @@ export default function EditStory() {
         return;
       }
 
-      const stories = await base44.entities.Story.filter({ order_id: orderId });
+      const stories = await base44.entities[entityName].filter({ order_id: orderId });
       const s = stories[0];
       if (!s) { setLoadError('not_found'); setLoading(false); return; }
       setStory(s);
 
-      const res = await base44.functions.invoke('getStoryPages', { order_id: orderId, product: 'stories', language: s.lang || 'he' });
+      const res = await base44.functions.invoke('getStoryPages', { order_id: orderId, product, language: s.lang || 'he' });
       setCover(res.data?.cover || null);
       const loaded = res.data?.pages || [];
       // סיפור שנוצר לפני שהעריכה עלתה לאוויר — יש לו order_id אבל אין
@@ -78,14 +85,14 @@ export default function EditStory() {
     if (!story) return;
     try {
       const res = await base44.functions.invoke('getStoryEditStatus', {
-        order_id: story.order_id, product: 'stories', language: story.lang || 'he',
+        order_id: story.order_id, product, language: story.lang || 'he',
       });
       const data = res.data || {};
       if (data.status === 'done') {
         clearInterval(pollRef.current);
         setNewStoryUrl(data.story_url || '');
         if (data.story_url) {
-          try { await base44.entities.Story.update(story.id, { story_link: data.story_url }); } catch (_) {}
+          try { await base44.entities[entityName].update(story.id, { story_link: data.story_url }); } catch (_) {}
         }
         setSaveState('done');
       } else if (data.status === 'no-change') {
@@ -106,7 +113,7 @@ export default function EditStory() {
     try {
       const res = await base44.functions.invoke('saveStoryEdit', {
         order_id: story.order_id,
-        product: 'stories',
+        product,
         language: story.lang || 'he',
         pages: changedPages.map((p) => ({ page: p.page, text: p.text })),
       });
