@@ -57,6 +57,9 @@ export const INTRO_QUESTIONS_HE = [
   { key: 'name', tag: 'child', question: 'מה השם של הגיבור/ה שלנו?', type: 'text' },
   { key: 'age', tag: 'child', question: 'בן/בת כמה?', type: 'chips', options: ['3', '4', '5', '6', '7', '8', '9', '10+'] },
   { key: 'gender', tag: 'child', question: 'מי אתה/את?', type: 'chips', options: ['ילד', 'ילדה', 'אחר/ת'] },
+  // אופציונלי, ומגיע לספר: הפרומפט משתמש בכינוי בדיאלוג בלבד, בעוד הכותרת
+  // והנרטיב נשארים עם השם המלא.
+  { key: 'nickname', tag: 'child', question: 'איך קוראים לך בבית? (לא חובה)', type: 'text' },
 ];
 
 const PAGES_HE = [
@@ -150,6 +153,7 @@ export const INTRO_QUESTIONS_EN = [
   { key: 'name', tag: 'child', question: "What's our hero's name?", type: 'text' },
   { key: 'age', tag: 'child', question: 'How old are they?', type: 'chips', options: ['3', '4', '5', '6', '7', '8', '9', '10+'] },
   { key: 'gender', tag: 'child', question: 'Are you a boy or a girl?', type: 'chips', options: ['Boy', 'Girl', 'Other'] },
+  { key: 'nickname', tag: 'child', question: 'What do they call you at home? (optional)', type: 'text' },
 ];
 
 const PAGES_EN = [
