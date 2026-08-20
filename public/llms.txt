@@ -1,6 +1,6 @@
 # StoryLeap
 
-> StoryLeap creates personalized, AI-powered emotional stories for children ages 3-9. Parents fill out a short questionnaire about their child (an emotional challenge such as fears, social difficulty, separation anxiety, or starting school), and StoryLeap generates a story built around that specific child, designed to open a meaningful conversation between parent and child. Content is available in English and Hebrew (Hebrew pages live under /he/*).
+> StoryLeap is a family emotional-wellbeing platform. It helps families navigate the emotional moments of childhood — starting school, moving house, a new sibling, a parent traveling, bedtime fears, and other everyday changes — with guidance for parents, tools and activities for children, and personalized stories that bring the two together. Parents fill out a short questionnaire about their child and the specific moment or challenge, and StoryLeap generates a story built around that child, designed to open a meaningful conversation between parent and child. Several free activities (no signup, no story purchase required) are also available as standalone tools. Content is available in English and Hebrew (Hebrew pages live under /he/*).
 
 For the full plain-text content of every page, see /llms-full.txt
 
@@ -14,7 +14,10 @@ For the full plain-text content of every page, see /llms-full.txt
 - [Contact](https://storyleapai.com/Contact) / [Hebrew](https://storyleapai.com/he/contact): Contact form and direct contact details.
 - [Getting Ready for First Grade](https://storyleapai.com/KitaAlef) / [Hebrew](https://storyleapai.com/he/kita-alef): Joint parent-child questionnaire for the transition to first grade/kindergarten.
 - [Moving House](https://storyleapai.com/MovingHouse): Questionnaire for children going through a house move.
-- [Feelings Map](https://storyleapai.com/FeelingsMap): Free follow-up activity to do with a child after reading their story.
+- [Feelings Map](https://storyleapai.com/FeelingsMap): Free follow-up activity to do with a child after reading their story — naming feelings, noticing body sensations, and choosing a helpful next step.
+- [Goodbye Ritual](https://storyleapai.com/FreeActivityGoodbye): Free interactive tool to build a calm, personalized goodbye routine for school drop-off, for kids working through separation anxiety. No signup or purchase required.
+- [Morning & Evening Routine Builder](https://storyleapai.com/FreeActivityMorningEvening): Free tool to create a personalized, printable morning and evening routine board with a child, building independence step by step. No signup or purchase required.
+- [A Little Heart from Home](https://storyleapai.com/FreeActivityLittleHeart): Free printable keepsake tool — a personalized letter, photo card, or drawing a child can carry to school for comfort. No signup or purchase required.
 - [Privacy Policy](https://storyleapai.com/PrivacyPolicy): What information is collected and how it's used.
 - [Terms of Use, Purchase & Cancellation](https://storyleapai.com/TermsOfUse): Purchase, delivery time, corrections, and cancellation terms.
 
