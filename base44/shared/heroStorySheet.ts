@@ -130,9 +130,19 @@ export function colLetter(index: number): string {
   return out;
 }
 
-const GENDER_HE: Record<string, string> = {
-  'ילד': 'בן', 'ילדה': 'בת', 'אחר/ת': 'אחר',
-  Boy: 'בן', Girl: 'בת', Other: 'אחר',
+// The questionnaire answer ('ילד' / 'Boy') → the value written in the sheet, per language.
+// hero_story/data_processor reads 'בת' in Hebrew and 'girl'/'female' in English, so a row
+// written in the wrong vocabulary silently produces a book about a boy.
+const GENDER: Record<string, Record<string, string>> = {
+  he: { 'ילד': 'בן', 'ילדה': 'בת', 'אחר/ת': 'אחר', Boy: 'בן', Girl: 'בת', Other: 'אחר' },
+  en: { 'ילד': 'Boy', 'ילדה': 'Girl', 'אחר/ת': 'Other', Boy: 'Boy', Girl: 'Girl', Other: 'Other' },
+};
+
+// photo_downloader.fetch_parent_photo accepts both vocabularies; kept per-language so the
+// sheet stays readable to whoever opens it.
+const PARENT_ROLE: Record<string, Record<string, string>> = {
+  he: { Mom: 'אמא', Dad: 'אבא', 'אמא': 'אמא', 'אבא': 'אבא' },
+  en: { Mom: 'Mom', Dad: 'Dad', 'אמא': 'Mom', 'אבא': 'Dad' },
 };
 
 /**
@@ -158,7 +168,7 @@ export function rowFromStory(
   const parentPhoto = famRole === 'אמא' || famRole === 'אבא' || famRole === 'Mom' || famRole === 'Dad'
     ? (fam?.photo || '')
     : '';
-  const parentWho = parentPhoto ? ({ Mom: 'אמא', Dad: 'אבא' } as Record<string, string>)[famRole] || famRole : '';
+  const parentWho = parentPhoto ? (PARENT_ROLE[lang] || PARENT_ROLE.he)[famRole] || famRole : '';
 
   const joinList = (v: any) => (Array.isArray(v) ? v.filter(Boolean).join(', ') : (v || ''));
 
@@ -170,7 +180,7 @@ export function rowFromStory(
     opts.credits !== undefined ? String(opts.credits) : '',
     a.name || story.child_name || '',
     a.age || '',
-    GENDER_HE[a.gender] || a.gender || story.gender || '',
+    (GENDER[lang] || GENDER.he)[a.gender] || a.gender || story.gender || '',
     a.nickname || '',
     a.photo || story.child_image_url || '',
     a.photo_consent ? 'כן' : '',
