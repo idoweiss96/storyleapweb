@@ -268,6 +268,54 @@ Steps: 1) When I think about starting kindergarten, I feel... (choose from Happy
 (Hebrew version available via the same page with Hebrew text: מפת הרגשות שלי בדרך לכיתה א׳.)
 
 ================================================================================
+## Goodbye Ritual (English) — https://storyleapai.com/FreeActivityGoodbye
+================================================================================
+
+A tiny goodbye ritual that turns into a safe morning. Free, interactive, no signup or purchase required.
+
+A short wizard builds a personalized printable goodbye-ritual card for a child working through separation anxiety at school drop-off. It asks: the child's name and gender; who usually says goodbye in the morning; how you usually say goodbye; what matters most for you to say at the goodbye moment; what helps them most in the morning; a few more details including who picks them up at the end of the day and the first thing you do together when you meet again. The result is a printable card with "how to use this card" instructions for a consistent daily goodbye ritual.
+
+================================================================================
+## Goodbye Ritual (Hebrew) — https://storyleapai.com/FreeActivityGoodbye
+================================================================================
+
+טקס פרידה קטן, שיהפוך לבוקר בטוח. חינמי, אינטראקטיבי, בלי הרשמה או תשלום.
+
+שאלון קצר בונה כרטיס טקס פרידה מודפס ומותאם אישית לילד/ה שמתמודד/ת עם קושי בפרידה בשער בית הספר. שואל: שם ומגדר הילד/ה; מי נפרד/ת ממנו/ה בבוקר בדרך כלל; איך אתם רגילים להיפרד; מה חשוב לכם להגיד ברגע הפרידה; מה הכי עוזר לו/לה בבוקר; עוד כמה פרטים כולל מי אוסף אותו/ה בסוף היום ומה הדבר הראשון שתעשו ביחד כשתתראו. התוצאה היא כרטיס מודפס עם הוראות "איך להשתמש בכרטיס" לטקס פרידה יומי עקבי.
+
+================================================================================
+## Morning & Evening Routine Builder (English) — https://storyleapai.com/FreeActivityMorningEvening
+================================================================================
+
+A personal morning and evening board. Free, printable, no signup or purchase required.
+
+A wizard builds a personalized, printable morning-and-evening routine board with a child. It asks: the child's name; what happens at your house in the morning and evening, and in what order; what the child does alone versus together with a parent (an "independence goal"); a morning encouragement line and a calming evening activity; then lets the child pick a design and choose a print format. The result is a printable board, split into a morning routine section and an evening routine section, with "how to use this board" instructions, meant to build a child's independence step by step.
+
+================================================================================
+## Morning & Evening Routine Builder (Hebrew) — https://storyleapai.com/FreeActivityMorningEvening
+================================================================================
+
+לוח בוקר וערב אישי. חינמי, להדפסה, בלי הרשמה או תשלום.
+
+שאלון בונה לוח שגרת בוקר וערב מודפס ומותאם אישית לילד/ה. שואל: שם הילד/ה; מה קורה אצלכם בבוקר ובערב, ובאיזה סדר; מה עושה/ת הילד/ה לבד ומה ביחד עם ההורה ("יעד לעצמאות"); משפט עידוד לבוקר ופעילות מרגיעה לפני השינה; ולבסוף בחירת עיצוב ופורמט הדפסה. התוצאה היא לוח מודפס, מחולק לשגרת בוקר ושגרת ערב, עם הוראות "איך להשתמש בלוח", שנועד לבנות עצמאות בשלבים.
+
+================================================================================
+## A Little Heart from Home (English) — https://storyleapai.com/FreeActivityLittleHeart
+================================================================================
+
+A Little Heart from Home. Free, printable keepsake card, no signup or purchase required.
+
+A wizard creates a small, personal, warm card a child can carry through the day to feel close to a parent even when apart. It asks: the child's name; what kind of card to create; up to two themes that matter most to share with the child; how to sign the message; a symbol (plus an optional second symbol) to decorate the card; what helps the child most that day; where the card will be kept; then design and print-format choices. The result is a printable or downloadable keepsake card. Afterward, the page offers an optional next step toward creating a full personalized StoryLeap story.
+
+================================================================================
+## A Little Heart from Home (Hebrew) — https://storyleapai.com/FreeActivityLittleHeart
+================================================================================
+
+לב קטן מהבית. כרטיס זיכרון חינמי להדפסה, בלי הרשמה או תשלום.
+
+שאלון יוצר כרטיס אישי, חם וקטן, שהילד/ה ייקח/תיקח איתו/ה במהלך היום כדי להרגיש קרוב/ה להורה גם כשהוא/היא לא שם. שואל: שם הילד/ה; איזה סוג כרטיס ליצור; עד שני נושאים שהכי חשוב להעביר לילד/ה; איך לחתום על ההודעה; סמל (ואפשרות לסמל שני) לעיטור הכרטיס; מה יעזור לילד/ה במיוחד היום; איפה הכרטיס יישמר; ולבסוף בחירת עיצוב ופורמט הדפסה. התוצאה היא כרטיס זיכרון להדפסה או להורדה. בסיום, העמוד מציע צעד המשך אופציונלי ליצירת סיפור מותאם אישית מלא ב-StoryLeap.
+
+================================================================================
 ## Privacy Policy (English) — https://storyleapai.com/PrivacyPolicy
 ================================================================================
 
