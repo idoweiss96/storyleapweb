@@ -6,7 +6,7 @@ This file contains the real, plain-text content of every page on storyleapai.com
 ## Home (English) — https://storyleapai.com/
 ================================================================================
 
-Every child deserves their own story
+Helping families through childhood's moments
 
 Parenting comes with moments you don't always know how to handle. StoryLeap turns those moments into simple, personalized experiences you and your child can go through together, through stories, activities and practical guidance.
 
@@ -31,13 +31,13 @@ Testimonials: "We ended up both crying by the end, the good kind. She looked at 
 
 Your data is encrypted & secure. We never share your data. Privacy compliant.
 
-Ready to create magic? Create now a personalized story tailored to your child's world!
+Ready to start? Get guidance, activities, and a personalized story built around your child's moment.
 
 ================================================================================
 ## Home (Hebrew) — https://storyleapai.com/he
 ================================================================================
 
-כל ילד/ה ראויים לסיפור משלהם
+מלווים משפחות ברגעים של הילדות
 
 הורות מגיעה עם רגעים שלא תמיד יודעים איך להתמודד איתם. סטוריליפ הופכת רגעים כאלה לחוויות פשוטות ומותאמות אישית שאתם והילד/ה שלכם עוברים יחד, עם סיפורים, פעילויות והדרכה מעשית.
 
@@ -60,7 +60,7 @@ Ready to create magic? Create now a personalized story tailored to your child's 
 
 המידע שלכם מוצפן ומאובטח. לא נשתף מידע עם צד שלישי. עמידה בתקני פרטיות.
 
-מוכנים ליצור קסם? צרו עכשיו סיפור אישי המותאם לעולם של הילד שלכם!
+מוכנים להתחיל? קבלו הכוונה, פעילויות, וסיפור מותאם אישית שנבנה סביב הרגע של הילד/ה שלכם.
 
 ================================================================================
 ## Pricing (English) — https://storyleapai.com/Pricing
