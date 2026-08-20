@@ -18,7 +18,7 @@ async function findRowByOrderId(
 ): Promise<number | null> {
   if (!orderId) return null;
   const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A2:AF`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A2:Y`,
     { headers: { 'Authorization': `Bearer ${accessToken}` } }
   );
   if (!res.ok) return null;
