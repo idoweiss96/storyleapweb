@@ -55,9 +55,9 @@ export default function HomeScreen({ onStart }) {
           </span>
         </div>
 
-        <h2 className="text-xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>
+        <h1 className="text-xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>
           {isEn ? 'Getting Ready to Move, Together 🏠' : 'מתכוננים למעבר, ביחד 🏠'}
-        </h2>
+        </h1>
         <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>
           {isEn ? 'A joint questionnaire for child and parent, 5 minutes' : 'שאלון משותף לילד ולהורה, 5 דקות'}
         </p>
