@@ -14,8 +14,7 @@ export default async function(req) {
 
     // הסיפור חייב להיות של המשתמש המחובר. בלי הבדיקה הזו כל משתמש רשום
     // יכול לקרוא ולדרוס סיפור של משפחה אחרת לפי order_id בלבד.
-    const owned = await base44.asServiceRole.entities.Story.filter({ order_id });
-    const mine = owned.find((s) => s.contact_email === user.email || s.created_by_id === user.id);
+    const mine = await findOwnedOrder(base44, order_id, product, user);
     if (!mine) return Response.json({ error: 'Not found' }, { status: 404 });
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
