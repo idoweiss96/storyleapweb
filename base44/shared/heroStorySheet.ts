@@ -10,6 +10,11 @@
 // Rules when changing this file:
 //   1. Append new columns at the END and never reorder existing ones — rows already
 //      written keep their positions, and the pipeline reads old rows too.
+//   0. Removed 2026-08-20 (do not re-add without changing the questionnaire too):
+//      parent photo + whose photo, favourite character, who joins the adventure,
+//      sibling name, pet type, pet name. The hero now travels alone and meets the
+//      invented creature companion — so no illustration ever needs a real face other
+//      than the child's own, which is exactly the case we can actually get right.
 //   2. Change a header string only together with hero_story/data_processor.py.
 //   3. Keep HEADERS and rowFromStory in the same order. The tests in
 //      hero_story/sheet_schema.py compare both sides.
@@ -35,36 +40,29 @@ export function sheetFor(language: string) {
 export const HEADERS = [
   'תאריך',                                    // A
   'שפה',                                      // B
-  'מזהה הזמנה',                                // C  ← story_edit + order_state key
-  'אימייל משתמש',                              // D
-  'קרדיטים',                                   // E
-  'שם הילד/ה',                                 // F  ← data_processor.child_name
-  'גיל',                                       // G
-  'מגדר',                                      // H
-  'כינוי',                                     // I
-  'קישור לתמונת הילד/ה',                        // J  ← photo_downloader.fetch_child_photo
-  'אישור צילום',                                // K
-  'קישור לתמונת ההורה',                         // L  ← photo_downloader.fetch_parent_photo
-  'מי בתמונה (אמא/אבא)',                        // M
-  'איזה עולם הכי מתאים?',                       // N  ← themes.match_theme
-  'מה הילד/ה הכי אוהב/ת',                       // O  ← the field that drives the plot
-  'איך היית מתאר/ת את האופי של הילד/ה',          // P
-  'פרטים אישיים שנשמח לשלב בסיפור',              // Q
-  'דמות אהובה',                                 // R
-  'מי מצטרף להרפתקה?',                          // S
-  'שם אח\\אחות',                                // T
-  'סוג חיית המחמד',                             // U
-  'שם חיית המחמד',                              // V
-  'לאיזה אירוע הספר?',                          // W
-  'ממי המתנה?',                                 // X
-  'הקדשה אישית',                                // Y  ← becomes the dedication page
-  'הערות',                                      // Z
-  'אימייל לקשר',                                // AA
-  'טלפון לקשר',                                 // AB
-  'סטטוס',                                      // AC ← preview / paid — drives the watcher
-  'קישור לתצוגה מקדימה',                        // AD
-  'קישור לסיפור',                               // AE
-  'אימייל נשלח',                                // AF
+  'מזהה הזמנה',                               // C
+  'אימייל משתמש',                             // D
+  'קרדיטים',                                  // E
+  'שם הילד/ה',                                // F
+  'גיל',                                      // G
+  'מגדר',                                     // H
+  'כינוי',                                    // I
+  'קישור לתמונת הילד/ה',                      // J
+  'אישור צילום',                              // K
+  'איזה עולם הכי מתאים?',                     // L
+  'מה הילד/ה הכי אוהב/ת',                     // M
+  'איך היית מתאר/ת את האופי של הילד/ה',       // N
+  'פרטים אישיים שנשמח לשלב בסיפור',           // O
+  'לאיזה אירוע הספר?',                        // P
+  'ממי המתנה?',                               // Q
+  'הקדשה אישית',                              // R
+  'הערות',                                    // S
+  'אימייל לקשר',                              // T
+  'טלפון לקשר',                               // U
+  'סטטוס',                                    // V
+  'קישור לתצוגה מקדימה',                      // W
+  'קישור לסיפור',                             // X
+  'אימייל נשלח',                              // Y
 ];
 
 /**
@@ -73,48 +71,41 @@ export const HEADERS = [
  * Mirrored by hero_story/sheet_schema.py (HEADERS_EN).
  */
 export const HEADERS_EN = [
-  'Timestamp',
-  'Language',
-  'Order ID',
-  'User Email',
-  'Credits',
-  "Child's Name",
-  'Age',
-  'Gender',
-  'Nickname',
-  "Child's Photo Link",
-  'Photo Consent',
-  "Parent's Photo Link",
-  'Whose Photo (Mom/Dad)',
-  'Story World',
-  'What the Child Loves',
-  'Personality',
-  'Personal Details',
-  'Favorite Character',
-  'Who joins the adventure?',
-  "Sibling's Name",
-  'Pet Type',
-  "Pet's Name",
-  'Occasion',
-  'Gift From',
-  'Dedication',
-  'Notes',
-  'Contact Email',
-  'Contact Phone',
-  'status',
-  'preview link',
-  'story link',
-  'Email Sent',
+  'Timestamp',                                // A
+  'Language',                                 // B
+  'Order ID',                                 // C
+  'User Email',                               // D
+  'Credits',                                  // E
+  "Child's Name",                             // F
+  'Age',                                      // G
+  'Gender',                                   // H
+  'Nickname',                                 // I
+  "Child's Photo Link",                       // J
+  'Photo Consent',                            // K
+  'Story World',                              // L
+  'What the Child Loves',                     // M
+  'Personality',                              // N
+  'Personal Details',                         // O
+  'Occasion',                                 // P
+  'Gift From',                                // Q
+  'Dedication',                               // R
+  'Notes',                                    // S
+  'Contact Email',                            // T
+  'Contact Phone',                            // U
+  'status',                                   // V
+  'preview link',                             // W
+  'story link',                               // X
+  'Email Sent',                               // Y
 ];
 
 // Column indexes the writers need by name (0-based, matching HEADERS above).
 // Identical in both languages — the two header lists are kept in the same order.
 export const COL = {
   ORDER_ID: 2,
-  CONTACT_EMAIL: 26,
-  STATUS: 28,
-  PREVIEW_LINK: 29,
-  STORY_LINK: 30,
+  CONTACT_EMAIL: 19,
+  STATUS: 21,
+  PREVIEW_LINK: 22,
+  STORY_LINK: 23,
 };
 
 export const CREDITS_PER_BOOK = 110;
@@ -138,12 +129,6 @@ const GENDER: Record<string, Record<string, string>> = {
   en: { 'ילד': 'Boy', 'ילדה': 'Girl', 'אחר/ת': 'Other', Boy: 'Boy', Girl: 'Girl', Other: 'Other' },
 };
 
-// photo_downloader.fetch_parent_photo accepts both vocabularies; kept per-language so the
-// sheet stays readable to whoever opens it.
-const PARENT_ROLE: Record<string, Record<string, string>> = {
-  he: { Mom: 'אמא', Dad: 'אבא', 'אמא': 'אמא', 'אבא': 'אבא' },
-  en: { Mom: 'Mom', Dad: 'Dad', 'אמא': 'Mom', 'אבא': 'Dad' },
-};
 
 /**
  * The site stores every questionnaire answer in `answers`, keyed by the question `key`
@@ -163,13 +148,6 @@ export function rowFromStory(
   // family_photos is a single {role, customLabel, photo} object (FamilyPhotosInput).
   // Only a parent's photo is usable downstream — the pipeline refuses to draw any other
   // real person without a photo, and inventing a grandparent's face is worse than omitting.
-  const fam = a.parent_photo && typeof a.parent_photo === 'object' ? a.parent_photo : null;
-  const famRole = (fam?.role || '').trim();
-  const parentPhoto = famRole === 'אמא' || famRole === 'אבא' || famRole === 'Mom' || famRole === 'Dad'
-    ? (fam?.photo || '')
-    : '';
-  const parentWho = parentPhoto ? (PARENT_ROLE[lang] || PARENT_ROLE.he)[famRole] || famRole : '';
-
   const joinList = (v: any) => (Array.isArray(v) ? v.filter(Boolean).join(', ') : (v || ''));
 
   return [
@@ -184,17 +162,10 @@ export function rowFromStory(
     a.nickname || '',
     a.photo || story.child_image_url || '',
     a.photo_consent ? 'כן' : '',
-    parentPhoto,
-    parentWho,
     joinList(a.world),
     joinList(a.loves) + (a.loves_parent ? ` | ${a.loves_parent}` : ''),
     a.personality || '',
     a.personal_details || '',
-    a.favorite_character || '',
-    joinList(a.companions),
-    a.sibling_name || '',
-    a.pet_kind || '',
-    a.pet_name || '',
     joinList(a.occasion),
     a.gift_from || '',
     a.dedication || '',
