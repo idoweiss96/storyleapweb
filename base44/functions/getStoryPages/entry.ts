@@ -1,9 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
-// Shared spreadsheet used by the external story-editing pipeline.
-// DO NOT touch the order-tracking sheets from here — this is a separate sheet.
 import { findOwnedOrder } from '../../shared/orderOwnership.ts';
 
+// Shared spreadsheet used by the external story-editing pipeline.
+// DO NOT touch the order-tracking sheets from here — this is a separate sheet.
 const EDIT_SHEET_ID = '1dPdK1zPcDSHOntvl5PYcn-BFyc6qu-8WGojHJ9Y7fiQ';
 const PAGES_SHEET = 'pages';
 
