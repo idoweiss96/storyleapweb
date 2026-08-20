@@ -10,6 +10,11 @@
 //
 // Unlike the therapeutic questionnaires, nothing here asks about a difficulty. This is a
 // gift: the questions exist to make the story unmistakably about THIS child.
+//
+// Deliberately NOT asked (removed 2026-08-20): a parent photo, a favourite character, and
+// who joins the adventure (sibling / pet / grandparent). The hero travels alone and meets
+// the invented creature companion in the story world — which also means the illustrations
+// only ever contain the child and imaginary characters, so no real face is ever invented.
 
 // The 17 worlds of hero_story/themes.py. The labels must match Theme.label_he /
 // Theme.label_en exactly — match_theme() matches on the full label first.
@@ -92,34 +97,10 @@ const PAGES_HE = [
         key: 'personal_details', tag: 'together', question: 'פרטים קטנים שיעשו את הסיפור אישי',
         type: 'textarea', hint: 'צבע אהוב, אוכל אהוב, מקום אהוב, משפט שהוא/היא תמיד אומר/ת...',
       },
-      { key: 'favorite_character', tag: 'child', question: 'דמות אהובה מספר או מסרט?', type: 'text' },
     ],
   },
   {
     id: 3,
-    title: 'מי מצטרף',
-    questions: [
-      {
-        key: 'companions', tag: 'child', question: 'מי מצטרף להרפתקה?', type: 'chips', multi: true,
-        options: ['אמא/אבא', 'אח/אחות', 'סבא/סבתא', 'חיית מחמד', 'חבר/ה', 'חפץ אהוב', 'אף אחד — הרפתקה לבד'],
-      },
-      {
-        key: 'sibling_name', tag: 'child', question: 'איך קוראים לאח/אחות?', type: 'text',
-        showIf: { dependsOn: 'companions', values: ['אח/אחות'] },
-      },
-      {
-        key: 'pet_kind', tag: 'child', question: 'איזו חיה?', type: 'text',
-        hint: 'כלב, חתולה, אוגר…',
-        showIf: { dependsOn: 'companions', values: ['חיית מחמד'] },
-      },
-      {
-        key: 'pet_name', tag: 'child', question: 'ואיך קוראים לה?', type: 'text',
-        showIf: { dependsOn: 'companions', values: ['חיית מחמד'] },
-      },
-    ],
-  },
-  {
-    id: 4,
     title: 'המתנה',
     questions: [
       {
@@ -136,15 +117,10 @@ const PAGES_HE = [
     ],
   },
   {
-    id: 5,
-    title: 'תמונות',
+    id: 4,
+    title: 'תמונה',
     questions: [
       { key: 'photo', question: 'תמונה של הגיבור/ה', type: 'photo', required: true, consent: true },
-      {
-        key: 'parent_photo', tag: 'together',
-        question: 'תמונה של אמא או אבא (אופציונלי — רק כך נוכל לצייר אותם בספר)',
-        type: 'family_photos',
-      },
     ],
   },
 ];
@@ -177,24 +153,10 @@ const PAGES_EN = [
       },
       { key: 'personality', tag: 'together', question: 'How would you describe them?', type: 'textarea', hint: 'e.g. curious, notices details nobody else does, stubborn when something matters' },
       { key: 'personal_details', tag: 'together', question: 'Little details that make the story theirs', type: 'textarea', hint: 'Favourite colour, favourite food, a place they love, something they always say...' },
-      { key: 'favorite_character', tag: 'child', question: 'A favourite character from a book or film?', type: 'text' },
     ],
   },
   {
     id: 3,
-    title: 'Who comes along',
-    questions: [
-      {
-        key: 'companions', tag: 'child', question: 'Who joins the adventure?', type: 'chips', multi: true,
-        options: ['Mom/Dad', 'Sibling', 'Grandparent', 'Pet', 'A friend', 'A beloved toy', 'Nobody — a solo adventure'],
-      },
-      { key: 'sibling_name', tag: 'child', question: "What's the sibling's name?", type: 'text', showIf: { dependsOn: 'companions', values: ['Sibling'] } },
-      { key: 'pet_kind', tag: 'child', question: 'What kind of pet?', type: 'text', hint: 'dog, cat, hamster…', showIf: { dependsOn: 'companions', values: ['Pet'] } },
-      { key: 'pet_name', tag: 'child', question: "And what's their name?", type: 'text', showIf: { dependsOn: 'companions', values: ['Pet'] } },
-    ],
-  },
-  {
-    id: 4,
     title: 'The Gift',
     questions: [
       { key: 'occasion', tag: 'together', question: "What's the occasion?", type: 'chips', options: ['Birthday', 'Holiday', 'Graduation', 'A new sibling', 'Just because'] },
@@ -204,11 +166,10 @@ const PAGES_EN = [
     ],
   },
   {
-    id: 5,
-    title: 'Photos',
+    id: 4,
+    title: 'Photo',
     questions: [
       { key: 'photo', question: "The hero's photo", type: 'photo', required: true, consent: true },
-      { key: 'parent_photo', tag: 'together', question: 'A photo of Mom or Dad (optional — only then can we draw them in the book)', type: 'family_photos' },
     ],
   },
 ];
