@@ -4,6 +4,7 @@ import { Sparkles, CheckCircle2, AlertTriangle, ImageOff } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import StoryPageEditor from '@/components/story/StoryPageEditor';
 import EditSaveBar from '@/components/story/EditSaveBar';
+import NoIndexMeta from '@/components/SEO/NoIndexMeta';
 
 export default function EditStory() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -126,6 +127,7 @@ export default function EditStory() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
+        <NoIndexMeta />
         <div className="animate-spin w-8 h-8 border-4 border-violet-300 border-t-violet-600 rounded-full" />
       </div>
     );
@@ -134,6 +136,7 @@ export default function EditStory() {
   if (loadError || !story) {
     return (
       <div className="max-w-md mx-auto text-center py-16">
+        <NoIndexMeta />
         <ImageOff className="w-10 h-10 text-slate-300 mx-auto mb-3" />
         <p className="text-slate-500">
           {loadError === 'no_pages'
@@ -150,6 +153,7 @@ export default function EditStory() {
 
   return (
     <div dir={isHe ? 'rtl' : 'ltr'} className="max-w-3xl mx-auto pb-32">
+      <NoIndexMeta />
       <div className="text-center mb-8">
         <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-violet-200">
           <Sparkles className="w-7 h-7 text-white" />
