@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Star, Heart, Loader2 } from 'lucide-react';
+import NoIndexMeta from '@/components/SEO/NoIndexMeta';
 
 const PURPLE = '#4A3FB5';
 
@@ -134,6 +135,7 @@ export default function FeedbackSurvey() {
   if (submitted) {
     return (
       <div dir={isRTL ? 'rtl' : 'ltr'} className="max-w-xl mx-auto px-4 py-16 text-center">
+        <NoIndexMeta />
         <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
           <Heart className="w-8 h-8 text-amber-500 fill-amber-400" />
         </div>
@@ -145,6 +147,7 @@ export default function FeedbackSurvey() {
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'} className="max-w-2xl mx-auto px-4 py-10">
+      <NoIndexMeta />
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-slate-800 mb-2">{c.title} 🎉</h1>
         <p className="text-slate-600">{c.subtitle}</p>
