@@ -22,6 +22,8 @@ import MovingHouse from './pages/MovingHouse';
 import MovingHouseStory from './pages/MovingHouseStory';
 import HeroStory from './pages/HeroStory';
 import HeroStoryCheckout from './pages/HeroStoryCheckout';
+import PrepareStory from './pages/PrepareStory';
+import PrepareStoryCheckout from './pages/PrepareStoryCheckout';
 import FeelingsMap from './pages/FeelingsMap';
 import DesignSystem from './pages/DesignSystem';
 import ExportSamples from './pages/ExportSamples';
@@ -100,6 +102,8 @@ const AuthenticatedApp = () => {
       <Route path="/MovingHouseStory" element={<LayoutWrapper currentPageName="MovingHouseStory"><MovingHouseStory /></LayoutWrapper>} />
       <Route path="/HeroStory" element={<LayoutWrapper currentPageName="HeroStory"><HeroStory /></LayoutWrapper>} />
       <Route path="/HeroStoryCheckout" element={<LayoutWrapper currentPageName="HeroStoryCheckout"><HeroStoryCheckout /></LayoutWrapper>} />
+      <Route path="/PrepareStory" element={<LayoutWrapper currentPageName="PrepareStory"><PrepareStory /></LayoutWrapper>} />
+      <Route path="/PrepareStoryCheckout" element={<LayoutWrapper currentPageName="PrepareStoryCheckout"><PrepareStoryCheckout /></LayoutWrapper>} />
       <Route path="/FeelingsMap" element={<LayoutWrapper currentPageName="FeelingsMap"><FeelingsMap /></LayoutWrapper>} />
       <Route path="/design-system" element={<LayoutWrapper currentPageName="DesignSystem"><DesignSystem /></LayoutWrapper>} />
       <Route path="/ExportSamples" element={<LayoutWrapper currentPageName="ExportSamples"><ExportSamples /></LayoutWrapper>} />
