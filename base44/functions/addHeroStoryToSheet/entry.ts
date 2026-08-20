@@ -1,23 +1,24 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
-import { HEADERS, HERO_SHEET_NAME, COL, colLetter, rowFromStory, makeOrderId } from '../../shared/heroStorySheet.ts';
+import { COL, colLetter, rowFromStory, makeOrderId, sheetFor } from '../../shared/heroStorySheet.ts';
 
 // Writes one hero_story order into the order sheet the Python pipeline watches.
 //
-// "StoryLeap — הזמנות ספר הגיבור/ה", created by hero_story/setup_sheet.py on 2026-08-20.
-// The SAME id lives in hero_story/sheets_reader.py (HE_SHEET_ID) — here the site writes,
-// there the pipeline reads. Changing one without the other breaks the chain silently:
-// orders keep being accepted and no book is ever produced.
-const SPREADSHEET_ID = '1IiQNdmqhLppQctejSY3rmST8CAhPQTtKfnZyzER18cU';
+// One spreadsheet per language — the ids and the reason for the split live in
+// heroStorySheet.ts (sheetFor). The same ids sit in hero_story/sheets_reader.py:
+// here the site writes, there the pipeline reads. Changing one side without the other
+// breaks the chain silently — orders keep being accepted and no book is ever produced.
 
 // Same two-stage flow as the therapeutic product: a row with status "preview" makes the
 // watcher produce the full text but only PREVIEW_PAGES illustrations; "paid" makes it
 // finish the rest. A row with an empty status is never picked up.
 type Status = 'preview' | 'paid';
 
-async function findRowByOrderId(accessToken: string, orderId: string): Promise<number | null> {
+async function findRowByOrderId(
+  accessToken: string, orderId: string, spreadsheetId: string, sheetName: string
+): Promise<number | null> {
   if (!orderId) return null;
   const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(HERO_SHEET_NAME)}!A2:AF`,
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A2:AF`,
     { headers: { 'Authorization': `Bearer ${accessToken}` } }
   );
   if (!res.ok) return null;
@@ -30,13 +31,6 @@ async function findRowByOrderId(accessToken: string, orderId: string): Promise<n
 
 export default async function(req) {
   try {
-    if (!SPREADSHEET_ID) {
-      return Response.json({
-        error: 'SPREADSHEET_ID is not set — run initHeroStorySheet once and paste the id into ' +
-               'base44/functions/addHeroStoryToSheet/entry.ts and hero_story/sheets_reader.py',
-      }, { status: 500 });
-    }
-
     const base44 = createClientFromRequest(req);
     const body = await req.json();
 
@@ -49,7 +43,9 @@ export default async function(req) {
     if (!story) return Response.json({ error: 'story_id or story data required' }, { status: 400 });
 
     const status: Status = body.status === 'paid' ? 'paid' : 'preview';
-    const orderId = (story.order_id || body.order_id || makeOrderId(story.lang || 'he')).trim();
+    const lang = story.lang === 'en' ? 'en' : 'he';
+    const { spreadsheetId, sheetName, headers } = sheetFor(lang);
+    const orderId = (story.order_id || body.order_id || makeOrderId(lang)).trim();
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
     const authHeaders = { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' };
@@ -57,15 +53,15 @@ export default async function(req) {
     // An order that already has a preview row must be UPDATED, not appended again:
     // two rows with the same order id would make the watcher generate (and charge for)
     // the same book twice, and story_edit would not know which row is authoritative.
-    const existingRow = await findRowByOrderId(accessToken, orderId);
+    const existingRow = await findRowByOrderId(accessToken, orderId, spreadsheetId, sheetName);
     if (existingRow) {
       const statusCol = colLetter(COL.STATUS);
       const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(HERO_SHEET_NAME)}!${statusCol}${existingRow}?valueInputOption=RAW`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!${statusCol}${existingRow}?valueInputOption=RAW`,
         { method: 'PUT', headers: authHeaders, body: JSON.stringify({ values: [[status]] }) }
       );
       if (!res.ok) return Response.json({ error: await res.text() }, { status: 500 });
-      return Response.json({ success: true, action: 'status_updated', row: existingRow, order_id: orderId, status });
+      return Response.json({ success: true, action: 'status_updated', row: existingRow, order_id: orderId, status, lang });
     }
 
     const row = rowFromStory(story, {
@@ -75,13 +71,13 @@ export default async function(req) {
       credits: status === 'paid' ? 110 : undefined,
     });
 
-    if (row.length !== HEADERS.length) {
-      return Response.json({ error: `row/header length mismatch: ${row.length} vs ${HEADERS.length}` }, { status: 500 });
+    if (row.length !== headers.length) {
+      return Response.json({ error: `row/header length mismatch: ${row.length} vs ${headers.length}` }, { status: 500 });
     }
 
     for (let attempt = 1; attempt <= 3; attempt++) {
       const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(HERO_SHEET_NAME)}!A1:append?valueInputOption=USER_ENTERED`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A1:append?valueInputOption=USER_ENTERED`,
         { method: 'POST', headers: authHeaders, body: JSON.stringify({ values: [row] }) }
       );
       if (res.ok) {
@@ -90,7 +86,7 @@ export default async function(req) {
         if (story.id && !story.order_id) {
           await base44.asServiceRole.entities.KitaAlefStory.update(story.id, { order_id: orderId }).catch(() => {});
         }
-        return Response.json({ success: true, action: 'appended', order_id: orderId, status });
+        return Response.json({ success: true, action: 'appended', order_id: orderId, status, lang });
       }
       console.error(`[addHeroStoryToSheet] attempt ${attempt}:`, res.status, await res.text());
       if (attempt < 3) await new Promise((r) => setTimeout(r, 1000 * attempt));
