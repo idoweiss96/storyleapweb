@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import HomeScreen from '@/components/moving-house/HomeScreen';
 import ContactScreen from '@/components/moving-house/ContactScreen';
 import Questionnaire from '@/components/moving-house/Questionnaire';
 import { base44 } from '@/api/base44Client';
 import { useLanguage } from '@/components/LanguageContext';
+import BreadcrumbSchema from '@/components/SEO/BreadcrumbSchema';
+import PageMeta from '@/components/SEO/PageMeta';
 
 // Duplicated from src/pages/KitaAlef.jsx (same flow/template), with moving-house content.
 // The original KitaAlef page and entity usage are untouched.
 export default function MovingHouse() {
   const { lang } = useLanguage();
+  const location = useLocation();
   const [step, setStep] = useState('home');
   const [answers, setAnswers] = useState({});
   const [storyId, setStoryId] = useState(null);
@@ -41,6 +45,11 @@ export default function MovingHouse() {
 
   return (
     <div>
+      <PageMeta
+        title={lang === 'he' ? 'הכנה רגשית למעבר דירה | כלים להורים ולילדים | StoryLeap' : 'Moving House | Emotional Prep for Kids | StoryLeap'}
+        description={lang === 'he' ? 'המעבר לבית חדש מביא איתו הרבה רגשות, גם להורים וגם לילדים. StoryLeap מציעה הדרכה וסיפור מותאם אישית לילד להרגיש מוכן ובטוח.' : 'Moving house brings big feelings for kids and parents alike. StoryLeap offers guidance and a personalized story to help your child feel ready and supported through the move.'}
+      />
+      <BreadcrumbSchema items={[{ name: lang === 'he' ? 'מעבר דירה' : 'Moving House', path: location.pathname }]} />
       {step === 'home' && <HomeScreen onStart={() => setStep('contact')} />}
       {step === 'contact' && <ContactScreen answers={answers} setAnswers={setAnswers} onSubmit={handleContactSubmit} />}
       {step === 'questionnaire' && (
