@@ -3,10 +3,11 @@ import { HEADERS, HERO_SHEET_NAME, COL, colLetter, rowFromStory, makeOrderId } f
 
 // Writes one hero_story order into the order sheet the Python pipeline watches.
 //
-// ⚠️ SPREADSHEET_ID is empty until someone runs initHeroStorySheet once and pastes the id
-// it returns here. Empty on purpose: a wrong-but-plausible default would send real orders
-// into another product's sheet, and both products would then generate the same book.
-const SPREADSHEET_ID = '';
+// "StoryLeap — הזמנות ספר הגיבור/ה", created by hero_story/setup_sheet.py on 2026-08-20.
+// The SAME id lives in hero_story/sheets_reader.py (HE_SHEET_ID) — here the site writes,
+// there the pipeline reads. Changing one without the other breaks the chain silently:
+// orders keep being accepted and no book is ever produced.
+const SPREADSHEET_ID = '1IiQNdmqhLppQctejSY3rmST8CAhPQTtKfnZyzER18cU';
 
 // Same two-stage flow as the therapeutic product: a row with status "preview" makes the
 // watcher produce the full text but only PREVIEW_PAGES illustrations; "paid" makes it
