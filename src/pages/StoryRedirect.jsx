@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import NoIndexMeta from '@/components/SEO/NoIndexMeta';
 
 // Permanent link for parents (e.g. shared via WhatsApp). HeyZine issues a new
 // flipbook URL on every re-publish, so this always redirects to the current one.
@@ -28,6 +29,7 @@ export default function StoryRedirect() {
   if (failed) {
     return (
       <div className="max-w-md mx-auto text-center py-20">
+        <NoIndexMeta />
         <p className="text-slate-500">לא נמצא סיפור עבור הקישור הזה.</p>
       </div>
     );
@@ -35,6 +37,7 @@ export default function StoryRedirect() {
 
   return (
     <div className="flex items-center justify-center py-20">
+      <NoIndexMeta />
       <div className="animate-spin w-8 h-8 border-4 border-violet-300 border-t-violet-600 rounded-full" />
     </div>
   );
