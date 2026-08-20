@@ -20,6 +20,8 @@ import KitaAlef from './pages/KitaAlef';
 import KitaAlefStory from './pages/KitaAlefStory';
 import MovingHouse from './pages/MovingHouse';
 import MovingHouseStory from './pages/MovingHouseStory';
+import HeroStory from './pages/HeroStory';
+import HeroStoryCheckout from './pages/HeroStoryCheckout';
 import FeelingsMap from './pages/FeelingsMap';
 import DesignSystem from './pages/DesignSystem';
 import ExportSamples from './pages/ExportSamples';
@@ -96,6 +98,8 @@ const AuthenticatedApp = () => {
       <Route path="/KitaAlefStory" element={<LayoutWrapper currentPageName="KitaAlefStory"><KitaAlefStory /></LayoutWrapper>} />
       <Route path="/MovingHouse" element={<LayoutWrapper currentPageName="MovingHouse"><MovingHouse /></LayoutWrapper>} />
       <Route path="/MovingHouseStory" element={<LayoutWrapper currentPageName="MovingHouseStory"><MovingHouseStory /></LayoutWrapper>} />
+      <Route path="/HeroStory" element={<LayoutWrapper currentPageName="HeroStory"><HeroStory /></LayoutWrapper>} />
+      <Route path="/HeroStoryCheckout" element={<LayoutWrapper currentPageName="HeroStoryCheckout"><HeroStoryCheckout /></LayoutWrapper>} />
       <Route path="/FeelingsMap" element={<LayoutWrapper currentPageName="FeelingsMap"><FeelingsMap /></LayoutWrapper>} />
       <Route path="/design-system" element={<LayoutWrapper currentPageName="DesignSystem"><DesignSystem /></LayoutWrapper>} />
       <Route path="/ExportSamples" element={<LayoutWrapper currentPageName="ExportSamples"><ExportSamples /></LayoutWrapper>} />
