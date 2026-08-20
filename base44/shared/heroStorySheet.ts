@@ -17,6 +17,20 @@
 export const HERO_SHEET_NAME = 'שאלון';
 export const HERO_SHEET_NAME_EN = 'Questionnaire';
 
+// Separate spreadsheet per language, exactly like every other product. NOT one sheet with
+// a language column: the English watcher picks a row by an empty "story link" cell without
+// looking at the language, so it would happily pick up Hebrew rows and write them an
+// English book. Created by hero_story/setup_sheet.py on 2026-08-20.
+export const HERO_SPREADSHEET_ID_HE = '1IiQNdmqhLppQctejSY3rmST8CAhPQTtKfnZyzER18cU';
+export const HERO_SPREADSHEET_ID_EN = '1qgL88JuIIs2eCD6cgXKa6JtBk2seOPct3ad5Bvx21K8';
+
+/** (spreadsheetId, tab name, headers) for a language. */
+export function sheetFor(language: string) {
+  return language === 'en'
+    ? { spreadsheetId: HERO_SPREADSHEET_ID_EN, sheetName: HERO_SHEET_NAME_EN, headers: HEADERS_EN }
+    : { spreadsheetId: HERO_SPREADSHEET_ID_HE, sheetName: HERO_SHEET_NAME, headers: HEADERS };
+}
+
 /** Column headers, in sheet order. Mirrored by hero_story/sheet_schema.py. */
 export const HEADERS = [
   'תאריך',                                    // A
@@ -53,7 +67,48 @@ export const HEADERS = [
   'אימייל נשלח',                                // AF
 ];
 
+/**
+ * English headers. Same order as HEADERS, so the two sheets read side by side, and the
+ * exact vocabulary hero_story/data_processor._process_english_row looks for.
+ * Mirrored by hero_story/sheet_schema.py (HEADERS_EN).
+ */
+export const HEADERS_EN = [
+  'Timestamp',
+  'Language',
+  'Order ID',
+  'User Email',
+  'Credits',
+  "Child's Name",
+  'Age',
+  'Gender',
+  'Nickname',
+  "Child's Photo Link",
+  'Photo Consent',
+  "Parent's Photo Link",
+  'Whose Photo (Mom/Dad)',
+  'Story World',
+  'What the Child Loves',
+  'Personality',
+  'Personal Details',
+  'Favorite Character',
+  'Who joins the adventure?',
+  "Sibling's Name",
+  'Pet Type',
+  "Pet's Name",
+  'Occasion',
+  'Gift From',
+  'Dedication',
+  'Notes',
+  'Contact Email',
+  'Contact Phone',
+  'status',
+  'preview link',
+  'story link',
+  'Email Sent',
+];
+
 // Column indexes the writers need by name (0-based, matching HEADERS above).
+// Identical in both languages — the two header lists are kept in the same order.
 export const COL = {
   ORDER_ID: 2,
   CONTACT_EMAIL: 26,
