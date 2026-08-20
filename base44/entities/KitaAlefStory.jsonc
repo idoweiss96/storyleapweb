@@ -34,6 +34,10 @@
       "type": "string",
       "description": "\u05e7\u05d9\u05e9\u05d5\u05e8 \u05dc\u05e1\u05d9\u05e4\u05d5\u05e8 \u05e9\u05e0\u05d5\u05e6\u05e8 (\u05de\u05de\u05d5\u05dc\u05d0 \u05e2\u05dc \u05d9\u05d3\u05d9 \u05d0\u05d3\u05de\u05d9\u05df)"
     },
+    "order_id": {
+      "type": "string",
+      "description": "Stable order id (SL-HE-YYMMDD-XXXX). Written once when the order reaches the order sheet, and used as the join key by the external pipeline and by story_edit. Never regenerated for an existing record."
+    },
     "payment_status": {
       "type": "string",
       "enum": [
