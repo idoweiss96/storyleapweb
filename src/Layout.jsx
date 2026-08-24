@@ -155,7 +155,7 @@ function LayoutInner({ children, currentPageName }) {
     children: [
       { key: 'feeling', label: lang === 'he' ? 'מתמודדים עם רגש' : 'Working through a feeling', to: '/CreateStory' },
       { key: 'change', label: lang === 'he' ? 'מתכוננים לשינוי' : 'Getting ready for a change', to: '/PrepareStory' },
-      { key: 'kita', label: lang === 'he' ? 'מתחילים גן / כיתה א׳' : 'Starting kindergarten / first grade', to: navPathFor('KitaAlef', location.pathname, lang) },
+      { key: 'kita', label: lang === 'he' ? 'מתחילים כיתה א׳' : 'Starting kindergarten', to: navPathFor('KitaAlef', location.pathname, lang) },
       { key: 'adventure', label: lang === 'he' ? 'סיפור מעצים ביטחון' : 'Building Confidence', to: '/HeroStory' },
     ],
   };

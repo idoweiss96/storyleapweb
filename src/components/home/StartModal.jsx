@@ -29,7 +29,7 @@ export default function StartModal({ onClose }) {
     {
       key: 'kita',
       icon: GraduationCap,
-      title: isHe ? 'מתחילים גן / כיתה א׳' : 'Starting kindergarten / first grade',
+      title: isHe ? 'מתחילים כיתה א׳' : 'Starting kindergarten',
       to: navPathFor('KitaAlef', location.pathname, lang),
     },
     {

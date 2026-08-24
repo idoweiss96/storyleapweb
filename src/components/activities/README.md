@@ -38,21 +38,28 @@
 | מנוע | כלים בגל 0 | סטטוס |
 |---|---|---|
 | כרטיסים | גלגל רגשות, קלפי חוזקות, Coping Cards, קלפי רגשות, לוח בחירה, כרטיס בקשת הפסקה | **3 מתוך 6 נבנו** |
-| סולם/מדידה | מד חום רגשי, Emotion Check-in | טרם |
-| רצף וסדר יום | לוח סדר יום חזותי, First–Then | טרם |
-| קנבס יצירתי | ציור הרגש, מפת גוף | טרם |
+| סולם/מדידה | מד חום רגשי, Emotion Check-in | **1 מתוך 2 נבנה** |
+| קנבס יצירתי | ציור הרגש, מפת גוף | **1 מתוך 2 נבנה** |
+| רצף וסדר יום | לוח סדר יום חזותי, First–Then | טרם — המנוע היחיד שלא נפתח |
 
 ---
 
 ## מה קיים כרגע
 
-| פעילות | תיקייה | נתיב | מצב | השאלה שהיא שואלת |
+| פעילות | תיקייה | נתיב | מנוע | השאלה שהיא שואלת |
 |---|---|---|---|---|
-| גלגל הרגשות | `emotion-wheel/` | `/activities/emotion-wheel` | `spin` | מה אני מרגיש? |
-| קלפי החוזקות שלי | `strength-cards/` | `/activities/strength-cards` | `pick` | מי אני? |
-| הקלפים שעוזרים לי | `coping-cards/` | `/activities/coping-cards` | `build-a-kit` | מה אני עושה? |
+| גלגל הרגשות | `emotion-wheel/` | `/activities/emotion-wheel` | כרטיסים · `spin` | מה אני מרגיש? |
+| קלפי החוזקות שלי | `strength-cards/` | `/activities/strength-cards` | כרטיסים · `pick` | מי אני? |
+| הקלפים שעוזרים לי | `coping-cards/` | `/activities/coping-cards` | כרטיסים · `build-a-kit` | מה אני עושה? |
+| ציור הרגש | `emotion-drawing/` | `/activities/emotion-drawing` | קנבס | איך זה נראה? |
+| מד החום של הרגשות | `emotion-thermometer/` | `/activities/emotion-thermometer` | סולם | כמה זה חזק? |
 
-שלושתן ללא AI, ללא backend, ומדפיסות פלט שאפשר לתלות.
+כולן ללא AI, ללא backend, ומדפיסות פלט שאפשר לתלות.
+
+**גיוון האינטראקציה נשמר בכוונה.** שלוש הראשונות נבנו ברצף וכולן
+"בוחרים מתוך רשימה". ציור הרגש היה הפעילות הראשונה שבה הילד **יוצר**
+במקום לבחור, ומד החום הראשונה שבה הוא **מודד**. כשמוסיפים פעילות חדשה
+שווה לשאול לא רק "איזה כלי חסר" אלא "איזו *פעולה* חסרה".
 
 ---
 
@@ -73,11 +80,22 @@ src/components/activities/
 │   ├── README.md
 │   ├── strengthCardsContent.js
 │   └── StrengthCards.jsx
-└── coping-cards/
+├── coping-cards/
+│   ├── README.md
+│   ├── copingCardsContent.js
+│   └── CopingCards.jsx
+├── emotion-drawing/
+│   ├── README.md
+│   ├── emotionDrawingContent.js
+│   └── EmotionDrawing.jsx
+└── emotion-thermometer/
     ├── README.md
-    ├── copingCardsContent.js
-    └── CopingCards.jsx
+    ├── emotionThermometerContent.js
+    └── EmotionThermometer.jsx
 ```
+
+`shared/` משרת את פעילויות הכרטיסים. ציור הרגש ומד החום משתמשים ממנו
+רק ב-`PickerCard` למסך בחירת הרגש — כל השאר בכל אחת מהן הוא שלה.
 
 הרכיבים יושבים כאן. **העמודים** יושבים ב-`src/pages/` לפי הקונבנציה של הפרויקט,
 והם דקים בכוונה — כותרת, קישור חזרה, טיפ להורה, והרכיב עצמו.
