@@ -45,8 +45,8 @@ export default function HomeScreen({ onStart }) {
     : 'ספר הכנה עובד הכי טוב כשהוא מדויק ומוחשי. כשילד או ילדה יודעים מראש מה עומד לקרות, איך הדברים ייראו, מה הם ישמעו ומה יהיה הסדר, האירוע הופך ממשהו לא מוכר למשהו שכבר פגשו בסיפור. לכן, ככל שתהיו קונקרטיים יותר בפרטים, כך הספר יוכל להכין אותם טוב יותר.';
 
   const noWorry = isEn
-    ? 'If your child has not asked about it or seemed concerned, say so — and the book will contain no worry at all. That is deliberate: a book can plant a worry, not only answer one.'
-    : 'אם הילד/ה לא שאל/ה ולא הביע/ה חשש — כתבו את זה, והספר לא יזכיר שום חשש. זה מכוון: ספר יכול לשתול דאגה, לא רק לענות עליה.';
+    ? "If your child hasn't asked questions or shown any concern, just say so. The book won't introduce fear or worry that isn't there. The goal is to prepare them for what's ahead, without creating new concerns."
+    : 'אם הילד או הילדה לא שאלו שאלות ולא הביעו חשש, פשוט כתבו את זה. הספר לא יכניס פחד או דאגה שלא קיימים. המטרה היא להכין אותם למה שצפוי, בלי ליצור חששות חדשים.';
 
   return (
     <div className="min-h-[75vh] flex flex-col items-center justify-center px-4 py-10 rounded-3xl" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
@@ -88,7 +88,7 @@ export default function HomeScreen({ onStart }) {
 
         <div className="mb-5 rounded-2xl p-4 border" style={{ background: '#EAF8FD', borderColor: '#B8EBF7' }}>
           <p className="text-[12.5px] leading-relaxed" style={{ color: '#1A1A6E' }}>
-            <span className="font-semibold">{isEn ? 'No difficulty required 🌤️' : 'לא צריך שיהיה קושי 🌤️'}</span> {noWorry}
+            <span className="font-semibold">{isEn ? "No difficulty required 🌤️" : 'לא חייב להיות קושי 🌤️'}</span> {noWorry}
           </p>
         </div>
 
