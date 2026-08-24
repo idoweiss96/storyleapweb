@@ -1,35 +1,41 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { X, Sparkles, GraduationCap, Wand2 } from 'lucide-react';
+import { X, Heart, RefreshCw, GraduationCap, Wand2 } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageContext';
 import { navPathFor } from '@/lib/marketingRoutes';
 
-// Shown when clicking the Hero "Let's start together" button. Offers the same three
-// entry paths as the "Get Started" nav dropdown (see Layout.jsx), so the choice
-// structure is identical in both places.
-export default function StartModal({ onClose, onPickSpecific }) {
+// Shown when clicking the Hero "Let's start together" button. Mirrors the "Get
+// Started" nav dropdown (see Layout.jsx): four options, each linking straight to
+// its own questionnaire — no intermediate choice screen.
+export default function StartModal({ onClose }) {
   const { lang } = useLanguage();
   const location = useLocation();
   const isHe = lang === 'he';
 
   const options = [
     {
-      key: 'specific',
-      icon: Sparkles,
-      title: isHe ? 'משהו ספציפי עובר על הילד/ה שלי עכשיו' : 'Something specific my child is going through right now',
-      action: onPickSpecific,
+      key: 'feeling',
+      icon: Heart,
+      title: isHe ? 'מתמודדים עם רגש' : 'Working through a feeling',
+      to: '/CreateStory',
     },
     {
-      key: 'school',
+      key: 'change',
+      icon: RefreshCw,
+      title: isHe ? 'מתכוננים לשינוי' : 'Getting ready for a change',
+      to: '/PrepareStory',
+    },
+    {
+      key: 'kita',
       icon: GraduationCap,
-      title: isHe ? 'מתכוננים לכיתה א׳/גן' : 'Getting ready for school',
+      title: isHe ? 'מתחילים גן / כיתה א׳' : 'Starting kindergarten / first grade',
       to: navPathFor('KitaAlef', location.pathname, lang),
     },
     {
       key: 'adventure',
       icon: Wand2,
-      title: isHe ? 'סתם הרפתקה כיפית ומעצימה' : 'Just a fun, empowering adventure',
+      title: isHe ? 'הרפתקה כיפית ומעצימה' : 'A fun, empowering adventure',
       to: '/HeroStory',
     },
   ];
@@ -52,18 +58,15 @@ export default function StartModal({ onClose, onPickSpecific }) {
         <div className="space-y-3">
           {options.map((opt) => {
             const Icon = opt.icon;
-            const content = (
-              <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all cursor-pointer">
-                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5 text-slate-700" />
+            return (
+              <Link key={opt.key} to={opt.to} onClick={onClose}>
+                <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all cursor-pointer">
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+                    <Icon className="w-5 h-5 text-slate-700" />
+                  </div>
+                  <span className="text-slate-800 font-medium text-sm">{opt.title}</span>
                 </div>
-                <span className="text-slate-800 font-medium text-sm">{opt.title}</span>
-              </div>
-            );
-            return opt.to ? (
-              <Link key={opt.key} to={opt.to} onClick={onClose}>{content}</Link>
-            ) : (
-              <button key={opt.key} onClick={opt.action} className="w-full">{content}</button>
+              </Link>
             );
           })}
         </div>

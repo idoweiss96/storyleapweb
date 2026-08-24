@@ -120,20 +120,7 @@ export default function Home() {
     trackEvent('homepage_viewed');
   }, []);
 
-  // Deep link support for the "Get Started" nav dropdown's first option, which
-  // points here with #start-chips to reveal the chip card.
-  useEffect(() => {
-    if (location.hash === '#start-chips') {
-      const el = document.getElementById('what-going-through-card');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [location.hash]);
 
-  const scrollToChips = () => {
-    setShowStartModal(false);
-    const el = document.getElementById('what-going-through-card');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   const features = [
   { icon: Wand2, title: t('feature1_title'), description: t('feature1_desc'), bg: 'bg-blue-50', iconColor: 'text-blue-600' },
@@ -390,7 +377,7 @@ export default function Home() {
 
       <AnimatePresence>
         {showStartModal && (
-          <StartModal onClose={() => setShowStartModal(false)} onPickSpecific={scrollToChips} />
+          <StartModal onClose={() => setShowStartModal(false)} />
         )}
       </AnimatePresence>
     </div>);

@@ -141,17 +141,21 @@ function LayoutInner({ children, currentPageName }) {
     window.dispatchEvent(new Event('credits-updated'));
   };
 
-  // Consolidates the three entry paths (also offered by the Hero "Let's start
-  // together" modal on Home) under one nav item instead of adding separate links
-  // for HeroStory/PrepareStory — same choice structure in both places.
+  // Consolidates all four entry flows (also offered by the Hero "Let's start
+  // together" modal on Home) under one nav item, each linking straight to its
+  // own questionnaire — no intermediate choice screen. CreateStory and
+  // PrepareStory get distinct labels so they aren't confused with each other:
+  // CreateStory = coping with an existing feeling, PrepareStory = getting ready
+  // for a future change/event.
   const getStartedItem = {
     name: 'GetStarted',
     label: lang === 'he' ? 'בואו נתחיל' : 'Get Started',
     icon: Sparkles,
     dropdown: true,
     children: [
-      { key: 'specific', label: lang === 'he' ? 'משהו ספציפי עובר על הילד/ה שלי' : 'Something specific for my child', to: `${navPathFor('Home', location.pathname, lang)}#start-chips` },
-      { key: 'school', label: lang === 'he' ? 'מתכוננים לכיתה א׳/גן' : 'Getting ready for school', to: navPathFor('KitaAlef', location.pathname, lang) },
+      { key: 'feeling', label: lang === 'he' ? 'מתמודדים עם רגש' : 'Working through a feeling', to: '/CreateStory' },
+      { key: 'change', label: lang === 'he' ? 'מתכוננים לשינוי' : 'Getting ready for a change', to: '/PrepareStory' },
+      { key: 'kita', label: lang === 'he' ? 'מתחילים גן / כיתה א׳' : 'Starting kindergarten / first grade', to: navPathFor('KitaAlef', location.pathname, lang) },
       { key: 'adventure', label: lang === 'he' ? 'הרפתקה כיפית ומעצימה' : 'A fun, empowering adventure', to: '/HeroStory' },
     ],
   };
