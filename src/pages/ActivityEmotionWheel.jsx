@@ -19,7 +19,7 @@ export default function ActivityEmotionWheel() {
 
       <Link
         to="/activities"
-        className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 mb-6"
+        className="site-chrome inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 mb-6"
       >
         <BackArrow className="w-4 h-4" />
         <span>{copy.back}</span>
@@ -33,7 +33,7 @@ export default function ActivityEmotionWheel() {
       <EmotionWheel lang={isHe ? 'he' : 'en'} />
 
       <div
-        className="flex gap-3 items-start mt-10 rounded-2xl p-4 text-sm leading-relaxed"
+        className="site-chrome flex gap-3 items-start mt-10 rounded-2xl p-4 text-sm leading-relaxed"
         style={{ background: '#FFF8EC', border: '1.5px solid #F5C842', color: '#7A5000' }}
       >
         <Lightbulb className="w-5 h-5 shrink-0 mt-0.5" />
