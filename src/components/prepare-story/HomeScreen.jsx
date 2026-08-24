@@ -66,7 +66,7 @@ export default function HomeScreen({ onStart }) {
         </div>
 
         <h1 className="text-xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>
-          {isEn ? 'Known before it happens 🗓️' : 'מוכר עוד לפני שזה קורה 🗓️'}
+          {isEn ? 'Turning the unfamiliar into the familiar 🗓️' : 'הופכים את הלא מוכר למוכר 🗓️'}
         </h1>
         <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>
           {isEn ? 'A personalized digital preparation book, 5 minutes to create' : 'ספר הכנה דיגיטלי מותאם אישית, 5 דקות ליצירה'}
