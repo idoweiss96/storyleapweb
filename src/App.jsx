@@ -39,6 +39,7 @@ import EditStory from './pages/EditStory';
 import StoryRedirect from './pages/StoryRedirect';
 import Activities from './pages/Activities';
 import ActivityEmotionWheel from './pages/ActivityEmotionWheel';
+import ActivityStrengthCards from './pages/ActivityStrengthCards';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -121,6 +122,7 @@ const AuthenticatedApp = () => {
       <Route path="/story/:order_id" element={<LayoutWrapper currentPageName="StoryRedirect"><StoryRedirect /></LayoutWrapper>} />
       <Route path="/activities" element={<LayoutWrapper currentPageName="Activities"><Activities /></LayoutWrapper>} />
       <Route path="/activities/emotion-wheel" element={<LayoutWrapper currentPageName="ActivityEmotionWheel"><ActivityEmotionWheel /></LayoutWrapper>} />
+      <Route path="/activities/strength-cards" element={<LayoutWrapper currentPageName="ActivityStrengthCards"><ActivityStrengthCards /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
