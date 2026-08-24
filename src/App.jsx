@@ -49,6 +49,14 @@ import ActivityBreakCard from './pages/ActivityBreakCard';
 import ActivityBodyMap from './pages/ActivityBodyMap';
 import ActivityEmotionCards from './pages/ActivityEmotionCards';
 import ActivityEmotionCheckin from './pages/ActivityEmotionCheckin';
+import ActivityTaskAnalysis from './pages/ActivityTaskAnalysis';
+import ActivityAdlSequence from './pages/ActivityAdlSequence';
+import ActivityRoutineChecklist from './pages/ActivityRoutineChecklist';
+import ActivityVisualTimer from './pages/ActivityVisualTimer';
+import ActivityBreathing from './pages/ActivityBreathing';
+import ActivitySafePlace from './pages/ActivitySafePlace';
+import ActivityVisualRules from './pages/ActivityVisualRules';
+import ActivityCalmCorner from './pages/ActivityCalmCorner';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -141,6 +149,14 @@ const AuthenticatedApp = () => {
       <Route path="/activities/body-map" element={<LayoutWrapper currentPageName="ActivityBodyMap"><ActivityBodyMap /></LayoutWrapper>} />
       <Route path="/activities/emotion-cards" element={<LayoutWrapper currentPageName="ActivityEmotionCards"><ActivityEmotionCards /></LayoutWrapper>} />
       <Route path="/activities/emotion-checkin" element={<LayoutWrapper currentPageName="ActivityEmotionCheckin"><ActivityEmotionCheckin /></LayoutWrapper>} />
+      <Route path="/activities/task-analysis" element={<LayoutWrapper currentPageName="ActivityTaskAnalysis"><ActivityTaskAnalysis /></LayoutWrapper>} />
+      <Route path="/activities/adl-sequence" element={<LayoutWrapper currentPageName="ActivityAdlSequence"><ActivityAdlSequence /></LayoutWrapper>} />
+      <Route path="/activities/routine-checklist" element={<LayoutWrapper currentPageName="ActivityRoutineChecklist"><ActivityRoutineChecklist /></LayoutWrapper>} />
+      <Route path="/activities/visual-timer" element={<LayoutWrapper currentPageName="ActivityVisualTimer"><ActivityVisualTimer /></LayoutWrapper>} />
+      <Route path="/activities/breathing" element={<LayoutWrapper currentPageName="ActivityBreathing"><ActivityBreathing /></LayoutWrapper>} />
+      <Route path="/activities/safe-place" element={<LayoutWrapper currentPageName="ActivitySafePlace"><ActivitySafePlace /></LayoutWrapper>} />
+      <Route path="/activities/visual-rules" element={<LayoutWrapper currentPageName="ActivityVisualRules"><ActivityVisualRules /></LayoutWrapper>} />
+      <Route path="/activities/calm-corner" element={<LayoutWrapper currentPageName="ActivityCalmCorner"><ActivityCalmCorner /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
