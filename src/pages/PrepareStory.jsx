@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import HomeScreen from '@/components/prepare-story/HomeScreen';
 import ContactScreen from '@/components/prepare-story/ContactScreen';
 import Questionnaire from '@/components/prepare-story/Questionnaire';
+import { getTopicPreset } from '@/components/prepare-story/questionsConfig';
 import { base44 } from '@/api/base44Client';
 import { useLanguage } from '@/components/LanguageContext';
 import BreadcrumbSchema from '@/components/SEO/BreadcrumbSchema';
@@ -20,7 +21,18 @@ export default function PrepareStory() {
   const { lang } = useLanguage();
   const location = useLocation();
   const [step, setStep] = useState('home');
-  const [answers, setAnswers] = useState({});
+  // A deep link like ?topic=moving_home pre-selects the category/topic questions
+  // on page 1, so the parent sees the relevant topic already chosen.
+  const [answers, setAnswers] = useState(() => {
+    try {
+      const topicParam = new URLSearchParams(window.location.search).get('topic');
+      if (topicParam) {
+        const preset = getTopicPreset(topicParam, lang === 'en');
+        if (preset) return preset;
+      }
+    } catch (_) {}
+    return {};
+  });
   const [storyId, setStoryId] = useState(null);
 
   useEffect(() => {

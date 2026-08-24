@@ -9,7 +9,7 @@ import GalleryTipPopup from './GalleryTipPopup';
 
 const GALLERY_ITEMS = [
   { id: 'kindergarten', dedicated: 'KitaAlef', src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/ee44ec4b5_image4.png', he: 'התחלת גן', en: 'Starting kindergarten' },
-  { id: 'moving', dedicated: 'MovingHouse', src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/aacd843f4_image52.png', he: 'התמודדות עם מעבר דירה', en: 'Coping with a big move' },
+  { id: 'moving', dedicated: 'PrepareStoryMoving', src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/aacd843f4_image52.png', he: 'התמודדות עם מעבר דירה', en: 'Coping with a big move' },
   { id: 'friends', src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/dd316698e_image51.png', he: 'הכרת חברים חדשים', en: 'Making new friends' },
   { id: 'bedtime', src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/0e345ce30_image5.png', he: 'רגשות גדולים לפני השינה', en: 'Big feelings before bedtime' },
   { id: 'goodbye', src: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/e38dd71a8_image54.png', he: 'פרידה מדי בוקר בגן', en: 'Saying goodbye each morning' },
@@ -27,7 +27,7 @@ export default function StoryGallery() {
 
   const handleItemClick = (item) => {
     if (item.dedicated === 'KitaAlef') { navigate(navPath('KitaAlef')); return; }
-    if (item.dedicated === 'MovingHouse') { navigate('/MovingHouse'); return; }
+    if (item.dedicated === 'PrepareStoryMoving') { navigate('/PrepareStory?topic=moving_home'); return; }
     setActiveTipId(item.id);
   };
 

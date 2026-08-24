@@ -18,8 +18,6 @@ import Vision from './pages/Vision';
 import OurMethods from './pages/OurMethods';
 import KitaAlef from './pages/KitaAlef';
 import KitaAlefStory from './pages/KitaAlefStory';
-import MovingHouse from './pages/MovingHouse';
-import MovingHouseStory from './pages/MovingHouseStory';
 import HeroStory from './pages/HeroStory';
 import HeroStoryCheckout from './pages/HeroStoryCheckout';
 import PrepareStory from './pages/PrepareStory';
@@ -101,8 +99,6 @@ const AuthenticatedApp = () => {
       <Route path="/our-methods" element={<LayoutWrapper currentPageName="OurMethods"><OurMethods /></LayoutWrapper>} />
       <Route path="/KitaAlef" element={<LayoutWrapper currentPageName="KitaAlef"><KitaAlef /></LayoutWrapper>} />
       <Route path="/KitaAlefStory" element={<LayoutWrapper currentPageName="KitaAlefStory"><KitaAlefStory /></LayoutWrapper>} />
-      <Route path="/MovingHouse" element={<LayoutWrapper currentPageName="MovingHouse"><MovingHouse /></LayoutWrapper>} />
-      <Route path="/MovingHouseStory" element={<LayoutWrapper currentPageName="MovingHouseStory"><MovingHouseStory /></LayoutWrapper>} />
       <Route path="/HeroStory" element={<LayoutWrapper currentPageName="HeroStory"><HeroStory /></LayoutWrapper>} />
       <Route path="/HeroStoryCheckout" element={<LayoutWrapper currentPageName="HeroStoryCheckout"><HeroStoryCheckout /></LayoutWrapper>} />
       <Route path="/PrepareStory" element={<LayoutWrapper currentPageName="PrepareStory"><PrepareStory /></LayoutWrapper>} />

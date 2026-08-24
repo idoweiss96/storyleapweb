@@ -51,12 +51,19 @@ export default function CreateStory() {
     const validKeys = ['chip_new', 'chip_fear', 'chip_moving', 'chip_friendship', 'chip_separation', 'chip_emotions', 'chip_other'];
     return validKeys.includes(val) ? val : null;
   });
-  const [formData, setFormData] = useState({
-    childName: '', childAge: '', gender: '', childImage: '',
-    parentImage: '', parentRelation: '',
-    setting: '', challengeType: '', customChallenge: '', triggerDesc: '',
-    reactionType: '', hobbies: '', contactEmail: '', contactPhone: '',
-    couponCode: '',
+  // A deep link like ?challenge=fears pre-selects the emotional challenge field,
+  // so the parent doesn't have to pick it manually.
+  const [formData, setFormData] = useState(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const challenge = urlParams.get('challenge');
+    const validChallenges = ['fears', 'social_difficulty', 'changes', 'emotional_regulation', 'separation_anxiety', 'self_confidence', 'sleep_issues', 'other'];
+    return {
+      childName: '', childAge: '', gender: '', childImage: '',
+      parentImage: '', parentRelation: '',
+      setting: '', challengeType: validChallenges.includes(challenge) ? challenge : '', customChallenge: '', triggerDesc: '',
+      reactionType: '', hobbies: '', contactEmail: '', contactPhone: '',
+      couponCode: '',
+    };
   });
 
   useEffect(() => {

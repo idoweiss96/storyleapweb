@@ -1,29 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Printer } from 'lucide-react';
+import { ANSWER_STYLES } from '../shared/cardStyles';
+import { PrintableAnswer } from '../shared/ActivityCards';
 import { EMOTIONS, UI } from './emotionWheelContent';
 
 const STYLE = `
-  /* Answer field. On screen a textarea; in print it becomes plain text, or ruled
-     lines when nothing was typed, so the card can also be filled in by hand. */
-  .ew-answer{
-    width:100%;margin-top:16px;
-    font-family:inherit;font-size:15px;color:#1a1a2e;line-height:1.55;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:12px;
-    padding:11px 13px;resize:vertical;min-height:72px;
-    transition:border-color .18s;
-  }
-  .ew-answer::placeholder{color:rgba(26,26,46,.34)}
-  .ew-answer:focus{border-color:#FF6FB5;outline:none}
-  .ew-answer-print,.ew-answer-blank{display:none}
-
   @media print{
-    .ew-answer{display:none}
-    .ew-answer-print{
-      display:block;margin-top:10px;font-size:14.5px;color:#1a1a2e;line-height:1.6;
-      white-space:pre-wrap;overflow-wrap:anywhere;
-    }
-    .ew-answer-blank{display:block;margin-top:12px}
-    .ew-answer-blank i{display:block;border-bottom:1px dashed #c4bcd8;height:22px}
     .ew-result{box-shadow:none;break-inside:avoid}
   }
 `;
@@ -117,8 +99,8 @@ export default function EmotionWheel({ lang = 'he' }) {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <style>{STYLE}</style>
+    <div className="ac-deck flex flex-col items-center">
+      <style>{ANSWER_STYLES + STYLE}</style>
 
       <div className="site-chrome relative" style={{ width: '100%', maxWidth: 340 }}>
         {/* Pointer, sitting above the wheel and never rotating with it */}
@@ -193,24 +175,14 @@ export default function EmotionWheel({ lang = 'he' }) {
             </h2>
             <p className="text-lg text-slate-700 leading-relaxed">{result.prompt}</p>
 
-            <textarea
-              className="ew-answer"
-              rows={3}
-              value={answers[result.key] || ''}
-              onChange={(e) => setAnswers((prev) => ({ ...prev, [result.key]: e.target.value }))}
-              placeholder={copy.answerPlaceholder}
-              aria-label={result.prompt}
-            />
-
-            {(answers[result.key] || '').trim() ? (
-              <p className="ew-answer-print text-start">{answers[result.key].trim()}</p>
-            ) : (
-              <span className="ew-answer-blank" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-            )}
+            <div className="text-start">
+              <PrintableAnswer
+                value={answers[result.key]}
+                onChange={(value) => setAnswers((prev) => ({ ...prev, [result.key]: value }))}
+                placeholder={copy.answerPlaceholder}
+                ariaLabel={result.prompt}
+              />
+            </div>
           </div>
         ) : (
           <p className="text-center text-slate-400">{copy.instructions}</p>

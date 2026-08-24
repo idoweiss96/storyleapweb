@@ -462,3 +462,20 @@ export function topicKeyFromLabel(label) {
   const hit = TOPICS.find((t) => label.includes(t.he) || label.includes(t.en));
   return hit ? hit.key : '';
 }
+
+/**
+ * Stable topic key → preset answers for the category/topic questions on page 1
+ * ("moving_home" → { topic_category, topic, topic_key }). Used to pre-select the
+ * topic when arriving via a deep link (e.g. ?topic=moving_home), so the parent sees
+ * it already chosen instead of picking it manually. Returns null for an unknown key.
+ */
+export function getTopicPreset(topicKey, isEn) {
+  const topic = TOPICS.find((t) => t.key === topicKey);
+  if (!topic) return null;
+  const category = CATEGORIES.find((c) => c.key === topic.category);
+  return {
+    topic_category: category ? catLabel(category, isEn) : '',
+    topic: topicLabel(topic, isEn),
+    topic_key: topic.key,
+  };
+}
