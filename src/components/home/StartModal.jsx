@@ -35,7 +35,7 @@ export default function StartModal({ onClose }) {
     {
       key: 'adventure',
       icon: Wand2,
-      title: isHe ? 'הרפתקה כיפית ומעצימה' : 'A fun, empowering adventure',
+      title: isHe ? 'סיפור מעצים ביטחון' : 'Building Confidence',
       to: '/HeroStory',
     },
   ];
