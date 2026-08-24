@@ -60,6 +60,21 @@ const STYLE = `
   .sc-hand .sc-hand-slot:nth-child(4n+3) .sc-card{transform:rotate(-1.5deg)}
   .sc-hand .sc-hand-slot:nth-child(4n+4) .sc-card{transform:rotate(3deg)}
 
+  /* Answer field. On screen it is a textarea; in print it becomes plain text,
+     or ruled lines when nothing was typed, so the sheet can be filled by hand. */
+  .sc-answer{
+    width:100%;margin-top:10px;
+    font-family:inherit;font-size:15px;color:#1a1a2e;line-height:1.55;
+    background:#fff;border:1.5px solid #EDE9F8;border-radius:12px;
+    padding:11px 13px;resize:vertical;min-height:64px;
+    transition:border-color .18s;
+  }
+  .sc-answer::placeholder{color:rgba(26,26,46,.36)}
+  .sc-answer:focus{border-color:#FF6FB5;outline:none}
+  .sc-answer-print,.sc-answer-blank{display:none}
+
+  .sc-qrow{flex:1;min-width:0}
+
   @media (prefers-reduced-motion:reduce){
     .sc-card,.sc-card:hover,.sc-card:active{transition:none;transform:none}
     .sc-hand .sc-card{transform:none}
@@ -68,6 +83,13 @@ const STYLE = `
   @media print{
     .sc-card{box-shadow:none;break-inside:avoid}
     .sc-hand .sc-card{transform:none}
+    .sc-answer{display:none}
+    .sc-answer-print{
+      display:block;margin-top:8px;font-size:14.5px;color:#1a1a2e;
+      white-space:pre-wrap;overflow-wrap:anywhere;
+    }
+    .sc-answer-blank{display:block;margin-top:10px}
+    .sc-answer-blank i{display:block;border-bottom:1px dashed #b4b4c6;height:20px}
   }
 `;
 
@@ -104,13 +126,19 @@ export default function StrengthCards({ lang = 'he' }) {
 
   const [selected, setSelected] = useState([]);
   const [revealed, setRevealed] = useState(false);
+  const [answers, setAnswers] = useState({});
 
   const toggle = (id) => {
     setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
+  const answer = (id, value) => {
+    setAnswers((prev) => ({ ...prev, [id]: value }));
+  };
+
   const restart = () => {
     setSelected([]);
+    setAnswers({});
     setRevealed(false);
   };
 
@@ -143,6 +171,7 @@ export default function StrengthCards({ lang = 'he' }) {
           <ul className="flex flex-col gap-4">
             {chosen.map((strength) => {
               const text = strength[lang] || strength.he;
+              const written = (answers[strength.id] || '').trim();
               return (
                 <li
                   key={strength.id}
@@ -150,9 +179,27 @@ export default function StrengthCards({ lang = 'he' }) {
                   style={{ background: '#FFF0F7' }}
                 >
                   <span className="text-2xl leading-none shrink-0">{strength.emoji}</span>
-                  <div>
+                  <div className="sc-qrow">
                     <p className="font-bold text-slate-800">{text.label}</p>
                     <p className="text-slate-600 mt-1">{text.prompt}</p>
+
+                    <textarea
+                      className="sc-answer"
+                      rows={2}
+                      value={answers[strength.id] || ''}
+                      onChange={(e) => answer(strength.id, e.target.value)}
+                      placeholder={copy.answerPlaceholder}
+                      aria-label={text.prompt}
+                    />
+
+                    {written ? (
+                      <p className="sc-answer-print">{written}</p>
+                    ) : (
+                      <span className="sc-answer-blank" aria-hidden="true">
+                        <i />
+                        <i />
+                      </span>
+                    )}
                   </div>
                 </li>
               );
