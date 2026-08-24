@@ -19,12 +19,16 @@ export default function StartModal({ onClose }) {
       icon: Heart,
       title: isHe ? 'מתמודדים עם רגש' : 'Working through a feeling',
       to: '/CreateStory',
+      iconBg: 'bg-rose-100',
+      iconColor: 'text-rose-500',
     },
     {
       key: 'change',
       icon: RefreshCw,
       title: isHe ? 'מתכוננים לשינוי' : 'Getting ready for a change',
       to: '/PrepareStory',
+      iconBg: 'bg-sky-100',
+      iconColor: 'text-sky-500',
     },
     {
       key: 'kita',
@@ -33,12 +37,16 @@ export default function StartModal({ onClose }) {
       subtitle: isHe ? 'שאלון משותף הורה-ילד, 3 דקות' : 'A short parent-child questionnaire, 3 minutes',
       to: navPathFor('KitaAlef', location.pathname, lang),
       special: true,
+      iconBg: 'bg-purple-100',
+      iconColor: 'text-purple-500',
     },
     {
       key: 'adventure',
       icon: Wand2,
       title: isHe ? 'סיפור מעצים ביטחון' : 'Building Confidence',
       to: '/HeroStory',
+      iconBg: 'bg-amber-100',
+      iconColor: 'text-amber-500',
     },
   ];
 
@@ -72,8 +80,8 @@ export default function StartModal({ onClose }) {
                       ✨ {isHe ? 'ספיישל' : 'Special'}
                     </span>
                   )}
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
-                    <Icon className="w-5 h-5 text-slate-700" />
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${opt.iconBg || 'bg-slate-100'}`}>
+                    <Icon className={`w-5 h-5 ${opt.iconColor || 'text-slate-700'}`} />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-slate-800 font-medium text-sm">{opt.title}</span>
