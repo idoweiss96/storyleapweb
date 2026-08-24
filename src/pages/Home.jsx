@@ -147,6 +147,13 @@ export default function Home() {
                 {t('hero_pill_digital')}
               </div>
             </div>
+            <Button
+              size="lg"
+              onClick={() => document.getElementById('what-going-through-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+              className="h-14 px-10 rounded-xl text-lg font-bold bg-slate-800 hover:bg-slate-700 text-white shadow-lg mb-6"
+            >
+              {lang === 'he' ? 'בואו נתחיל יחד ←' : "Let's start together →"}
+            </Button>
             <div className="flex flex-col items-center gap-2 mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200">
                 ☀️ {lang === 'he' ? 'מבצע חופש גדול' : 'Summer Sale'}
@@ -157,7 +164,7 @@ export default function Home() {
                 <span className="font-bold">{lang === 'he' ? '₪70' : '$25'}</span>
               </div>
             </div>
-            <div className="mb-4 rounded-2xl bg-white/75 shadow-lg shadow-slate-200/60 px-4 py-6 md:px-8 md:py-8">
+            <div id="what-going-through-card" className="mb-4 rounded-2xl bg-white/75 shadow-lg shadow-slate-200/60 px-4 py-6 md:px-8 md:py-8">
               <p className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-4">{t('hero_chips_title')}</p>
               <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-xl mx-auto">
                 {CHIP_ITEMS.map((chip) => (
