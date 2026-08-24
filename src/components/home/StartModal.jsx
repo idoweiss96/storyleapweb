@@ -30,7 +30,9 @@ export default function StartModal({ onClose }) {
       key: 'kita',
       icon: GraduationCap,
       title: isHe ? 'מתחילים כיתה א׳' : 'Starting kindergarten',
+      subtitle: isHe ? 'שאלון משותף הורה-ילד, 3 דקות' : 'A short parent-child questionnaire, 3 minutes',
       to: navPathFor('KitaAlef', location.pathname, lang),
+      special: true,
     },
     {
       key: 'adventure',
@@ -60,11 +62,25 @@ export default function StartModal({ onClose }) {
             const Icon = opt.icon;
             return (
               <Link key={opt.key} to={opt.to} onClick={onClose}>
-                <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all cursor-pointer">
+                <div className={`relative flex items-center gap-3 p-4 rounded-xl transition-all cursor-pointer ${
+                  opt.special
+                    ? 'border-2 border-pink-200 bg-gradient-to-r from-pink-50 via-purple-50 to-sky-50 hover:border-pink-300'
+                    : 'border border-slate-200 hover:border-slate-400 hover:bg-slate-50'
+                }`}>
+                  {opt.special && (
+                    <span className="absolute -top-2.5 end-3 text-[11px] font-semibold text-white bg-gradient-to-r from-pink-400 to-sky-400 rounded-full px-2 py-0.5 shadow-sm">
+                      ✨ {isHe ? 'ספיישל' : 'Special'}
+                    </span>
+                  )}
                   <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
                     <Icon className="w-5 h-5 text-slate-700" />
                   </div>
-                  <span className="text-slate-800 font-medium text-sm">{opt.title}</span>
+                  <div className="flex flex-col">
+                    <span className="text-slate-800 font-medium text-sm">{opt.title}</span>
+                    {opt.subtitle && (
+                      <span className="text-xs text-slate-500 mt-0.5">{opt.subtitle}</span>
+                    )}
+                  </div>
                 </div>
               </Link>
             );
