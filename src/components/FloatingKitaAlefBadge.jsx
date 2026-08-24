@@ -35,7 +35,7 @@ export default function FloatingKitaAlefBadge() {
         <motion.span animate={{ rotate: [0, 20, -20, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
           <Sparkles className="w-4 h-4" />
         </motion.span>
-        {isHe ? 'ספיישל כיתה א׳' : 'Starting School Special'}
+        {isHe ? 'ספיישל כיתה א׳' : 'Starting Kindergarten Special'}
       </motion.button>
     </motion.div>
   );
