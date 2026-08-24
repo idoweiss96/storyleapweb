@@ -69,7 +69,7 @@ export default function HomeScreen({ onStart }) {
           {isEn ? 'Known before it happens 🗓️' : 'מוכר עוד לפני שזה קורה 🗓️'}
         </h1>
         <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>
-          {isEn ? 'A personalized preparation book, 5 minutes to create' : 'ספר הכנה מותאם אישית, 5 דקות ליצירה'}
+          {isEn ? 'A personalized digital preparation book, 5 minutes to create' : 'ספר הכנה דיגיטלי מותאם אישית, 5 דקות ליצירה'}
         </p>
 
         <div className="mb-5 rounded-2xl p-4 border" style={{ background: '#FFF8EC', borderColor: '#F5C842' }}>
