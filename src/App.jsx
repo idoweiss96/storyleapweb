@@ -37,6 +37,7 @@ import FreeActivityMorningEvening from './pages/FreeActivityMorningEvening';
 import FreeActivityLittleHeart from './pages/FreeActivityLittleHeart';
 import EditStory from './pages/EditStory';
 import StoryRedirect from './pages/StoryRedirect';
+import Activities from './pages/Activities';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -117,6 +118,7 @@ const AuthenticatedApp = () => {
       <Route path="/FreeActivityLittleHeart" element={<LayoutWrapper currentPageName="FreeActivityLittleHeart"><FreeActivityLittleHeart /></LayoutWrapper>} />
       <Route path="/EditStory" element={<LayoutWrapper currentPageName="EditStory"><EditStory /></LayoutWrapper>} />
       <Route path="/story/:order_id" element={<LayoutWrapper currentPageName="StoryRedirect"><StoryRedirect /></LayoutWrapper>} />
+      <Route path="/activities" element={<LayoutWrapper currentPageName="Activities"><Activities /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
