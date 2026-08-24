@@ -21,6 +21,15 @@ const ACTIVITIES_META = {
 // Adding a game = adding an object here (plus its page + route in App.jsx).
 const GAMES = [
   {
+    path: '/activities/feelings-explorer',
+    emoji: '🧭',
+    title: { en: 'Why Do I Feel This Way?', he: 'למה אני מרגיש/ה ככה?' },
+    desc: {
+      en: 'Step closer to a feeling until you find what happened',
+      he: 'מתקרבים לרגש צעד-צעד עד שמגלים מה בדיוק קרה',
+    },
+  },
+  {
     path: '/activities/emotion-wheel',
     emoji: '🎡',
     title: { en: 'The Emotion Wheel', he: 'גלגל הרגשות' },
