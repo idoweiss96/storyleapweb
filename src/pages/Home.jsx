@@ -11,6 +11,7 @@ import { navPathFor } from '@/lib/marketingRoutes';
 import StoryGallery from '@/components/home/StoryGallery';
 import { trackEvent } from '@/lib/posthog';
 import PageMeta from '@/components/SEO/PageMeta';
+import FloatingKitaAlefBadge from '@/components/FloatingKitaAlefBadge';
 
 const HOME_META = {
   en: { title: "StoryLeap - Helping Families Through Childhood's Moments", description: 'StoryLeap helps families navigate the emotional moments of childhood, with guidance for parents, tools and activities for children, and personalized stories.' },
@@ -114,6 +115,7 @@ export default function Home() {
   return (
     <div className="pb-12">
       <PageMeta title={homeMeta.title} description={homeMeta.description} />
+      <FloatingKitaAlefBadge />
       {/* Hero Section */}
       <section className="relative py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
@@ -156,7 +158,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mb-4 rounded-2xl bg-white/75 shadow-lg shadow-slate-200/60 px-4 py-6 md:px-8 md:py-8">
-              <p className="text-base font-semibold text-slate-700 mb-4">{t('hero_chips_title')}</p>
+              <p className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-4">{t('hero_chips_title')}</p>
               <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-xl mx-auto">
                 {CHIP_ITEMS.map((chip) => (
                   <Link key={chip.key} to={chip.key === 'chip_moving' ? '/MovingHouse' : `${createPageUrl('CreateStory')}?from=${chip.key}`}>
