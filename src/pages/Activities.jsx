@@ -92,6 +92,24 @@ const GAMES = [
       he: 'שני שלבים לרגעים שקשה לעבור בהם למשהו אחר',
     },
   },
+  {
+    path: '/activities/choice-board',
+    emoji: '🔀',
+    title: { en: 'The Choice Board', he: 'לוח הבחירה' },
+    desc: {
+      en: 'Two to four options for a tricky moment in the day',
+      he: 'שתיים עד ארבע אפשרויות לרגע קשה ביום',
+    },
+  },
+  {
+    path: '/activities/break-card',
+    emoji: '✋',
+    title: { en: 'My Break Card', he: 'כרטיס ההפסקה שלי' },
+    desc: {
+      en: 'A card to show instead of having to explain',
+      he: 'כרטיס קטן להראות במקום להסביר',
+    },
+  },
 ];
 
 export default function Activities() {
