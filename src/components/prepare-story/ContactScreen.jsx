@@ -54,7 +54,7 @@ export default function ContactScreen({ answers, setAnswers, onSubmit }) {
           {isEn ? 'Who is the book for?' : 'למי הספר?'}
         </h2>
         <p className="text-sm text-center mb-2" style={{ color: '#6b6b8a' }}>
-          {isEn ? "We'll email the finished book here" : 'לכאן נשלח את הספר המוכן'}
+          {isEn ? 'The digital book will be sent here by email' : 'הספר הדיגיטלי ישלח לכאן במייל'}
         </p>
 
         {introQuestions.map(q => (
