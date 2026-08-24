@@ -110,6 +110,33 @@ const GAMES = [
       he: 'כרטיס קטן להראות במקום להסביר',
     },
   },
+  {
+    path: '/activities/body-map',
+    emoji: '🧍',
+    title: { en: 'My Body Map', he: 'מפת הגוף שלי' },
+    desc: {
+      en: 'Mark on the body where you feel the feeling',
+      he: 'מסמנים על הגוף איפה מרגישים את הרגש',
+    },
+  },
+  {
+    path: '/activities/emotion-cards',
+    emoji: '🃏',
+    title: { en: 'Our Emotion Cards', he: 'קלפי הרגשות שלנו' },
+    desc: {
+      en: 'Build a deck, print it and cut out real cards',
+      he: 'בונים חפיסה, מדפיסים וגוזרים קלפים אמיתיים',
+    },
+  },
+  {
+    path: '/activities/emotion-checkin',
+    emoji: '🗓️',
+    title: { en: 'The Weekly Check-in', he: 'הצ׳ק-אין השבועי' },
+    desc: {
+      en: 'A printable chart to mark how each day went',
+      he: 'לוח להדפסה שמסמנים בו כל יום איך היה',
+    },
+  },
 ];
 
 export default function Activities() {
