@@ -74,6 +74,24 @@ const GAMES = [
       he: 'מסמנים כמה הרגש חזק, ומגלים מה יכול לעזור',
     },
   },
+  {
+    path: '/activities/routine-board',
+    emoji: '📋',
+    title: { en: 'My Routine Board', he: 'לוח סדר היום שלי' },
+    desc: {
+      en: 'Build the day in order and print a board to hang up',
+      he: 'בונים את היום לפי הסדר ומדפיסים לוח לתלייה',
+    },
+  },
+  {
+    path: '/activities/first-then',
+    emoji: '➡️',
+    title: { en: 'First, Then', he: 'קודם, ואז' },
+    desc: {
+      en: 'Two steps for the moments when moving on is hard',
+      he: 'שני שלבים לרגעים שקשה לעבור בהם למשהו אחר',
+    },
+  },
 ];
 
 export default function Activities() {
