@@ -53,7 +53,7 @@ export default function StartModal({ onClose }) {
           <X className="w-5 h-5" />
         </button>
         <h2 className="text-lg font-bold text-slate-800 text-center mb-6">
-          {isHe ? 'עם מה נתחיל?' : 'What would you like to start with?'}
+          {isHe ? 'איזה סיפור ניצור?' : 'What would you like to start with?'}
         </h2>
         <div className="space-y-3">
           {options.map((opt) => {
