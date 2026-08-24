@@ -29,6 +29,15 @@ const GAMES = [
       he: 'מסובבים את הגלגל ומדברים על הרגש שיצא',
     },
   },
+  {
+    path: '/activities/strength-cards',
+    emoji: '💎',
+    title: { en: 'My Strength Cards', he: 'קלפי החוזקות שלי' },
+    desc: {
+      en: 'Pick the cards that feel like you and print your strengths',
+      he: 'בוחרים את הקלפים שמרגישים כמוך ומדפיסים את החוזקות',
+    },
+  },
 ];
 
 export default function Activities() {
