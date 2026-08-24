@@ -23,14 +23,20 @@ export default function FloatingKitaAlefBadge() {
       className="fixed bottom-6 z-40"
       style={{ [isHe ? 'right' : 'left']: '1.5rem' }}
     >
-      <button
+      <motion.button
         onClick={handleClick}
-        className="flex items-center gap-1.5 px-4 py-3 rounded-full text-white text-sm font-semibold shadow-lg hover:scale-105 transition-transform"
+        animate={{ scale: [1, 1.06, 1] }}
+        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        whileHover={{ scale: 1.15, boxShadow: '0 12px 32px rgba(255,111,181,0.6)' }}
+        whileTap={{ scale: 0.95 }}
+        className="flex items-center gap-1.5 px-4 py-3 rounded-full text-white text-sm font-semibold shadow-lg"
         style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)', boxShadow: '0 8px 24px rgba(255,111,181,0.4)' }}
       >
-        <Sparkles className="w-4 h-4" />
+        <motion.span animate={{ rotate: [0, 20, -20, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
+          <Sparkles className="w-4 h-4" />
+        </motion.span>
         {isHe ? 'ספיישל כיתה א׳' : 'Starting School Special'}
-      </button>
+      </motion.button>
     </motion.div>
   );
 }
