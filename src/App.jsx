@@ -41,6 +41,7 @@ import ActivityStrengthCards from './pages/ActivityStrengthCards';
 import ActivityCopingCards from './pages/ActivityCopingCards';
 import ActivityEmotionDrawing from './pages/ActivityEmotionDrawing';
 import ActivityEmotionThermometer from './pages/ActivityEmotionThermometer';
+import ActivityFeelingsExplorer from './pages/ActivityFeelingsExplorer';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -125,6 +126,7 @@ const AuthenticatedApp = () => {
       <Route path="/activities/coping-cards" element={<LayoutWrapper currentPageName="ActivityCopingCards"><ActivityCopingCards /></LayoutWrapper>} />
       <Route path="/activities/emotion-drawing" element={<LayoutWrapper currentPageName="ActivityEmotionDrawing"><ActivityEmotionDrawing /></LayoutWrapper>} />
       <Route path="/activities/emotion-thermometer" element={<LayoutWrapper currentPageName="ActivityEmotionThermometer"><ActivityEmotionThermometer /></LayoutWrapper>} />
+      <Route path="/activities/feelings-explorer" element={<LayoutWrapper currentPageName="ActivityFeelingsExplorer"><ActivityFeelingsExplorer /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
