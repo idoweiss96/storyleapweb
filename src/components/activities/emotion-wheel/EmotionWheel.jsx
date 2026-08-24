@@ -1,5 +1,32 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Printer } from 'lucide-react';
 import { EMOTIONS, UI } from './emotionWheelContent';
+
+const STYLE = `
+  /* Answer field. On screen a textarea; in print it becomes plain text, or ruled
+     lines when nothing was typed, so the card can also be filled in by hand. */
+  .ew-answer{
+    width:100%;margin-top:16px;
+    font-family:inherit;font-size:15px;color:#1a1a2e;line-height:1.55;
+    background:#fff;border:1.5px solid #EDE9F8;border-radius:12px;
+    padding:11px 13px;resize:vertical;min-height:72px;
+    transition:border-color .18s;
+  }
+  .ew-answer::placeholder{color:rgba(26,26,46,.34)}
+  .ew-answer:focus{border-color:#FF6FB5;outline:none}
+  .ew-answer-print,.ew-answer-blank{display:none}
+
+  @media print{
+    .ew-answer{display:none}
+    .ew-answer-print{
+      display:block;margin-top:10px;font-size:14.5px;color:#1a1a2e;line-height:1.6;
+      white-space:pre-wrap;overflow-wrap:anywhere;
+    }
+    .ew-answer-blank{display:block;margin-top:12px}
+    .ew-answer-blank i{display:block;border-bottom:1px dashed #c4bcd8;height:22px}
+    .ew-result{box-shadow:none;break-inside:avoid}
+  }
+`;
 
 // Geometry, in viewBox units. Angles are measured in degrees from 12 o'clock,
 // growing clockwise, which is also the direction the wheel spins.
@@ -34,6 +61,10 @@ export default function EmotionWheel({ lang = 'he' }) {
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [result, setResult] = useState(null);
+
+  // Answers are keyed by emotion + which of its prompts was asked, so spinning
+  // away and landing back on the same question brings the answer back with it.
+  const [answers, setAnswers] = useState({});
 
   // How many times each emotion has come up, so its prompts cycle instead of repeating.
   const landings = useRef({});
@@ -72,10 +103,12 @@ export default function EmotionWheel({ lang = 'he' }) {
     timer.current = setTimeout(
       () => {
         const text = emotion[lang] || emotion.he;
+        const promptIndex = seen % text.prompts.length;
         setResult({
           emotion,
+          key: `${emotion.id}:${promptIndex}`,
           label: text.label,
-          prompt: text.prompts[seen % text.prompts.length],
+          prompt: text.prompts[promptIndex],
         });
         setSpinning(false);
       },
@@ -85,7 +118,9 @@ export default function EmotionWheel({ lang = 'he' }) {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative" style={{ width: '100%', maxWidth: 340 }}>
+      <style>{STYLE}</style>
+
+      <div className="site-chrome relative" style={{ width: '100%', maxWidth: 340 }}>
         {/* Pointer, sitting above the wheel and never rotating with it */}
         <div className="absolute left-1/2 -translate-x-1/2 -top-1 z-10">
           <svg width="28" height="24" viewBox="0 0 28 24" aria-hidden="true">
@@ -139,7 +174,7 @@ export default function EmotionWheel({ lang = 'he' }) {
         type="button"
         onClick={spin}
         disabled={spinning}
-        className="mt-7 px-8 py-3.5 rounded-full text-white text-base font-semibold shadow-lg transition-transform disabled:opacity-60 disabled:cursor-not-allowed active:scale-[.98]"
+        className="site-chrome mt-7 px-8 py-3.5 rounded-full text-white text-base font-semibold shadow-lg transition-transform disabled:opacity-60 disabled:cursor-not-allowed active:scale-[.98]"
         style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
       >
         {spinning ? copy.spinning : result ? copy.again : copy.spin}
@@ -148,7 +183,7 @@ export default function EmotionWheel({ lang = 'he' }) {
       <div aria-live="polite" className="w-full mt-7 min-h-[132px]">
         {result ? (
           <div
-            className="rounded-2xl bg-white border p-6 text-center"
+            className="ew-result rounded-2xl bg-white border p-6 text-center"
             style={{ borderColor: result.emotion.color, boxShadow: '0 4px 20px rgba(255,111,181,.10)' }}
           >
             <div className="text-5xl mb-2">{result.emotion.emoji}</div>
@@ -157,11 +192,41 @@ export default function EmotionWheel({ lang = 'he' }) {
               {result.label}
             </h2>
             <p className="text-lg text-slate-700 leading-relaxed">{result.prompt}</p>
+
+            <textarea
+              className="ew-answer"
+              rows={3}
+              value={answers[result.key] || ''}
+              onChange={(e) => setAnswers((prev) => ({ ...prev, [result.key]: e.target.value }))}
+              placeholder={copy.answerPlaceholder}
+              aria-label={result.prompt}
+            />
+
+            {(answers[result.key] || '').trim() ? (
+              <p className="ew-answer-print text-start">{answers[result.key].trim()}</p>
+            ) : (
+              <span className="ew-answer-blank" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+            )}
           </div>
         ) : (
           <p className="text-center text-slate-400">{copy.instructions}</p>
         )}
       </div>
+
+      {result && (
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="site-chrome inline-flex items-center gap-2 mt-5 px-6 py-3 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+        >
+          <Printer className="w-4 h-4" />
+          {copy.print}
+        </button>
+      )}
     </div>
   );
 }
