@@ -27,22 +27,22 @@ export default function HomeScreen({ onStart }) {
   const SECTIONS = isEn
     ? [
         { emoji: '🗓️', title: 'The topic', desc: 'Moving house, a new sibling, a first dentist visit, potty training, starting kindergarten — and 46 more.' },
-        { emoji: '📋', title: 'What happens', desc: 'The sequence, in order. This is the most useful thing in the whole book.' },
-        { emoji: '👂', title: 'How it will feel', desc: 'What they will see, hear and feel — so the real thing holds no surprises.' },
-        { emoji: '🙋', title: 'Their role', desc: 'What they get to choose or do. An event you have a job in is one you take part in.' },
-        { emoji: '📸', title: 'Photos', desc: "Your child's photo, so the child in the illustrations really looks like them." },
+        { emoji: '📋', title: 'What happens', desc: "Describe what's expected to happen, step by step and in order. This is one of the most important parts of the book." },
+        { emoji: '👂', title: 'How it will feel', desc: 'What they will see, hear and feel — so the real experience will feel more familiar and expected.' },
+        { emoji: '🙋', title: 'Their role', desc: 'What they will get to do, choose or say during the event. When a child has a clear role, it is easier to feel part of what is happening.' },
+        { emoji: '📸', title: 'Photos', desc: "Upload a photo of your child, so the character in the illustrations really looks like them." },
       ]
     : [
-        { emoji: '🗓️', title: 'הנושא', desc: 'מעבר דירה, אח חדש, ביקור ראשון אצל רופא שיניים, גמילה, כניסה לגן — ועוד 46.' },
-        { emoji: '📋', title: 'מה יקרה', desc: 'הרצף, לפי הסדר. זה הדבר הכי שימושי בכל הספר.' },
-        { emoji: '👂', title: 'איך זה ירגיש', desc: 'מה יראו, ישמעו וירגישו — כדי שבאירוע האמיתי לא תהיה שום הפתעה.' },
-        { emoji: '🙋', title: 'התפקיד שלהם', desc: 'מה יוכלו לבחור ולעשות. אירוע שיש בו תפקיד הוא אירוע שמשתתפים בו.' },
-        { emoji: '📸', title: 'תמונות', desc: 'תמונה של הילד/ה, כדי שהדמות באיורים באמת תדמה לו/ה.' },
+        { emoji: '🗓️', title: 'הנושא', desc: 'מעבר דירה, אח חדש, ביקור ראשון אצל רופא השיניים, גמילה, כניסה לגן ועוד 46 נושאים.' },
+        { emoji: '📋', title: 'מה יקרה', desc: 'תארו את מה שצפוי לקרות, שלב אחר שלב ולפי הסדר. זה אחד החלקים החשובים ביותר בספר.' },
+        { emoji: '👂', title: 'איך זה ירגיש', desc: 'מה הילד או הילדה יראו, ישמעו וירגישו, כדי שהחוויה האמיתית תהיה מוכרת וצפויה יותר.' },
+        { emoji: '🙋', title: 'התפקיד שלהם', desc: 'מה הם יוכלו לעשות, לבחור או להגיד במהלך האירוע. כשיש לילד תפקיד ברור, קל יותר להרגיש חלק ממה שקורה.' },
+        { emoji: '📸', title: 'תמונות', desc: 'העלו תמונה של הילד או הילדה, כדי שהדמות באיורים תהיה דומה להם.' },
       ];
 
   const introText = isEn
-    ? 'A preparation book works because of accuracy, not reassurance. A child who already knows the order of events, and what things will look and sound like, meets something familiar instead of a surprise. So the more concrete you are — the actual room, the actual sequence, the actual noise — the more the book will do its job.'
-    : 'ספר הכנה עובד בזכות דיוק, לא בזכות הרגעה. ילד/ה שכבר יודע/ת מה הסדר, ואיך זה ייראה וישמע, פוגש/ת משהו מוכר במקום הפתעה. לכן ככל שתהיו קונקרטיים יותר — החדר האמיתי, הרצף האמיתי, הרעש האמיתי — כך הספר יעשה את העבודה שלו טוב יותר.';
+    ? 'A preparation book works best when it is accurate and concrete. When a child knows in advance what is about to happen, what things will look like, what they will hear and what the order will be, the event turns from something unfamiliar into something they already met in a story. So the more concrete you are with the details, the better the book can prepare them.'
+    : 'ספר הכנה עובד הכי טוב כשהוא מדויק ומוחשי. כשילד או ילדה יודעים מראש מה עומד לקרות, איך הדברים ייראו, מה הם ישמעו ומה יהיה הסדר, האירוע הופך ממשהו לא מוכר למשהו שכבר פגשו בסיפור. לכן, ככל שתהיו קונקרטיים יותר בפרטים, כך הספר יוכל להכין אותם טוב יותר.';
 
   const noWorry = isEn
     ? 'If your child has not asked about it or seemed concerned, say so — and the book will contain no worry at all. That is deliberate: a book can plant a worry, not only answer one.'
