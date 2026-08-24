@@ -147,13 +147,14 @@ export default function Home() {
                 {t('hero_pill_digital')}
               </div>
             </div>
-            <Button
-              size="lg"
-              onClick={() => document.getElementById('what-going-through-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-              className="h-14 px-10 rounded-xl text-lg font-bold bg-slate-800 hover:bg-slate-700 text-white shadow-lg mb-6"
-            >
-              {lang === 'he' ? 'בואו נתחיל יחד ←' : "Let's start together →"}
-            </Button>
+            <Link to={createPageUrl('CreateStory')}>
+              <Button
+                size="lg"
+                className="h-14 px-10 rounded-xl text-lg font-bold bg-slate-800 hover:bg-slate-700 text-white shadow-lg mb-6"
+              >
+                {lang === 'he' ? 'בואו נתחיל יחד ←' : "Let's start together →"}
+              </Button>
+            </Link>
             <div className="flex flex-col items-center gap-2 mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200">
                 ☀️ {lang === 'he' ? 'מבצע חופש גדול' : 'Summer Sale'}
