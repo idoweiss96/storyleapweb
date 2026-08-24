@@ -48,6 +48,7 @@
 
 | פעילות | תיקייה | נתיב | מנוע | השאלה שהיא שואלת |
 |---|---|---|---|---|
+| למה אני מרגיש/ה ככה? | `feelings-explorer/` | `/activities/feelings-explorer` | דריל-דאון | **למה** אני מרגיש? |
 | גלגל הרגשות | `emotion-wheel/` | `/activities/emotion-wheel` | כרטיסים · `spin` | מה אני מרגיש? |
 | קלפי החוזקות שלי | `strength-cards/` | `/activities/strength-cards` | כרטיסים · `pick` | מי אני? |
 | הקלפים שעוזרים לי | `coping-cards/` | `/activities/coping-cards` | כרטיסים · `build-a-kit` | מה אני עושה? |
@@ -88,14 +89,18 @@ src/components/activities/
 │   ├── README.md
 │   ├── emotionDrawingContent.js
 │   └── EmotionDrawing.jsx
-└── emotion-thermometer/
+├── emotion-thermometer/
+│   ├── README.md
+│   ├── emotionThermometerContent.js
+│   └── EmotionThermometer.jsx
+└── feelings-explorer/
     ├── README.md
-    ├── emotionThermometerContent.js
-    └── EmotionThermometer.jsx
+    ├── feelingsExplorerContent.js
+    └── FeelingsExplorer.jsx
 ```
 
 `shared/` משרת את פעילויות הכרטיסים. ציור הרגש ומד החום משתמשים ממנו
-רק ב-`PickerCard` למסך בחירת הרגש — כל השאר בכל אחת מהן הוא שלה.
+רק ב-`PickerCard` למסך בחירת הרגש; "למה אני מרגיש/ה ככה?" לא משתמשת בו כלל.
 
 הרכיבים יושבים כאן. **העמודים** יושבים ב-`src/pages/` לפי הקונבנציה של הפרויקט,
 והם דקים בכוונה — כותרת, קישור חזרה, טיפ להורה, והרכיב עצמו.
