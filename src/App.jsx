@@ -46,6 +46,9 @@ import ActivityRoutineBoard from './pages/ActivityRoutineBoard';
 import ActivityFirstThen from './pages/ActivityFirstThen';
 import ActivityChoiceBoard from './pages/ActivityChoiceBoard';
 import ActivityBreakCard from './pages/ActivityBreakCard';
+import ActivityBodyMap from './pages/ActivityBodyMap';
+import ActivityEmotionCards from './pages/ActivityEmotionCards';
+import ActivityEmotionCheckin from './pages/ActivityEmotionCheckin';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -135,6 +138,9 @@ const AuthenticatedApp = () => {
       <Route path="/activities/first-then" element={<LayoutWrapper currentPageName="ActivityFirstThen"><ActivityFirstThen /></LayoutWrapper>} />
       <Route path="/activities/choice-board" element={<LayoutWrapper currentPageName="ActivityChoiceBoard"><ActivityChoiceBoard /></LayoutWrapper>} />
       <Route path="/activities/break-card" element={<LayoutWrapper currentPageName="ActivityBreakCard"><ActivityBreakCard /></LayoutWrapper>} />
+      <Route path="/activities/body-map" element={<LayoutWrapper currentPageName="ActivityBodyMap"><ActivityBodyMap /></LayoutWrapper>} />
+      <Route path="/activities/emotion-cards" element={<LayoutWrapper currentPageName="ActivityEmotionCards"><ActivityEmotionCards /></LayoutWrapper>} />
+      <Route path="/activities/emotion-checkin" element={<LayoutWrapper currentPageName="ActivityEmotionCheckin"><ActivityEmotionCheckin /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
