@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail, Globe } from 'lucide-react';
+import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail, Globe, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import OnboardingTour from './components/onboarding/OnboardingTour';
 import CreditsAddedPopup from './components/story/CreditsAddedPopup';
 import FloatingGift from './components/FloatingGift';
@@ -140,8 +141,24 @@ function LayoutInner({ children, currentPageName }) {
     window.dispatchEvent(new Event('credits-updated'));
   };
 
+  // Consolidates the three entry paths (also offered by the Hero "Let's start
+  // together" modal on Home) under one nav item instead of adding separate links
+  // for HeroStory/PrepareStory — same choice structure in both places.
+  const getStartedItem = {
+    name: 'GetStarted',
+    label: lang === 'he' ? 'בואו נתחיל' : 'Get Started',
+    icon: Sparkles,
+    dropdown: true,
+    children: [
+      { key: 'specific', label: lang === 'he' ? 'משהו ספציפי עובר על הילד/ה שלי' : 'Something specific for my child', to: `${navPathFor('Home', location.pathname, lang)}#start-chips` },
+      { key: 'school', label: lang === 'he' ? 'מתכוננים לכיתה א׳/גן' : 'Getting ready for school', to: navPathFor('KitaAlef', location.pathname, lang) },
+      { key: 'adventure', label: lang === 'he' ? 'הרפתקה כיפית ומעצימה' : 'A fun, empowering adventure', to: '/HeroStory' },
+    ],
+  };
+
   const publicNavItems = [
     { name: 'Home', label: t('nav_home'), icon: Home },
+    getStartedItem,
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
     { name: 'Contact', label: t('nav_contact'), icon: Mail },
     { name: 'Vision', label: lang === 'he' ? 'החזון שלנו' : 'Our Vision', icon: Sparkles },
@@ -150,6 +167,7 @@ function LayoutInner({ children, currentPageName }) {
 
   const authNavItems = [
     { name: 'Home', label: t('nav_home'), icon: Home },
+    getStartedItem,
     { name: 'CreateStory', label: t('nav_new_story'), icon: Sparkles },
     { name: 'MyStories', label: t('nav_my_stories'), icon: BookOpen },
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
@@ -257,6 +275,26 @@ function LayoutInner({ children, currentPageName }) {
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
+                if (item.dropdown) {
+                  return (
+                    <DropdownMenu key={item.name}>
+                      <DropdownMenuTrigger asChild>
+                        <button className="flex items-center gap-2 px-4 py-2 rounded-xl transition-all text-slate-500 hover:bg-slate-50 hover:text-slate-700">
+                          <Icon className="w-4 h-4" />
+                          <span className="text-sm">{item.label}</span>
+                          <ChevronDown className="w-3.5 h-3.5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align={isRTL ? 'end' : 'start'} className="w-64">
+                        {item.children.map((child) => (
+                          <DropdownMenuItem key={child.key} asChild>
+                            <Link to={child.to}>{child.label}</Link>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  );
+                }
                 const isActive = currentPageName === item.name;
                 return (
                   <Link key={item.name} to={item.path || navPathFor(item.name, location.pathname, lang)}
@@ -315,6 +353,24 @@ function LayoutInner({ children, currentPageName }) {
               <nav className="flex flex-col p-4 gap-1">
                 {navItems.map((item) => {
                   const Icon = item.icon;
+                  if (item.dropdown) {
+                    return (
+                      <div key={item.name} className="px-4 py-2">
+                        <div className="flex items-center gap-3 text-slate-500 font-medium mb-1">
+                          <Icon className="w-5 h-5" />
+                          <span>{item.label}</span>
+                        </div>
+                        <div className="flex flex-col gap-1 ps-8">
+                          {item.children.map((child) => (
+                            <Link key={child.key} to={child.to} onClick={() => setMobileMenuOpen(false)}
+                              className="px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-50 text-sm">
+                              {child.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  }
                   const isActive = currentPageName === item.name;
                   return (
                     <Link key={item.name} to={item.path || navPathFor(item.name, location.pathname, lang)} onClick={() => setMobileMenuOpen(false)}

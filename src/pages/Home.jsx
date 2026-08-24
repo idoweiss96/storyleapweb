@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell, ChevronRight, ChevronLeft, Quote, Tablet, MessageCircle, Book } from 'lucide-react';
@@ -9,6 +9,7 @@ import { useLanguage } from '../components/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
 import StoryGallery from '@/components/home/StoryGallery';
+import StartModal from '@/components/home/StartModal';
 import { trackEvent } from '@/lib/posthog';
 import PageMeta from '@/components/SEO/PageMeta';
 import FloatingKitaAlefBadge from '@/components/FloatingKitaAlefBadge';
@@ -27,6 +28,21 @@ const CHIP_ITEMS = [
   { key: 'chip_emotions', icon: '💗', className: 'bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100 hover:border-rose-300' },
   { key: 'chip_other', icon: '✨', className: 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300' },
 ];
+
+// Where each chip leads: /PrepareStory for "getting ready for something new" topics
+// (with the topic pre-selected), /CreateStory for emotional-challenge topics
+// (with the challenge pre-selected), and a generic CreateStory for "something else".
+function chipDestination(key) {
+  switch (key) {
+    case 'chip_new': return '/PrepareStory';
+    case 'chip_moving': return '/PrepareStory?topic=moving_home';
+    case 'chip_separation': return `${createPageUrl('CreateStory')}?from=chip_separation&challenge=separation_anxiety`;
+    case 'chip_fear': return `${createPageUrl('CreateStory')}?from=chip_fear&challenge=fears`;
+    case 'chip_friendship': return `${createPageUrl('CreateStory')}?from=chip_friendship&challenge=social_difficulty`;
+    case 'chip_emotions': return `${createPageUrl('CreateStory')}?from=chip_emotions&challenge=emotional_regulation`;
+    default: return `${createPageUrl('CreateStory')}?from=chip_other`;
+  }
+}
 
 function TestimonialsCarousel() {
   const { t } = useLanguage();
@@ -98,10 +114,26 @@ export default function Home() {
   const { t, lang } = useLanguage();
   const location = useLocation();
   const kitaAlefPath = navPathFor('KitaAlef', location.pathname, lang);
+  const [showStartModal, setShowStartModal] = useState(false);
 
   useEffect(() => {
     trackEvent('homepage_viewed');
   }, []);
+
+  // Deep link support for the "Get Started" nav dropdown's first option, which
+  // points here with #start-chips to reveal the chip card.
+  useEffect(() => {
+    if (location.hash === '#start-chips') {
+      const el = document.getElementById('what-going-through-card');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [location.hash]);
+
+  const scrollToChips = () => {
+    setShowStartModal(false);
+    const el = document.getElementById('what-going-through-card');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const features = [
   { icon: Wand2, title: t('feature1_title'), description: t('feature1_desc'), bg: 'bg-blue-50', iconColor: 'text-blue-600' },
@@ -147,14 +179,13 @@ export default function Home() {
                 {t('hero_pill_digital')}
               </div>
             </div>
-            <Link to={createPageUrl('CreateStory')}>
-              <Button
-                size="lg"
-                className="h-14 px-10 rounded-xl text-lg font-bold bg-slate-800 hover:bg-slate-700 text-white shadow-lg mb-6"
-              >
-                {lang === 'he' ? 'בואו נתחיל יחד ←' : "Let's start together →"}
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              onClick={() => setShowStartModal(true)}
+              className="h-14 px-10 rounded-xl text-lg font-bold bg-slate-800 hover:bg-slate-700 text-white shadow-lg mb-6"
+            >
+              {lang === 'he' ? 'בואו נתחיל יחד ←' : "Let's start together →"}
+            </Button>
             <div className="flex flex-col items-center gap-2 mb-6">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold border border-orange-200">
                 ☀️ {lang === 'he' ? 'מבצע חופש גדול' : 'Summer Sale'}
@@ -169,7 +200,7 @@ export default function Home() {
               <p className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-4">{t('hero_chips_title')}</p>
               <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-xl mx-auto">
                 {CHIP_ITEMS.map((chip) => (
-                  <Link key={chip.key} to={chip.key === 'chip_moving' ? '/MovingHouse' : `${createPageUrl('CreateStory')}?from=${chip.key}`}>
+                  <Link key={chip.key} to={chipDestination(chip.key)}>
                     <span className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 hover:scale-105 ${chip.className}`}>
                       <span>{chip.icon}</span>
                       {t(chip.key)}
@@ -356,6 +387,12 @@ export default function Home() {
           </Card>
         </motion.div>
       </section>
+
+      <AnimatePresence>
+        {showStartModal && (
+          <StartModal onClose={() => setShowStartModal(false)} onPickSpecific={scrollToChips} />
+        )}
+      </AnimatePresence>
     </div>);
 
 }
