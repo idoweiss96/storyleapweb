@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Printer, RotateCcw, Undo2 } from 'lucide-react';
+import { ANSWER_STYLES } from '../shared/cardStyles';
+import { PrintableAnswer } from '../shared/ActivityCards';
 import { CORE, UI } from './feelingsExplorerContent';
 
 // Donut geometry. Angles are degrees from 12 o'clock, growing clockwise.
@@ -63,6 +65,11 @@ const STYLE = `
 
   @media print{
     .fx-result{box-shadow:none}
+    /* Outrank ".fx-block p", which styles the question and would otherwise
+       render the child's own answer as a bold centred heading. */
+    .fx-block .ac-answer-print{
+      font-weight:400;color:#334155;font-size:15px;margin-top:10px;text-align:start;
+    }
   }
 `;
 
@@ -143,6 +150,10 @@ export default function FeelingsExplorer({ lang = 'he' }) {
   const [branch, setBranch] = useState(null);
   const [leaf, setLeaf] = useState(null);
 
+  // Answers are keyed by the full path, so stepping back to explore another
+  // route and returning brings the child's own words back with them.
+  const [answers, setAnswers] = useState({});
+
   const pick = (t) => t[lang] || t.he;
   const leafText = (l) => (typeof l[lang] === 'string' ? l[lang] : l.he);
 
@@ -156,6 +167,7 @@ export default function FeelingsExplorer({ lang = 'he' }) {
     setCore(null);
     setBranch(null);
     setLeaf(null);
+    setAnswers({});
   };
 
   // Which options the wheel is showing right now
@@ -209,9 +221,10 @@ export default function FeelingsExplorer({ lang = 'he' }) {
   if (leaf) {
     const branchText = pick(branch);
     const isOther = leaf.id === '__other__';
+    const pathKey = `${core.id}:${branch.id}:${leaf.id}`;
     return (
       <div>
-        <style>{STYLE}</style>
+        <style>{ANSWER_STYLES + STYLE}</style>
 
         <h2 className="fx-step">{copy.resultTitle}</h2>
 
@@ -233,6 +246,12 @@ export default function FeelingsExplorer({ lang = 'he' }) {
           <div className="fx-block">
             <h3>{copy.talkAbout}</h3>
             <p>{branchText.question}</p>
+            <PrintableAnswer
+              value={answers[pathKey]}
+              onChange={(value) => setAnswers((prev) => ({ ...prev, [pathKey]: value }))}
+              placeholder={copy.answerPlaceholder}
+              ariaLabel={branchText.question}
+            />
           </div>
         </div>
 
