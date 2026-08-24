@@ -2,10 +2,101 @@ import React, { useState } from 'react';
 import { Check, Printer, RotateCcw } from 'lucide-react';
 import { STRENGTHS, UI } from './strengthCardsContent';
 
+const STYLE = `
+  .sc-deck *{box-sizing:border-box}
+
+  .sc-card{
+    position:relative;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    width:100%;aspect-ratio:5/7;padding:14px 10px;
+    background:linear-gradient(160deg,#ffffff 0%,#FFFCF8 100%);
+    border:1.5px solid #EDE9F8;border-radius:16px;
+    box-shadow:0 3px 12px rgba(26,26,110,.08), 0 1px 3px rgba(26,26,110,.04);
+    cursor:pointer;text-align:center;
+    transition:transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s, border-color .18s, background .18s;
+  }
+  /* Inner frame, the way a printed card has a border inside its edge */
+  .sc-card::before{
+    content:'';position:absolute;inset:7px;
+    border:1px solid rgba(26,26,110,.10);border-radius:10px;pointer-events:none;
+    transition:border-color .18s;
+  }
+  .sc-card:hover{transform:translateY(-5px) rotate(-1deg);box-shadow:0 10px 26px rgba(26,26,110,.14)}
+  .sc-card:active{transform:translateY(-2px) scale(.99)}
+  .sc-card:focus-visible{outline:2.5px solid #1A1A6E;outline-offset:3px}
+
+  .sc-card[aria-pressed="true"]{
+    background:linear-gradient(160deg,#FFF0F7 0%,#FFD6EC 100%);
+    border-color:#FF6FB5;
+    transform:translateY(-6px);
+    box-shadow:0 12px 28px rgba(255,111,181,.28);
+  }
+  .sc-card[aria-pressed="true"]::before{border-color:rgba(255,111,181,.45)}
+  .sc-card[aria-pressed="true"]:hover{transform:translateY(-9px) rotate(-1deg)}
+
+  .sc-emoji{font-size:34px;line-height:1}
+  .sc-label{font-size:12.5px;font-weight:600;color:#3f3f56;line-height:1.35}
+
+  /* Corner pips, mirrored like the indices on a playing card */
+  .sc-pip{position:absolute;font-size:9px;color:rgba(26,26,110,.28);line-height:1}
+  .sc-pip-a{top:11px;inset-inline-start:12px}
+  .sc-pip-b{bottom:11px;inset-inline-end:12px;transform:rotate(180deg)}
+  .sc-card[aria-pressed="true"] .sc-pip{color:rgba(255,111,181,.75)}
+
+  .sc-check{
+    position:absolute;top:-9px;inset-inline-end:-9px;
+    width:26px;height:26px;border-radius:999px;background:#1A1A6E;
+    display:grid;place-items:center;border:2.5px solid #fff;
+    box-shadow:0 2px 8px rgba(26,26,110,.3);
+  }
+
+  /* Chosen cards laid out as a hand, each tilted a little */
+  .sc-hand{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+  .sc-hand .sc-hand-slot{width:104px}
+  .sc-hand .sc-card{cursor:default}
+  .sc-hand .sc-card:hover{transform:none;box-shadow:0 3px 12px rgba(26,26,110,.08), 0 1px 3px rgba(26,26,110,.04)}
+  .sc-hand .sc-hand-slot:nth-child(4n+1) .sc-card{transform:rotate(-3deg)}
+  .sc-hand .sc-hand-slot:nth-child(4n+2) .sc-card{transform:rotate(2deg)}
+  .sc-hand .sc-hand-slot:nth-child(4n+3) .sc-card{transform:rotate(-1.5deg)}
+  .sc-hand .sc-hand-slot:nth-child(4n+4) .sc-card{transform:rotate(3deg)}
+
+  @media (prefers-reduced-motion:reduce){
+    .sc-card,.sc-card:hover,.sc-card:active{transition:none;transform:none}
+    .sc-hand .sc-card{transform:none}
+  }
+
+  @media print{
+    .sc-card{box-shadow:none;break-inside:avoid}
+    .sc-hand .sc-card{transform:none}
+  }
+`;
+
 function countLabel(copy, n) {
   if (n === 0) return copy.selectedNone;
   if (n === 1) return copy.selectedOne;
   return copy.selectedMany.replace('{n}', n);
+}
+
+function CardFace({ strength, label, selected, onClick, interactive }) {
+  const Tag = interactive ? 'button' : 'div';
+  return (
+    <Tag
+      className="sc-card"
+      {...(interactive
+        ? { type: 'button', onClick, 'aria-pressed': selected }
+        : { 'aria-pressed': selected || undefined })}
+    >
+      <span className="sc-pip sc-pip-a" aria-hidden="true">✦</span>
+      <span className="sc-pip sc-pip-b" aria-hidden="true">✦</span>
+      {selected && interactive && (
+        <span className="sc-check" aria-hidden="true">
+          <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+        </span>
+      )}
+      <span className="sc-emoji">{strength.emoji}</span>
+      <span className="sc-label">{label}</span>
+    </Tag>
+  );
 }
 
 export default function StrengthCards({ lang = 'he' }) {
@@ -28,12 +119,26 @@ export default function StrengthCards({ lang = 'he' }) {
 
   if (revealed) {
     return (
-      <div>
+      <div className="sc-deck">
+        <style>{STYLE}</style>
+
         <div className="rounded-2xl bg-white border border-slate-100 shadow-lg shadow-slate-100 p-6 md:p-8">
           <h2 className="text-2xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>
             {copy.myStrengths}
           </h2>
-          <p className="text-center text-slate-500 mb-7">{copy.revealIntro}</p>
+          <p className="text-center text-slate-500 mb-8">{copy.revealIntro}</p>
+
+          <div className="sc-hand mb-8">
+            {chosen.map((strength) => (
+              <div key={strength.id} className="sc-hand-slot">
+                <CardFace
+                  strength={strength}
+                  label={(strength[lang] || strength.he).label}
+                  interactive={false}
+                />
+              </div>
+            ))}
+          </div>
 
           <ul className="flex flex-col gap-4">
             {chosen.map((strength) => {
@@ -44,7 +149,7 @@ export default function StrengthCards({ lang = 'he' }) {
                   className="flex gap-4 items-start rounded-xl p-4"
                   style={{ background: '#FFF0F7' }}
                 >
-                  <span className="text-3xl leading-none shrink-0">{strength.emoji}</span>
+                  <span className="text-2xl leading-none shrink-0">{strength.emoji}</span>
                   <div>
                     <p className="font-bold text-slate-800">{text.label}</p>
                     <p className="text-slate-600 mt-1">{text.prompt}</p>
@@ -79,40 +184,23 @@ export default function StrengthCards({ lang = 'he' }) {
   }
 
   return (
-    <div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {STRENGTHS.map((strength) => {
-          const text = strength[lang] || strength.he;
-          const isOn = selected.includes(strength.id);
-          return (
-            <button
-              key={strength.id}
-              type="button"
-              onClick={() => toggle(strength.id)}
-              aria-pressed={isOn}
-              className="relative flex flex-col items-center text-center gap-2 rounded-2xl p-4 min-h-[124px] justify-center transition-all active:scale-[.98]"
-              style={{
-                background: isOn ? '#FFD6EC' : '#fff',
-                border: `1.5px solid ${isOn ? '#FF6FB5' : '#EDE9F8'}`,
-                boxShadow: isOn ? '0 4px 20px rgba(255,111,181,.18)' : '0 2px 10px rgba(79,195,232,.06)',
-              }}
-            >
-              {isOn && (
-                <span
-                  className="absolute top-2 flex items-center justify-center w-5 h-5 rounded-full"
-                  style={{ background: '#1A1A6E', insetInlineEnd: '0.5rem' }}
-                >
-                  <Check className="w-3 h-3 text-white" />
-                </span>
-              )}
-              <span className="text-3xl leading-none">{strength.emoji}</span>
-              <span className="text-sm font-medium text-slate-700 leading-snug">{text.label}</span>
-            </button>
-          );
-        })}
+    <div className="sc-deck">
+      <style>{STYLE}</style>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+        {STRENGTHS.map((strength) => (
+          <CardFace
+            key={strength.id}
+            strength={strength}
+            label={(strength[lang] || strength.he).label}
+            selected={selected.includes(strength.id)}
+            onClick={() => toggle(strength.id)}
+            interactive
+          />
+        ))}
       </div>
 
-      <div className="flex flex-col items-center gap-4 mt-8">
+      <div className="flex flex-col items-center gap-4 mt-9">
         <p aria-live="polite" className="text-sm text-slate-500">
           {countLabel(copy, selected.length)}
         </p>
