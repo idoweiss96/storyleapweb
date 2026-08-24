@@ -137,6 +137,78 @@ const GAMES = [
       he: 'לוח להדפסה שמסמנים בו כל יום איך היה',
     },
   },
+  {
+    path: '/activities/task-analysis',
+    emoji: '🪜',
+    title: { en: 'Break Down a Task', he: 'פירוק משימה' },
+    desc: {
+      en: 'Split one hard task into small steps and see which are hard',
+      he: 'מפרקים משימה קשה לצעדים ורואים אילו מהם באמת קשים',
+    },
+  },
+  {
+    path: '/activities/adl-sequence',
+    emoji: '🧼',
+    title: { en: 'Picture Sequence', he: 'רצף בתמונות' },
+    desc: {
+      en: 'Ready-made strips for washing, brushing teeth and dressing',
+      he: 'רצפים מוכנים לשטיפת ידיים, צחצוח שיניים והתלבשות',
+    },
+  },
+  {
+    path: '/activities/routine-checklist',
+    emoji: '✅',
+    title: { en: 'Routine Checklist', he: 'צ׳ק-ליסט שגרה' },
+    desc: {
+      en: 'A tick-box list, in a day or a whole-week version',
+      he: 'רשימה עם משבצות סימון, ליום אחד או לשבוע שלם',
+    },
+  },
+  {
+    path: '/activities/visual-timer',
+    emoji: '⏱️',
+    title: { en: 'The Visual Timer', he: 'הטיימר החזותי' },
+    desc: {
+      en: 'Time you can see instead of count',
+      he: 'זמן שרואים במקום לספור',
+    },
+  },
+  {
+    path: '/activities/breathing',
+    emoji: '🫧',
+    title: { en: 'Breathing', he: 'נשימות' },
+    desc: {
+      en: 'Follow the circle and breathe with it',
+      he: 'עוקבים אחרי העיגול ונושמים איתו',
+    },
+  },
+  {
+    path: '/activities/safe-place',
+    emoji: '🏝️',
+    title: { en: 'My Safe Place', he: 'המקום הבטוח שלי' },
+    desc: {
+      en: 'Build a place to return to in your mind when things are hard',
+      he: 'בונים מקום שאפשר לחזור אליו בדמיון כשקשה',
+    },
+  },
+  {
+    path: '/activities/visual-rules',
+    emoji: '📜',
+    title: { en: 'Our House Rules', he: 'כללי הבית שלנו' },
+    desc: {
+      en: 'Up to six rules, phrased as what we do',
+      he: 'עד שישה כללים, מנוסחים כמה שכן עושים',
+    },
+  },
+  {
+    path: '/activities/calm-corner',
+    emoji: '🪴',
+    title: { en: 'The Calm Corner', he: 'פינת הרוגע' },
+    desc: {
+      en: 'Set up a corner to go to, and agree how it works',
+      he: 'מקימים פינה ללכת אליה, ומסכימים איך היא עובדת',
+    },
+  },
 ];
 
 export default function Activities() {
