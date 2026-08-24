@@ -19,7 +19,17 @@ const ACTIVITIES_META = {
 // The single place to register a game. Each entry renders one card in the grid.
 // Shape: { path, emoji, title: { en, he }, desc: { en, he } }
 // Adding a game = adding an object here (plus its page + route in App.jsx).
-const GAMES = [];
+const GAMES = [
+  {
+    path: '/activities/emotion-wheel',
+    emoji: '🎡',
+    title: { en: 'The Emotion Wheel', he: 'גלגל הרגשות' },
+    desc: {
+      en: 'Spin the wheel and talk about the feeling it lands on',
+      he: 'מסובבים את הגלגל ומדברים על הרגש שיצא',
+    },
+  },
+];
 
 export default function Activities() {
   const { lang } = useLanguage();
