@@ -38,6 +38,15 @@ const GAMES = [
       he: 'בוחרים את הקלפים שמרגישים כמוך ומדפיסים את החוזקות',
     },
   },
+  {
+    path: '/activities/coping-cards',
+    emoji: '🎈',
+    title: { en: 'Cards That Help Me', he: 'הקלפים שעוזרים לי' },
+    desc: {
+      en: 'Build a personal calm-down kit and print it',
+      he: 'בונים ערכת הרגעה אישית לרגעים קשים ומדפיסים',
+    },
+  },
 ];
 
 export default function Activities() {
