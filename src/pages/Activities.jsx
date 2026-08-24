@@ -47,6 +47,24 @@ const GAMES = [
       he: 'בונים ערכת הרגעה אישית לרגעים קשים ומדפיסים',
     },
   },
+  {
+    path: '/activities/emotion-drawing',
+    emoji: '🎨',
+    title: { en: 'Draw the Feeling', he: 'ציור הרגש' },
+    desc: {
+      en: 'Pick a feeling and draw what it looks like',
+      he: 'בוחרים רגש ומציירים איך הוא נראה',
+    },
+  },
+  {
+    path: '/activities/emotion-thermometer',
+    emoji: '🌡️',
+    title: { en: 'The Feelings Thermometer', he: 'מד החום של הרגשות' },
+    desc: {
+      en: 'Mark how strong a feeling is, and see what can help',
+      he: 'מסמנים כמה הרגש חזק, ומגלים מה יכול לעזור',
+    },
+  },
 ];
 
 export default function Activities() {
