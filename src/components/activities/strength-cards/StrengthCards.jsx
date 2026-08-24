@@ -5,6 +5,7 @@ import { STRENGTHS, UI } from './strengthCardsContent';
 const STYLE = `
   .sc-deck *{box-sizing:border-box}
 
+  /* ---- Picker card: the deck the child chooses from ---- */
   .sc-card{
     position:relative;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
@@ -50,46 +51,66 @@ const STYLE = `
     box-shadow:0 2px 8px rgba(26,26,110,.3);
   }
 
-  /* Chosen cards laid out as a hand, each tilted a little */
-  .sc-hand{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
-  .sc-hand .sc-hand-slot{width:104px}
-  .sc-hand .sc-card{cursor:default}
-  .sc-hand .sc-card:hover{transform:none;box-shadow:0 3px 12px rgba(26,26,110,.08), 0 1px 3px rgba(26,26,110,.04)}
-  .sc-hand .sc-hand-slot:nth-child(4n+1) .sc-card{transform:rotate(-3deg)}
-  .sc-hand .sc-hand-slot:nth-child(4n+2) .sc-card{transform:rotate(2deg)}
-  .sc-hand .sc-hand-slot:nth-child(4n+3) .sc-card{transform:rotate(-1.5deg)}
-  .sc-hand .sc-hand-slot:nth-child(4n+4) .sc-card{transform:rotate(3deg)}
+  /* ---- Result card: same card language, but it carries the question and the answer ---- */
+  .sc-result-grid{display:grid;grid-template-columns:1fr;gap:16px}
+  @media (min-width:560px){.sc-result-grid{grid-template-columns:1fr 1fr}}
 
-  /* Answer field. On screen it is a textarea; in print it becomes plain text,
-     or ruled lines when nothing was typed, so the sheet can be filled by hand. */
+  .sc-bigcard{
+    position:relative;display:flex;flex-direction:column;
+    padding:22px 18px 18px;min-height:250px;
+    background:linear-gradient(160deg,#ffffff 0%,#FFF8FB 100%);
+    border:1.5px solid #FF6FB5;border-radius:16px;
+    box-shadow:0 4px 18px rgba(255,111,181,.16);
+    break-inside:avoid;
+  }
+  .sc-bigcard::before{
+    content:'';position:absolute;inset:7px;
+    border:1px solid rgba(255,111,181,.32);border-radius:10px;pointer-events:none;
+  }
+  .sc-bigcard .sc-pip{color:rgba(255,111,181,.6)}
+
+  .sc-bighead{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px}
+  .sc-bigemoji{font-size:36px;line-height:1}
+  .sc-biglabel{font-size:15px;font-weight:700;color:#1A1A6E;line-height:1.35}
+
+  .sc-rule{
+    height:1px;margin:14px 6px 12px;
+    background:linear-gradient(90deg,transparent,rgba(255,111,181,.38),transparent);
+  }
+
+  .sc-bigq{
+    font-size:13.5px;line-height:1.55;text-align:center;
+    color:rgba(26,26,46,.62);margin:0 0 12px;
+  }
+
+  /* Answer field. On screen a textarea; in print it becomes plain text,
+     or ruled lines when nothing was typed, so the card can be filled by hand. */
   .sc-answer{
-    width:100%;margin-top:10px;
-    font-family:inherit;font-size:15px;color:#1a1a2e;line-height:1.55;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:12px;
-    padding:11px 13px;resize:vertical;min-height:64px;
+    width:100%;margin-top:auto;
+    font-family:inherit;font-size:14.5px;color:#1a1a2e;line-height:1.55;
+    background:rgba(255,255,255,.75);border:1.5px solid #FFD6EC;border-radius:11px;
+    padding:10px 12px;resize:vertical;min-height:66px;
     transition:border-color .18s;
   }
-  .sc-answer::placeholder{color:rgba(26,26,46,.36)}
-  .sc-answer:focus{border-color:#FF6FB5;outline:none}
+  .sc-answer::placeholder{color:rgba(26,26,46,.34)}
+  .sc-answer:focus{border-color:#FF6FB5;outline:none;background:#fff}
   .sc-answer-print,.sc-answer-blank{display:none}
-
-  .sc-qrow{flex:1;min-width:0}
 
   @media (prefers-reduced-motion:reduce){
     .sc-card,.sc-card:hover,.sc-card:active{transition:none;transform:none}
-    .sc-hand .sc-card{transform:none}
   }
 
   @media print{
-    .sc-card{box-shadow:none;break-inside:avoid}
-    .sc-hand .sc-card{transform:none}
+    .sc-card{box-shadow:none}
+    .sc-result-grid{grid-template-columns:1fr 1fr;gap:14px}
+    .sc-bigcard{box-shadow:none;min-height:0;padding:18px 16px 16px}
     .sc-answer{display:none}
     .sc-answer-print{
-      display:block;margin-top:8px;font-size:14.5px;color:#1a1a2e;
+      display:block;margin-top:6px;font-size:14px;color:#1a1a2e;line-height:1.6;
       white-space:pre-wrap;overflow-wrap:anywhere;
     }
-    .sc-answer-blank{display:block;margin-top:10px}
-    .sc-answer-blank i{display:block;border-bottom:1px dashed #b4b4c6;height:20px}
+    .sc-answer-blank{display:block;margin-top:8px}
+    .sc-answer-blank i{display:block;border-bottom:1px dashed #d8a9c4;height:21px}
   }
 `;
 
@@ -99,25 +120,64 @@ function countLabel(copy, n) {
   return copy.selectedMany.replace('{n}', n);
 }
 
-function CardFace({ strength, label, selected, onClick, interactive }) {
-  const Tag = interactive ? 'button' : 'div';
+function Pips() {
   return (
-    <Tag
-      className="sc-card"
-      {...(interactive
-        ? { type: 'button', onClick, 'aria-pressed': selected }
-        : { 'aria-pressed': selected || undefined })}
-    >
+    <>
       <span className="sc-pip sc-pip-a" aria-hidden="true">✦</span>
       <span className="sc-pip sc-pip-b" aria-hidden="true">✦</span>
-      {selected && interactive && (
+    </>
+  );
+}
+
+function PickerCard({ strength, label, selected, onClick }) {
+  return (
+    <button type="button" className="sc-card" aria-pressed={selected} onClick={onClick}>
+      <Pips />
+      {selected && (
         <span className="sc-check" aria-hidden="true">
           <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
         </span>
       )}
       <span className="sc-emoji">{strength.emoji}</span>
       <span className="sc-label">{label}</span>
-    </Tag>
+    </button>
+  );
+}
+
+function ResultCard({ strength, text, value, onChange, placeholder }) {
+  const written = (value || '').trim();
+  return (
+    <div className="sc-bigcard">
+      <Pips />
+
+      <div className="sc-bighead">
+        <span className="sc-bigemoji">{strength.emoji}</span>
+        <p className="sc-biglabel">{text.label}</p>
+      </div>
+
+      <div className="sc-rule" />
+
+      <p className="sc-bigq">{text.prompt}</p>
+
+      <textarea
+        className="sc-answer"
+        rows={3}
+        value={value || ''}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        aria-label={text.prompt}
+      />
+
+      {written ? (
+        <p className="sc-answer-print">{written}</p>
+      ) : (
+        <span className="sc-answer-blank" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -130,10 +190,6 @@ export default function StrengthCards({ lang = 'he' }) {
 
   const toggle = (id) => {
     setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-  };
-
-  const answer = (id, value) => {
-    setAnswers((prev) => ({ ...prev, [id]: value }));
   };
 
   const restart = () => {
@@ -150,64 +206,27 @@ export default function StrengthCards({ lang = 'he' }) {
       <div className="sc-deck">
         <style>{STYLE}</style>
 
-        <div className="rounded-2xl bg-white border border-slate-100 shadow-lg shadow-slate-100 p-6 md:p-8">
-          <h2 className="text-2xl font-bold text-center mb-2" style={{ color: '#1A1A6E' }}>
+        <div className="text-center mb-7">
+          <h2 className="text-2xl font-bold mb-2" style={{ color: '#1A1A6E' }}>
             {copy.myStrengths}
           </h2>
-          <p className="text-center text-slate-500 mb-8">{copy.revealIntro}</p>
-
-          <div className="sc-hand mb-8">
-            {chosen.map((strength) => (
-              <div key={strength.id} className="sc-hand-slot">
-                <CardFace
-                  strength={strength}
-                  label={(strength[lang] || strength.he).label}
-                  interactive={false}
-                />
-              </div>
-            ))}
-          </div>
-
-          <ul className="flex flex-col gap-4">
-            {chosen.map((strength) => {
-              const text = strength[lang] || strength.he;
-              const written = (answers[strength.id] || '').trim();
-              return (
-                <li
-                  key={strength.id}
-                  className="flex gap-4 items-start rounded-xl p-4"
-                  style={{ background: '#FFF0F7' }}
-                >
-                  <span className="text-2xl leading-none shrink-0">{strength.emoji}</span>
-                  <div className="sc-qrow">
-                    <p className="font-bold text-slate-800">{text.label}</p>
-                    <p className="text-slate-600 mt-1">{text.prompt}</p>
-
-                    <textarea
-                      className="sc-answer"
-                      rows={2}
-                      value={answers[strength.id] || ''}
-                      onChange={(e) => answer(strength.id, e.target.value)}
-                      placeholder={copy.answerPlaceholder}
-                      aria-label={text.prompt}
-                    />
-
-                    {written ? (
-                      <p className="sc-answer-print">{written}</p>
-                    ) : (
-                      <span className="sc-answer-blank" aria-hidden="true">
-                        <i />
-                        <i />
-                      </span>
-                    )}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <p className="text-slate-500">{copy.revealIntro}</p>
         </div>
 
-        <div className="site-chrome flex flex-wrap gap-3 justify-center mt-7">
+        <div className="sc-result-grid">
+          {chosen.map((strength) => (
+            <ResultCard
+              key={strength.id}
+              strength={strength}
+              text={strength[lang] || strength.he}
+              value={answers[strength.id]}
+              onChange={(value) => setAnswers((prev) => ({ ...prev, [strength.id]: value }))}
+              placeholder={copy.answerPlaceholder}
+            />
+          ))}
+        </div>
+
+        <div className="site-chrome flex flex-wrap gap-3 justify-center mt-8">
           <button
             type="button"
             onClick={restart}
@@ -236,13 +255,12 @@ export default function StrengthCards({ lang = 'he' }) {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
         {STRENGTHS.map((strength) => (
-          <CardFace
+          <PickerCard
             key={strength.id}
             strength={strength}
             label={(strength[lang] || strength.he).label}
             selected={selected.includes(strength.id)}
             onClick={() => toggle(strength.id)}
-            interactive
           />
         ))}
       </div>
