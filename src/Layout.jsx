@@ -59,13 +59,21 @@ function LayoutInner({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [signupBonusPopup, setSignupBonusPopup] = useState(null);
+  // Written to localStorage by the space page, so labelling the nav item with
+  // the child's name costs no entity query on every other page.
+  const [activeSpaceName, setActiveSpaceName] = useState(getActiveSpaceName());
 
   useEffect(() => {
     loadUser();
     // Refresh credits on custom event (e.g. after story creation)
     const handleCreditsUpdate = () => loadUser();
+    const handleSpaceChange = () => setActiveSpaceName(getActiveSpaceName());
     window.addEventListener('credits-updated', handleCreditsUpdate);
-    return () => window.removeEventListener('credits-updated', handleCreditsUpdate);
+    window.addEventListener('active-space-changed', handleSpaceChange);
+    return () => {
+      window.removeEventListener('credits-updated', handleCreditsUpdate);
+      window.removeEventListener('active-space-changed', handleSpaceChange);
+    };
   }, []);
 
   // PostHog: tracked on every page except System Management (Admin), which is excluded
@@ -174,6 +182,14 @@ function LayoutInner({ children, currentPageName }) {
     { name: 'Home', label: t('nav_home'), icon: Home },
     getStartedItem,
     { name: 'CreateStory', label: t('nav_new_story'), icon: Sparkles },
+    {
+      name: 'ChildSpace',
+      label: activeSpaceName
+        ? (lang === 'he' ? `המרחב של ${activeSpaceName}` : `${activeSpaceName}'s Space`)
+        : (lang === 'he' ? 'המרחב שלי' : 'My Space'),
+      icon: Heart,
+      path: '/space',
+    },
     { name: 'MyStories', label: t('nav_my_stories'), icon: BookOpen },
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
     { name: 'Contact', label: t('nav_contact'), icon: Mail },
