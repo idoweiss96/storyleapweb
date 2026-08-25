@@ -1,0 +1,7 @@
+{
+  "name": "ZTest6",
+  "type": "object",
+  "properties": { "foo": { "type": "string" } },
+  "required": [],
+  "note": "עברית עובדת"
+}
