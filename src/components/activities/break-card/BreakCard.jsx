@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { Plus, Printer, RotateCcw } from 'lucide-react';
 import { ACTIONS, CUSTOM_EMOJI, PHRASES, UI } from './breakCardContent';
@@ -189,6 +190,14 @@ export default function BreakCard({ lang = 'he' }) {
           <Printer className="w-4 h-4" />
           {copy.print}
         </button>
+        <SaveToSpace
+          slug="break-card"
+          lang={lang}
+          getEntry={() => (actions.length > 0 ? {
+            summary: `${actions.length} ${lang === 'he' ? 'דרכים שעוזרות' : 'things that help'}`,
+            payload: { phrase, actions },
+          } : null)}
+        />
       </div>
 
       <div className="site-chrome">
