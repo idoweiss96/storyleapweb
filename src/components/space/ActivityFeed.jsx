@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Gamepad2, Plus, Trash2, ExternalLink, Calendar } from 'lucide-react';
+import { Gamepad2, Plus, Trash2, ExternalLink, Calendar, Printer } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { GAMES } from '@/pages/Activities';
+import { buildPreviewDoc } from '@/components/activities/shared/captureSnapshot';
 
 const slugOf = (game) => game.path.split('/').filter(Boolean).pop();
 const gameFor = (slug) => GAMES.find((g) => slugOf(g) === slug);
@@ -87,6 +88,55 @@ function payloadRows(payload, lang) {
     const known = FIELD_LABELS[key];
     return [{ key, label: known ? known[lang] || known.he : key, text }];
   });
+}
+
+/**
+ * A saved activity, shown the way it looked when it was saved.
+ *
+ * The markup is rendered in a sandboxed iframe: it carries the activity's own
+ * <style> tags, and isolation keeps those styles from leaking into the app.
+ * The frame grows to its content so there is no inner scrollbar.
+ */
+function SnapshotView({ html, rtl, title }) {
+  const frameRef = useRef(null);
+  const [height, setHeight] = useState(320);
+
+  const fit = useCallback(() => {
+    const doc = frameRef.current?.contentDocument;
+    if (!doc?.body) return;
+    setHeight(Math.min(Math.max(doc.body.scrollHeight + 24, 160), 2400));
+  }, []);
+
+  const handlePrint = () => {
+    const win = frameRef.current?.contentWindow;
+    if (!win) return;
+    win.focus();
+    win.print();
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="rounded-xl border border-slate-200 overflow-hidden bg-white">
+        <iframe
+          ref={frameRef}
+          title={title}
+          srcDoc={buildPreviewDoc(html, { rtl })}
+          onLoad={fit}
+          sandbox="allow-same-origin allow-modals"
+          className="w-full block border-0"
+          style={{ height }}
+        />
+      </div>
+      <button
+        type="button"
+        onClick={handlePrint}
+        className="self-start inline-flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-slate-700 px-2 py-1 rounded-lg hover:bg-slate-50 transition-colors"
+      >
+        <Printer className="w-3.5 h-3.5" />
+        {rtl ? 'הדפסה' : 'Print'}
+      </button>
+    </div>
+  );
 }
 
 /**
@@ -199,7 +249,7 @@ export default function ActivityFeed({ entries, lang = 'he', onChanged }) {
       </Card>
 
       <Dialog open={!!viewing} onOpenChange={() => setViewing(null)}>
-        <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[88vh] overflow-y-auto">
           {viewing && (
             <>
               <DialogHeader>
@@ -229,7 +279,15 @@ export default function ActivityFeed({ entries, lang = 'he', onChanged }) {
                   <p className="text-base text-slate-700 font-medium">{viewing.summary}</p>
                 )}
 
-                {payloadRows(viewing.payload, lang).length > 0 && (
+                {viewing.snapshot_html && (
+                  <SnapshotView
+                    html={viewing.snapshot_html}
+                    rtl={he}
+                    title={viewingGame ? (he ? viewingGame.title.he : viewingGame.title.en) : viewing.activity_slug}
+                  />
+                )}
+
+                {!viewing.snapshot_html && payloadRows(viewing.payload, lang).length > 0 && (
                   <dl className="flex flex-col gap-3">
                     {payloadRows(viewing.payload, lang).map((row) => (
                       <div key={row.key} className="flex flex-col gap-0.5">
