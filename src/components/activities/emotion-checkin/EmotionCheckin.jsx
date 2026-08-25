@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { Check, Printer } from 'lucide-react';
 import {
@@ -179,6 +180,14 @@ export default function EmotionCheckin({ lang = 'he' }) {
             <Printer className="w-4 h-4" />
             {copy.print}
           </button>
+          <SaveToSpace
+            slug="emotion-checkin"
+            lang={lang}
+            getEntry={() => (selected.length > 0 ? {
+              summary: name || `${selected.length} ${lang === 'he' ? 'רגשות' : 'feelings'}`,
+              payload: { name, selected },
+            } : null)}
+          />
         </div>
       )}
 
