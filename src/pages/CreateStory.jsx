@@ -178,6 +178,9 @@ export default function CreateStory() {
     contact_email: formData.contactEmail || null, contact_phone: formData.contactPhone || null,
     content: null, story_link: null, payment_status: paymentStatus, lang,
     order_id: generateOrderId(lang),
+    // Attaches the story to whichever space the parent last had open. Left
+    // undefined when they have none, which keeps the field optional.
+    child_space_id: getActiveSpaceId() || undefined,
   });
 
   // Step 1: User clicks "המשך ליצירת הספר"
