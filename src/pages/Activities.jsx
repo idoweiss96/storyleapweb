@@ -19,7 +19,7 @@ const ACTIVITIES_META = {
 // The single place to register a game. Each entry renders one card in the grid.
 // Shape: { path, emoji, title: { en, he }, desc: { en, he } }
 // Adding a game = adding an object here (plus its page + route in App.jsx).
-const GAMES = [
+export const GAMES = [
   {
     path: '/activities/feelings-explorer',
     emoji: '🧭',
