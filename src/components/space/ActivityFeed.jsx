@@ -13,17 +13,52 @@ const slugOf = (game) => game.path.split('/').filter(Boolean).pop();
 const gameFor = (slug) => GAMES.find((g) => slugOf(g) === slug);
 
 /**
- * Turn one payload value into something readable, without inventing labels.
- * Anything we can't confidently name is skipped rather than guessed at.
+ * Field names the activities use internally, in the parent's language.
+ * A key with no entry here still shows — under its raw name — rather than
+ * being dropped, so nothing a child saved can silently disappear.
  */
+const FIELD_LABELS = {
+  answers:     { he: 'תשובות',        en: 'Answers' },
+  answer:      { he: 'תשובה',          en: 'Answer' },
+  emotion:     { he: 'רגש',            en: 'Feeling' },
+  feeling:     { he: 'רגש',            en: 'Feeling' },
+  level:       { he: 'עוצמה',           en: 'Level' },
+  marked:      { he: 'מקומות בגוף',    en: 'Body spots' },
+  selected:    { he: 'מה נבחר',        en: 'Chosen' },
+  board:       { he: 'הלוח',            en: 'Board' },
+  items:       { he: 'פריטים',          en: 'Items' },
+  agreements:  { he: 'הסכמות',         en: 'Agreements' },
+  customItems: { he: 'נוספו בעצמנו',  en: 'Added by us' },
+  steps:       { he: 'צעדים',           en: 'Steps' },
+  task:        { he: 'המשימה',         en: 'Task' },
+  name:        { he: 'שם',              en: 'Name' },
+  mode:        { he: 'תצוגה',           en: 'Mode' },
+  first:       { he: 'קודם',            en: 'First' },
+  then:        { he: 'ואז',             en: 'Then' },
+  situation:   { he: 'המצב',            en: 'Situation' },
+  ownQuestion: { he: 'השאלה',           en: 'Question' },
+  options:     { he: 'האפשרויות',      en: 'Options' },
+  phrase:      { he: 'משפט',            en: 'Phrase' },
+  actions:     { he: 'מה עוזר',        en: 'What helps' },
+  core:        { he: 'רגש בסיסי',      en: 'Core feeling' },
+  branch:      { he: 'הסתעפות',        en: 'Branch' },
+  leaf:        { he: 'מה בדיוק',       en: 'Exactly' },
+  sequence:    { he: 'הרצף',            en: 'Sequence' },
+  custom:      { he: 'משלנו',           en: 'Ours' },
+  strokeCount: { he: 'משיכות',         en: 'Strokes' },
+  key:         null, // internal id — never worth showing
+};
+
+/** One readable line for a scalar, a labelled object, or a list of them. */
 function describe(value, lang) {
   if (value === null || value === undefined || value === '') return null;
   if (typeof value === 'string') return value;
   if (typeof value === 'number') return String(value);
+  if (typeof value === 'boolean') return null;
   if (Array.isArray(value)) {
     if (value.length === 0) return null;
     const labels = value.map((v) => describe(v, lang)).filter(Boolean);
-    return labels.length ? labels.join(' · ') : `${value.length}`;
+    return labels.length ? labels.join(' · ') : null;
   }
   if (typeof value === 'object') {
     const label = value[lang] ?? value.he ?? value.label ?? value.title ?? value.text ?? value.name;
@@ -32,10 +67,26 @@ function describe(value, lang) {
       const nested = label[lang] ?? label.he ?? label.label;
       if (typeof nested === 'string') return `${value.emoji ? value.emoji + ' ' : ''}${nested}`;
     }
+    // A plain bag such as { anger: 'because my brother took it' }. The keys are
+    // internal prompt ids, so the child's own words are what gets shown.
+    const written = Object.values(value).map((v) => describe(v, lang)).filter(Boolean);
+    if (written.length) return written.join(' \n');
     if (typeof value.emoji === 'string') return value.emoji;
     return null;
   }
   return null;
+}
+
+/** Payload keys turned into rows, dropping only what is genuinely empty. */
+function payloadRows(payload, lang) {
+  if (!payload || typeof payload !== 'object') return [];
+  return Object.entries(payload).flatMap(([key, value]) => {
+    if (key in FIELD_LABELS && FIELD_LABELS[key] === null) return [];
+    const text = describe(value, lang);
+    if (!text) return [];
+    const known = FIELD_LABELS[key];
+    return [{ key, label: known ? known[lang] || known.he : key, text }];
+  });
 }
 
 /**
@@ -178,18 +229,16 @@ export default function ActivityFeed({ entries, lang = 'he', onChanged }) {
                   <p className="text-base text-slate-700 font-medium">{viewing.summary}</p>
                 )}
 
-                {viewing.payload && (
-                  <dl className="flex flex-col gap-2">
-                    {Object.entries(viewing.payload).map(([key, value]) => {
-                      const text = describe(value, lang);
-                      if (!text) return null;
-                      return (
-                        <div key={key} className="flex gap-2 text-sm">
-                          <dt className="text-slate-400 font-mono text-xs pt-0.5 flex-none">{key}</dt>
-                          <dd className="text-slate-700 flex-1">{text}</dd>
-                        </div>
-                      );
-                    })}
+                {payloadRows(viewing.payload, lang).length > 0 && (
+                  <dl className="flex flex-col gap-3">
+                    {payloadRows(viewing.payload, lang).map((row) => (
+                      <div key={row.key} className="flex flex-col gap-0.5">
+                        <dt className="text-xs font-medium text-slate-400">{row.label}</dt>
+                        <dd className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">
+                          {row.text}
+                        </dd>
+                      </div>
+                    ))}
                   </dl>
                 )}
 
