@@ -45,6 +45,7 @@ const WEBSITE_SCHEMA = {
   url: 'https://storyleapai.com',
 };
 import { LanguageProvider, useLanguage } from './components/LanguageContext';
+import { getActiveSpaceName } from '@/lib/childSpace';
 import { initPostHog, trackPageview, stopTracking, resumeTracking } from '@/lib/posthog';
 
 // New brand logo URL
