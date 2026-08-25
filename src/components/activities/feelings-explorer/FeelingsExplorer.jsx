@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { Printer, RotateCcw, Undo2 } from 'lucide-react';
 import { ANSWER_STYLES } from '../shared/cardStyles';
@@ -281,6 +282,14 @@ export default function FeelingsExplorer({ lang = 'he' }) {
             <Printer className="w-4 h-4" />
             {copy.print}
           </button>
+          <SaveToSpace
+            slug="feelings-explorer"
+            lang={lang}
+            getEntry={() => (leaf || branch || core ? {
+              summary: (leaf || branch || core)?.[lang] || (leaf || branch || core)?.he || (leaf || branch || core)?.label || undefined,
+              payload: { core, branch, leaf, answers },
+            } : null)}
+          />
         </div>
       </div>
     );
