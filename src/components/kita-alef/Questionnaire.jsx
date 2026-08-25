@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { getActiveSpaceId } from '@/lib/childSpace';
 import { getPages } from './questionsConfig';
 import { useLanguage } from '@/components/LanguageContext';
 import QuestionCard from './QuestionCard';
@@ -100,7 +101,7 @@ export default function Questionnaire({ answers, setAnswers, onBackToContact }) 
         contact_email: contactEmail,
         contact_phone: contactPhone,
       };
-      const saved = await base44.entities.KitaAlefStory.create({ ...storyData, content: null, story_link: null, payment_status: 'draft' });
+      const saved = await base44.entities.KitaAlefStory.create({ ...storyData, content: null, story_link: null, payment_status: 'draft', child_space_id: getActiveSpaceId() || undefined });
       const id = saved.id;
       const submitToSheet = () => base44.functions.invoke('submitKitaAlefAnswers', { answers: mergedAnswers, lang, story_id: id });
       submitToSheet().catch(() => submitToSheet().catch((err) => console.error('submitKitaAlefAnswers failed twice', err)));
