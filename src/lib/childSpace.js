@@ -9,6 +9,7 @@
  */
 
 const ACTIVE_SPACE_KEY = 'sl_active_space_id';
+const ACTIVE_SPACE_NAME_KEY = 'sl_active_space_name';
 
 /* ------------------------------------------------------------------ *
  * Avatar library
@@ -81,11 +82,32 @@ export function getActiveSpaceId() {
   }
 }
 
-export function setActiveSpaceId(id) {
+/**
+ * The name is cached alongside the id purely so the header can label the nav
+ * item "Noam's Space" without every page paying for an entity query.
+ */
+export function setActiveSpaceId(id, name) {
   try {
-    if (id) localStorage.setItem(ACTIVE_SPACE_KEY, id);
-    else localStorage.removeItem(ACTIVE_SPACE_KEY);
+    if (id) {
+      localStorage.setItem(ACTIVE_SPACE_KEY, id);
+      if (name) localStorage.setItem(ACTIVE_SPACE_NAME_KEY, name);
+    } else {
+      localStorage.removeItem(ACTIVE_SPACE_KEY);
+      localStorage.removeItem(ACTIVE_SPACE_NAME_KEY);
+    }
   } catch (_) { /* private mode — the page still works, it just forgets */ }
+  try {
+    window.dispatchEvent(new Event('active-space-changed'));
+  } catch (_) { /* no window during SSR-style renders */ }
+}
+
+/** Cached display name of the active space, or null before one is picked. */
+export function getActiveSpaceName() {
+  try {
+    return localStorage.getItem(ACTIVE_SPACE_NAME_KEY) || null;
+  } catch (_) {
+    return null;
+  }
 }
 
 /**
