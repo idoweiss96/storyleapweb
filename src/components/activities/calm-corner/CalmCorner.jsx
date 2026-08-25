@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useRef, useState } from 'react';
 import { Plus, Printer, RotateCcw } from 'lucide-react';
 import { AGREEMENTS, CUSTOM_EMOJI, ITEMS, UI } from './calmCornerContent';
@@ -214,6 +215,14 @@ export default function CalmCorner({ lang = 'he' }) {
               <Printer className="w-4 h-4" />
               {copy.print}
             </button>
+            <SaveToSpace
+              slug="calm-corner"
+              lang={lang}
+              getEntry={() => (items.length > 0 || agreements.length > 0 ? {
+                summary: name || `${items.length} ${lang === 'he' ? 'פריטים' : 'items'}`,
+                payload: { name, items, agreements, customItems },
+              } : null)}
+            />
           </div>
         </>
       )}
