@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useRef, useState } from 'react';
 import { ChevronDown, ChevronUp, Plus, Printer, RotateCcw, X } from 'lucide-react';
 import { EXAMPLES, HELP_LEVELS, UI } from './taskAnalysisContent';
@@ -317,6 +318,14 @@ export default function TaskAnalysis({ lang = 'he' }) {
                 <Printer className="w-4 h-4" />
                 {copy.print}
               </button>
+              <SaveToSpace
+                slug="task-analysis"
+                lang={lang}
+                getEntry={() => (steps.length > 0 ? {
+                  summary: task || `${steps.length} ${lang === 'he' ? 'צעדים' : 'steps'}`,
+                  payload: { task, steps },
+                } : null)}
+              />
             </div>
           </>
         )}
