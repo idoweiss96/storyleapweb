@@ -17,7 +17,6 @@ const gameFor = (slug) => GAMES.find((g) => slugOf(g) === slug);
  * Anything we can't confidently name is skipped rather than guessed at.
  */
 function describe(value, lang) {
-  const he = lang === 'he';
   if (value === null || value === undefined || value === '') return null;
   if (typeof value === 'string') return value;
   if (typeof value === 'number') return String(value);
