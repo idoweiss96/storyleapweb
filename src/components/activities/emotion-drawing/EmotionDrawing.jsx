@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Eraser, Printer, RotateCcw, Undo2 } from 'lucide-react';
 import { CARD_STYLES } from '../shared/cardStyles';
@@ -296,6 +297,16 @@ export default function EmotionDrawing({ lang = 'he' }) {
             <Printer className="w-4 h-4" />
             {copy.print}
           </button>
+          <SaveToSpace
+            slug="emotion-drawing"
+            lang={lang}
+            className="ms-2"
+            getEntry={() => (strokeCount > 0 ? {
+              summary: emotion?.[lang] || emotion?.he || emotion?.label || undefined,
+              payload: { emotion, strokeCount },
+              imageDataUrl: canvasRef.current?.toDataURL('image/png'),
+            } : null)}
+          />
         </div>
       </div>
     </div>
