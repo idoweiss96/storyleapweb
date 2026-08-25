@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { getActiveSpaceId } from '@/lib/childSpace';
 import { getPages, topicKeyFromLabel } from './questionsConfig';
 import { useLanguage } from '@/components/LanguageContext';
 import QuestionCard from '@/components/kita-alef/QuestionCard';
@@ -118,7 +119,7 @@ export default function Questionnaire({ answers, setAnswers, storyId }) {
         // A partial record already exists from the contact step — update it instead of duplicating.
         await base44.entities.KitaAlefStory.update(id, storyData);
       } else {
-        const saved = await base44.entities.KitaAlefStory.create({ ...storyData, content: null, story_link: null, payment_status: 'draft' });
+        const saved = await base44.entities.KitaAlefStory.create({ ...storyData, content: null, story_link: null, payment_status: 'draft', child_space_id: getActiveSpaceId() || undefined });
         id = saved.id;
       }
       // Nothing is written to the order sheet yet — that happens in
