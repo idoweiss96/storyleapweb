@@ -173,23 +173,27 @@ export function moodStreak(entries) {
  * null when there isn't enough evidence to say anything honest. Rules that
  * cannot fire stay silent rather than padding the card with filler.
  * ------------------------------------------------------------------ */
-export function buildInsights({ space, stories = [], activities = [], moods = [], lang = 'he' }) {
+export function buildInsights({ space, stories = [], entries = [], moods = [], lang = 'he' }) {
   const he = lang === 'he';
   const name = space?.name || (he ? 'הילד/ה' : 'your child');
   const out = [];
 
-  // 1. Most-opened activity — needs a real winner, not a 1-vs-1 tie.
-  const opened = activities.filter((a) => (a.open_count || 0) > 0);
-  if (opened.length > 0) {
-    const top = [...opened].sort((a, b) => (b.open_count || 0) - (a.open_count || 0))[0];
-    if ((top.open_count || 0) >= 2) {
-      out.push({
-        icon: 'sparkles',
-        text: he
-          ? `${name} חוזר/ת לפעילות «${top.activity_title || top.activity_slug}» יותר מלכל אחרת`
-          : `${name} returns to "${top.activity_title || top.activity_slug}" more than any other activity`,
-      });
-    }
+  // 1. The activity actually returned to most. Needs a real winner: one saved
+  // entry says nothing, and a 1-vs-1 tie is not a preference.
+  const bySlug = entries.reduce((acc, e) => {
+    acc[e.activity_slug] = (acc[e.activity_slug] || 0) + 1;
+    return acc;
+  }, {});
+  const ranked = Object.entries(bySlug).sort((a, b) => b[1] - a[1]);
+  if (ranked.length > 0 && ranked[0][1] >= 2 && ranked[0][1] > (ranked[1]?.[1] || 0)) {
+    const [slug, count] = ranked[0];
+    out.push({
+      icon: 'sparkles',
+      text: he
+        ? `${name} חזר/ה לפעילות הזו ${count} פעמים — יותר מלכל אחרת`
+        : `${name} came back to one activity ${count} times — more than any other`,
+      slug,
+    });
   }
 
   // 2. Mood trend — only with enough days to mean something.
