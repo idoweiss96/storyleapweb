@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 import CreditsAddedPopup from '../components/story/CreditsAddedPopup';
+import PackageGrid from '../components/pricing/PackageGrid';
 import { trackEvent } from '@/lib/posthog';
 import PageMeta from '@/components/SEO/PageMeta';
 import BreadcrumbSchema from '@/components/SEO/BreadcrumbSchema';
@@ -50,18 +51,6 @@ function parseAmountFromDisplay(display) {
   return Number.isFinite(num) ? num : 0;
 }
 
-// Default fixed prices by language, used only as a fallback when there's no DB
-// CreditPackage / applied coupon for the active language. Routed through the same
-// dynamic PayPal order flow as everything else (see note above on Hosted Buttons).
-const HOSTED_BUTTONS = {
-  he: {
-    full: { amount: '70', currency: 'ILS', display: '₪70', original: '₪110' },
-  },
-  en: {
-    full: { amount: '25', currency: 'USD', display: '$25', original: '$40' },
-  },
-};
-
 export default function Pricing() {
   const { lang, isHe: langIsHe } = useLanguage();
   const navigate = useNavigate();
@@ -94,21 +83,21 @@ export default function Pricing() {
   const isHe = lang === 'he';
   const [hostedButtonCode, setHostedButtonCode] = useState(null); // e.g. 'IDO10'
   const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, price_ils, price_usd } from DB
+  const [packages, setPackages] = useState([]); // All CreditPackages from DB
   const [selectedPackage, setSelectedPackage] = useState(null); // CreditPackage from DB (dynamic price)
   const btnConfig = useMemo(() => {
     if (hostedButtonCode) return HOSTED_BUTTON_CODES[hostedButtonCode];
-    const langKey = isHe ? 'he' : 'en';
     if (appliedCoupon) {
       // All discount coupons use the dynamic regular button (DB-sourced price)
       return isHe
         ? { amount: String(appliedCoupon.price_ils), currency: 'ILS', display: `₪${appliedCoupon.price_ils}` }
         : { amount: String(appliedCoupon.price_usd), currency: 'USD', display: `$${appliedCoupon.price_usd}` };
     }
-    // Default: dynamic pricing from the CreditPackage in the DB (Hebrew only; no fixed payment link)
-    if (langKey === 'he' && selectedPackage) {
-      return { package_id: selectedPackage.id, currency: 'ILS', display: `₪${selectedPackage.price}`, original: '₪110' };
+    // Default: dynamic pricing from the selected CreditPackage in the DB
+    if (selectedPackage) {
+      return { package_id: selectedPackage.id, currency: 'USD', display: `$${selectedPackage.price}` };
     }
-    return HOSTED_BUTTONS[langKey].full;
+    return null;
   }, [hostedButtonCode, appliedCoupon, isHe, selectedPackage]);
 
   // Fires Purchase to Meta Pixel at most once per PayPal order ID.
@@ -164,7 +153,7 @@ export default function Pricing() {
             const res = await base44.functions.invoke('captureGiftOrder', {
               paypal_order_id: paypalToken,
               recipient_email: storedRecipient,
-              credits: 110,
+              credits: selectedPackage?.credits || 50,
             });
             console.log('[MetaPixelDiag] path=mobile-gift success:', res.data?.success, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success) {
@@ -178,14 +167,14 @@ export default function Pricing() {
           } else {
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: paypalToken,
-              credits: 110,
+              credits: selectedPackage?.credits || 50,
             });
             console.log('[MetaPixelDiag] path=mobile-credits success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success && !res.data.already_processed) {
               trackPurchaseOnce(paypalToken, res.data.amount, res.data.currency);
               try { await base44.auth.updateMe({ credits: res.data.new_total }); } catch (_) {}
               window.dispatchEvent(new Event('credits-updated'));
-              const added = res.data.credits_added || 110;
+              const added = res.data.credits_added || selectedPackage?.credits || 50;
               const bonus = res.data.bonus || 0;
               const total = res.data.new_total;
               setCreditsPopup({ added, total: total - bonus, navigateOnClose: true });
@@ -252,13 +241,15 @@ export default function Pricing() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthed]);
 
-  // Load CreditPackage from DB for dynamic (non-fixed-link) pricing
+  // Load CreditPackages from DB for dynamic pricing, sorted smallest to largest
   useEffect(() => {
     base44.entities.CreditPackage.list()
       .then((pkgs) => {
-        if (pkgs.length > 0) {
-          const popular = pkgs.find((p) => p.is_popular);
-          setSelectedPackage(popular || pkgs[0]);
+        const sorted = [...pkgs].sort((a, b) => a.credits - b.credits);
+        setPackages(sorted);
+        if (sorted.length > 0) {
+          const popular = sorted.find((p) => p.is_popular);
+          setSelectedPackage(popular || sorted[0]);
         }
       })
       .catch(() => {});
@@ -266,7 +257,7 @@ export default function Pricing() {
 
   // Render PayPal Buttons
   useEffect(() => {
-    if (!paypalClientId || !isAuthed) return;
+    if (!paypalClientId || !isAuthed || !btnConfig) return;
     renderKeyRef.current += 1;
     const currentKey = renderKeyRef.current;
     isRenderedRef.current = false;
@@ -303,7 +294,7 @@ export default function Pricing() {
             const res = await base44.functions.invoke('captureGiftOrder', {
               paypal_order_id: data.orderID,
               recipient_email: recipientEmailRef.current,
-              credits: 110,
+              credits: selectedPackage?.credits || 50,
             });
             console.log('[MetaPixelDiag] path=desktop-gift success:', res.data?.success, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success) {
@@ -316,7 +307,7 @@ export default function Pricing() {
           } else {
             const res = await base44.functions.invoke('captureCreditsOrder', {
               paypal_order_id: data.orderID,
-              credits: 110,
+              credits: selectedPackage?.credits || 50,
             });
             console.log('[MetaPixelDiag] path=desktop-credits success:', res.data?.success, 'already_processed:', res.data?.already_processed, 'amount:', res.data?.amount, 'currency:', res.data?.currency);
             if (res.data?.success && !res.data.already_processed) {
@@ -324,7 +315,7 @@ export default function Pricing() {
               trackEvent('payment_completed', { type: 'credits' });
               await base44.auth.updateMe({ credits: res.data.new_total });
               setTimeout(() => window.dispatchEvent(new Event('credits-updated')), 300);
-              const added = res.data.credits_added || 110;
+              const added = res.data.credits_added || selectedPackage?.credits || 50;
               const bonus = res.data.bonus || 0;
               const total = res.data.new_total;
               setCreditsPopup({ added, total: total - bonus, navigateOnClose: true });
@@ -506,13 +497,15 @@ export default function Pricing() {
     <div className="max-w-4xl mx-auto pb-16">
       <PageMeta title={pricingMeta.title} description={pricingMeta.description} />
       <BreadcrumbSchema items={[{ name: isHe ? 'רכישת קרדיטים' : 'Pricing', path: location.pathname }]} />
-      <ProductSchema
-        name={isHe ? 'סיפור מותאם אישית' : 'Personalized Story'}
-        description={pricingMeta.description}
-        price={parseAmountFromDisplay(btnConfig.display)}
-        currency={btnConfig.currency}
-        path={location.pathname}
-      />
+      {btnConfig && (
+        <ProductSchema
+          name={isHe ? 'סיפור מותאם אישית' : 'Personalized Story'}
+          description={pricingMeta.description}
+          price={parseAmountFromDisplay(btnConfig.display)}
+          currency={btnConfig.currency}
+          path={location.pathname}
+        />
+      )}
       <div className="text-center mb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-4xl font-bold text-slate-800 mb-3">
@@ -541,16 +534,18 @@ export default function Pricing() {
                 <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
               </h2>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-xl px-6 py-4 mb-6 mt-2">
-                <p className="text-lg font-bold text-amber-800">
-                  {selectedPackage
-                    ? `⭐ ${selectedPackage.credits} ${isHe ? 'קרדיטים' : 'Credits'}`
-                    : (isHe ? '⭐ 110 קרדיטים' : '⭐ 110 Credits')}
+              <div className="bg-purple-50 border border-purple-200 rounded-xl px-6 py-4 mb-6 mt-2">
+                <p className="text-sm font-bold text-purple-800">
+                  🎁 {isHe ? 'מתנת הצטרפות: 100 קרדיטים מתנה בהרשמה' : 'Welcome gift: 100 free credits on signup'}
                 </p>
-                <p className="text-sm text-amber-600 mt-1">
-                  {isHe ? '110 קרדיטים = יצירת סיפור אחד מותאם אישית' : 'Includes one personalized story'}
+                <p className="text-xs text-purple-500 mt-1">
+                  {isHe ? '60 קרדיטים = יצירת סיפור אחד מותאם אישית' : '60 credits = one personalized story'}
                 </p>
               </div>
+
+              {!appliedCoupon && !hostedButtonCode && (
+                <PackageGrid packages={packages} selectedPackage={selectedPackage} onSelect={setSelectedPackage} isHe={isHe} />
+              )}
 
               {/* Gift Mode Toggle */}
               <div className="mb-6">
@@ -574,16 +569,8 @@ export default function Pricing() {
               )}
 
               <div className="text-center mb-6">
-                {btnConfig.original && (
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold mb-3">
-                    ☀️ {isHe ? 'מבצע חופש גדול' : 'Summer Sale'}
-                  </div>
-                )}
                 <div className="flex items-center justify-center gap-3">
-                  {btnConfig.original && (
-                    <span className="text-xl text-slate-400 line-through">{btnConfig.original}</span>
-                  )}
-                  <p className="text-3xl font-bold text-slate-800">{btnConfig.display}</p>
+                  <p className="text-3xl font-bold text-slate-800">{btnConfig?.display}</p>
                 </div>
                 {promoApplied && (
                   <p className="text-green-600 text-sm font-medium mt-1">
