@@ -11,7 +11,7 @@ import {
 } from '@/lib/childSpace';
 import SpaceHero from '@/components/space/SpaceHero';
 import SpaceStories from '@/components/space/SpaceStories';
-import ActivityShelf from '@/components/space/ActivityShelf';
+import ActivityFeed from '@/components/space/ActivityFeed';
 import ReminderList from '@/components/space/ReminderList';
 import MoodCheckIn from '@/components/space/MoodCheckIn';
 import ParentInsights from '@/components/space/ParentInsights';
@@ -26,13 +26,12 @@ export default function ChildSpace() {
   const [spaces, setSpaces] = useState([]);
   const [activeSpace, setActiveSpace] = useState(null);
   const [allStories, setAllStories] = useState([]);
-  const [activities, setActivities] = useState([]);
+  const [entries, setEntries] = useState([]);
   const [reminders, setReminders] = useState([]);
   const [moods, setMoods] = useState([]);
 
   const [spaceDialogOpen, setSpaceDialogOpen] = useState(false);
   const [editingSpace, setEditingSpace] = useState(null);
-  const [activityPickerOpen, setActivityPickerOpen] = useState(false);
   const [adoptDismissed, setAdoptDismissed] = useState(false);
 
   /* ---------------- data ---------------- */
@@ -59,17 +58,17 @@ export default function ChildSpace() {
 
   const loadSpaceData = useCallback(async (spaceId) => {
     if (!spaceId) {
-      setActivities([]);
+      setEntries([]);
       setReminders([]);
       setMoods([]);
       return;
     }
     const [act, rem, mood] = await Promise.all([
-      base44.entities.SpaceActivity.filter({ child_space_id: spaceId }).catch(() => []),
+      base44.entities.ActivityEntry.filter({ child_space_id: spaceId }, '-created_date').catch(() => []),
       base44.entities.Reminder.filter({ child_space_id: spaceId }).catch(() => []),
       base44.entities.MoodEntry.filter({ child_space_id: spaceId }, '-date').catch(() => []),
     ]);
-    setActivities(act || []);
+    setEntries(act || []);
     setReminders(rem || []);
     setMoods(mood || []);
   }, []);
@@ -168,8 +167,8 @@ export default function ChildSpace() {
             </h1>
             <p className="text-slate-500 max-w-md mx-auto mb-6">
               {he
-                ? 'מרחב אחד לכל ילד/ה — הסיפורים, הפעילויות האהובות, התזכורות והרגשות, במקום אחד. אפשר ליצור כמה מרחבים שתרצו.'
-                : 'One space per child — stories, favourite activities, reminders and feelings, all in one place. Create as many as you need.'}
+                ? 'מרחב אחד לכל ילד/ה — הסיפורים, הפעילויות שעשיתם, התזכורות והרגשות, במקום אחד. אפשר ליצור כמה מרחבים שתרצו.'
+                : 'One space per child — stories, the activities you did, reminders and feelings, all in one place. Create as many as you need.'}
             </p>
             <Button
               onClick={() => { setEditingSpace(null); setSpaceDialogOpen(true); }}
@@ -237,7 +236,6 @@ export default function ChildSpace() {
         space={activeSpace}
         lang={lang}
         onEdit={() => { setEditingSpace(activeSpace); setSpaceDialogOpen(true); }}
-        onAddActivity={() => setActivityPickerOpen(true)}
       />
 
       {unassignedStories.length > 0 && !adoptDismissed && (
@@ -253,13 +251,10 @@ export default function ChildSpace() {
       <div className="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-4 mb-4">
         <div className="flex flex-col gap-4">
           <SpaceStories stories={spaceStories} lang={lang} />
-          <ActivityShelf
-            spaceId={activeSpace.id}
-            activities={activities}
+          <ActivityFeed
+            entries={entries}
             lang={lang}
             onChanged={refreshSpaceData}
-            pickerOpen={activityPickerOpen}
-            setPickerOpen={setActivityPickerOpen}
           />
         </div>
 
@@ -267,7 +262,7 @@ export default function ChildSpace() {
           <ParentInsights
             space={activeSpace}
             stories={spaceStories}
-            activities={activities}
+            entries={entries}
             moods={moods}
             lang={lang}
           />
