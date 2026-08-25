@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { Printer, RotateCcw } from 'lucide-react';
 import { QUESTIONS, UI } from './safePlaceContent';
@@ -137,6 +138,14 @@ export default function SafePlace({ lang = 'he' }) {
               <Printer className="w-4 h-4" />
               {copy.print}
             </button>
+            <SaveToSpace
+              slug="safe-place"
+              lang={lang}
+              getEntry={() => (Object.keys(answers).length > 0 ? {
+                summary: `${Object.keys(answers).length} ${lang === 'he' ? 'תשובות' : 'answers'}`,
+                payload: { answers },
+              } : null)}
+            />
           </div>
         </>
       )}
