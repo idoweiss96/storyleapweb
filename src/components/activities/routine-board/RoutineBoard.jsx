@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useRef, useState } from 'react';
 import { ChevronDown, ChevronUp, Plus, Printer, RotateCcw, X } from 'lucide-react';
 import { CUSTOM_EMOJI, PARTS, PART_LABELS, stepLabel, stepsByPart } from '../shared/routineSteps';
@@ -209,6 +210,14 @@ export default function RoutineBoard({ lang = 'he' }) {
               <Printer className="w-4 h-4" />
               {copy.print}
             </button>
+            <SaveToSpace
+              slug="routine-board"
+              lang={lang}
+              getEntry={() => (board.length > 0 ? {
+                summary: `${board.length} ${lang === 'he' ? 'שלבים' : 'steps'}`,
+                payload: { board },
+              } : null)}
+            />
           </div>
         </>
       )}
