@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail, Globe, ChevronDown, Heart } from 'lucide-react';
+import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail, Globe, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
@@ -45,7 +45,6 @@ const WEBSITE_SCHEMA = {
   url: 'https://storyleapai.com',
 };
 import { LanguageProvider, useLanguage } from './components/LanguageContext';
-import { getActiveSpaceName } from '@/lib/childSpace';
 import { initPostHog, trackPageview, stopTracking, resumeTracking } from '@/lib/posthog';
 
 // New brand logo URL
@@ -59,21 +58,13 @@ function LayoutInner({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [signupBonusPopup, setSignupBonusPopup] = useState(null);
-  // Written to localStorage by the space page, so labelling the nav item with
-  // the child's name costs no entity query on every other page.
-  const [activeSpaceName, setActiveSpaceName] = useState(getActiveSpaceName());
 
   useEffect(() => {
     loadUser();
     // Refresh credits on custom event (e.g. after story creation)
     const handleCreditsUpdate = () => loadUser();
-    const handleSpaceChange = () => setActiveSpaceName(getActiveSpaceName());
     window.addEventListener('credits-updated', handleCreditsUpdate);
-    window.addEventListener('active-space-changed', handleSpaceChange);
-    return () => {
-      window.removeEventListener('credits-updated', handleCreditsUpdate);
-      window.removeEventListener('active-space-changed', handleSpaceChange);
-    };
+    return () => window.removeEventListener('credits-updated', handleCreditsUpdate);
   }, []);
 
   // PostHog: tracked on every page except System Management (Admin), which is excluded
@@ -182,14 +173,6 @@ function LayoutInner({ children, currentPageName }) {
     { name: 'Home', label: t('nav_home'), icon: Home },
     getStartedItem,
     { name: 'CreateStory', label: t('nav_new_story'), icon: Sparkles },
-    {
-      name: 'ChildSpace',
-      label: activeSpaceName
-        ? (lang === 'he' ? `המרחב של ${activeSpaceName}` : `${activeSpaceName}'s Space`)
-        : (lang === 'he' ? 'המרחב שלי' : 'My Space'),
-      icon: Heart,
-      path: '/space',
-    },
     { name: 'MyStories', label: t('nav_my_stories'), icon: BookOpen },
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
     { name: 'Contact', label: t('nav_contact'), icon: Mail },
