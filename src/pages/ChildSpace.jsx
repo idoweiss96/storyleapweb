@@ -83,6 +83,8 @@ export default function ChildSpace() {
         if (cancelled) return;
         const active = resolveActiveSpace(list);
         setActiveSpace(active);
+        // Persist on first visit too, so the header can label itself.
+        setActiveSpaceId(active?.id || null, active?.name);
         await Promise.all([loadStories(), loadSpaceData(active?.id)]);
       } catch (e) {
         console.error('[ChildSpace] init failed:', e);
@@ -97,7 +99,7 @@ export default function ChildSpace() {
 
   const selectSpace = useCallback(async (space) => {
     setActiveSpace(space);
-    setActiveSpaceId(space?.id || null);
+    setActiveSpaceId(space?.id || null, space?.name);
     await loadSpaceData(space?.id);
   }, [loadSpaceData]);
 
