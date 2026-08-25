@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sparkles, Star, CheckCircle, Tag, Gift } from 'lucide-react';
+import { Sparkles, Star, CheckCircle, Tag, Gift, ShieldCheck, Heart, Zap, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '../components/LanguageContext';
 import { base44 } from '@/api/base44Client';
@@ -534,31 +534,58 @@ export default function Pricing() {
                 <Star className="w-8 h-8 text-amber-500 fill-amber-400" />
               </h2>
 
-              <div className="bg-purple-50 border border-purple-200 rounded-xl px-6 py-4 mb-6 mt-2">
-                <p className="text-sm font-bold text-purple-800">
-                  🎁 {isHe ? 'מתנת הצטרפות: 100 קרדיטים מתנה בהרשמה' : 'Welcome gift: 100 free credits on signup'}
-                </p>
-                <p className="text-xs text-purple-500 mt-1">
-                  {isHe ? '60 קרדיטים = יצירת סיפור אחד מותאם אישית' : '60 credits = one personalized story'}
-                </p>
+              <div className="flex items-center gap-4 bg-purple-50 border border-purple-200 rounded-xl px-5 py-4 mb-6 mt-2 text-right rtl:text-right">
+                <div className="w-11 h-11 rounded-xl bg-purple-100 flex items-center justify-center shrink-0">
+                  <Gift className="w-6 h-6 text-purple-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-purple-800">
+                    🎁 {isHe ? 'מתנת הצטרפות: 100 קרדיטים מתנה בהרשמה' : 'Welcome gift: 100 free credits on signup'}
+                  </p>
+                  <p className="text-xs text-purple-500 mt-1">
+                    {isHe ? '60 קרדיטים = יצירת סיפור אחד מותאם אישית' : '60 credits = one personalized story'}
+                  </p>
+                </div>
               </div>
 
               {!appliedCoupon && !hostedButtonCode && (
                 <PackageGrid packages={packages} selectedPackage={selectedPackage} onSelect={setSelectedPackage} isHe={isHe} />
               )}
 
-              {/* Gift Mode Toggle */}
-              <div className="mb-6">
-                <div className="flex gap-2 p-1 bg-slate-100 rounded-xl">
-                  <button onClick={() => { setGiftMode(false); setGiftSuccess(null); }} className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all text-sm font-medium ${!giftMode ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}`}>
-                    <Star className="w-4 h-4" />
-                    {isHe ? 'רכישה עבורי' : 'Buy for myself'}
-                  </button>
-                  <button onClick={() => { setGiftMode(true); setPromoApplied(false); setPromoCode(''); setHostedButtonCode(null); setAppliedCoupon(null); }} className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all text-sm font-medium ${giftMode ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'}`}>
-                    <Gift className="w-4 h-4" />
-                    {isHe ? 'שלח כמתנה' : 'Send as gift'}
-                  </button>
+              {/* Trust badges */}
+              <div className="flex items-center justify-center gap-6 mb-6 text-xs text-slate-500">
+                <div className="flex flex-col items-center gap-1.5 w-20">
+                  <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center"><ShieldCheck className="w-4 h-4 text-purple-500" /></div>
+                  <span className="text-center leading-tight">{isHe ? 'תשלום מאובטח' : 'Safe & secure'}</span>
                 </div>
+                <div className="flex flex-col items-center gap-1.5 w-20">
+                  <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center"><Heart className="w-4 h-4 text-purple-500" /></div>
+                  <span className="text-center leading-tight">{isHe ? 'ללא תפוגה' : 'No expiration'}</span>
+                </div>
+                <div className="flex flex-col items-center gap-1.5 w-20">
+                  <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center"><Zap className="w-4 h-4 text-purple-500" /></div>
+                  <span className="text-center leading-tight">{isHe ? 'קל לשימוש' : 'Easy to use'}</span>
+                </div>
+              </div>
+
+              {/* Gift Mode Toggle */}
+              <div className="mb-6 space-y-2">
+                <button onClick={() => { setGiftMode(false); setGiftSuccess(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all text-right rtl:text-right ${!giftMode ? 'border-purple-300 bg-purple-50' : 'border-slate-200 bg-white'}`}>
+                  <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center shrink-0"><ShoppingCart className="w-4 h-4 text-purple-500" /></div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-slate-800">{isHe ? 'רכישה עבורי' : 'Buy for myself'}</p>
+                    <p className="text-xs text-slate-400">{isHe ? 'אני רוצה ליצור סיפורים' : 'I want to create stories'}</p>
+                  </div>
+                  {isHe ? <ChevronLeft className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
+                </button>
+                <button onClick={() => { setGiftMode(true); setPromoApplied(false); setPromoCode(''); setHostedButtonCode(null); setAppliedCoupon(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all text-right rtl:text-right ${giftMode ? 'border-amber-300 bg-amber-50' : 'border-slate-200 bg-white'}`}>
+                  <div className="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center shrink-0"><Gift className="w-4 h-4 text-amber-500" /></div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-slate-800">{isHe ? 'שלח כמתנה' : 'Send as a gift'}</p>
+                    <p className="text-xs text-slate-400">{isHe ? 'שתפו סיפורים עם מישהו מיוחד' : 'Share stories with someone special'}</p>
+                  </div>
+                  {isHe ? <ChevronLeft className="w-4 h-4 text-slate-400" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
+                </button>
               </div>
 
               {giftMode && (
