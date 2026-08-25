@@ -178,6 +178,7 @@ export default function EmotionThermometer({ lang = 'he' }) {
           {copy.changeFeeling}
         </button>
         {band && (
+          <>
           <button
             type="button"
             onClick={() => window.print()}
@@ -195,6 +196,7 @@ export default function EmotionThermometer({ lang = 'he' }) {
               payload: { feeling: feelingText, level },
             } : null)}
           />
+          </>
         )}
       </div>
     </div>
