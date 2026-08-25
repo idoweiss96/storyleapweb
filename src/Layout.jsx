@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail, Globe, ChevronDown } from 'lucide-react';
+import { Sparkles, BookOpen, Wallet, Home, Menu, X, Star, LogOut, Mail, Globe, ChevronDown, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
