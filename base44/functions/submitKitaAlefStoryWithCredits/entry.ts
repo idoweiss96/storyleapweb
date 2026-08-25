@@ -40,12 +40,12 @@ Deno.serve(async (req) => {
     const currentCredits = dbUser.credits || 0;
 
     // Not enough credits
-    if (currentCredits < 110) {
+    if (currentCredits < 60) {
       return Response.json({ success: false, reason: 'insufficient_credits', credits: currentCredits });
     }
 
     // Deduct credits atomically
-    await base44.asServiceRole.entities.User.update(dbUser.id, { credits: currentCredits - 110 });
+    await base44.asServiceRole.entities.User.update(dbUser.id, { credits: currentCredits - 60 });
 
     // Fetch story, persist lang durably on the record, then mark as paid
     const story = await base44.asServiceRole.entities.KitaAlefStory.get(story_id);
@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
       lang: effectiveLang,
     }).catch(() => {});
 
-    return Response.json({ success: true, credits_remaining: currentCredits - 110 });
+    return Response.json({ success: true, credits_remaining: currentCredits - 60 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

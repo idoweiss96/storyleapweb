@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 
-const SIGNUP_BONUS = 10;
+const SIGNUP_BONUS = 100;
 
 // Grants 10 welcome credits to a new user on their first onboarding completion.
 // Idempotent: uses the onboarding_completed flag — if already completed, no grant.

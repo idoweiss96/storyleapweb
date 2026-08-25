@@ -108,7 +108,7 @@ export const COL = {
   STORY_LINK: 23,
 };
 
-export const CREDITS_PER_BOOK = 110;
+export const CREDITS_PER_BOOK = 60;
 
 /** A1 column letter for a 0-based index (supports up to ZZ). */
 export function colLetter(index: number): string {
