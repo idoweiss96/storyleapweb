@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { ANSWER_STYLES, CARD_STYLES } from '../shared/cardStyles';
 import { ActionBar, PickerCard, PrintableAnswer, ResultCard, countLabel } from '../shared/ActivityCards';
@@ -56,6 +57,16 @@ export default function StrengthCards({ lang = 'he' }) {
           restartLabel={copy.restart}
           onPrint={() => window.print()}
           printLabel={copy.print}
+          extra={
+            <SaveToSpace
+              slug="strength-cards"
+              lang={lang}
+              getEntry={() => (selected.length > 0 ? {
+                summary: `${selected.length} ${lang === 'he' ? 'חוזקות' : 'strengths'}`,
+                payload: { selected, answers },
+              } : null)}
+            />
+          }
         />
       </div>
     );
