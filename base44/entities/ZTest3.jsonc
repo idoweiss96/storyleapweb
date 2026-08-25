@@ -1,0 +1,15 @@
+{
+  "name": "ZTest3",
+  "type": "object",
+  "properties": {
+    "foo": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
