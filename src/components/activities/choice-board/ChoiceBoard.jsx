@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useRef, useState } from 'react';
 import { Plus, Printer, RotateCcw, X } from 'lucide-react';
 import { CARD_STYLES } from '../shared/cardStyles';
@@ -240,6 +241,14 @@ export default function ChoiceBoard({ lang = 'he' }) {
             <Printer className="w-4 h-4" />
             {copy.print}
           </button>
+          <SaveToSpace
+            slug="choice-board"
+            lang={lang}
+            getEntry={() => (options.length > 0 ? {
+              summary: ownQuestion || situation?.[lang] || situation?.he || situation?.label || undefined,
+              payload: { situation, ownQuestion, options },
+            } : null)}
+          />
         </div>
       )}
 
