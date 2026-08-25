@@ -9,7 +9,7 @@ import { getAvatar, getTheme, ageFromBirthDate } from '@/lib/childSpace';
  * The top of the space: who this is, and the two things a parent
  * most often comes here to do.
  */
-export default function SpaceHero({ space, lang = 'he', onEdit, onAddActivity }) {
+export default function SpaceHero({ space, lang = 'he', onEdit }) {
   const he = lang === 'he';
   const avatar = getAvatar(space.avatar_id);
   const theme = getTheme(space.color_theme);
@@ -79,9 +79,11 @@ export default function SpaceHero({ space, lang = 'he', onEdit, onAddActivity })
               {he ? 'צור סיפור חדש' : 'Create a story'}
             </Link>
           </Button>
-          <Button variant="outline" onClick={onAddActivity} className="rounded-xl border-slate-200">
-            <Plus className="w-4 h-4 me-2" />
-            {he ? 'הוסף פעילות' : 'Add activity'}
+          <Button asChild variant="outline" className="rounded-xl border-slate-200">
+            <Link to="/activities">
+              <Plus className="w-4 h-4 me-2" />
+              {he ? 'לפעילויות' : 'Activities'}
+            </Link>
           </Button>
         </div>
       </div>
