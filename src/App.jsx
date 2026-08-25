@@ -36,6 +36,7 @@ import FreeActivityLittleHeart from './pages/FreeActivityLittleHeart';
 import EditStory from './pages/EditStory';
 import StoryRedirect from './pages/StoryRedirect';
 import Activities from './pages/Activities';
+import ChildSpace from './pages/ChildSpace';
 import ActivityEmotionWheel from './pages/ActivityEmotionWheel';
 import ActivityStrengthCards from './pages/ActivityStrengthCards';
 import ActivityCopingCards from './pages/ActivityCopingCards';
@@ -135,6 +136,7 @@ const AuthenticatedApp = () => {
       <Route path="/FreeActivityLittleHeart" element={<LayoutWrapper currentPageName="FreeActivityLittleHeart"><FreeActivityLittleHeart /></LayoutWrapper>} />
       <Route path="/EditStory" element={<LayoutWrapper currentPageName="EditStory"><EditStory /></LayoutWrapper>} />
       <Route path="/story/:order_id" element={<LayoutWrapper currentPageName="StoryRedirect"><StoryRedirect /></LayoutWrapper>} />
+      <Route path="/space" element={<LayoutWrapper currentPageName="ChildSpace"><ChildSpace /></LayoutWrapper>} />
       <Route path="/activities" element={<LayoutWrapper currentPageName="Activities"><Activities /></LayoutWrapper>} />
       <Route path="/activities/emotion-wheel" element={<LayoutWrapper currentPageName="ActivityEmotionWheel"><ActivityEmotionWheel /></LayoutWrapper>} />
       <Route path="/activities/strength-cards" element={<LayoutWrapper currentPageName="ActivityStrengthCards"><ActivityStrengthCards /></LayoutWrapper>} />
