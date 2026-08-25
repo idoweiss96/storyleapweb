@@ -1,0 +1,62 @@
+{
+  "name": "Reminder",
+  "type": "object",
+  "properties": {
+    "child_space_id": {
+      "type": "string",
+      "description": "מזהה המרחב שאליו שייכת התזכורת"
+    },
+    "title": {
+      "type": "string",
+      "description": "מה צריך לעשות, למשל: להכין יחד את תיק בית הספר"
+    },
+    "time": {
+      "type": "string",
+      "description": "שעה בפורמט HH:MM. טקסט ולא date-time, כי זו שעה חוזרת ולא רגע יחיד"
+    },
+    "repeat": {
+      "type": "string",
+      "enum": ["once", "daily", "weekdays", "weekly"],
+      "default": "daily",
+      "description": "תדירות החזרה"
+    },
+    "icon": {
+      "type": "string",
+      "description": "אימוג׳י שמופיע לצד התזכורת"
+    },
+    "done_dates": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "רשימת תאריכים (YYYY-MM-DD) שבהם התזכורת סומנה כבוצעה"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "תזכורת כבויה נשארת ברשימה אבל לא מוצגת בדאשבורד"
+    }
+  },
+  "required": ["child_space_id", "title"],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        { "created_by_id": "{{user.id}}" },
+        { "user_condition": { "role": "admin" } }
+      ]
+    },
+    "update": {
+      "$or": [
+        { "created_by_id": "{{user.id}}" },
+        { "user_condition": { "role": "admin" } }
+      ]
+    },
+    "delete": {
+      "$or": [
+        { "created_by_id": "{{user.id}}" },
+        { "user_condition": { "role": "admin" } }
+      ]
+    }
+  }
+}
