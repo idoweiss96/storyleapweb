@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Printer } from 'lucide-react';
 import { ANSWER_STYLES } from '../shared/cardStyles';
@@ -198,6 +199,14 @@ export default function EmotionWheel({ lang = 'he' }) {
           <Printer className="w-4 h-4" />
           {copy.print}
         </button>
+        <SaveToSpace
+          slug="emotion-wheel"
+          lang={lang}
+          getEntry={() => (result ? {
+            summary: `${result.emotion?.emoji || ''} ${result.label}`.trim(),
+            payload: { emotion: result.label, key: result.key, answers },
+          } : null)}
+        />
       )}
     </div>
   );
