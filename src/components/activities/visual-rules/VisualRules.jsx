@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useRef, useState } from 'react';
 import { Plus, Printer, RotateCcw, X } from 'lucide-react';
 import { CUSTOM_EMOJI, MAX_RULES, MIN_RULES, RULES, UI } from './visualRulesContent';
@@ -165,6 +166,14 @@ export default function VisualRules({ lang = 'he' }) {
             <Printer className="w-4 h-4" />
             {copy.print}
           </button>
+          <SaveToSpace
+            slug="visual-rules"
+            lang={lang}
+            getEntry={() => (board.length > 0 ? {
+              summary: `${board.length} ${lang === 'he' ? 'כללים' : 'rules'}`,
+              payload: { board },
+            } : null)}
+          />
         </div>
       )}
 
