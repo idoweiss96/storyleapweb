@@ -79,7 +79,7 @@ export function PrintableAnswer({ value, onChange, placeholder, ariaLabel, lines
 }
 
 /** Restart + print, hidden from the printed page via `site-chrome`. */
-export function ActionBar({ onRestart, restartLabel, onPrint, printLabel }) {
+export function ActionBar({ onRestart, restartLabel, onPrint, printLabel, extra }) {
   return (
     <div className="site-chrome flex flex-wrap gap-3 justify-center mt-8">
       <button
@@ -99,6 +99,7 @@ export function ActionBar({ onRestart, restartLabel, onPrint, printLabel }) {
         <Printer className="w-4 h-4" />
         {printLabel}
       </button>
+      {extra}
     </div>
   );
 }
