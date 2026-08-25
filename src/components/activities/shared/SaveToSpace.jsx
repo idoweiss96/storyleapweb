@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Check, Loader2, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { getActiveSpaceId, getActiveSpaceName, setActiveSpaceId, getAvatar } from '@/lib/childSpace';
+import { capturePrintable } from './captureSnapshot';
 
 /**
  * "Save to my space" — the counterpart to each activity's print button.
@@ -25,6 +26,7 @@ export default function SaveToSpace({ slug, getEntry, lang = 'he', label, savedL
   const [spaces, setSpaces] = useState(null); // null until first load
   const [visible, setVisible] = useState(!!getActiveSpaceId());
   const [picking, setPicking] = useState(false);
+  const btnRef = useRef(null);
 
   const cachedName = getActiveSpaceName();
 
@@ -53,6 +55,13 @@ export default function SaveToSpace({ slug, getEntry, lang = 'he', label, savedL
       toast.error(he ? 'עוד אין מה לשמור' : 'Nothing to save yet');
       return;
     }
+    // Freeze how the activity looks right now, before any dialog or toast can
+    // alter the page. The entry still carries `payload`, so an entry whose
+    // snapshot fails degrades to field rows rather than to nothing.
+    const snapshotHtml = capturePrintable(
+      btnRef.current?.closest('main') || document.querySelector('main'),
+    );
+
     setState('saving');
     try {
       let imageUrl;
@@ -70,6 +79,7 @@ export default function SaveToSpace({ slug, getEntry, lang = 'he', label, savedL
         activity_slug: slug,
         summary: entry.summary || undefined,
         payload: entry.payload || undefined,
+        snapshot_html: snapshotHtml || undefined,
         image_url: imageUrl,
       });
 
@@ -131,6 +141,7 @@ export default function SaveToSpace({ slug, getEntry, lang = 'he', label, savedL
   return (
     <>
       <button
+        ref={btnRef}
         type="button"
         onClick={handleClick}
         disabled={state !== 'idle'}
