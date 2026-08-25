@@ -249,7 +249,7 @@ export default function BodyMap({ lang = 'he' }) {
               lang={lang}
               getEntry={() => (emotion && marked.length > 0 ? {
                 summary: `${emotion?.emoji || ''} ${marked.length} ${lang === 'he' ? 'מקומות בגוף' : 'body spots'}`.trim(),
-                payload: { emotion, marked, answer },
+                payload: { emotion, marked: orderedMarks, answer },
               } : null)}
             />
           </>
