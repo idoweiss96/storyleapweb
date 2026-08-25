@@ -10,9 +10,9 @@ const ICONS = { sparkles: Sparkles, heart: Heart, book: BookOpen };
  * Insights are derived on every render from data already on the page —
  * nothing here is stored. See buildInsights() for the rules.
  */
-export default function ParentInsights({ space, stories, activities, moods, lang = 'he' }) {
+export default function ParentInsights({ space, stories, entries, moods, lang = 'he' }) {
   const he = lang === 'he';
-  const insights = buildInsights({ space, stories, activities, moods, lang });
+  const insights = buildInsights({ space, stories, entries, moods, lang });
 
   return (
     <Card className="border-0 shadow-lg shadow-violet-50">
