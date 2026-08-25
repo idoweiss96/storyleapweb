@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { Printer, RotateCcw } from 'lucide-react';
 import { ANSWER_STYLES, CARD_STYLES } from '../shared/cardStyles';
@@ -243,6 +244,14 @@ export default function BodyMap({ lang = 'he' }) {
               <Printer className="w-4 h-4" />
               {copy.print}
             </button>
+            <SaveToSpace
+              slug="body-map"
+              lang={lang}
+              getEntry={() => (emotion && marked.length > 0 ? {
+                summary: `${emotion?.emoji || ''} ${marked.length} ${lang === 'he' ? 'מקומות בגוף' : 'body spots'}`.trim(),
+                payload: { emotion, marked, answer },
+              } : null)}
+            />
           </>
         )}
       </div>
