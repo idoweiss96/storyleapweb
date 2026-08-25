@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useRef, useState } from 'react';
 import { ChevronDown, ChevronUp, Plus, Printer, RotateCcw, X } from 'lucide-react';
 import { CUSTOM_EMOJI, PARTS, PART_LABELS, stepLabel, stepsByPart } from '../shared/routineSteps';
@@ -263,6 +264,14 @@ export default function RoutineChecklist({ lang = 'he' }) {
             <Printer className="w-4 h-4" />
             {copy.print}
           </button>
+          <SaveToSpace
+            slug="routine-checklist"
+            lang={lang}
+            getEntry={() => (items.length > 0 ? {
+              summary: name || `${items.length} ${lang === 'he' ? 'משימות' : 'tasks'}`,
+              payload: { name, mode, items },
+            } : null)}
+          />
         </div>
       )}
 
