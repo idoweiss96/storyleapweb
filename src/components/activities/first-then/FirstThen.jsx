@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { ArrowLeftRight, Plus, Printer, RotateCcw, X } from 'lucide-react';
 import { CUSTOM_EMOJI, PARTS, PART_LABELS, stepLabel, stepsByPart } from '../shared/routineSteps';
@@ -200,6 +201,14 @@ export default function FirstThen({ lang = 'he' }) {
             <Printer className="w-4 h-4" />
             {copy.print}
           </button>
+          <SaveToSpace
+            slug="first-then"
+            lang={lang}
+            getEntry={() => (first && then ? {
+              summary: `${first?.[lang] || first?.he || first?.label || ''} → ${then?.[lang] || then?.he || then?.label || ''}`.trim(),
+              payload: { first, then },
+            } : null)}
+          />
         </div>
       )}
 
