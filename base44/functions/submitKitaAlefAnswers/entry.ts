@@ -85,7 +85,7 @@ function answersToRow(answers, userEmail, lang, storyId) {
     '', // Story link — filled in later once the story is ready
     '', // Email sent — filled in by the notification automation
     storyId || '',
-    isEn ? 'Pending Payment' : 'ממתין לתשלום',
+    isEn ? 'Pending Payment' : 'ממתינים לתשלום',
   ];
 }
 

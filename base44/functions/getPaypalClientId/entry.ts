@@ -1,11 +1,8 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
-
+// No auth required: a PayPal client ID is not a secret — it's embedded in the public
+// PayPal JS SDK script URL anyway. Guests need this too, to pay for a single story
+// without creating an account.
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-
     return Response.json({ client_id: Deno.env.get('PAYPAL_CLIENT_ID') });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

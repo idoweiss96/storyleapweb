@@ -17,6 +17,16 @@ const settingMapEN = { space: 'Space', forest: 'Enchanted Forest', castle: 'Cast
 const challengeMapEN = { fears: 'Fears', social_difficulty: 'Social Difficulty', changes: 'Changes', emotional_regulation: 'Emotional Regulation', separation_anxiety: 'Separation Anxiety', self_confidence: 'Self Confidence', sleep_issues: 'Sleep Issues' };
 const reactionMapEN = { outburst: 'Outburst', withdrawal: 'Withdrawal', attention_seeking: 'Attention Seeking', crying: 'Crying', aggression: 'Aggression', avoidance: 'Avoidance' };
 
+// The three real-world states an order can be in. Written as human-readable status text
+// (not just 'paid'/''), and driven only by story.payment_status — which is only ever set
+// to 'paid' after a verified payment event (credit deduction after purchase, or a captured
+// PayPal payment), never on questionnaire submission alone.
+const STATUS_PENDING = { he: 'ממתינים לתשלום', en: 'Pending Payment' };
+const STATUS_PREPARING = { he: 'הסיפור בהכנה', en: 'Story in preparation' };
+function statusFor(story, lang) {
+  return story.payment_status === 'paid' ? STATUS_PREPARING[lang] : STATUS_PENDING[lang];
+}
+
 function isHebrew(text) {
   return /[\u0590-\u05FF]/.test(text || '');
 }
@@ -43,7 +53,7 @@ function storyToRow(story, lang, userEmail, tags) {
     userEmail || '',
     '', // Price — not tracked for credit-funded stories
     '', // Currency — not tracked for credit-funded stories
-    story.payment_status === 'paid' ? 110 : '',
+    story.payment_status === 'paid' ? 60 : '',
     story.child_name || '',
     story.child_age || '',
     genderMap[story.gender] || story.gender || '',
@@ -58,15 +68,17 @@ function storyToRow(story, lang, userEmail, tags) {
     story.hobbies || '',
     story.contact_email || '',
     story.contact_phone || '',
-    '', // Story Link — filled in later once the story is ready
+    story.story_link || '', // Story Link — filled in later once the story is ready
     '', // Email Sent — filled in by the notification automation
     '', // (unused)
     '', // (unused note column)
-    story.payment_status === 'paid' ? 'paid' : '', // Z — סטטוס
+    statusFor(story, lang), // Z — סטטוס
     '', // AA — only used for rows upgraded from a preview (see findPreviewRow below)
   ];
 }
 
+const COL_ORDER_ID = 2; // C
+const COL_STORY_LINK = 21; // V
 const COL_CONTACT_EMAIL = 19; // T
 const COL_STATUS = 25; // Z
 const COL_PREVIEW_LINK = 26; // AA
@@ -76,8 +88,41 @@ function colLetter(index) {
   return 'A' + String.fromCharCode('A'.charCodeAt(0) + (index - 26));
 }
 
+// This story already has a row (written when the questionnaire was first submitted,
+// status "pending payment") — find it by order_id so a payment confirmation UPDATES
+// that row instead of appending a second one for the same order.
+async function findRowByOrderId(spreadsheetId, sheetName, accessToken, orderId) {
+  if (!orderId) return null;
+  const col = colLetter(COL_ORDER_ID);
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!${col}2:${col}`,
+    { headers: { 'Authorization': `Bearer ${accessToken}` } }
+  );
+  if (!res.ok) return null;
+  const rows = (await res.json()).values || [];
+  for (let i = rows.length - 1; i >= 0; i--) {
+    if ((rows[i][0] || '').trim() === orderId) return i + 2; // header row + 1-indexing
+  }
+  return null;
+}
+
+async function updateRowStatus(spreadsheetId, sheetName, accessToken, rowNumber, status, storyLink) {
+  const data = [{ range: `${sheetName}!${colLetter(COL_STATUS)}${rowNumber}`, values: [[status]] }];
+  if (storyLink) {
+    data.push({ range: `${sheetName}!${colLetter(COL_STORY_LINK)}${rowNumber}`, values: [[storyLink]] });
+  }
+  await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data }),
+    }
+  );
+}
+
 // If this contact already has a free preview row (status "preview") in this sheet, upgrade
-// that same row to "paid" instead of appending a brand new one for the same customer.
+// that same row to paid instead of appending a brand new one for the same customer.
 async function findPreviewRow(spreadsheetId, sheetName, accessToken, contactEmail) {
   if (!contactEmail) return null;
   const res = await fetch(
@@ -98,25 +143,6 @@ async function findPreviewRow(spreadsheetId, sheetName, accessToken, contactEmai
   return null;
 }
 
-async function upgradeRowToPaid(spreadsheetId, sheetName, accessToken, rowNumber, storyLink) {
-  const statusCol = colLetter(COL_STATUS);
-  const data = [{ range: `${sheetName}!${statusCol}${rowNumber}`, values: [['paid']] }];
-  // Only overwrite the link if the full story link is already known; otherwise leave the
-  // existing preview link in place until an admin replaces it with the real one.
-  if (storyLink) {
-    const linkCol = colLetter(COL_PREVIEW_LINK);
-    data.push({ range: `${sheetName}!${linkCol}${rowNumber}`, values: [[storyLink]] });
-  }
-  await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchUpdate`,
-    {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data }),
-    }
-  );
-}
-
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -129,11 +155,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No story data provided' }, { status: 400 });
     }
 
-    console.log('[addStoryToSheet] Story data received:', { child_name: storyData.child_name, event_type: body.event?.type, has_data: !!body.data });
+    console.log('[addStoryToSheet] Story data received:', { child_name: storyData.child_name, payment_status: storyData.payment_status, order_id: storyData.order_id, event_type: body.event?.type, has_data: !!body.data });
 
     const lang = detectLanguage(storyData);
     const spreadsheetId = lang === 'he' ? SPREADSHEET_ID_HE : SPREADSHEET_ID_EN;
     const sheetName = lang === 'he' ? SHEET_NAME_HE : SHEET_NAME_EN;
+    const status = statusFor(storyData, lang);
 
     let tags = [];
     try {
@@ -157,12 +184,23 @@ Deno.serve(async (req) => {
       try {
         const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlesheets');
 
-        // This customer already has a free preview row (status "preview") — upgrade it to "paid"
+        // This order already has a row from when the questionnaire was first submitted —
+        // update its status in place instead of appending a duplicate row.
+        if (storyData.order_id) {
+          const existingRow = await findRowByOrderId(spreadsheetId, sheetName, accessToken, storyData.order_id);
+          if (existingRow) {
+            await updateRowStatus(spreadsheetId, sheetName, accessToken, existingRow, status, storyData.story_link);
+            console.log('[addStoryToSheet] Updated existing row status:', { child_name: storyData.child_name, lang, row: existingRow, status });
+            return Response.json({ success: true, lang, action: 'status_updated', row: existingRow });
+          }
+        }
+
+        // This customer already has a free preview row (status "preview") — upgrade it
         // instead of appending a duplicate row for the same person.
         if (storyData.payment_status === 'paid') {
           const previewRow = await findPreviewRow(spreadsheetId, sheetName, accessToken, storyData.contact_email);
           if (previewRow) {
-            await upgradeRowToPaid(spreadsheetId, sheetName, accessToken, previewRow, storyData.story_link);
+            await updateRowStatus(spreadsheetId, sheetName, accessToken, previewRow, status, storyData.story_link);
             console.log('[addStoryToSheet] Upgraded preview row to paid:', { child_name: storyData.child_name, lang, row: previewRow });
             return Response.json({ success: true, lang, action: 'upgraded_preview_row', row: previewRow });
           }
@@ -178,7 +216,7 @@ Deno.serve(async (req) => {
         );
         if (response.ok) {
           console.log('[addStoryToSheet] Success:', { child_name: storyData.child_name, lang, spreadsheetId, attempt });
-          return Response.json({ success: true, lang });
+          return Response.json({ success: true, lang, action: 'appended' });
         }
         const err = await response.text();
         console.error(`[addStoryToSheet] Sheets API error (attempt ${attempt}):`, response.status, err);

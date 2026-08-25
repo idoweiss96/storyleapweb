@@ -4,7 +4,8 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
 // 'paid' (i.e. after credits — themselves only granted following a verified
 // PayPal capture — were successfully deducted). Finds the matching row in the
 // Kita Alef Google Sheet by the internal story_id column (written by
-// submitKitaAlefAnswers) and updates its "Payment Status" cell to "שולם"/"Paid".
+// submitKitaAlefAnswers) and updates its "Payment Status" cell from
+// "ממתינים לתשלום"/"Pending Payment" to "הסיפור בהכנה"/"Story in preparation".
 // Never blocks or throws into the caller — this is best-effort visibility only.
 
 const SPREADSHEET_ID_HE = '1tVuanXaYnEt50RA2ckzaFVRiLh6WR_OLS6cLLYzkhS8';
@@ -46,7 +47,7 @@ Deno.serve(async (req) => {
       {
         method: 'PUT',
         headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ values: [[isEn ? 'Paid' : 'שולם']] }),
+        body: JSON.stringify({ values: [[isEn ? 'Story in preparation' : 'הסיפור בהכנה']] }),
       }
     );
     if (!updateRes.ok) {
