@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { Printer, RotateCcw } from 'lucide-react';
 import { CARD_STYLES } from '../shared/cardStyles';
@@ -105,6 +106,14 @@ export default function AdlSequence({ lang = 'he' }) {
           <Printer className="w-4 h-4" />
           {copy.print}
         </button>
+        <SaveToSpace
+          slug="adl-sequence"
+          lang={lang}
+          getEntry={() => (sequence ? {
+            summary: sequence?.title?.[lang] || sequence?.title?.he || sequence?.label || undefined,
+            payload: { sequence },
+          } : null)}
+        />
       </div>
     </div>
   );
