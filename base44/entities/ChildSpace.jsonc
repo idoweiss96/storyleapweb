@@ -1,0 +1,67 @@
+{
+  "name": "ChildSpace",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "שם הילד/ה כפי שההורה בחר להציג במרחב"
+    },
+    "avatar_id": {
+      "type": "string",
+      "description": "מזהה דמות מתוך ספריית האווטארים שבקוד (src/lib/childSpace.js)"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "תמונת אווטאר מותאמת אישית, גובר על avatar_id אם קיים"
+    },
+    "birth_date": {
+      "type": "string",
+      "format": "date",
+      "description": "תאריך לידה, משמש לחישוב הגיל המוצג"
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["boy", "girl", "other"],
+      "description": "מגדר, לצורך ניסוח נכון של הטקסטים במרחב"
+    },
+    "color_theme": {
+      "type": "string",
+      "enum": ["violet", "pink", "sky", "amber", "emerald"],
+      "default": "violet",
+      "description": "ערכת הצבע של המרחב"
+    },
+    "tagline": {
+      "type": "string",
+      "description": "משפט אישי שמופיע בכרטיס הברוכים הבאים"
+    },
+    "is_archived": {
+      "type": "boolean",
+      "default": false,
+      "description": "מרחב שהוסתר. לא נמחק, כדי שסיפורים ששולם עליהם לא ייעלמו"
+    }
+  },
+  "required": ["name"],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {
+      "$or": [
+        { "created_by_id": "{{user.id}}" },
+        { "user_condition": { "role": "admin" } }
+      ]
+    },
+    "update": {
+      "$or": [
+        { "created_by_id": "{{user.id}}" },
+        { "user_condition": { "role": "admin" } }
+      ]
+    },
+    "delete": {
+      "$or": [
+        { "created_by_id": "{{user.id}}" },
+        { "user_condition": { "role": "admin" } }
+      ]
+    }
+  }
+}
