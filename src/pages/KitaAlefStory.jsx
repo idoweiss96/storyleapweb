@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { getActiveSpaceId } from '@/lib/childSpace';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
@@ -160,6 +161,7 @@ export default function KitaAlefStory() {
       if (!id) {
         // No prior record (e.g. anonymous path) — create it now and expose story_id in the URL.
         const savedStory = await base44.entities.KitaAlefStory.create({
+          child_space_id: getActiveSpaceId() || undefined,
           child_name: answers.name || '',
           gender: answers.gender || '',
           child_image_url: answers.photo || null,
@@ -209,6 +211,7 @@ export default function KitaAlefStory() {
       let id = storyId;
       if (!id) {
         const savedStory = await base44.entities.KitaAlefStory.create({
+          child_space_id: getActiveSpaceId() || undefined,
           child_name: answers.name || '',
           gender: answers.gender || '',
           child_image_url: answers.photo || null,
