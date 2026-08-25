@@ -191,6 +191,7 @@ export default function EmotionWheel({ lang = 'he' }) {
       </div>
 
       {result && (
+        <>
         <button
           type="button"
           onClick={() => window.print()}
@@ -207,6 +208,7 @@ export default function EmotionWheel({ lang = 'he' }) {
             payload: { emotion: result.label, key: result.key, answers },
           } : null)}
         />
+        </>
       )}
     </div>
   );
