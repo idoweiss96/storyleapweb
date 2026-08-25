@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import StoryForm from '../components/story/StoryForm';
 import LoginPromptModal from '../components/story/LoginPromptModal';
 import FreePreviewOffer from '../components/story/FreePreviewOffer';
+import GuestStoryCheckout from '../components/story/GuestStoryCheckout';
 import { useLanguage } from '../components/LanguageContext';
 import { useNavPath } from '@/lib/useNavPath';
 import { trackEvent } from '@/lib/posthog';
@@ -421,6 +422,32 @@ export default function CreateStory() {
                 >
                   {isHe ? 'הכל נכון, המשך להתחברות' : "Looks good, continue to Sign In"}
                 </Button>
+                <p className="text-xs text-slate-400 text-center mb-3">
+                  {isHe ? 'עם חשבון תוכלו גם לרכוש חבילות קרדיטים במחיר משתלם יותר' : 'With an account you can also buy credit packages at a better price'}
+                </p>
+
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
+                  <div className="relative flex justify-center text-xs"><span className="bg-white px-3 text-slate-400">{isHe ? 'או' : 'or'}</span></div>
+                </div>
+
+                {!formData.contactEmail ? (
+                  <p className="text-xs text-slate-400 text-center mb-3">
+                    {isHe ? 'הזינו מייל בשלב הקודם כדי לשלם כאורח, בלי חשבון' : 'Enter an email in the previous step to pay as a guest, no account needed'}
+                  </p>
+                ) : (
+                  <GuestStoryCheckout
+                    getStoryData={() => buildStoryData('draft')}
+                    lang={lang}
+                    isHe={isHe}
+                    onSuccess={(story) => {
+                      localStorage.removeItem(PENDING_FORM_KEY);
+                      trackEvent('guest_story_purchased');
+                      setGeneratedStory(story);
+                      setStep('success');
+                    }}
+                  />
+                )}
 
                 <FreePreviewOffer previewState={previewState} onRequest={handleRequestPreview} isHe={isHe} childName={formData.childName} />
 
