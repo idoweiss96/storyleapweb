@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { Printer } from 'lucide-react';
 import { CARD_STYLES } from '../shared/cardStyles';
@@ -186,6 +187,14 @@ export default function EmotionThermometer({ lang = 'he' }) {
             <Printer className="w-4 h-4" />
             {copy.print}
           </button>
+          <SaveToSpace
+            slug="emotion-thermometer"
+            lang={lang}
+            getEntry={() => (feeling && level !== null ? {
+              summary: `${feelingText} · ${lang === 'he' ? 'עוצמה' : 'level'} ${level}`,
+              payload: { feeling: feelingText, level },
+            } : null)}
+          />
         )}
       </div>
     </div>
