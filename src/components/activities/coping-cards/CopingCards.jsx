@@ -1,3 +1,4 @@
+import SaveToSpace from '../shared/SaveToSpace';
 import React, { useState } from 'react';
 import { CARD_STYLES } from '../shared/cardStyles';
 import { ActionBar, PickerCard, ResultCard, countLabel } from '../shared/ActivityCards';
@@ -70,6 +71,16 @@ export default function CopingCards({ lang = 'he' }) {
           restartLabel={copy.restart}
           onPrint={() => window.print()}
           printLabel={copy.print}
+          extra={
+            <SaveToSpace
+              slug="coping-cards"
+              lang={lang}
+              getEntry={() => (selected.length > 0 ? {
+                summary: `${selected.length} ${lang === 'he' ? 'קלפים שעוזרים' : 'cards that help'}`,
+                payload: { selected, custom },
+              } : null)}
+            />
+          }
         />
       </div>
     );
