@@ -78,8 +78,8 @@ export default function AdoptStoriesPrompt({ stories, spaces, lang = 'he', onAdo
             </h2>
             <p className="text-sm text-slate-500 mt-1">
               {he
-                ? 'אפשר לאסוף אותם למרחב לפי שם הילד/ה. שום דבר לא נמחק — הסיפורים רק מקבלים בית.'
-                : 'You can collect them into a space by name. Nothing is deleted — the stories just get a home.'}
+                ? 'אפשר לאסוף אותם למרחב לפי שם הילד/ה. שום דבר לא נמחק, הסיפורים רק מקבלים בית.'
+                : 'You can collect them into a space by name. Nothing is deleted, the stories just get a home.'}
             </p>
           </div>
           {onDismiss && (
