@@ -4,7 +4,7 @@ import { getLangSwitchTarget, resolveRouteLang } from '@/lib/marketingRoutes';
 
 const translations = {
   he: {
-    nav_home: 'בית', nav_new_story: 'סיפור חדש', nav_my_stories: 'הסיפורים שלי', nav_credits: 'קרדיטים', nav_admin: 'ניהול',
+    nav_home: 'בית', nav_new_story: 'סיפור חדש', nav_my_stories: 'המרחב שלי', nav_credits: 'קרדיטים', nav_admin: 'ניהול',
     login: 'התחברות',
     footer: '© 2024 StoryLeap - מלווים משפחות ברגעים הרגשיים של הילדות ✨',
     hero_badge: '✨ כלים קטנים לרגעים גדולים', hero_title1: 'כל ילד/ה ראויים', hero_title2: 'לסיפור משלהם',
@@ -91,7 +91,7 @@ const translations = {
     contact_info_email: 'מייל', contact_info_phone: 'טלפון',
   },
   en: {
-    nav_home: 'Home', nav_new_story: 'New Story', nav_my_stories: 'My Stories', nav_credits: 'Credits', nav_admin: 'Admin',
+    nav_home: 'Home', nav_new_story: 'New Story', nav_my_stories: 'My Space', nav_credits: 'Credits', nav_admin: 'Admin',
     login: 'Login',
     footer: "© 2024 StoryLeap - Helping families through childhood's moments ✨",
     hero_badge: '✨ Small tools for big moments', hero_title1: 'Every child deserves', hero_title2: 'their own story',
