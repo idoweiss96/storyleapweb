@@ -106,6 +106,10 @@ export default function ChildSpace() {
     await loadSpaceData(activeSpace?.id);
   }, [loadSpaceData, activeSpace]);
 
+  const handleStoryUpdated = useCallback((storyId, patch) => {
+    setAllStories((prev) => prev.map((s) => (s.id === storyId ? { ...s, ...patch } : s)));
+  }, []);
+
   const handleSpaceSaved = useCallback(async (saved) => {
     const list = await loadSpaces();
     const fresh = list.find((s) => s.id === saved?.id) || saved;
@@ -250,7 +254,7 @@ export default function ChildSpace() {
 
       <div className="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-4 mb-4">
         <div className="flex flex-col gap-4">
-          <SpaceStories stories={spaceStories} lang={lang} />
+          <SpaceStories stories={spaceStories} lang={lang} onStoryUpdated={handleStoryUpdated} />
           <ActivityFeed
             entries={entries}
             lang={lang}

@@ -107,7 +107,7 @@ export default function MyStories() {
   const handleActivateStory = async (story, e) => {
     e.stopPropagation();
     const credits = user?.credits || 0;
-    if (credits < 110) {
+    if (credits < 60) {
       navigate(navPath('Pricing'));
       return;
     }
@@ -271,7 +271,7 @@ export default function MyStories() {
                           ) : (
                             <span className="flex items-center gap-1">
                               <Sparkles className="w-3 h-3" />
-                              {lang === 'he' ? 'צור סיפור (110 ⭐)' : 'Create Story (110 ⭐)'}
+                              {lang === 'he' ? 'צור סיפור (60 ⭐)' : 'Create Story (60 ⭐)'}
                             </span>
                           )}
                         </Button>
@@ -336,7 +336,7 @@ export default function MyStories() {
                             onClick={(e) => { handleActivateStory(selectedStory, e); setSelectedStory(null); }}
                             className="h-8 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs">
                             {activatingStoryId === selectedStory.id ? <Clock className="w-3 h-3 animate-spin" /> : (
-                              <span className="flex items-center gap-1"><Sparkles className="w-3 h-3" />{lang === 'he' ? 'צור סיפור (110 ⭐)' : 'Create Story (110 ⭐)'}</span>
+                              <span className="flex items-center gap-1"><Sparkles className="w-3 h-3" />{lang === 'he' ? 'צור סיפור (60 ⭐)' : 'Create Story (60 ⭐)'}</span>
                             )}
                           </Button>
                         </div>

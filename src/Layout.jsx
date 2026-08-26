@@ -173,7 +173,7 @@ function LayoutInner({ children, currentPageName }) {
     { name: 'Home', label: t('nav_home'), icon: Home },
     getStartedItem,
     { name: 'CreateStory', label: t('nav_new_story'), icon: Sparkles },
-    { name: 'MyStories', label: t('nav_my_stories'), icon: BookOpen },
+    { name: 'MyStories', label: t('nav_my_stories'), icon: BookOpen, path: '/space' },
     { name: 'Pricing', label: t('nav_pricing'), icon: Star },
     { name: 'Contact', label: t('nav_contact'), icon: Mail },
     { name: 'Vision', label: lang === 'he' ? 'החזון שלנו' : 'Our Vision', icon: Sparkles },
