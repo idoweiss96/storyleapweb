@@ -4,7 +4,7 @@
 export const UI = {
   he: {
     title: 'קודם, ואז',
-    subtitle: 'שני שלבים בלבד — מה עושים עכשיו, ומה בא אחרי. הכי שימושי ברגע שקשה לעבור בין דברים.',
+    subtitle: 'שני שלבים בלבד, מה עושים עכשיו, ומה בא אחרי. הכי שימושי ברגע שקשה לעבור בין דברים.',
     firstLabel: 'קודם',
     thenLabel: 'ואז',
     emptyFirst: 'בחרו מה קורה קודם',
@@ -24,7 +24,7 @@ export const UI = {
   },
   en: {
     title: 'First, Then',
-    subtitle: 'Just two steps — what happens now, and what comes after. Most useful in the moment when moving between things is hard.',
+    subtitle: 'Just two steps, what happens now, and what comes after. Most useful in the moment when moving between things is hard.',
     firstLabel: 'First',
     thenLabel: 'Then',
     emptyFirst: 'Pick what happens first',
