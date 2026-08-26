@@ -29,7 +29,7 @@ const PAGES_HE = [
           { emoji: '😬', label: 'קצת חושש/ת' },
           { emoji: '😰', label: 'חושש/ת מאוד' },
         ],
-        parentField: { label: 'הורה — שתפו גם אתם: איזה רגש מגיע אליכם?' }
+        parentField: { label: 'הורה: שתפו גם אתם, איזה רגש מגיע אליכם?' }
       },
       {
         key: 'scary_things', tag: 'together', question: 'ממה את/ה קצת חושש/חוששת?', type: 'chips', multi: true,
@@ -78,7 +78,7 @@ const PAGES_HE = [
       },
       {
         key: 'hero', tag: 'child', question: 'יש גיבור/ה שהכי אוהב/ת?', type: 'textarea',
-        hint: 'הורה — שאלו: למה הוא/היא הגיבור/ה שלך?'
+        hint: 'הורה: שאלו, למה הוא/היא הגיבור/ה שלך?'
       },
       {
         key: 'comfort', tag: 'together', question: 'כשקצת לא בנוח — מה הכי עוזר?', type: 'emoji',
@@ -107,7 +107,7 @@ const PAGES_HE = [
           { emoji: '🎒', label: 'התיק החדש' },
           { emoji: '🤷', label: 'לא יודע/ת' },
         ],
-        parentField: { label: 'הורה — שתפו ממה הייתם מתרגשים בגיל הזה' }
+        parentField: { label: 'הורה: שתפו ממה הייתם מתרגשים בגיל הזה' }
       },
       {
         key: 'one_worry', tag: 'together', question: 'איזה דבר אחד קצת מדאיג?', type: 'textarea',
@@ -190,7 +190,7 @@ const PAGES_EN = [
           { emoji: '😬', label: 'A little worried' },
           { emoji: '😰', label: 'Very worried' },
         ],
-        parentField: { label: 'Parent — share too: what feeling comes up for you?' }
+        parentField: { label: 'Parent: share too, what feeling comes up for you?' }
       },
       {
         key: 'scary_things', tag: 'together', question: 'What are you a little worried about?', type: 'chips', multi: true,
@@ -239,7 +239,7 @@ const PAGES_EN = [
       },
       {
         key: 'hero', tag: 'child', question: 'Is there a hero/heroine you love?', type: 'textarea',
-        hint: 'Parent — ask: why are they your hero?'
+        hint: 'Parent: ask, why are they your hero?'
       },
       {
         key: 'comfort', tag: 'together', question: "When you're a bit uncomfortable — what helps most?", type: 'emoji',
@@ -268,7 +268,7 @@ const PAGES_EN = [
           { emoji: '🎒', label: 'The new bag' },
           { emoji: '🤷', label: "Don't know" },
         ],
-        parentField: { label: 'Parent — share what you would have been excited about at this age' }
+        parentField: { label: 'Parent: share what you would have been excited about at this age' }
       },
       {
         key: 'one_worry', tag: 'together', question: 'What one thing is a bit worrying?', type: 'textarea',
