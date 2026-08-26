@@ -2,6 +2,7 @@ import React from 'react';
 import { Star, Gem, Cloud, BookOpen, Crown } from 'lucide-react';
 
 const STORY_COST = 60;
+const USD_TO_ILS = 3.7;
 const ICONS = [Star, Cloud, BookOpen, Crown, Gem];
 const ICON_STYLES = [
   'bg-amber-100 text-amber-500',
@@ -31,7 +32,9 @@ export default function PackageGrid({ packages, selectedPackage, onSelect, isHe 
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
       {packages.map((pkg, idx) => {
         const isSelected = selectedPackage?.id === pkg.id;
-        const perCredit = (pkg.price / pkg.credits).toFixed(2);
+        const displayPrice = isHe ? Math.round(pkg.price * USD_TO_ILS) : pkg.price;
+        const priceSymbol = isHe ? '₪' : '$';
+        const perCredit = (displayPrice / pkg.credits).toFixed(2);
         const highlighted = pkg.is_popular || pkg.is_best_value;
         const Icon = ICONS[idx % ICONS.length];
         const iconStyle = pkg.is_popular
@@ -80,8 +83,8 @@ export default function PackageGrid({ packages, selectedPackage, onSelect, isHe 
               ✨ {storySubtitle(pkg.credits, isHe)}
             </p>
 
-            <p className={`text-3xl font-bold ${accentText}`}>${pkg.price}</p>
-            <p className="text-xs text-slate-400 mb-4">${perCredit} {isHe ? 'לקרדיט' : 'per credit'}</p>
+            <p className={`text-3xl font-bold ${accentText}`}>{priceSymbol}{displayPrice}</p>
+            <p className="text-xs text-slate-400 mb-4">{priceSymbol}{perCredit} {isHe ? 'לקרדיט' : 'per credit'}</p>
 
             <span
               className={`w-full py-2 rounded-full text-sm font-semibold border-2 transition-colors ${

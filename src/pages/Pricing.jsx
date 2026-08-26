@@ -31,6 +31,9 @@ const HOSTED_BUTTON_CODES = {
   'IDO10': { amount: '0.10', currency: 'ILS', display: '₪0.10' },
 };
 
+// USD → ILS conversion rate used to display and charge Hebrew-site prices in shekels.
+export const USD_TO_ILS = 3.7;
+
 
 
 // Meta Pixel helpers — fbq is loaded by the base code in index.html; never fire without checking it exists.
@@ -93,8 +96,13 @@ export default function Pricing() {
         ? { amount: String(appliedCoupon.price_ils), currency: 'ILS', display: `₪${appliedCoupon.price_ils}` }
         : { amount: String(appliedCoupon.price_usd), currency: 'USD', display: `$${appliedCoupon.price_usd}` };
     }
-    // Default: dynamic pricing from the selected CreditPackage in the DB
+    // Default: dynamic pricing from the selected CreditPackage in the DB.
+    // Hebrew site charges in ILS (converted from the DB's USD price).
     if (selectedPackage) {
+      if (isHe) {
+        const ilsAmount = Math.round(selectedPackage.price * USD_TO_ILS);
+        return { package_id: selectedPackage.id, currency: 'ILS', display: `₪${ilsAmount}` };
+      }
       return { package_id: selectedPackage.id, currency: 'USD', display: `$${selectedPackage.price}` };
     }
     return null;

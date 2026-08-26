@@ -3,6 +3,9 @@ import { getPaypalAccessToken } from '../../shared/paypal.ts';
 
 const PAYPAL_BASE = 'https://api-m.paypal.com';
 const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID');
+// USD → ILS conversion rate — CreditPackage.price is stored in USD; Hebrew-site
+// purchases charge the converted ILS amount, matching the price shown on screen.
+const USD_TO_ILS = 3.7;
 
 // Creates a PayPal Order with the amount read in real time from the CreditPackage
 // in the database (by package_id), NOT from a fixed payment link or client-supplied
@@ -35,7 +38,7 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Package not found' }, { status: 404 });
       }
       if (!pkg) return Response.json({ error: 'Package not found' }, { status: 404 });
-      amount = Number(pkg.price);
+      amount = currency === 'ILS' ? Math.round(Number(pkg.price) * USD_TO_ILS) : Number(pkg.price);
       credits = Number(pkg.credits);
       description = `StoryLeap - ${pkg.name || (credits + ' Credits')}`;
     } else {
