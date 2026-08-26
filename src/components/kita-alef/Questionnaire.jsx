@@ -101,8 +101,8 @@ export default function Questionnaire({ answers, setAnswers, onBackToContact }) 
         contact_email: contactEmail,
         contact_phone: contactPhone,
       };
-      const saved = await base44.entities.KitaAlefStory.create({ ...storyData, content: null, story_link: null, payment_status: 'draft', child_space_id: getActiveSpaceId() || undefined });
-      const id = saved.id;
+      const createRes = await base44.functions.invoke('createKitaAlefStory', { ...storyData, child_space_id: getActiveSpaceId() || undefined });
+      const id = createRes.data.id;
       const submitToSheet = () => base44.functions.invoke('submitKitaAlefAnswers', { answers: mergedAnswers, lang, story_id: id });
       submitToSheet().catch(() => submitToSheet().catch((err) => console.error('submitKitaAlefAnswers failed twice', err)));
       // Go straight to the checkout/order-summary screen — no login/save gate before pricing.

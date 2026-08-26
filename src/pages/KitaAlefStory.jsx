@@ -60,7 +60,8 @@ export default function KitaAlefStory() {
       // Priority 1: durable DB record by story_id (survives refresh, new tab, cleared sessionStorage)
       if (urlStoryId) {
         try {
-          const record = await base44.entities.KitaAlefStory.get(urlStoryId);
+          const res = await base44.functions.invoke('getKitaAlefStory', { story_id: urlStoryId });
+          const record = res.data?.story;
           if (record) {
             setStoryId(record.id);
             setAnswers(record.answers || pending?.answers || {});
@@ -140,16 +141,12 @@ export default function KitaAlefStory() {
     // Persist contact details to the durable record when one already exists.
     if (storyId) {
       try {
-        await base44.entities.KitaAlefStory.update(storyId, { contact_email: contactEmail, contact_phone: contactPhone || null, lang });
+        await base44.functions.invoke('updateKitaAlefStoryContact', { story_id: storyId, contact_email: contactEmail, contact_phone: contactPhone || null, lang });
       } catch (_) {}
     }
 
-    if (!user) {
-      const resumeUrl = storyId ? `/KitaAlefStory?story_id=${storyId}&resume=1` : '/KitaAlefStory?resume=1';
-      base44.auth.redirectToLogin(resumeUrl);
-      return;
-    }
-
+    // Checkout/price is accessible without logging in — login is only required
+    // at the actual payment/credit-spend step, handled further down the flow.
     setStep('credits_check');
   };
 
@@ -160,7 +157,7 @@ export default function KitaAlefStory() {
       let id = storyId;
       if (!id) {
         // No prior record (e.g. anonymous path) — create it now and expose story_id in the URL.
-        const savedStory = await base44.entities.KitaAlefStory.create({
+        const createRes = await base44.functions.invoke('createKitaAlefStory', {
           child_space_id: getActiveSpaceId() || undefined,
           child_name: answers.name || '',
           gender: answers.gender || '',
@@ -169,17 +166,14 @@ export default function KitaAlefStory() {
           lang,
           contact_email: contactEmail,
           contact_phone: contactPhone || null,
-          content: null,
-          story_link: null,
-          payment_status: 'draft',
         });
-        id = savedStory.id;
+        id = createRes.data.id;
         setStoryId(id);
-        setCreatedStory(savedStory);
+        setCreatedStory({ id, child_name: answers.name || '' });
         window.history.replaceState({}, '', `/KitaAlefStory?story_id=${id}`);
       } else {
         // Record already exists — ensure contact details and lang are persisted.
-        await base44.entities.KitaAlefStory.update(id, { contact_email: contactEmail, contact_phone: contactPhone || null, lang, answers });
+        await base44.functions.invoke('updateKitaAlefStoryContact', { story_id: id, contact_email: contactEmail, contact_phone: contactPhone || null, lang, answers });
         setCreatedStory({ id, child_name: answers.name || '' });
       }
 
@@ -210,7 +204,7 @@ export default function KitaAlefStory() {
     try {
       let id = storyId;
       if (!id) {
-        const savedStory = await base44.entities.KitaAlefStory.create({
+        const createRes = await base44.functions.invoke('createKitaAlefStory', {
           child_space_id: getActiveSpaceId() || undefined,
           child_name: answers.name || '',
           gender: answers.gender || '',
@@ -219,14 +213,11 @@ export default function KitaAlefStory() {
           lang,
           contact_email: contactEmail,
           contact_phone: contactPhone || null,
-          content: null,
-          story_link: null,
-          payment_status: 'draft',
         });
-        id = savedStory.id;
+        id = createRes.data.id;
         setStoryId(id);
       } else {
-        await base44.entities.KitaAlefStory.update(id, { contact_email: contactEmail, contact_phone: contactPhone || null, lang, answers });
+        await base44.functions.invoke('updateKitaAlefStoryContact', { story_id: id, contact_email: contactEmail, contact_phone: contactPhone || null, lang, answers });
       }
       base44.analytics.track({ eventName: 'kita_alef_story_saved_pending_payment', properties: { story_id: id } });
       sessionStorage.removeItem(PENDING_KEY);
