@@ -241,8 +241,8 @@ export default function Activities() {
 
         <p className="text-base md:text-lg text-slate-500 max-w-2xl mx-auto">
           {isHe
-            ? 'אוסף משחקים קצרים לילדים — לשחק לבד או יחד איתכם, בכמה דקות של חיבור.'
-            : 'A collection of short games for kids — to play alone or together with you, in a few minutes of connection.'}
+            ? 'אוסף משחקים קצרים לילדים, לשחק לבד או יחד איתכם, בכמה דקות של חיבור.'
+            : 'A collection of short games for kids, to play alone or together with you, in a few minutes of connection.'}
         </p>
       </header>
 
