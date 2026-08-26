@@ -140,6 +140,7 @@ export const GAMES = [
       en: 'A printable chart to mark how each day went',
       he: 'לוח להדפסה שמסמנים בו כל יום איך היה',
     },
+    access: 'coming_soon',
   },
   {
     path: '/activities/task-analysis',
@@ -149,6 +150,7 @@ export const GAMES = [
       en: 'Split one hard task into small steps and see which are hard',
       he: 'מפרקים משימה קשה לצעדים ורואים אילו מהם באמת קשים',
     },
+    access: 'coming_soon',
   },
   {
     path: '/activities/adl-sequence',
@@ -168,6 +170,7 @@ export const GAMES = [
       en: 'A tick-box list, in a day or a whole-week version',
       he: 'רשימה עם משבצות סימון, ליום אחד או לשבוע שלם',
     },
+    access: 'coming_soon',
   },
   {
     path: '/activities/visual-timer',
@@ -177,6 +180,7 @@ export const GAMES = [
       en: 'Time you can see instead of count',
       he: 'זמן שרואים במקום לספור',
     },
+    access: 'coming_soon',
   },
   {
     path: '/activities/breathing',
@@ -186,6 +190,7 @@ export const GAMES = [
       en: 'Follow the circle and breathe with it',
       he: 'עוקבים אחרי העיגול ונושמים איתו',
     },
+    access: 'coming_soon',
   },
   {
     path: '/activities/safe-place',
@@ -205,6 +210,7 @@ export const GAMES = [
       en: 'Up to six rules, phrased as what we do',
       he: 'עד שישה כללים, מנוסחים כמה שכן עושים',
     },
+    access: 'coming_soon',
   },
   {
     path: '/activities/calm-corner',
@@ -214,6 +220,7 @@ export const GAMES = [
       en: 'Set up a corner to go to, and agree how it works',
       he: 'מקימים פינה ללכת אליה, ומסכימים איך היא עובדת',
     },
+    access: 'coming_soon',
   },
 ];
 

@@ -9,13 +9,15 @@ import LoginRequiredDialog from './LoginRequiredDialog';
 // Renders one activity card according to its access tier:
 // - 'free': open to everyone, links straight to the activity.
 // - 'coming_soon': not clickable, shows a "Coming soon" badge + dialog.
+//   Admins bypass this and get a normal link, so the team can preview it early.
 // - 'auth' (default): requires login. Locked with a small padlock for guests,
 //   who see a login prompt on click; authenticated users get a normal link.
 export default function ActivityGameCard({ game, isHe }) {
-  const { isAuthenticated, navigateToLogin } = useAuth();
+  const { isAuthenticated, navigateToLogin, user } = useAuth();
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const access = game.access || 'auth';
+  const isAdmin = user?.role === 'admin';
   const locked = access === 'auth' && !isAuthenticated;
 
   const cardBody = (
@@ -38,7 +40,7 @@ export default function ActivityGameCard({ game, isHe }) {
     </Card>
   );
 
-  if (access === 'coming_soon') {
+  if (access === 'coming_soon' && !isAdmin) {
     return (
       <>
         <div className="group cursor-not-allowed opacity-70" onClick={() => setShowComingSoon(true)}>
