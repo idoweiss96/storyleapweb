@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { X, Heart, RefreshCw, GraduationCap, Wand2 } from 'lucide-react';
+import { X, Heart, RefreshCw, GraduationCap, Wand2, Puzzle } from 'lucide-react';
 import { useLanguage } from '@/components/LanguageContext';
 import { navPathFor } from '@/lib/marketingRoutes';
 
@@ -47,6 +47,15 @@ export default function StartModal({ onClose }) {
       to: '/HeroStory',
       iconBg: 'bg-amber-100',
       iconColor: 'text-amber-500',
+    },
+    {
+      key: 'activities',
+      icon: Puzzle,
+      title: isHe ? 'פעילויות חינמיות' : 'Free Activities',
+      subtitle: isHe ? 'לחינם' : 'Free',
+      to: '/activities',
+      iconBg: 'bg-emerald-100',
+      iconColor: 'text-emerald-500',
     },
   ];
 
