@@ -170,7 +170,7 @@ export default function Home() {
               size="lg"
               onClick={() => setShowStartModal(true)}
               className="h-14 px-10 rounded-full text-lg font-bold text-white mb-6 hover:scale-105 active:scale-95 hover:opacity-90 transition-all duration-300 border-0"
-              style={{ background: 'linear-gradient(135deg, #FF6B6B, #FDB654, #4FC3E8, #6B5CE7, #FF6FB5)', boxShadow: '0 10px 40px rgba(255,111,181,0.25), 0 4px 20px rgba(79,195,232,0.2)' }}
+              style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)', boxShadow: '0 10px 40px rgba(255,111,181,0.25), 0 4px 20px rgba(79,195,232,0.2)' }}
             >
               {lang === 'he' ? 'בואו נתחיל יחד ←' : "Let's start together →"}
             </Button>
