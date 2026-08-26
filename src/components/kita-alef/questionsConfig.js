@@ -98,7 +98,7 @@ const PAGES_HE = [
     title: 'כיתה א׳',
     questions: [
       {
-        key: 'looking_forward', tag: 'child', question: 'מה הכי מחכים לו/לה בכיתה א׳?', type: 'emoji',
+        key: 'looking_forward', tag: 'child', question: 'למה הכי מחכים לקראת כיתה א׳?', type: 'emoji',
         options: [
           { emoji: '📖', label: 'ללמוד לקרוא' },
           { emoji: '🧑‍🤝‍🧑', label: 'חברים חדשים' },
