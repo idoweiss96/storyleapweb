@@ -68,7 +68,7 @@ export const STRENGTHS = [
   {
     id: 'patient',
     emoji: '⏳',
-    he: { label: 'אני סבלני/ת', prompt: 'על מה חיכית הרבה זמן?' },
+    he: { label: 'אני סבלני/ת', prompt: 'למה חיכית הרבה זמן?' },
     en: { label: 'I am patient', prompt: 'What did you wait a long time for?' },
   },
   {
@@ -106,7 +106,7 @@ export const UI = {
     selectedMany: 'בחרת {n} קלפים',
     reveal: 'אלה החוזקות שלי',
     myStrengths: 'החוזקות שלי',
-    revealIntro: 'אלה הכוחות שבחרת. על כל אחד יש שאלה — כדאי לענות עליה יחד.',
+    revealIntro: 'אלה הכוחות שבחרת. על כל אחד יש שאלה, כדאי לענות עליה יחד.',
     answerPlaceholder: 'אפשר לכתוב כאן את התשובה...',
     restart: 'לבחור מחדש',
     print: 'להדפסה',
@@ -122,12 +122,12 @@ export const UI = {
     selectedMany: 'You chose {n} cards',
     reveal: 'These are my strengths',
     myStrengths: 'My strengths',
-    revealIntro: 'These are the strengths you chose. Each one has a question — it is worth answering them together.',
+    revealIntro: 'These are the strengths you chose. Each one has a question, it is worth answering them together.',
     answerPlaceholder: 'You can write your answer here...',
     restart: 'Choose again',
     print: 'Print',
     parentTipLabel: 'Tip for parents',
-    parentTip: 'Pick a card yourself too — one you see in your child — and say why. Children remember that for a long time.',
+    parentTip: 'Pick a card yourself too, one you see in your child, and say why. Children remember that for a long time.',
     back: 'Back to the Activity Place',
   },
 };
