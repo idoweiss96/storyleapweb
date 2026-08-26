@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Gamepad2, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/components/LanguageContext';
 import PageMeta from '@/components/SEO/PageMeta';
+import ActivityGameCard from '@/components/activities/ActivityGameCard';
 
 const ACTIVITIES_META = {
   en: {
@@ -37,6 +37,7 @@ export const GAMES = [
       en: 'Spin the wheel and talk about the feeling it lands on',
       he: 'מסובבים את הגלגל ומדברים על הרגש שיצא',
     },
+    access: 'free',
   },
   {
     path: '/activities/strength-cards',
@@ -64,6 +65,7 @@ export const GAMES = [
       en: 'Pick a feeling and draw what it looks like',
       he: 'בוחרים רגש ומציירים איך הוא נראה',
     },
+    access: 'free',
   },
   {
     path: '/activities/emotion-thermometer',
@@ -73,6 +75,7 @@ export const GAMES = [
       en: 'Mark how strong a feeling is, and see what can help',
       he: 'מסמנים כמה הרגש חזק, ומגלים מה יכול לעזור',
     },
+    access: 'free',
   },
   {
     path: '/activities/routine-board',
@@ -109,6 +112,7 @@ export const GAMES = [
       en: 'A card to show instead of having to explain',
       he: 'כרטיס קטן להראות במקום להסביר',
     },
+    access: 'coming_soon',
   },
   {
     path: '/activities/body-map',
@@ -154,6 +158,7 @@ export const GAMES = [
       en: 'Ready-made strips for washing, brushing teeth and dressing',
       he: 'רצפים מוכנים לשטיפת ידיים, צחצוח שיניים והתלבשות',
     },
+    access: 'coming_soon',
   },
   {
     path: '/activities/routine-checklist',
@@ -190,6 +195,7 @@ export const GAMES = [
       en: 'Build a place to return to in your mind when things are hard',
       he: 'בונים מקום שאפשר לחזור אליו בדמיון כשקשה',
     },
+    access: 'coming_soon',
   },
   {
     path: '/activities/visual-rules',
@@ -243,19 +249,7 @@ export default function Activities() {
       {GAMES.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {GAMES.map((game) => (
-            <Link key={game.path} to={game.path} className="group">
-              <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer rounded-2xl">
-                <CardContent className="p-6 text-center">
-                  <div className="text-4xl mb-3">{game.emoji}</div>
-                  <h2 className="text-base font-bold text-slate-800 mb-2">
-                    {isHe ? game.title.he : game.title.en}
-                  </h2>
-                  <p className="text-slate-500 text-sm">
-                    {isHe ? game.desc.he : game.desc.en}
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
+            <ActivityGameCard key={game.path} game={game} isHe={isHe} />
           ))}
         </div>
       ) : (
