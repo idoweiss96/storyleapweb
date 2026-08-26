@@ -11,11 +11,15 @@ export default function HomeScreen({ onStart }) {
         { emoji: '💜', text: 'Based on psychological therapy methods' },
         { emoji: '👨‍👩‍👧', text: 'Shared parent-child experience' },
         { emoji: '⏱', text: 'About 5 minutes' },
+        { emoji: '📖', text: 'Personalized story' },
+        { emoji: '🧭', text: 'Digital guidance' },
       ]
     : [
         { emoji: '💜', text: 'מבוסס על עקרונות מספרות והתפתחות הילד' },
         { emoji: '👨‍👩‍👧', text: 'חוויה משותפת הורה-ילד' },
         { emoji: '⏱', text: 'כ-5 דקות' },
+        { emoji: '📖', text: 'סיפור מותאם אישית' },
+        { emoji: '🧭', text: 'הדרכה דיגיטלית' },
       ];
 
   const SECTIONS = isEn
