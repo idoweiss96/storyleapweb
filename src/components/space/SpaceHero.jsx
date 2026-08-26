@@ -99,7 +99,7 @@ export default function SpaceHero({ space, lang = 'he', onEdit }) {
           </div>
           <p className="text-sm text-slate-500 leading-relaxed">
             {he
-              ? 'כל סיפור, כל חיבוק, כל צעד קטן — בונים את הביטחון כאן, יחד.'
+              ? 'כל סיפור, כל חיבוק, כל צעד קטן, בונים את הביטחון כאן, יחד.'
               : 'Every story, every hug, every small step builds confidence here, together.'}
           </p>
         </CardContent>
