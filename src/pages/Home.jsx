@@ -200,9 +200,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <StoryGallery />
-
       {/* Kita Alef Special Banner */}
       <section className="py-4">
         <Link to={kitaAlefPath}>
@@ -287,6 +284,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Gallery Section */}
+      <StoryGallery />
 
       {/* Features Section */}
       <section className="py-12">
