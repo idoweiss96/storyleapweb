@@ -51,8 +51,8 @@ export default function StartModal({ onClose }) {
     {
       key: 'activities',
       icon: Puzzle,
-      title: isHe ? 'פעילויות חינמיות' : 'Free Activities',
-      subtitle: isHe ? 'לחינם' : 'Free',
+      title: isHe ? 'לשחק ולחקור' : 'Play & Explore',
+      subtitle: isHe ? 'פעילויות ומשחקים בחינם' : 'Free activities and games',
       to: '/activities',
       iconBg: 'bg-emerald-100',
       iconColor: 'text-emerald-500',
