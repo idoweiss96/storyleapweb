@@ -5,7 +5,7 @@ const PAYPAL_BASE = 'https://api-m.paypal.com';
 const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID');
 // USD → ILS conversion rate — CreditPackage.price is stored in USD; Hebrew-site
 // purchases charge the converted ILS amount, matching the price shown on screen.
-const USD_TO_ILS = 3.7;
+const USD_TO_ILS = 2.9;
 
 // Creates a PayPal Order with the amount read in real time from the CreditPackage
 // in the database (by package_id), NOT from a fixed payment link or client-supplied

@@ -2,7 +2,7 @@ import React from 'react';
 import { Star, Gem, Cloud, BookOpen, Crown } from 'lucide-react';
 
 const STORY_COST = 60;
-const USD_TO_ILS = 3.7;
+const USD_TO_ILS = 2.9;
 const ICONS = [Star, Cloud, BookOpen, Crown, Gem];
 const ICON_STYLES = [
   'bg-amber-100 text-amber-500',

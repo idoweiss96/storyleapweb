@@ -32,7 +32,7 @@ const HOSTED_BUTTON_CODES = {
 };
 
 // USD → ILS conversion rate used to display and charge Hebrew-site prices in shekels.
-export const USD_TO_ILS = 3.7;
+export const USD_TO_ILS = 2.9;
 
 
 
