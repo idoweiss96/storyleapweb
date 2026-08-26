@@ -20,7 +20,7 @@ export const UI = {
     clearConfirm: 'לנקות את כל הלוח?',
     print: 'להדפיס את הלוח',
     parentTipLabel: 'טיפ להורה',
-    parentTip: 'שווה לבנות את הלוח יחד עם הילד/ה ולא בשבילו. ילד שבחר בעצמו את הסדר מתווכח עליו הרבה פחות — הלוח הופך למשהו שהוא הסכים לו, ולא לעוד הוראה.',
+    parentTip: 'שווה לבנות את הלוח יחד עם הילד/ה ולא בשבילו. ילד שבחר בעצמו את הסדר מתווכח עליו הרבה פחות, הלוח הופך למשהו שהוא הסכים לו, ולא לעוד הוראה.',
     back: 'חזרה למקום הפעילויות',
   },
   en: {
@@ -41,7 +41,7 @@ export const UI = {
     clearConfirm: 'Clear the whole board?',
     print: 'Print my board',
     parentTipLabel: 'Tip for parents',
-    parentTip: 'Build the board with your child rather than for them. A child who chose the order argues about it far less — the board becomes something they agreed to, not another instruction.',
+    parentTip: 'Build the board with your child rather than for them. A child who chose the order argues about it far less, the board becomes something they agreed to, not another instruction.',
     back: 'Back to the Activity Place',
   },
 };

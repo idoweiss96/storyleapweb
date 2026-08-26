@@ -63,7 +63,7 @@ export const UI = {
     clearConfirm: 'למחוק את כל הצעדים?',
     print: 'להדפיס',
     parentTipLabel: 'טיפ להורה',
-    parentTip: 'הערך הגדול הוא בגילוי שהמשימה לא קשה — רק שניים מהצעדים קשים. משם אפשר לעבוד על שני צעדים במקום להילחם על כל הבוקר, ולראות אחרי חודש שאחד מהם עבר ל"לבד".',
+    parentTip: 'הערך הגדול הוא בגילוי שהמשימה לא קשה, רק שניים מהצעדים קשים. משם אפשר לעבוד על שני צעדים במקום להילחם על כל הבוקר, ולראות אחרי חודש שאחד מהם עבר ל"לבד".',
     back: 'חזרה למקום הפעילויות',
   },
   en: {
@@ -87,7 +87,7 @@ export const UI = {
     clearConfirm: 'Delete all the steps?',
     print: 'Print',
     parentTipLabel: 'Tip for parents',
-    parentTip: 'The real value is discovering the task is not hard — only two of the steps are. From there you can work on two steps instead of fighting about the whole morning, and see a month later that one of them has moved to "on my own".',
+    parentTip: 'The real value is discovering the task is not hard, only two of the steps are. From there you can work on two steps instead of fighting about the whole morning, and see a month later that one of them has moved to "on my own".',
     back: 'Back to the Activity Place',
   },
 };

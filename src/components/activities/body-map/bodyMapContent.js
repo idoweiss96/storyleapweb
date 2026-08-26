@@ -44,7 +44,7 @@ export const UI = {
     clear: 'לנקות את הסימונים',
     print: 'להדפיס את המפה',
     parentTipLabel: 'טיפ להורה',
-    parentTip: 'אין משמעות "נכונה" למקום שהילד/ה בחר/ה, ולא כדאי לפרש אותו. הערך הוא בעצם ההבחנה שרגש מורגש בגוף — ילד שיודע לזהות את הכיווץ בבטן לפני ההתפרצות מקבל כמה שניות יקרות.',
+    parentTip: 'אין משמעות "נכונה" למקום שהילד/ה בחר/ה, ולא כדאי לפרש אותו. הערך הוא בעצם ההבחנה שרגש מורגש בגוף, ילד שיודע לזהות את הכיווץ בבטן לפני ההתפרצות מקבל כמה שניות יקרות.',
     back: 'חזרה למקום הפעילויות',
   },
   en: {
@@ -62,7 +62,7 @@ export const UI = {
     clear: 'Clear the marks',
     print: 'Print my map',
     parentTipLabel: 'Tip for parents',
-    parentTip: 'There is no "correct" meaning to where your child marks, and it is best not to interpret it. The value is in noticing at all that feelings live in the body — a child who recognises the tightening in their tummy before the outburst gains a few precious seconds.',
+    parentTip: 'There is no "correct" meaning to where your child marks, and it is best not to interpret it. The value is in noticing at all that feelings live in the body, a child who recognises the tightening in their tummy before the outburst gains a few precious seconds.',
     back: 'Back to the Activity Place',
   },
 };

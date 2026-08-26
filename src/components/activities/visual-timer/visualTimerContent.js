@@ -32,7 +32,7 @@ export const LABELS = [
 export const UI = {
   he: {
     title: 'הטיימר החזותי',
-    subtitle: 'הזמן נראה במקום להיספר. הצבע נעלם לאט, וכשהוא נגמר — נגמר.',
+    subtitle: 'הזמן נראה במקום להיספר. הצבע נעלם לאט, וכשהוא נגמר, נגמר.',
     labelTitle: 'על מה הטיימר?',
     labelPlaceholder: 'למשל: עוד קצת בפארק',
     timeTitle: 'כמה זמן?',
@@ -44,7 +44,7 @@ export const UI = {
     doneNote: 'עכשיו עוברים לדבר הבא.',
     change: 'לשנות את הטיימר',
     parentTipLabel: 'טיפ להורה',
-    parentTip: 'להראות את הטיימר לפני שמתחילים, ולא ברגע שצריך להפסיק. ילד שראה את העיגול מתמלא בהתחלה מבין שהסוף נקבע מראש — ולא שההורה החליט לעצור כי נמאס לו.',
+    parentTip: 'להראות את הטיימר לפני שמתחילים, ולא ברגע שצריך להפסיק. ילד שראה את העיגול מתמלא בהתחלה מבין שהסוף נקבע מראש, ולא שההורה החליט לעצור כי נמאס לו.',
     back: 'חזרה למקום הפעילויות',
   },
   en: {
@@ -61,7 +61,7 @@ export const UI = {
     doneNote: 'Now we move on to the next thing.',
     change: 'Change the timer',
     parentTipLabel: 'Tip for parents',
-    parentTip: 'Show the timer before you start, not at the moment you need to stop. A child who watched the circle fill at the beginning understands the ending was set in advance — not that a parent decided to stop because they had had enough.',
+    parentTip: 'Show the timer before you start, not at the moment you need to stop. A child who watched the circle fill at the beginning understands the ending was set in advance, not that a parent decided to stop because they had had enough.',
     back: 'Back to the Activity Place',
   },
 };

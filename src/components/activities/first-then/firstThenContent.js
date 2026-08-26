@@ -19,7 +19,7 @@ export const UI = {
     clear: 'להתחיל מחדש',
     print: 'להדפיס',
     parentTipLabel: 'טיפ להורה',
-    parentTip: 'הכוח של "קודם, ואז" הוא בקיצור. שני שלבים זה מה שילד מצליח להחזיק בראש כשקשה לו — לוח של שמונה שלבים באותו רגע רק מעמיס. תלו את זה במקום שרואים, והצביעו במקום להסביר.',
+    parentTip: 'הכוח של "קודם, ואז" הוא בקיצור. שני שלבים זה מה שילד מצליח להחזיק בראש כשקשה לו, לוח של שמונה שלבים באותו רגע רק מעמיס. תלו את זה במקום שרואים, והצביעו במקום להסביר.',
     back: 'חזרה למקום הפעילויות',
   },
   en: {
@@ -39,7 +39,7 @@ export const UI = {
     clear: 'Start over',
     print: 'Print',
     parentTipLabel: 'Tip for parents',
-    parentTip: 'The power of First–Then is that it is short. Two steps is what a child can hold on to when things are hard — an eight-step board in that moment only adds load. Hang it where it can be seen, and point instead of explaining.',
+    parentTip: 'The power of First-Then is that it is short. Two steps is what a child can hold on to when things are hard, an eight-step board in that moment only adds load. Hang it where it can be seen, and point instead of explaining.',
     back: 'Back to the Activity Place',
   },
 };

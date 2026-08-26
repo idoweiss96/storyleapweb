@@ -62,7 +62,7 @@ export const UI = {
     print: 'להדפיס את השלט',
     printHint: 'שווה לתלות את השלט בתוך הפינה עצמה, בגובה של הילד/ה.',
     parentTipLabel: 'טיפ להורה',
-    parentTip: 'הטעות הנפוצה היא לשלוח לפינה. פינת רוגע שמשמשת גם כעונש מפסיקה לעבוד תוך שבוע — הילד לומד שהמקום הזה הוא לא מקלט אלא תוצאה. אם צריך, לכו אליה יחד.',
+    parentTip: 'הטעות הנפוצה היא לשלוח לפינה. פינת רוגע שמשמשת גם כעונש מפסיקה לעבוד תוך שבוע, הילד לומד שהמקום הזה הוא לא מקלט אלא תוצאה. אם צריך, לכו אליה יחד.',
     back: 'חזרה למקום הפעילויות',
   },
   en: {
@@ -83,7 +83,7 @@ export const UI = {
     print: 'Print the sign',
     printHint: 'Hang the sign inside the corner itself, at your child’s height.',
     parentTipLabel: 'Tip for parents',
-    parentTip: 'The common mistake is sending a child to the corner. A calm corner that doubles as a punishment stops working within a week — the child learns the place is a consequence, not a refuge. If needed, go there together.',
+    parentTip: 'The common mistake is sending a child to the corner. A calm corner that doubles as a punishment stops working within a week, the child learns the place is a consequence, not a refuge. If needed, go there together.',
     back: 'Back to the Activity Place',
   },
 };

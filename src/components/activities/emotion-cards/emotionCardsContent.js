@@ -38,7 +38,7 @@ export const EMOTIONS = [
 export const UI = {
   he: {
     title: 'קלפי הרגשות שלנו',
-    subtitle: 'בוחרים אילו רגשות ייכנסו לחפיסה, מדפיסים, גוזרים — ויש לכם קלפי רגשות אמיתיים לשולחן.',
+    subtitle: 'בוחרים אילו רגשות ייכנסו לחפיסה, מדפיסים, גוזרים, ויש לכם קלפי רגשות אמיתיים לשולחן.',
     pickTitle: 'אילו רגשות ייכנסו לחפיסה?',
     selectAll: 'לבחור הכול',
     selectNone: 'לנקות הכול',
@@ -51,17 +51,17 @@ export const UI = {
     uses: [
       'שולפים קלף ומספרים מתי הרגשתם ככה',
       'בוחרים בסוף היום איזה קלף הכי מתאים להיום',
-      'מסדרים את הקלפים מהנעים לפחות נעים — ומגלים שאין הסכמה',
+      'מסדרים את הקלפים מהנעים לפחות נעים, ומגלים שאין הסכמה',
       'מחביאים קלף ומנסים לנחש אותו לפי הבעת פנים',
       'משאירים כמה על המקרר, כדי שיהיה במה להצביע כשאין מילים',
     ],
     parentTipLabel: 'טיפ להורה',
-    parentTip: 'הכוח של הקלפים הוא דווקא בזה שהם לא במסך. קלף שאפשר להחזיק, להעביר למישהו או להפוך על השולחן עושה משהו שמסך לא עושה — במיוחד לילדים שקשה להם לדבר על רגשות.',
+    parentTip: 'הכוח של הקלפים הוא דווקא בזה שהם לא במסך. קלף שאפשר להחזיק, להעביר למישהו או להפוך על השולחן עושה משהו שמסך לא עושה, במיוחד לילדים שקשה להם לדבר על רגשות.',
     back: 'חזרה למקום הפעילויות',
   },
   en: {
     title: 'Our Emotion Cards',
-    subtitle: 'Choose which feelings go in the deck, print, cut them out — and you have a real set of emotion cards for the table.',
+    subtitle: 'Choose which feelings go in the deck, print, cut them out, and you have a real set of emotion cards for the table.',
     pickTitle: 'Which feelings go in the deck?',
     selectAll: 'Select all',
     selectNone: 'Clear all',
@@ -74,12 +74,12 @@ export const UI = {
     uses: [
       'Draw a card and tell about a time you felt that way',
       'At the end of the day, pick the card that fits today best',
-      'Sort the cards from nicest to least nice — and discover you disagree',
+      'Sort the cards from nicest to least nice, and discover you disagree',
       'Hide a card and guess it from the face someone makes',
       'Leave a few on the fridge, so there is something to point at when words are hard',
     ],
     parentTipLabel: 'Tip for parents',
-    parentTip: 'The strength of the cards is precisely that they are not on a screen. A card you can hold, hand to someone, or turn face down does something a screen does not — especially for children who find talking about feelings hard.',
+    parentTip: 'The strength of the cards is precisely that they are not on a screen. A card you can hold, hand to someone, or turn face down does something a screen does not, especially for children who find talking about feelings hard.',
     back: 'Back to the Activity Place',
   },
 };
