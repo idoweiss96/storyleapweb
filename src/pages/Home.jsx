@@ -9,6 +9,7 @@ import { useLanguage } from '../components/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import { navPathFor } from '@/lib/marketingRoutes';
 import StoryGallery from '@/components/home/StoryGallery';
+import ActivityPlaceTeaser from '@/components/home/ActivityPlaceTeaser';
 import StartModal from '@/components/home/StartModal';
 import { trackEvent } from '@/lib/posthog';
 import PageMeta from '@/components/SEO/PageMeta';
@@ -340,6 +341,9 @@ export default function Home() {
           </Card>
         </motion.div>
       </section>
+
+      {/* Activity Place Teaser */}
+      <ActivityPlaceTeaser />
 
       {/* Testimonials Carousel */}
       <TestimonialsCarousel />
