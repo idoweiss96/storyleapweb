@@ -81,7 +81,7 @@ const PAGES_HE = [
         hint: 'הורה: שאלו, למה הוא/היא הגיבור/ה שלך?'
       },
       {
-        key: 'comfort', tag: 'together', question: 'כשקצת לא בנוח — מה הכי עוזר?', type: 'emoji',
+        key: 'comfort', tag: 'together', question: 'כשקצת לא בנוח, מה הכי עוזר?', type: 'emoji',
         options: [
           { emoji: '🤗', label: 'חיבוק' },
           { emoji: '💬', label: 'לדבר' },
@@ -242,7 +242,7 @@ const PAGES_EN = [
         hint: 'Parent: ask, why are they your hero?'
       },
       {
-        key: 'comfort', tag: 'together', question: "When you're a bit uncomfortable — what helps most?", type: 'emoji',
+        key: 'comfort', tag: 'together', question: "When you're a bit uncomfortable, what helps most?", type: 'emoji',
         options: [
           { emoji: '🤗', label: 'Hug' },
           { emoji: '💬', label: 'Talking' },
