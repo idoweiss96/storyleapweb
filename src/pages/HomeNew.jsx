@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell,
-  ChevronRight, ChevronLeft, Quote, MessageCircle, Check,
+  ChevronRight, ChevronLeft, Quote, MessageCircle, Check, ShieldCheck,
 } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { navPathFor } from '@/lib/marketingRoutes';
@@ -238,19 +238,17 @@ const HERO_STORY_IMG =
  * NOTE: a small Leapy could later sit beside this stack once a hosted asset exists.
  */
 function HeroPreview({ isHe }) {
-  const pill =
-    'inline-flex items-center gap-1.5 rounded-full bg-white/95 border border-slate-200/80 shadow-md px-3 py-1.5 text-xs font-semibold text-slate-700';
+  // One pill treatment for all four labels - same capsule, same icon size/weight,
+  // same prominence. First three name what's included; the fourth is the "why".
+  const Pill = ({ Icon, tint, children }) => (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 border border-slate-200/80 shadow-md px-3 py-1.5 text-xs font-semibold text-slate-700 whitespace-nowrap">
+      <Icon className={`w-3 h-3 ${tint}`} aria-hidden="true" />
+      {children}
+    </span>
+  );
   return (
     <div className="relative mx-auto w-[16.5rem] sm:w-[18rem] md:w-[19rem] max-w-full my-3">
-      {/* included: parent guidance - tucked to the top corner, mostly in the margin */}
-      <div className="relative z-10 flex justify-end pe-3 mb-[-0.375rem]">
-        <span className={pill}>
-          <Heart className="w-3 h-3 text-rose-400" aria-hidden="true" />
-          {isHe ? 'הכוונה להורה' : 'Parent guidance'}
-        </span>
-      </div>
-
-      {/* the story - a real StoryLeap illustration, its name integrated at the bottom */}
+      {/* the story - a real StoryLeap illustration */}
       <div className="rounded-3xl bg-white border border-white shadow-xl shadow-slate-200/70 overflow-hidden" style={{ transform: 'rotate(-1.5deg)' }}>
         <div className="aspect-[4/3] overflow-hidden bg-slate-50">
           <img
@@ -260,30 +258,14 @@ function HeroPreview({ isHe }) {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="flex items-center gap-2 px-4 py-3">
-          <span className="w-7 h-7 rounded-xl bg-violet-100 flex items-center justify-center shrink-0">
-            <BookOpen className="w-4 h-4 text-violet-500" />
-          </span>
-          <span className="text-sm font-semibold text-slate-700">
-            {isHe ? 'סיפור מותאם אישית' : 'A personalized story'}
-          </span>
-        </div>
       </div>
 
-      {/* included: gentle activities - just below the card, opposite side, clear of the caption */}
-      <div className="relative z-10 flex justify-start ps-3 mt-[0.35rem]">
-        <span className={pill}>
-          <Sparkles className="w-3 h-3 text-sky-400" aria-hidden="true" />
-          {isHe ? 'פעילויות עדינות' : 'Gentle activities'}
-        </span>
-      </div>
-
-      {/* why it matters - a supporting line, softer and centred so it reads apart from the "what" pills */}
-      <div className="mt-3 flex justify-center">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-violet-50/80 border border-violet-100 px-3.5 py-1.5 text-[11px] md:text-xs font-semibold text-violet-800">
-          <MessageCircle className="w-3.5 h-3.5 text-violet-400 shrink-0" aria-hidden="true" />
-          {isHe ? 'פתח לשיחות רגשיות' : 'A doorway to emotional conversations'}
-        </span>
+      {/* one coherent set of labels - what StoryLeap includes, and why it is special */}
+      <div className="mt-4 flex flex-wrap justify-center gap-2">
+        <Pill Icon={Heart} tint="text-rose-400">{isHe ? 'הכוונה להורה' : 'Parent guidance'}</Pill>
+        <Pill Icon={BookOpen} tint="text-violet-400">{isHe ? 'סיפור מותאם אישית' : 'A personalized story'}</Pill>
+        <Pill Icon={Sparkles} tint="text-sky-400">{isHe ? 'פעילויות תומכות' : 'Supporting activities'}</Pill>
+        <Pill Icon={ShieldCheck} tint="text-emerald-500">{isHe ? 'מבוסס על שיטות מגובות מחקר' : 'Built on evidence-informed methods'}</Pill>
       </div>
     </div>
   );
