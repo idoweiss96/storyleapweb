@@ -178,7 +178,7 @@ export default function Garage({ lang = 'he' }) {
   const allFixed = car.faults.every((f) => fixed.includes(f));
   const hasFuelFault = car.faults.includes('fuel');
 
-  const useTool = (toolId) => {
+  const applyTool = (toolId) => {
     // A tool only does something if this car actually has the matching fault.
     const match = car.faults.find((f) => FAULTS[f].tool === toolId && !fixed.includes(f));
     if (!match) {
@@ -267,7 +267,7 @@ export default function Garage({ lang = 'he' }) {
             key={tool.id}
             type="button"
             className="gr-tool site-chrome"
-            onClick={() => useTool(tool.id)}
+            onClick={() => applyTool(tool.id)}
             disabled={allFixed}
           >
             <span className="gr-tool-emoji" role="img" aria-hidden="true">
