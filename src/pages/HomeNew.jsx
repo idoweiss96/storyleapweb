@@ -83,14 +83,14 @@ function chipDestination(key) {
 // `bedtime` is the one addition. Wording comes from the shared dictionary where
 // a key already exists.
 const MOMENTS = [
-  { key: 'chip_new', tone: 'peach', to: '/PrepareStory' },
-  { key: 'chip_fear', tone: 'lavender', to: `${createPageUrl('CreateStory')}?from=chip_fear&challenge=fears` },
-  { key: 'chip_moving', tone: 'blue', to: '/PrepareStory?topic=moving_home' },
-  { key: 'chip_friendship', tone: 'blush', to: `${createPageUrl('CreateStory')}?from=chip_friendship&challenge=social_difficulty` },
-  { key: 'chip_separation', tone: 'mint', to: `${createPageUrl('CreateStory')}?from=chip_separation&challenge=separation_anxiety` },
-  { key: 'chip_emotions', tone: 'rose', to: `${createPageUrl('CreateStory')}?from=chip_emotions&challenge=emotional_regulation` },
-  { key: 'bedtime', tone: 'night', to: `${createPageUrl('CreateStory')}?from=chip_bedtime&challenge=sleep_issues`, he: 'שעת השינה', en: 'Bedtime' },
-  { key: 'chip_other', tone: 'neutral', to: `${createPageUrl('CreateStory')}?from=chip_other` },
+  { key: 'chip_new', tone: 'peach', glyph: 'door', to: '/PrepareStory' },
+  { key: 'chip_fear', tone: 'lavender', glyph: 'lantern', to: `${createPageUrl('CreateStory')}?from=chip_fear&challenge=fears` },
+  { key: 'chip_moving', tone: 'blue', glyph: 'house', to: '/PrepareStory?topic=moving_home' },
+  { key: 'chip_friendship', tone: 'blush', glyph: 'bubbles', to: `${createPageUrl('CreateStory')}?from=chip_friendship&challenge=social_difficulty` },
+  { key: 'chip_separation', tone: 'mint', glyph: 'linked', to: `${createPageUrl('CreateStory')}?from=chip_separation&challenge=separation_anxiety` },
+  { key: 'chip_emotions', tone: 'rose', glyph: 'cloud', to: `${createPageUrl('CreateStory')}?from=chip_emotions&challenge=emotional_regulation` },
+  { key: 'bedtime', tone: 'night', glyph: 'pillow', to: `${createPageUrl('CreateStory')}?from=chip_bedtime&challenge=sleep_issues`, he: 'שעת השינה', en: 'Bedtime' },
+  { key: 'chip_other', tone: 'neutral', glyph: 'book', to: `${createPageUrl('CreateStory')}?from=chip_other` },
 ];
 
 // Soft StoryLeap colour identity per moment category. Full literal class strings
@@ -105,6 +105,118 @@ const TONE = {
   night:    { card: 'bg-indigo-50/70 border-indigo-100 hover:border-indigo-200', sel: 'bg-indigo-50 border-indigo-300 ring-2 ring-indigo-200', swatch: 'bg-indigo-200/80', check: 'text-indigo-600' },
   neutral:  { card: 'bg-slate-50 border-slate-200 hover:border-slate-300',       sel: 'bg-slate-100 border-slate-300 ring-2 ring-slate-200',   swatch: 'bg-slate-300/70', check: 'text-slate-600' },
 };
+
+// First-pass branded micro-illustrations for the moment cards. Soft rounded
+// fills, one idea each, a cream highlight and a single "magic" spark, all tinted
+// from the card's own category colour. No emoji, no icon-library glyphs, no
+// outlines. viewBox 40x40, readable at ~32-40px.
+const MOMENT_PALETTE = {
+  peach:    { bg: '#FDF1E3', mid: '#F6D3A6', deep: '#E1934E', accent: '#F5C24B' },
+  lavender: { bg: '#F1ECFB', mid: '#D6C7F0', deep: '#9576D1', accent: '#C7B3EC' },
+  blue:     { bg: '#E8F1FB', mid: '#BFD9F1', deep: '#5E9AD1', accent: '#A9CFF0' },
+  blush:    { bg: '#FCEAF1', mid: '#F4C6D9', deep: '#DD7FA6', accent: '#F3B0CA' },
+  mint:     { bg: '#E5F5F0', mid: '#BEE6D9', deep: '#5EBFA8', accent: '#A7E1D0' },
+  rose:     { bg: '#FCEBEC', mid: '#F4C6CC', deep: '#DC7D89', accent: '#F2AEB6' },
+  night:    { bg: '#ECEDFA', mid: '#C7CBEF', deep: '#7E84CE', accent: '#C6B4EC' },
+  neutral:  { bg: '#F3F3F6', mid: '#DBDFE6', deep: '#9AA1AC', accent: '#F3C766' },
+};
+
+function MomentGlyph({ tone, kind }) {
+  const P = MOMENT_PALETTE[tone] || MOMENT_PALETTE.neutral;
+  const cream = '#FFFDF7';
+  const shapes = {
+    // Starting something new - an open door with a soft glow
+    door: (
+      <>
+        <circle cx="23" cy="20" r="8.5" fill={P.accent} opacity="0.5" />
+        <rect x="15" y="10" width="12" height="20" rx="3" fill={P.mid} />
+        <rect x="17.2" y="12.2" width="7.6" height="15.6" rx="2" fill={cream} />
+        <path d="M15 12 L9 14.6 V27.4 L15 25 Z" fill={P.deep} />
+        <circle cx="13" cy="19.7" r="0.9" fill={P.mid} />
+      </>
+    ),
+    // Dealing with fear - a small lantern with gentle protective light
+    lantern: (
+      <>
+        <circle cx="20" cy="21" r="10" fill={P.accent} opacity="0.4" />
+        <path d="M18.4 8.2 a1.6 1.6 0 0 1 3.2 0" fill="none" stroke={P.deep} strokeWidth="1.5" strokeLinecap="round" />
+        <rect x="16" y="9" width="8" height="3" rx="1.5" fill={P.deep} />
+        <rect x="14.5" y="12" width="11" height="17" rx="4.5" fill={P.mid} />
+        <rect x="17" y="15" width="6" height="11" rx="3" fill={cream} />
+        <circle cx="20" cy="20.6" r="1.9" fill={P.accent} />
+      </>
+    ),
+    // Moving house - a small house with one moving box
+    house: (
+      <>
+        <path d="M10 20.5 L19 11.5 L28 20.5 V29 a1 1 0 0 1 -1 1 H11 a1 1 0 0 1 -1 -1 Z" fill={P.mid} />
+        <path d="M8.6 21 L19 10.5 L29.4 21" fill="none" stroke={P.deep} strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="16.4" y="22" width="5.2" height="8" rx="1.6" fill={cream} />
+        <rect x="23.5" y="23.5" width="8.5" height="7.5" rx="1.6" fill={P.deep} />
+        <path d="M23.5 27.2 H32 M27.7 23.5 V31" stroke={P.bg} strokeWidth="1.3" />
+      </>
+    ),
+    // Friendship challenges - two soft speech bubbles in dialogue
+    bubbles: (
+      <>
+        <rect x="6.5" y="10.5" width="16" height="11" rx="4.5" fill={P.mid} />
+        <path d="M11 21 l-1.4 3.6 4.2 -2.6 Z" fill={P.mid} />
+        <g fill={cream}>
+          <circle cx="11.5" cy="16" r="1.1" />
+          <circle cx="15" cy="16" r="1.1" />
+          <circle cx="18.5" cy="16" r="1.1" />
+        </g>
+        <rect x="19" y="18.5" width="15" height="10" rx="4.5" fill={P.deep} />
+        <path d="M29.5 28.5 l1.3 3.2 -4 -2.4 Z" fill={P.deep} />
+      </>
+    ),
+    // Separation - two soft shapes connected gently
+    linked: (
+      <>
+        <circle cx="13" cy="20" r="6.6" fill={P.mid} />
+        <circle cx="27" cy="20" r="6.6" fill={P.deep} />
+        <circle cx="10.8" cy="17.8" r="1.6" fill={cream} />
+        <g fill={P.accent}>
+          <circle cx="17.6" cy="20" r="1.05" />
+          <circle cx="20" cy="20" r="1.05" />
+          <circle cx="22.4" cy="20" r="1.05" />
+        </g>
+      </>
+    ),
+    // Big emotions - a soft cloud with a subtle swirl
+    cloud: (
+      <>
+        <path d="M12.5 25 a5 5 0 0 1 0.8 -9.4 a6 6 0 0 1 11.2 -0.6 a4.6 4.6 0 0 1 2.8 10 Z" fill={P.mid} />
+        <path d="M15 20 c2.2 -2.2 5.4 -2.2 7.4 0 c1.5 1.5 -0.4 3.9 -2 2.6" fill="none" stroke={P.deep} strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M26.5 11 l0.7 1.7 1.8 0.2 -1.3 1.3 0.3 1.8 -1.6 -0.9 -1.6 0.9 0.3 -1.8 -1.3 -1.3 1.8 -0.2 Z" fill={P.accent} />
+      </>
+    ),
+    // Bedtime - a pillow with a moon
+    pillow: (
+      <>
+        <path d="M8 22 a4.5 4.5 0 0 1 4.5 -5.5 h15 a4.5 4.5 0 0 1 0 11 h-15 A4.5 4.5 0 0 1 8 22 Z" fill={P.mid} />
+        <path d="M11.5 17.5 q4.5 -3 9 0" fill="none" stroke={cream} strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M25.5 8 a4.4 4.4 0 1 0 3.2 7.5 A5.4 5.4 0 0 1 25.5 8 Z" fill={P.accent} />
+        <circle cx="31.2" cy="9.4" r="0.9" fill={P.deep} />
+      </>
+    ),
+    // Something else - a small open book with a star
+    book: (
+      <>
+        <path d="M9 13 q5.2 -2.6 11 0 v15.6 q-5.8 -2.4 -11 0 Z" fill={P.mid} />
+        <path d="M31 13 q-5.2 -2.6 -11 0 v15.6 q5.8 -2.4 11 0 Z" fill={P.deep} />
+        <path d="M20 12.6 V29" stroke={P.bg} strokeWidth="1.3" />
+        <path d="M26.8 8.5 l0.8 1.9 2 0.8 -2 0.8 -0.8 1.9 -0.8 -1.9 -2 -0.8 2 -0.8 Z" fill={P.accent} />
+      </>
+    ),
+  };
+  return (
+    <svg viewBox="0 0 40 40" className="w-10 h-10 shrink-0" aria-hidden="true">
+      <rect x="1.5" y="1.5" width="37" height="37" rx="12" fill={P.bg} />
+      {shapes[kind] || shapes.book}
+    </svg>
+  );
+}
 
 const HERO_STORY_IMG =
   'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/465dd64af_image3.png';
@@ -188,7 +300,7 @@ function MomentBox({ isHe, t, onOpenModal }) {
                 on ? `${T.sel} shadow-md` : `${T.card} hover:-translate-y-1 hover:shadow-lg`
               }`}
             >
-              <span className={`w-8 h-8 rounded-xl ${T.swatch}`} aria-hidden="true" />
+              <MomentGlyph tone={m.tone} kind={m.glyph} />
               <span className="text-sm md:text-[15px] font-bold text-slate-700 leading-snug">{label(m)}</span>
               {on && (
                 <Check
