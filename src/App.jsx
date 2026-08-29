@@ -58,6 +58,8 @@ import ActivityBreathing from './pages/ActivityBreathing';
 import ActivitySafePlace from './pages/ActivitySafePlace';
 import ActivityVisualRules from './pages/ActivityVisualRules';
 import ActivityCalmCorner from './pages/ActivityCalmCorner';
+// --- Redesign prototype (additive, isolated, noindex). Not in production nav. ---
+import HomeNew from './pages/HomeNew';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -159,6 +161,7 @@ const AuthenticatedApp = () => {
       <Route path="/activities/safe-place" element={<LayoutWrapper currentPageName="ActivitySafePlace"><ActivitySafePlace /></LayoutWrapper>} />
       <Route path="/activities/visual-rules" element={<LayoutWrapper currentPageName="ActivityVisualRules"><ActivityVisualRules /></LayoutWrapper>} />
       <Route path="/activities/calm-corner" element={<LayoutWrapper currentPageName="ActivityCalmCorner"><ActivityCalmCorner /></LayoutWrapper>} />
+      <Route path="/HomeNew" element={<LayoutWrapper currentPageName="HomeNew"><HomeNew /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
