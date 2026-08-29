@@ -145,7 +145,7 @@ export default function Clinic({ lang = 'he' }) {
   else if (currentCopy && step > 0) line = `${lastDoneCopy.done}. ${currentCopy.ask}`;
   else if (currentCopy) line = `${info.problem}. ${currentCopy.ask}`;
 
-  const useTool = (toolId) => {
+  const applyTool = (toolId) => {
     if (treated) return;
     if (toolId !== current.tool) {
       setNudge(true);
@@ -201,7 +201,7 @@ export default function Clinic({ lang = 'he' }) {
             key={tool.id}
             type="button"
             className={`cl-tool site-chrome${used.includes(tool.id) ? ' used' : ''}`}
-            onClick={() => useTool(tool.id)}
+            onClick={() => applyTool(tool.id)}
             disabled={treated}
           >
             <span className="cl-tool-emoji" role="img" aria-hidden="true">
