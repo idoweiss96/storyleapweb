@@ -272,7 +272,7 @@ function HeroPreview({ isHe }) {
       {/* 3. Supporting activities - hangs off the lower-left, overlapping the edge by ~0.9rem (small) */}
       <span
         className={`${base} absolute z-10 text-xs shadow-md px-3 py-1.5`}
-        style={{ top: '52%', insetInlineEnd: '100%', marginInlineEnd: '-1.7rem' }}
+        style={{ top: '58%', insetInlineEnd: '100%', marginInlineEnd: '-1.7rem' }}
       >
         <Sparkles className="w-3 h-3 text-sky-400" aria-hidden="true" />
         {isHe ? 'פעילויות תומכות' : 'Supporting activities'}
