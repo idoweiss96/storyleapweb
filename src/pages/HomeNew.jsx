@@ -236,9 +236,10 @@ const HERO_STORY_IMG =
  * Logical insets keep the four-corner layout mirrored for Hebrew RTL.
  */
 function HeroPreview({ isHe }) {
-  const OV = '-12px'; // how far each pill pokes past its corner
+  const OV = '-10px'; // how far each pill pokes past its corner
   const pill =
-    'absolute z-10 inline-flex items-center gap-1 rounded-full bg-white/95 border border-slate-200/80 shadow-md px-2.5 py-1.5 text-[11px] md:text-xs font-semibold text-slate-700 whitespace-nowrap';
+    'absolute z-10 inline-flex items-center gap-1 rounded-full bg-white/95 border border-slate-200/80 shadow-md px-2 py-1 md:px-2.5 md:py-1.5 text-[10px] md:text-xs font-semibold text-slate-700 whitespace-nowrap';
+  const gi = 'w-2.5 h-2.5 md:w-3 md:h-3 shrink-0';
   return (
     <div className="relative mx-auto w-[16.5rem] sm:w-[17.5rem] md:w-[19rem] max-w-full my-5">
       {/* CARD - the centre of the composition */}
@@ -253,21 +254,21 @@ function HeroPreview({ isHe }) {
         </div>
       </div>
 
-      {/* four corners - identical style, one per corner */}
+      {/* four corners - identical pill, one per corner, poking ~10px past the edge */}
       <span className={pill} style={{ top: OV, insetInlineStart: OV }}>
-        <Sparkles className="w-3 h-3 text-sky-400 shrink-0" aria-hidden="true" />
+        <Sparkles className={`${gi} text-sky-400`} aria-hidden="true" />
         {isHe ? 'פעילויות תומכות' : 'Supporting activities'}
       </span>
       <span className={pill} style={{ top: OV, insetInlineEnd: OV }}>
-        <Heart className="w-3 h-3 text-rose-400 shrink-0" aria-hidden="true" />
+        <Heart className={`${gi} text-rose-400`} aria-hidden="true" />
         {isHe ? 'הכוונה להורה' : 'Parent guidance'}
       </span>
       <span className={pill} style={{ bottom: OV, insetInlineStart: OV }}>
-        <BookOpen className="w-3 h-3 text-violet-400 shrink-0" aria-hidden="true" />
+        <BookOpen className={`${gi} text-violet-400`} aria-hidden="true" />
         {isHe ? 'סיפור מותאם אישית' : 'A personalized story'}
       </span>
       <span className={pill} style={{ bottom: OV, insetInlineEnd: OV }}>
-        <ShieldCheck className="w-3 h-3 text-emerald-500 shrink-0" aria-hidden="true" />
+        <ShieldCheck className={`${gi} text-emerald-500`} aria-hidden="true" />
         {isHe ? 'מגובה מחקר' : 'Evidence-informed'}
       </span>
     </div>
