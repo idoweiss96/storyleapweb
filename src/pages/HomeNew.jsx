@@ -225,31 +225,22 @@ const HERO_STORY_IMG =
   'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/465dd64af_image3.png';
 
 /*
- * The hero's visual anchor: a personalized-story preview with a small set of
- * explanatory callouts around it. They read as a labelling SYSTEM, not stickers -
- * each names a real part of a StoryLeap experience:
- *   · Parent guidance            (what's included)
- *   · A personalized story        (what's included - integrated into the card)
- *   · Gentle activities           (what's included)
- *   · A doorway to emotional conversations   (why it matters - visually distinct)
- * "Evidence-informed" already appears in the trust line under the moment box, so
- * it is deliberately not repeated here. Flow layout (no absolute stickers) keeps
- * the composition breathable and avoids covering the image.
- * NOTE: a small Leapy could later sit beside this stack once a hosted asset exists.
+ * The hero's visual anchor: a personalized-story card with four explanatory
+ * callouts arranged AROUND it, like a product-annotation system (not a list):
+ *   1. Parent guidance                  - kisses the top-right edge
+ *   2. A personalized story             - integrated into the card's lower band
+ *   3. Supporting activities            - badge touching the lower-left edge
+ *   4. Built on evidence-informed ...   - wider pill hugging the lower edge, centred
+ * One design family (same capsule, border, white ground, icon style); sizes vary
+ * by role. Poke-out is small (~0.4-0.55rem) and lands on low-detail image areas.
  */
 function HeroPreview({ isHe }) {
-  // One pill treatment for all four labels - same capsule, same icon size/weight,
-  // same prominence. First three name what's included; the fourth is the "why".
-  const Pill = ({ Icon, tint, children }) => (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 border border-slate-200/80 shadow-md px-3 py-1.5 text-xs font-semibold text-slate-700 whitespace-nowrap">
-      <Icon className={`w-3 h-3 ${tint}`} aria-hidden="true" />
-      {children}
-    </span>
-  );
+  const base =
+    'inline-flex items-center gap-1.5 rounded-full bg-white/95 border border-slate-200/80 font-semibold text-slate-700 whitespace-nowrap';
   return (
-    <div className="relative mx-auto w-[16.5rem] sm:w-[18rem] md:w-[19rem] max-w-full my-3">
-      {/* the story - a real StoryLeap illustration */}
-      <div className="rounded-3xl bg-white border border-white shadow-xl shadow-slate-200/70 overflow-hidden" style={{ transform: 'rotate(-1.5deg)' }}>
+    <div className="relative mx-auto w-[17rem] sm:w-[18.5rem] md:w-[20rem] max-w-full pt-6 pb-9 px-3">
+      {/* CARD - the visual centre */}
+      <div className="relative rounded-3xl bg-white border border-white shadow-xl shadow-slate-200/70 overflow-hidden" style={{ transform: 'rotate(-1.5deg)' }}>
         <div className="aspect-[4/3] overflow-hidden bg-slate-50">
           <img
             src={HERO_STORY_IMG}
@@ -258,15 +249,34 @@ function HeroPreview({ isHe }) {
             className="w-full h-full object-cover"
           />
         </div>
+        {/* 2. A personalized story - integrated lower band of the card (medium) */}
+        <div className="flex items-center gap-2 px-4 py-2.5">
+          <span className="w-6 h-6 rounded-lg bg-violet-100 flex items-center justify-center shrink-0">
+            <BookOpen className="w-3.5 h-3.5 text-violet-500" aria-hidden="true" />
+          </span>
+          <span className="text-sm font-semibold text-slate-700">
+            {isHe ? 'סיפור מותאם אישית' : 'A personalized story'}
+          </span>
+        </div>
       </div>
 
-      {/* one coherent set of labels - what StoryLeap includes, and why it is special */}
-      <div className="mt-4 flex flex-wrap justify-center gap-2">
-        <Pill Icon={Heart} tint="text-rose-400">{isHe ? 'הכוונה להורה' : 'Parent guidance'}</Pill>
-        <Pill Icon={BookOpen} tint="text-violet-400">{isHe ? 'סיפור מותאם אישית' : 'A personalized story'}</Pill>
-        <Pill Icon={Sparkles} tint="text-sky-400">{isHe ? 'פעילויות תומכות' : 'Supporting activities'}</Pill>
-        <Pill Icon={ShieldCheck} tint="text-emerald-500">{isHe ? 'מבוסס על שיטות מגובות מחקר' : 'Built on evidence-informed methods'}</Pill>
-      </div>
+      {/* 1. Parent guidance - touching the top-right edge (small/medium) */}
+      <span className={`${base} absolute z-10 text-xs shadow-md px-3 py-1.5`} style={{ top: '0.4rem', insetInlineEnd: '-0.4rem' }}>
+        <Heart className="w-3 h-3 text-rose-400" aria-hidden="true" />
+        {isHe ? 'הכוונה להורה' : 'Parent guidance'}
+      </span>
+
+      {/* 3. Supporting activities - badge touching the lower-left edge (small/medium) */}
+      <span className={`${base} absolute z-10 text-xs shadow-md px-3 py-1.5`} style={{ top: '54%', insetInlineStart: '-0.55rem' }}>
+        <Sparkles className="w-3 h-3 text-sky-400" aria-hidden="true" />
+        {isHe ? 'פעילויות תומכות' : 'Supporting activities'}
+      </span>
+
+      {/* 4. Built on evidence-informed methods - wider pill hugging the lower edge (explanatory) */}
+      <span className={`${base} absolute left-1/2 -translate-x-1/2 z-10 text-xs md:text-[13px] shadow-lg px-4 py-2`} style={{ bottom: '0.1rem' }}>
+        <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+        {isHe ? 'מבוסס על שיטות מגובות מחקר' : 'Built on evidence-informed methods'}
+      </span>
     </div>
   );
 }
