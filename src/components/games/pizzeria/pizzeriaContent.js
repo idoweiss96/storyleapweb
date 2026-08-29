@@ -7,17 +7,17 @@
 
 // `layer: true` toppings paint the whole pizza instead of dropping pieces.
 export const TOPPINGS = [
-  { id: 'sauce', emoji: '🥫', layer: true, he: 'רוטב', en: 'Sauce' },
-  { id: 'cheese', emoji: '🧀', layer: true, he: 'גבינה', en: 'Cheese' },
-  { id: 'mushroom', emoji: '🍄', he: 'פטריות', en: 'Mushrooms' },
-  { id: 'olive', emoji: '🫒', he: 'זיתים', en: 'Olives' },
-  { id: 'tomato', emoji: '🍅', he: 'עגבניות', en: 'Tomatoes' },
-  { id: 'pepper', emoji: '🫑', he: 'פלפל', en: 'Pepper' },
-  { id: 'corn', emoji: '🌽', he: 'תירס', en: 'Corn' },
-  { id: 'pineapple', emoji: '🍍', he: 'אננס', en: 'Pineapple' },
-  { id: 'broccoli', emoji: '🥦', he: 'ברוקולי', en: 'Broccoli' },
-  { id: 'egg', emoji: '🥚', he: 'ביצה', en: 'Egg' },
-  { id: 'basil', emoji: '🌿', he: 'בזיליקום', en: 'Basil' },
+  { id: 'sauce', layer: true, he: 'רוטב', en: 'Sauce' },
+  { id: 'cheese', layer: true, he: 'גבינה', en: 'Cheese' },
+  { id: 'mushroom', he: 'פטריות', en: 'Mushrooms' },
+  { id: 'olive', he: 'זיתים', en: 'Olives' },
+  { id: 'tomato', he: 'עגבניות', en: 'Tomatoes' },
+  { id: 'pepper', he: 'פלפל', en: 'Pepper' },
+  { id: 'corn', he: 'תירס', en: 'Corn' },
+  { id: 'pineapple', he: 'אננס', en: 'Pineapple' },
+  { id: 'broccoli', he: 'ברוקולי', en: 'Broccoli' },
+  { id: 'egg', he: 'ביצה', en: 'Egg' },
+  { id: 'basil', he: 'בזיליקום', en: 'Basil' },
 ];
 
 // Where each piece lands, in order. Fixed so the same taps always draw the
@@ -36,35 +36,35 @@ export const SLOTS = [
 export const ORDERS = [
   {
     id: 'margherita',
-    customer: '🐼',
+    customer: 'panda',
     wants: ['sauce', 'cheese', 'basil'],
     he: { name: 'פנדי', line: 'רוטב, גבינה וקצת בזיליקום בבקשה' },
     en: { name: 'Pandy', line: 'Sauce, cheese and a bit of basil please' },
   },
   {
     id: 'veggie',
-    customer: '🐧',
+    customer: 'penguin',
     wants: ['sauce', 'cheese', 'mushroom', 'pepper'],
     he: { name: 'פינגי', line: 'אני רוצה פטריות ופלפל על רוטב וגבינה' },
     en: { name: 'Pingy', line: 'I would like mushrooms and pepper on sauce and cheese' },
   },
   {
     id: 'sweet',
-    customer: '🐨',
+    customer: 'koala',
     wants: ['sauce', 'cheese', 'corn', 'pineapple'],
     he: { name: 'קואלי', line: 'תירס ואננס! אני אוהב מתוק' },
     en: { name: 'Koali', line: 'Corn and pineapple! I like it sweet' },
   },
   {
     id: 'green',
-    customer: '🐢',
+    customer: 'turtle',
     wants: ['cheese', 'broccoli', 'olive'],
     he: { name: 'טורטי', line: 'ברוקולי וזיתים על גבינה, בלי רוטב' },
     en: { name: 'Torty', line: 'Broccoli and olives on cheese, no sauce' },
   },
   {
     id: 'everything',
-    customer: '🦊',
+    customer: 'fox',
     wants: ['sauce', 'cheese', 'tomato', 'egg'],
     he: { name: 'שועלי', line: 'עגבניות וביצה, ותודה מראש!' },
     en: { name: 'Foxy', line: 'Tomatoes and an egg, and thanks in advance!' },
