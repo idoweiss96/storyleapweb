@@ -125,25 +125,28 @@ function MomentGlyph({ tone, kind }) {
   const P = MOMENT_PALETTE[tone] || MOMENT_PALETTE.neutral;
   const cream = '#FFFDF7';
   const shapes = {
-    // Starting something new - an open door with a soft glow
+    // Starting something new - an open door in an arched frame, soft glow behind
     door: (
       <>
-        <circle cx="23" cy="20" r="8.5" fill={P.accent} opacity="0.5" />
-        <rect x="15" y="10" width="12" height="20" rx="3" fill={P.mid} />
-        <rect x="17.2" y="12.2" width="7.6" height="15.6" rx="2" fill={cream} />
-        <path d="M15 12 L9 14.6 V27.4 L15 25 Z" fill={P.deep} />
-        <circle cx="13" cy="19.7" r="0.9" fill={P.mid} />
+        <circle cx="22" cy="19" r="8" fill={P.accent} opacity="0.5" />
+        <path d="M14 30 v-12.5 a6 6 0 0 1 12 0 V30 Z" fill={P.mid} />
+        <path d="M16.6 30 v-10.5 a3.4 3.4 0 0 1 6.8 0 V30 Z" fill={cream} />
+        <path d="M16.6 18 L10.6 20.5 V29.6 L16.6 27.1 Z" fill={P.deep} />
+        <circle cx="14.4" cy="24" r="0.9" fill={P.mid} />
+        <rect x="8.8" y="29.4" width="22.4" height="2.4" rx="1.2" fill={P.deep} opacity="0.5" />
       </>
     ),
-    // Dealing with fear - a small lantern with gentle protective light
+    // Dealing with fear - a small hanging lantern with a warm protective light
     lantern: (
       <>
-        <circle cx="20" cy="21" r="10" fill={P.accent} opacity="0.4" />
-        <path d="M18.4 8.2 a1.6 1.6 0 0 1 3.2 0" fill="none" stroke={P.deep} strokeWidth="1.5" strokeLinecap="round" />
-        <rect x="16" y="9" width="8" height="3" rx="1.5" fill={P.deep} />
-        <rect x="14.5" y="12" width="11" height="17" rx="4.5" fill={P.mid} />
-        <rect x="17" y="15" width="6" height="11" rx="3" fill={cream} />
-        <circle cx="20" cy="20.6" r="1.9" fill={P.accent} />
+        <circle cx="20" cy="22" r="10" fill={P.accent} opacity="0.38" />
+        <circle cx="20" cy="6.2" r="1.7" fill="none" stroke={P.deep} strokeWidth="1.4" />
+        <path d="M20 7.9 V10" stroke={P.deep} strokeWidth="1.6" strokeLinecap="round" />
+        <rect x="15" y="10" width="10" height="3" rx="1.5" fill={P.deep} />
+        <rect x="14" y="13" width="12" height="15" rx="4" fill={P.mid} />
+        <rect x="17" y="16" width="6" height="10" rx="2.6" fill={cream} />
+        <path d="M20 19.4 q2.1 2.4 0 4.4 q-2.1 -2 0 -4.4 Z" fill={P.accent} />
+        <rect x="14" y="27.4" width="12" height="3" rx="1.5" fill={P.deep} />
       </>
     ),
     // Moving house - a small house with one moving box
