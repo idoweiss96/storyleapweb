@@ -7,18 +7,18 @@
  */
 
 export const ITEMS = [
-  { id: 'banana', emoji: '🍌', price: 1, he: 'בננה', en: 'Banana' },
-  { id: 'carrot', emoji: '🥕', price: 1, he: 'גזר', en: 'Carrot' },
-  { id: 'apple', emoji: '🍎', price: 2, he: 'תפוח', en: 'Apple' },
-  { id: 'pencil', emoji: '✏️', price: 2, he: 'עיפרון', en: 'Pencil' },
-  { id: 'juice', emoji: '🧃', price: 3, he: 'מיץ', en: 'Juice' },
-  { id: 'chocolate', emoji: '🍫', price: 3, he: 'שוקולד', en: 'Chocolate' },
-  { id: 'bread', emoji: '🍞', price: 4, he: 'לחם', en: 'Bread' },
-  { id: 'cookies', emoji: '🍪', price: 4, he: 'עוגיות', en: 'Cookies' },
-  { id: 'milk', emoji: '🥛', price: 5, he: 'חלב', en: 'Milk' },
-  { id: 'cheese', emoji: '🧀', price: 6, he: 'גבינה', en: 'Cheese' },
-  { id: 'book', emoji: '📕', price: 8, he: 'ספר', en: 'Book' },
-  { id: 'teddy', emoji: '🧸', price: 10, he: 'דובי', en: 'Teddy bear' },
+  { id: 'banana', price: 1, he: 'בננה', en: 'Banana' },
+  { id: 'carrot', price: 1, he: 'גזר', en: 'Carrot' },
+  { id: 'apple', price: 2, he: 'תפוח', en: 'Apple' },
+  { id: 'pencil', price: 2, he: 'עיפרון', en: 'Pencil' },
+  { id: 'juice', price: 3, he: 'מיץ', en: 'Juice' },
+  { id: 'chocolate', price: 3, he: 'שוקולד', en: 'Chocolate' },
+  { id: 'bread', price: 4, he: 'לחם', en: 'Bread' },
+  { id: 'cookies', price: 4, he: 'עוגיות', en: 'Cookies' },
+  { id: 'milk', price: 5, he: 'חלב', en: 'Milk' },
+  { id: 'cheese', price: 6, he: 'גבינה', en: 'Cheese' },
+  { id: 'book', price: 8, he: 'ספר', en: 'Book' },
+  { id: 'teddy', price: 10, he: 'דובי', en: 'Teddy bear' },
 ];
 
 export const COINS = [1, 2, 5, 10];
