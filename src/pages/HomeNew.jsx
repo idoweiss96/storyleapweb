@@ -546,30 +546,6 @@ export default function HomeNew() {
         </div>
       </section>
 
-      {/* ==================== FOR PROFESSIONALS (small, secondary) ==================== */}
-      <section id="professionals" className="py-6">
-        <Card className="border-0 shadow-lg shadow-slate-100">
-          <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-center gap-4 text-center md:text-start">
-            <div className="flex-1">
-              <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">
-                {isHe ? 'לאנשי מקצוע' : 'For professionals'}
-              </p>
-              <h3 className="text-xl font-bold text-slate-800 mb-1">
-                {isHe ? 'עובדים עם ילדים באופן מקצועי?' : 'Work with children professionally?'}
-              </h3>
-              <p className="text-slate-500 text-sm">
-                {isHe
-                  ? 'אנחנו בונים כלים מותאמים אישית למטפלים ולאנשי התפתחות הילד. חלק כבר קיים, הרבה עוד בפיתוח.'
-                  : "We're building personalized tools for therapists and child-development professionals. Some exists today, much is still in development."}
-              </p>
-            </div>
-            <Link to={visionPath}>
-              <Button variant="outline" className="rounded-xl">{isHe ? 'לקרוא עוד' : 'Learn more'}</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </section>
-
       {/* ==================== MAYA SAMPLE (unchanged from live Home) ==================== */}
       <section className="py-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
@@ -597,6 +573,30 @@ export default function HomeNew() {
 
       {/* ==================== TESTIMONIALS (unchanged from live Home) ==================== */}
       <TestimonialsCarousel />
+
+      {/* ==================== FOR PROFESSIONALS - soft, secondary, NOT in the main nav ==================== */}
+      <section id="professionals" className="py-6">
+        <Card className="border-0 shadow-md shadow-slate-100">
+          <CardContent className="p-6 md:p-7 flex flex-col md:flex-row items-center gap-4 text-center md:text-start bg-slate-50/60">
+            <div className="flex-1">
+              <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">
+                {isHe ? 'לאנשי מקצוע' : 'For professionals'}
+              </p>
+              <h3 className="text-lg font-bold text-slate-800 mb-1">
+                {isHe ? 'עובדים עם ילדים באופן מקצועי?' : 'Work with children professionally?'}
+              </h3>
+              <p className="text-slate-500 text-sm">
+                {isHe
+                  ? 'אנחנו בונים כלים לאנשי מקצוע גם — מטפלים, מחנכים ואנשי התפתחות הילד. עדיין בשלבי פיתוח.'
+                  : "We're building tools for professionals too - therapists, educators and child-development specialists. Still early."}
+              </p>
+            </div>
+            <Link to={visionPath}>
+              <Button variant="outline" className="rounded-xl">{isHe ? 'לקרוא עוד' : 'Learn more'}</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </section>
 
       {/* ==================== SECURITY BADGE (unchanged from live Home) ==================== */}
       <section className="py-4 flex justify-center">
