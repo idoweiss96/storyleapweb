@@ -2,6 +2,8 @@ import React from 'react';
 import { useLanguage } from '@/components/LanguageContext';
 import PageMeta from '@/components/SEO/PageMeta';
 import ActivityGameCard from '@/components/activities/ActivityGameCard';
+import Critter from '@/components/games/shared/art/Critter';
+import Icon from '@/components/games/shared/art/Icon';
 
 const GAMES_META = {
   he: {
@@ -18,11 +20,14 @@ const GAMES_META = {
 
 // The single place to register a game. Each entry renders one card in the grid.
 // Shape: { path, emoji, title: { en, he }, desc: { en, he }, access }
+// `emoji` is what ActivityGameCard renders above the title; the games pass a
+// drawn Icon or Critter there instead of a character, so the hub matches the
+// artwork inside the games.
 // Adding a game = adding an object here (plus its page + route in App.jsx).
 export const GAMES = [
   {
     path: '/games/clinic',
-    emoji: '🩺',
+    emoji: <Icon name="stethoscope" size={46} />,
     title: { en: 'My Clinic', he: 'הקליניקה שלי' },
     desc: {
       en: 'Treat the animals that come in, one tool at a time',
@@ -32,7 +37,7 @@ export const GAMES = [
   },
   {
     path: '/games/pizzeria',
-    emoji: '🍕',
+    emoji: <Icon name="pizza" size={46} />,
     title: { en: 'The Pizzeria', he: 'הפיצרייה' },
     desc: {
       en: 'Add toppings, bake, slice and serve the order',
@@ -42,7 +47,7 @@ export const GAMES = [
   },
   {
     path: '/games/garage',
-    emoji: '🔧',
+    emoji: <Icon name="wrench" size={46} />,
     title: { en: 'The Garage', he: 'המוסך' },
     desc: {
       en: 'Match the right tool to each fault, then paint the car',
@@ -52,7 +57,7 @@ export const GAMES = [
   },
   {
     path: '/games/store',
-    emoji: '🛒',
+    emoji: <Icon name="basket" size={46} />,
     title: { en: 'The Store', he: 'החנות' },
     desc: {
       en: 'A game for two: fill the basket, count the coins, pay',
@@ -62,7 +67,7 @@ export const GAMES = [
   },
   {
     path: '/games/actions',
-    emoji: '🤸',
+    emoji: <Critter species="topi" expression="happy" size={52} />,
     title: { en: 'What is Topi Doing?', he: 'מה טופי עושה?' },
     desc: {
       en: 'Tap a word and Topi acts it out — a verb game',
