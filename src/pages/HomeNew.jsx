@@ -204,6 +204,7 @@ export default function HomeNew() {
       <style>{`
         html.hn2-active header.site-chrome { display: none !important; }
         html.hn2-active main { padding-top: 0 !important; }
+        html.hn2-active body { overflow-x: hidden; }
       `}</style>
 
       {/* Slim seasonal-sale strip - moved out of the hero center */}
