@@ -8,14 +8,14 @@
 
 // The tray. Order here is the order on screen.
 export const TOOLS = [
-  { id: 'stethoscope', emoji: '🩺', he: 'סטטוסקופ', en: 'Stethoscope' },
-  { id: 'thermometer', emoji: '🌡️', he: 'מדחום', en: 'Thermometer' },
-  { id: 'drops', emoji: '💧', he: 'טיפות', en: 'Drops' },
-  { id: 'medicine', emoji: '💊', he: 'תרופה', en: 'Medicine' },
-  { id: 'ice', emoji: '🧊', he: 'קרח', en: 'Ice pack' },
-  { id: 'ointment', emoji: '🧴', he: 'משחה', en: 'Ointment' },
-  { id: 'bandage', emoji: '🩹', he: 'פלסטר', en: 'Bandage' },
-  { id: 'syringe', emoji: '💉', he: 'חיסון', en: 'Shot' },
+  { id: 'stethoscope', he: 'סטטוסקופ', en: 'Stethoscope' },
+  { id: 'thermometer', he: 'מדחום', en: 'Thermometer' },
+  { id: 'drops', he: 'טיפות', en: 'Drops' },
+  { id: 'medicine', he: 'תרופה', en: 'Medicine' },
+  { id: 'ice', he: 'קרח', en: 'Ice pack' },
+  { id: 'ointment', he: 'משחה', en: 'Ointment' },
+  { id: 'bandage', he: 'פלסטר', en: 'Bandage' },
+  { id: 'syringe', he: 'חיסון', en: 'Shot' },
 ];
 
 // Each patient is a short, predictable sequence of two or three steps.
@@ -24,7 +24,7 @@ export const TOOLS = [
 export const PATIENTS = [
   {
     id: 'bear',
-    emoji: '🐻',
+    species: 'bear',
     he: { name: 'דובי', problem: 'נפלתי מהעץ והברך שלי כואבת', farewell: 'תודה! עכשיו אני יכול ללכת לבד' },
     en: { name: 'Bruno', problem: 'I fell out of the tree and my knee hurts', farewell: 'Thank you! Now I can walk on my own' },
     steps: [
@@ -42,7 +42,7 @@ export const PATIENTS = [
   },
   {
     id: 'bunny',
-    emoji: '🐰',
+    species: 'bunny',
     he: { name: 'ארנבי', problem: 'אני מרגיש חם מאוד ועייף', farewell: 'אני הולך לישון קצת. ביי!' },
     en: { name: 'Bailey', problem: 'I feel very hot and tired', farewell: 'I am going to rest a bit. Bye!' },
     steps: [
@@ -60,7 +60,7 @@ export const PATIENTS = [
   },
   {
     id: 'puppy',
-    emoji: '🐶',
+    species: 'dog',
     he: { name: 'פאדי', problem: 'האוזן שלי מזמזמת וכואבת', farewell: 'האוזן שקטה עכשיו. תודה!' },
     en: { name: 'Pudi', problem: 'My ear is buzzing and it hurts', farewell: 'My ear is quiet now. Thanks!' },
     steps: [
@@ -78,7 +78,7 @@ export const PATIENTS = [
   },
   {
     id: 'cat',
-    emoji: '🐱',
+    species: 'cat',
     he: { name: 'מיצי', problem: 'אני משתעלת כל הזמן ולא מצליחה לנשום טוב', farewell: 'אני נושמת חופשי. תודה רבה!' },
     en: { name: 'Mitzi', problem: 'I keep coughing and I cannot breathe well', farewell: 'I can breathe freely. Thank you!' },
     steps: [
@@ -101,7 +101,7 @@ export const PATIENTS = [
   },
   {
     id: 'koala',
-    emoji: '🐨',
+    species: 'koala',
     he: { name: 'קואלי', problem: 'באתי לקבל חיסון ואני קצת מפחד', farewell: 'זה היה מהיר. הייתי אמיץ!' },
     en: { name: 'Koali', problem: 'I came for a shot and I am a little scared', farewell: 'That was quick. I was brave!' },
     steps: [
@@ -124,7 +124,7 @@ export const PATIENTS = [
   },
   {
     id: 'frog',
-    emoji: '🐸',
+    species: 'frog',
     he: { name: 'קווקי', problem: 'יש לי פריחה על היד והיא מגרדת נורא', farewell: 'זה כבר לא מגרד. תודה!' },
     en: { name: 'Croaky', problem: 'I have a rash on my arm and it itches a lot', farewell: 'It stopped itching. Thank you!' },
     steps: [
