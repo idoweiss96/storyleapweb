@@ -243,7 +243,7 @@ function HeroPreview({ isHe }) {
   return (
     <div className="relative mx-auto w-[16.5rem] sm:w-[18rem] md:w-[19rem] max-w-full my-3">
       {/* included: parent guidance - tucked to the top corner, mostly in the margin */}
-      <div className="relative z-10 flex justify-end pe-3 mb-[-0.55rem]">
+      <div className="relative z-10 flex justify-end pe-3 mb-[-0.375rem]">
         <span className={pill}>
           <Heart className="w-3 h-3 text-rose-400" aria-hidden="true" />
           {isHe ? 'הכוונה להורה' : 'Parent guidance'}
@@ -270,8 +270,8 @@ function HeroPreview({ isHe }) {
         </div>
       </div>
 
-      {/* included: gentle activities - tucked to the bottom corner, opposite side */}
-      <div className="relative z-10 flex justify-start ps-3 mt-[-0.55rem]">
+      {/* included: gentle activities - just below the card, opposite side, clear of the caption */}
+      <div className="relative z-10 flex justify-start ps-3 mt-[0.35rem]">
         <span className={pill}>
           <Sparkles className="w-3 h-3 text-sky-400" aria-hidden="true" />
           {isHe ? 'פעילויות עדינות' : 'Gentle activities'}
@@ -279,7 +279,7 @@ function HeroPreview({ isHe }) {
       </div>
 
       {/* why it matters - a supporting line, softer and centred so it reads apart from the "what" pills */}
-      <div className="mt-3.5 flex justify-center">
+      <div className="mt-3 flex justify-center">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-violet-50/80 border border-violet-100 px-3.5 py-1.5 text-[11px] md:text-xs font-semibold text-violet-800">
           <MessageCircle className="w-3.5 h-3.5 text-violet-400 shrink-0" aria-hidden="true" />
           {isHe ? 'פתח לשיחות רגשיות' : 'A doorway to emotional conversations'}
