@@ -13,7 +13,7 @@ import { useLanguage } from '@/components/LanguageContext';
 import { base44 } from '@/api/base44Client';
 import PageMeta from '@/components/SEO/PageMeta';
 import NoIndexMeta from '@/components/SEO/NoIndexMeta';
-import { LEAPY_AVATAR_URI } from '@/components/home-new/leapyAvatar';
+import { LEAPY_AVATAR_URI, LEAPY_AVATAR_URI_B } from '@/components/home-new/leapyAvatar';
 
 /*
  * ProfessionalsNew  -  isolated review page at /professionals-new.
@@ -227,7 +227,7 @@ export default function ProfessionalsNew() {
                 className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-white text-sm font-semibold"
                 style={{ background: ROYAL }}
               >
-                {isHe ? 'שותפי פיתוח' : 'Design partner'}
+                {isHe ? 'דברו איתנו' : 'Contact us'}
               </a>
             </div>
           </div>
@@ -266,47 +266,47 @@ export default function ProfessionalsNew() {
               </div>
             </motion.div>
 
-            {/* input -> output visual */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.12 }}
-              className="rounded-3xl bg-white/80 border border-white shadow-xl shadow-slate-200/60 p-4 sm:p-5"
-            >
-              <div className="grid sm:grid-cols-[1fr_auto_1fr] gap-3 items-center">
-                <div className="rounded-2xl bg-white border border-slate-200/70 shadow-sm p-4">
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-2">
-                    {isHe ? 'הקשר הילד' : "Child's context"}
-                  </p>
-                  <div className="space-y-1.5">
-                    {(isHe
-                      ? ['פרידה בבוקר בגן', 'מטרה: להיפרד ברוגע', 'אוהב/ת: דינוזאורים']
-                      : ['Morning drop-off at preschool', 'Goal: separate calmly', 'Loves: dinosaurs']
-                    ).map((c) => (
-                      <div key={c} className="text-xs rounded-lg bg-slate-50 border border-slate-100 px-2.5 py-1.5 text-slate-600">{c}</div>
-                    ))}
+            {/* professional-tool mockup: child/family context -> tool selection -> home continuity */}
+            <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5, delay: 0.12 }}>
+              <div className="mx-auto max-w-md rounded-[28px] bg-white border border-slate-200 shadow-2xl shadow-slate-300/40 p-2.5">
+                <div className="flex justify-center pb-1.5"><span className="w-1.5 h-1.5 rounded-full bg-slate-200" /></div>
+                <div className="rounded-[20px] overflow-hidden" style={{ background: 'linear-gradient(160deg, #F7FAFF 0%, #F1ECFB 100%)' }}>
+                  <div className="flex items-center justify-between px-4 py-2.5 bg-white/70 border-b border-white">
+                    <span className="text-[11px] font-bold" style={{ color: ROYAL }}>StoryLeap · {isHe ? 'לאנשי מקצוע' : 'Professional'}</span>
+                    <span className="w-5 h-5 rounded-full bg-violet-100" />
                   </div>
-                </div>
-
-                <div className="flex sm:flex-col items-center justify-center text-slate-300 py-1">
-                  <ArrowRight className="w-5 h-5 rotate-90 sm:rotate-0 rtl:sm:rotate-180" aria-hidden="true" />
-                </div>
-
-                <div className="rounded-2xl bg-white border p-4" style={{ borderColor: 'rgba(2,25,139,0.14)' }}>
-                  <p className="text-[10px] font-bold uppercase tracking-wide mb-2" style={{ color: ROYAL }}>
-                    {isHe ? 'סיפור חברתי מותאם' : 'Personalized social story'}
-                  </p>
-                  <div className="rounded-xl p-3" style={{ background: 'linear-gradient(135deg, #EAF1FF, #F1ECFB)' }}>
-                    <p className="text-sm font-bold text-slate-800 mb-1">
-                      {isHe ? 'הפרידה של מאיה בבוקר' : "Maya's morning goodbye"}
-                    </p>
-                    <p className="text-xs text-slate-500 leading-relaxed">
-                      {isHe
-                        ? '"בבוקר אמא מלווה אותי עד הדלת. אנחנו עושים חיבוק דינוזאור, ואז אני נכנסת פנימה..."'
-                        : '"In the morning, Mom walks me to the door. We do our dinosaur hug, and then I go inside..."'}
-                    </p>
-                    <div className="flex gap-1 mt-2">
-                      {[0, 1, 2, 3].map((i) => (
-                        <span key={i} className={`w-1.5 h-1.5 rounded-full ${i === 0 ? '' : 'bg-slate-300'}`} style={i === 0 ? { background: ROYAL } : undefined} />
-                      ))}
+                  <div className="p-4 space-y-3">
+                    <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-3 flex items-center gap-3">
+                      <span className="w-9 h-9 rounded-full bg-violet-100 flex items-center justify-center text-violet-600 text-sm font-bold shrink-0">
+                        {isHe ? 'מ' : 'M'}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-800">{isHe ? 'מאיה · גיל 5' : 'Maya · age 5'}</p>
+                        <div className="flex flex-wrap gap-1.5 mt-1">
+                          {(isHe ? ['מתחילה גן', 'מטרה: פרידה רגועה'] : ['Starting kindergarten', 'Goal: calm separation']).map((c) => (
+                            <span key={c} className="text-[10px] rounded-md bg-slate-50 border border-slate-100 px-1.5 py-0.5 text-slate-500">{c}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1.5">{isHe ? 'כלים מוצעים' : 'Suggested tools'}</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { icon: BookOpen, label: isHe ? 'סיפור חברתי' : 'Social story', on: true },
+                          { icon: Sparkles, label: isHe ? 'פעילות' : 'Activity' },
+                          { icon: Home, label: isHe ? 'תרגול בבית' : 'Home practice' },
+                        ].map(({ icon: Ic, label, on }) => (
+                          <div key={label} className={`rounded-xl p-2 text-center shadow-sm bg-white ${on ? 'border-2' : 'border border-slate-100'}`} style={on ? { borderColor: 'rgba(2,25,139,0.35)' } : undefined}>
+                            <Ic className="w-4 h-4 mx-auto mb-1" style={{ color: ROYAL }} />
+                            <span className="text-[9px] font-semibold text-slate-600 leading-tight block">{label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="rounded-xl px-3 py-2 flex items-center gap-2 text-[11px] font-medium" style={{ background: 'rgba(2,25,139,0.06)', color: ROYAL }}>
+                      <Users className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                      {isHe ? 'שותף עם המשפחה · מעקב בעוד 3 ימים' : 'Shared with family · follow-up in 3 days'}
                     </div>
                   </div>
                 </div>
@@ -468,7 +468,10 @@ export default function ProfessionalsNew() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
             <Card className="h-full border-0 shadow-lg shadow-slate-100">
               <CardContent className="p-6">
-                <h3 className="text-lg font-bold text-slate-800 mb-2">{isHe ? 'להיות שותף/ת פיתוח' : 'Become a design partner'}</h3>
+                <div className="flex items-center gap-2 mb-2">
+                  <img src={LEAPY_AVATAR_URI_B} alt="" className="w-7 h-7 rounded-full object-cover" style={{ objectPosition: 'center 12%' }} />
+                  <h3 className="text-lg font-bold text-slate-800">{isHe ? 'להיות שותף/ת פיתוח' : 'Become a design partner'}</h3>
+                </div>
                 <ul className="text-sm text-slate-500 space-y-1.5">
                   {(isHe
                     ? ['לבדוק גרסאות מוקדמות', 'לתת משוב', 'לעזור לעצב תהליכי עבודה', 'להשתתף בפיילוטים']
