@@ -364,7 +364,7 @@ export default function HomeNew() {
                 <h4 className="text-lg font-bold text-slate-800 mb-2">{isHe ? 'הבוקר והערב שלי' : 'My Morning and Evening'}</h4>
                 <p className="text-slate-500 text-sm">{isHe ? 'בונים לוח שגרה אישי להדפסה לבוקר ולערב' : 'Build a printable personal routine board'}</p>
               </CardContent>
-            </Link>
+            </Card>
           </Link>
           <Link to="/FreeActivityLittleHeart">
             <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer">
@@ -372,7 +372,7 @@ export default function HomeNew() {
                 <h4 className="text-lg font-bold text-slate-800 mb-2">{isHe ? 'לב קטן מהבית' : 'A Little Heart from Home'}</h4>
                 <p className="text-slate-500 text-sm">{isHe ? 'יוצרים יחד כרטיס, מכתב או ציור לקחת בתיק' : 'Create a card, letter, or drawing to take along'}</p>
               </CardContent>
-            </Link>
+            </Card>
           </Link>
         </div>
       </section>
