@@ -14,10 +14,10 @@ export const FAULTS = {
 };
 
 export const TOOLS = [
-  { id: 'sponge', emoji: '🧽', he: 'ספוג', en: 'Sponge' },
-  { id: 'wrench', emoji: '🔧', he: 'מפתח', en: 'Wrench' },
-  { id: 'fuel', emoji: '⛽', he: 'דלק', en: 'Fuel' },
-  { id: 'bulb', emoji: '💡', he: 'נורה', en: 'Bulb' },
+  { id: 'sponge', he: 'ספוג', en: 'Sponge' },
+  { id: 'wrench', he: 'מפתח', en: 'Wrench' },
+  { id: 'fuel', he: 'דלק', en: 'Fuel' },
+  { id: 'bulb', he: 'נורה', en: 'Bulb' },
 ];
 
 export const COLORS = [
@@ -34,7 +34,7 @@ export const COLORS = [
 export const CARS = [
   {
     id: 'bunny',
-    driver: '🐰',
+    driver: 'bunny',
     color: '#4FC3E8',
     faults: ['dirty', 'flat'],
     he: { name: 'ארנבי', line: 'נסעתי בשלולית ונתקעתי. אפשר עזרה?' },
@@ -42,7 +42,7 @@ export const CARS = [
   },
   {
     id: 'fox',
-    driver: '🦊',
+    driver: 'fox',
     color: '#EF6B6B',
     faults: ['fuel', 'light'],
     he: { name: 'שועלי', line: 'נגמר לי הדלק בדיוק כשהחשיך' },
@@ -50,7 +50,7 @@ export const CARS = [
   },
   {
     id: 'bear',
-    driver: '🐻',
+    driver: 'bear',
     color: '#F5C842',
     faults: ['dirty', 'fuel', 'flat'],
     he: { name: 'דובי', line: 'האמת? הכול קצת מקולקל אצלי' },
@@ -58,7 +58,7 @@ export const CARS = [
   },
   {
     id: 'panda',
-    driver: '🐼',
+    driver: 'panda',
     color: '#E2E8F0',
     faults: ['light', 'dirty'],
     he: { name: 'פנדי', line: 'הפנס לא נדלק ואני לא רואה כלום' },
@@ -66,7 +66,7 @@ export const CARS = [
   },
   {
     id: 'koala',
-    driver: '🐨',
+    driver: 'koala',
     color: '#A78BFA',
     faults: ['flat', 'fuel', 'light'],
     he: { name: 'קואלי', line: 'באתי לטיפול גדול לפני הטיול' },
