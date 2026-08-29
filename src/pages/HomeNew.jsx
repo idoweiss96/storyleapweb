@@ -260,20 +260,29 @@ function HeroPreview({ isHe }) {
         </div>
       </div>
 
-      {/* 1. Parent guidance - touching the top-right edge (small/medium) */}
-      <span className={`${base} absolute z-10 text-xs shadow-md px-3 py-1.5`} style={{ top: '0.4rem', insetInlineEnd: '-0.4rem' }}>
+      {/* 1. Parent guidance - hangs off the top-right, overlapping the corner by ~0.9rem (small) */}
+      <span
+        className={`${base} absolute z-10 text-xs shadow-md px-3 py-1.5`}
+        style={{ top: '0.4rem', insetInlineStart: '100%', marginInlineStart: '-1.7rem' }}
+      >
         <Heart className="w-3 h-3 text-rose-400" aria-hidden="true" />
         {isHe ? 'הכוונה להורה' : 'Parent guidance'}
       </span>
 
-      {/* 3. Supporting activities - badge touching the lower-left edge (small/medium) */}
-      <span className={`${base} absolute z-10 text-xs shadow-md px-3 py-1.5`} style={{ top: '54%', insetInlineStart: '-0.55rem' }}>
+      {/* 3. Supporting activities - hangs off the lower-left, overlapping the edge by ~0.9rem (small) */}
+      <span
+        className={`${base} absolute z-10 text-xs shadow-md px-3 py-1.5`}
+        style={{ top: '52%', insetInlineEnd: '100%', marginInlineEnd: '-1.7rem' }}
+      >
         <Sparkles className="w-3 h-3 text-sky-400" aria-hidden="true" />
         {isHe ? 'פעילויות תומכות' : 'Supporting activities'}
       </span>
 
-      {/* 4. Built on evidence-informed methods - wider pill hugging the lower edge (explanatory) */}
-      <span className={`${base} absolute left-1/2 -translate-x-1/2 z-10 text-xs md:text-[13px] shadow-lg px-4 py-2`} style={{ bottom: '0.1rem' }}>
+      {/* 4. Built on evidence-informed methods - wider pill hugging the lower edge, centred (explanatory) */}
+      <span
+        className={`${base} absolute left-1/2 -translate-x-1/2 z-10 text-xs md:text-[13px] shadow-lg px-4 py-2`}
+        style={{ bottom: '0.35rem' }}
+      >
         <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
         {isHe ? 'מבוסס על שיטות מגובות מחקר' : 'Built on evidence-informed methods'}
       </span>
