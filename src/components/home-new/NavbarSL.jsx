@@ -5,6 +5,7 @@ import { Sparkles, Heart, BookOpen, Menu, X, Globe, LogOut, Star } from 'lucide-
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import { useLanguage } from '@/components/LanguageContext';
+import { LEAPY_AVATAR_URI } from '@/components/home-new/leapyAvatar';
 
 /**
  * NavbarSL - navigation for the HomeNew prototype ONLY.
@@ -94,8 +95,16 @@ export default function NavbarSL() {
       className="flex items-center gap-2 ps-1.5 pe-3.5 py-1.5 rounded-full border border-violet-200/70 shadow-sm hover:shadow-md hover:-translate-y-px transition-all"
       style={{ background: 'linear-gradient(135deg, #F2ECFB 0%, #FDEDF4 100%)' }}
     >
-      <span className="w-7 h-7 rounded-full bg-white/70 flex items-center justify-center shrink-0">
-        <LeapyAvatar className="w-6 h-6" />
+      <span className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 border border-white/80 bg-[#F0EAFB]">
+        {/* SVG fallback sits behind; the Leapy photo covers it unless it fails to load */}
+        <LeapyAvatar className="absolute inset-0 w-full h-full" />
+        <img
+          src={LEAPY_AVATAR_URI}
+          alt="Leapy"
+          className="relative w-full h-full object-cover"
+          style={{ objectPosition: 'center 10%' }}
+          onError={(e) => { e.currentTarget.remove(); }}
+        />
       </span>
       {full && <span className="text-sm font-semibold text-slate-700">{mySpaceLabel}</span>}
     </Link>
