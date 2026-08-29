@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell,
-  ChevronRight, ChevronLeft, Quote, MessageCircle,
+  ChevronRight, ChevronLeft, Quote, MessageCircle, Check,
 } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { navPathFor } from '@/lib/marketingRoutes';
@@ -76,6 +76,132 @@ function chipDestination(key) {
     case 'chip_emotions': return `${createPageUrl('CreateStory')}?from=chip_emotions&challenge=emotional_regulation`;
     default: return `${createPageUrl('CreateStory')}?from=chip_other`;
   }
+}
+
+// Moments as data, so the selector can be a real "pick, then continue"
+// interaction. Destinations are the same prefilled flows the live chips use;
+// `bedtime` is the one addition. Wording comes from the shared dictionary where
+// a key already exists.
+const MOMENTS = [
+  { key: 'chip_new', to: '/PrepareStory' },
+  { key: 'chip_fear', to: `${createPageUrl('CreateStory')}?from=chip_fear&challenge=fears` },
+  { key: 'chip_moving', to: '/PrepareStory?topic=moving_home' },
+  { key: 'chip_friendship', to: `${createPageUrl('CreateStory')}?from=chip_friendship&challenge=social_difficulty` },
+  { key: 'chip_separation', to: `${createPageUrl('CreateStory')}?from=chip_separation&challenge=separation_anxiety` },
+  { key: 'chip_emotions', to: `${createPageUrl('CreateStory')}?from=chip_emotions&challenge=emotional_regulation` },
+  { key: 'bedtime', to: `${createPageUrl('CreateStory')}?from=chip_bedtime&challenge=sleep_issues`, he: 'שעת השינה', en: 'Bedtime' },
+  { key: 'chip_other', to: `${createPageUrl('CreateStory')}?from=chip_other` },
+];
+
+const HERO_STORY_IMG =
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/465dd64af_image3.png';
+
+/*
+ * One meaningful visual anchor for the hero: a personalized-story preview with
+ * small "activity" and "parent guidance" cards peeking behind it. Built from the
+ * existing StoryLeap visual language (soft rounded card, pastel, gentle tilt)
+ * around a real StoryLeap story illustration - no stock imagery.
+ * NOTE: Leapy would sit at the bottom-inline-start corner here once an approved
+ * hosted asset URL exists; left out for now rather than faked.
+ */
+function HeroPreview({ isHe }) {
+  return (
+    <div className="relative mx-auto w-full max-w-[15rem] sm:max-w-xs md:max-w-sm">
+      <div className="rounded-3xl bg-white border border-white shadow-xl shadow-slate-200/70 overflow-hidden" style={{ transform: 'rotate(-2deg)' }}>
+        <div className="aspect-[4/3] overflow-hidden bg-slate-50">
+          <img
+            src={HERO_STORY_IMG}
+            alt={isHe ? 'עמוד מתוך סיפור מותאם אישית' : 'A page from a personalized story'}
+            loading="eager"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="flex items-center gap-2 px-4 py-3">
+          <span className="w-7 h-7 rounded-xl bg-violet-100 flex items-center justify-center shrink-0">
+            <BookOpen className="w-4 h-4 text-violet-500" />
+          </span>
+          <span className="text-sm font-semibold text-slate-700">
+            {isHe ? 'סיפור מותאם אישית' : 'A personalized story'}
+          </span>
+        </div>
+      </div>
+
+      <div className="absolute rounded-2xl bg-sky-50 border border-sky-100 shadow-lg px-3.5 py-2.5"
+        style={{ bottom: '-1rem', insetInlineStart: '-1rem', transform: 'rotate(3deg)' }}>
+        <span className="text-xs font-bold text-sky-800">{isHe ? 'פעילות' : 'Activity'}</span>
+      </div>
+      <div className="absolute rounded-2xl bg-rose-50 border border-rose-100 shadow-lg px-3.5 py-2.5"
+        style={{ top: '-1rem', insetInlineEnd: '-0.75rem', transform: 'rotate(-3deg)' }}>
+        <span className="text-xs font-bold text-rose-800">{isHe ? 'הכוונה להורה' : 'Parent guidance'}</span>
+      </div>
+    </div>
+  );
+}
+
+/*
+ * The central Moment selector - larger, calmer, more premium, no emoji.
+ * Pick a moment, then the primary CTA becomes contextual to that choice.
+ */
+function MomentBox({ isHe, t, onOpenModal }) {
+  const navigate = useNavigate();
+  const [selected, setSelected] = useState(null);
+  const sel = MOMENTS.find((m) => m.key === selected);
+  const label = (m) => (m.he ? (isHe ? m.he : m.en) : t(m.key));
+
+  return (
+    <div id="moments" className="scroll-mt-24 max-w-3xl mx-auto rounded-3xl bg-white/85 border border-white/70 shadow-xl shadow-slate-200/60 px-5 py-7 md:px-10 md:py-9">
+      <div className="text-center mb-5 md:mb-7">
+        <h2 className="text-xl md:text-3xl font-extrabold text-slate-800 mb-1.5">{t('hero_chips_title')}</h2>
+        <p className="text-sm md:text-base text-slate-500">
+          {isHe ? 'בוחרים את הרגע, ואנחנו מובילים אתכם לכלים הנכונים.' : "Choose the moment, and we'll guide you to the right tools."}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
+        {MOMENTS.map((m) => {
+          const on = selected === m.key;
+          return (
+            <button
+              key={m.key}
+              type="button"
+              aria-pressed={on}
+              onClick={() => setSelected(on ? null : m.key)}
+              className={`flex items-center justify-between gap-1.5 rounded-2xl px-4 py-4 md:py-5 text-sm md:text-[15px] font-semibold text-start leading-snug transition-all duration-200 ${
+                on
+                  ? 'border-2 border-[#4FC3E8] bg-sky-50 text-slate-800 shadow-md'
+                  : 'border border-slate-200 bg-white text-slate-700 hover:border-[#9ad9ee] hover:shadow-md hover:-translate-y-0.5'
+              }`}
+            >
+              <span>{label(m)}</span>
+              {on && <Check className="w-4 h-4 text-[#37b6df] shrink-0" />}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="mt-6 md:mt-7 flex flex-col items-center gap-2.5">
+        <Button
+          size="lg"
+          onClick={() => (sel ? navigate(sel.to) : onOpenModal())}
+          className="h-14 px-8 rounded-full text-base md:text-lg font-bold text-white hover:scale-105 active:scale-95 hover:opacity-90 transition-all duration-300 border-0"
+          style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)', boxShadow: '0 10px 40px rgba(255,111,181,0.25), 0 4px 20px rgba(79,195,232,0.2)' }}
+        >
+          {sel
+            ? (isHe ? 'לראות תמיכה עבור הרגע הזה ←' : 'Explore support for this moment →')
+            : (isHe ? 'בואו נתחיל יחד ←' : "Let's start together →")}
+        </Button>
+        {sel ? (
+          <button type="button" onClick={() => setSelected(null)} className="text-xs md:text-sm text-slate-400 hover:text-slate-600 underline">
+            {isHe ? 'לבחור רגע אחר' : 'Pick a different moment'}
+          </button>
+        ) : (
+          <button type="button" onClick={onOpenModal} className="text-xs md:text-sm text-slate-400 hover:text-slate-600 underline">
+            {isHe ? 'עזרו לי לבחור' : 'Help me choose'}
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 // Copied verbatim from src/pages/Home.jsx - same visual, same content.
@@ -233,53 +359,35 @@ export default function HomeNew() {
           ))}
         </div>
 
-        <div className="relative text-center max-w-3xl mx-auto px-4">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-medium mb-5 border border-blue-100">
-              <Sparkles className="w-4 h-4" />
-              {t('hero_badge')}
-            </div>
-
-            <h1 className="text-3xl md:text-5xl font-bold text-slate-800 mb-4 leading-tight">
-              {t('hero_headline')}
-            </h1>
-
-            <p className="text-base md:text-lg text-slate-500 mb-6 leading-relaxed whitespace-pre-line max-w-2xl mx-auto">
-              {t('hero_headline_sub')}
-            </p>
-
-            {/* Moment selector - moved up, same StoryLeap card + chip language */}
-            <div id="moments" className="mb-4 rounded-2xl bg-white/80 shadow-lg shadow-slate-200/60 px-4 py-6 md:px-8 md:py-7">
-              <p className="text-xl md:text-2xl font-extrabold text-slate-800 mb-4">{t('hero_chips_title')}</p>
-              <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-xl mx-auto">
-                {CHIP_ITEMS.map((chip) => (
-                  <Link key={chip.key} to={chipDestination(chip.key)}>
-                    <span className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 hover:scale-105 ${chip.className}`}>
-                      <span>{chip.icon}</span>
-                      {t(chip.key)}
-                    </span>
-                  </Link>
-                ))}
+        <div className="relative max-w-6xl mx-auto px-4">
+          {/* headline + one meaningful visual anchor */}
+          <div className="grid md:grid-cols-[1.1fr_0.9fr] gap-8 md:gap-12 items-center mb-9 md:mb-11">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center md:text-start">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 text-sm font-medium mb-5 border border-blue-100">
+                <Sparkles className="w-4 h-4" />
+                {t('hero_badge')}
               </div>
-            </div>
+              <h1 className="text-3xl md:text-5xl font-bold text-slate-800 mb-4 leading-tight">
+                {t('hero_headline')}
+              </h1>
+              <p className="text-base md:text-lg text-slate-500 leading-relaxed whitespace-pre-line max-w-xl mx-auto md:mx-0">
+                {t('hero_headline_sub')}
+              </p>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.15 }}>
+              <HeroPreview isHe={isHe} />
+            </motion.div>
+          </div>
 
-            {/* Fallback CTA - same StoryLeap gradient button, now clearly secondary to the chips */}
-            <Button
-              size="lg"
-              onClick={() => setShowStartModal(true)}
-              className="h-13 px-8 rounded-full text-base md:text-lg font-bold text-white mt-1 mb-3 hover:scale-105 active:scale-95 hover:opacity-90 transition-all duration-300 border-0"
-              style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)', boxShadow: '0 10px 40px rgba(255,111,181,0.25), 0 4px 20px rgba(79,195,232,0.2)' }}
-            >
-              {isHe ? 'עדיין לא בטוחים? בואו נתחיל יחד ←' : "Not sure yet? Let's start together →"}
-            </Button>
+          {/* Moment box - the single strong central interaction */}
+          <MomentBox isHe={isHe} t={t} onOpenModal={() => setShowStartModal(true)} />
 
-            {/* One quiet trust line (replaces the two promo pills) */}
-            <p className="text-xs md:text-sm text-slate-400 max-w-lg mx-auto">
-              {isHe
-                ? 'בשימוש אצל 200+ משפחות · פרטי ובהובלת ההורה · גישה מבוססת מחקר'
-                : 'Used by 200+ families · Private & parent-guided · Evidence-informed approach'}
-            </p>
-          </motion.div>
+          {/* One quiet trust line (replaces the two promo pills) */}
+          <p className="text-xs md:text-sm text-slate-400 max-w-lg mx-auto text-center mt-5">
+            {isHe
+              ? 'בשימוש אצל 200+ משפחות · פרטי ובהובלת ההורה · גישה מבוססת מחקר'
+              : 'Used by 200+ families · Private & parent-guided · Evidence-informed approach'}
+          </p>
         </div>
       </section>
 
