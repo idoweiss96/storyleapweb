@@ -5,13 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
-  Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, Dumbbell,
+  Sparkles, Star, BookOpen, Wand2, Heart, ArrowLeft, ArrowRight, Dumbbell,
   ChevronRight, ChevronLeft, Quote, MessageCircle, Check, ShieldCheck,
 } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { navPathFor } from '@/lib/marketingRoutes';
 import StoryGallery from '@/components/home/StoryGallery';
-import ActivityPlaceTeaser from '@/components/home/ActivityPlaceTeaser';
 import StartModal from '@/components/home/StartModal';
 import PageMeta from '@/components/SEO/PageMeta';
 import NoIndexMeta from '@/components/SEO/NoIndexMeta';
@@ -240,19 +239,30 @@ function HeroPreview({ isHe }) {
   const pill =
     'absolute z-10 inline-flex items-center gap-1 rounded-full bg-white/95 border border-slate-200/80 shadow-md px-2 py-1 md:px-2.5 md:py-1.5 text-[10px] md:text-xs font-semibold text-slate-700 whitespace-nowrap';
   const gi = 'w-2.5 h-2.5 md:w-3 md:h-3 shrink-0';
+  // Clicking the card enters the SAME personalized-story flow as the Create Story CTA.
+  const storyHref = `${createPageUrl('CreateStory')}?from=hero_image`;
   return (
-    <div className="relative mx-auto w-[16.5rem] sm:w-[17.5rem] md:w-[19rem] max-w-full my-5">
-      {/* CARD - the centre of the composition */}
-      <div className="rounded-3xl bg-white border border-white shadow-xl shadow-slate-200/70 overflow-hidden">
-        <div className="aspect-[4/3] overflow-hidden bg-slate-50">
+    <div className="group relative mx-auto w-[16.5rem] sm:w-[17.5rem] md:w-[19rem] max-w-full my-5 transition-transform duration-300 ease-out hover:-translate-y-1">
+      {/* CARD - the centre of the composition, and a clickable entry to the story flow */}
+      <Link
+        to={storyHref}
+        aria-label={isHe ? 'ליצירת סיפור מותאם אישית' : 'Create a personalized story'}
+        className="block rounded-3xl bg-white border border-white shadow-xl shadow-slate-200/70 group-hover:shadow-2xl group-hover:shadow-slate-300/50 transition-shadow duration-300 overflow-hidden cursor-pointer"
+      >
+        <div className="relative aspect-[4/3] overflow-hidden bg-slate-50">
           <img
             src={HERO_STORY_IMG}
             alt={isHe ? 'עמוד מתוך סיפור מותאם אישית' : 'A page from a personalized story'}
             loading="eager"
             className="w-full h-full object-cover"
           />
+          {/* subtle hover affordance - no big button, appears only on hover */}
+          <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1.5 pt-10 pb-2.5 px-3 text-white text-xs font-semibold bg-gradient-to-t from-black/55 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {isHe ? 'ליצירת סיפור מותאם אישית' : 'Create a personalized story'}
+            <ArrowRight className={`w-3.5 h-3.5 ${isHe ? 'rotate-180' : ''}`} aria-hidden="true" />
+          </span>
         </div>
-      </div>
+      </Link>
 
       {/* four corners - identical pill, one per corner, poking ~10px past the edge */}
       <span className={pill} style={{ top: OV, insetInlineStart: OV }}>
@@ -572,7 +582,29 @@ export default function HomeNew() {
         </div>
       </section>
 
-      {/* ==================== KITA ALEF BANNER (unchanged from live Home) ==================== */}
+      {/* ==================== MAYA SAMPLE - a concrete product example, right after How it works ==================== */}
+      <section className="pt-6 pb-8">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <Card className="border-0 shadow-lg shadow-amber-100 overflow-hidden">
+            <CardContent className="p-0">
+              <div className="flex flex-col md:flex-row items-center gap-6 p-6 md:p-8" style={{ background: 'linear-gradient(135deg, #fff8ed 0%, #fde8c8 100%)' }}>
+                <div className="flex-1 text-center md:text-right">
+                  <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-2">✨ {t('maya_sample')}</p>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-2">{t('maya_title')}</h3>
+                  <Link to="/MayaStory">
+                    <Button className="rounded-xl px-6" style={{ background: '#c07028', color: 'white' }}>
+                      📖 {t('maya_btn')}
+                    </Button>
+                  </Link>
+                </div>
+                <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/7455564e3_MAYA.png" alt="Princess Maya" className="w-36 md:w-44 object-contain drop-shadow-lg rounded-md" />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </section>
+
+      {/* ==================== KITA ALEF BANNER (Starting School Special) ==================== */}
       <section className="py-4">
         <Link to={kitaAlefPath}>
           <motion.div
@@ -601,19 +633,19 @@ export default function HomeNew() {
         </Link>
       </section>
 
-      {/* ==================== ACTIVITIES (grouped: free set + Activity Place) ==================== */}
+      {/* ==================== ACTIVITIES - ONE section: supporting tools for the experience ==================== */}
       <section className="py-8">
         <div className="text-center mb-6">
           <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-1">
             {isHe ? 'פעילויות שמלוות את החוויה' : 'Activities that support the experience'}
           </h3>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 text-sm max-w-xl mx-auto">
             {isHe
-              ? 'כלים קצרים לצד הסיפור — או בפני עצמם. בלי הרשמה, בלי תשלום.'
-              : 'Short tools to use alongside a story - or on their own. No signup, no payment.'}
+              ? 'כלים קצרים לשימוש לצד החוויה שלכם ב-StoryLeap — ועוד פעילויות לגלות מתי שתצטרכו.'
+              : 'Short tools to use alongside your StoryLeap experience - with more activities to explore whenever you need them.'}
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
           <Link to="/FreeActivityGoodbye">
             <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer">
               <CardContent className="p-6 text-center">
@@ -638,10 +670,38 @@ export default function HomeNew() {
               </CardContent>
             </Card>
           </Link>
+          <Link to="/activities/emotion-wheel">
+            <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <h4 className="text-lg font-bold text-slate-800 mb-2">{isHe ? 'גלגל הרגשות' : 'The Emotion Wheel'}</h4>
+                <p className="text-slate-500 text-sm">{isHe ? 'מסובבים את הגלגל ומדברים על הרגש שיצא' : 'Spin the wheel and talk about the feeling it lands on'}</p>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/activities/emotion-thermometer">
+            <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <h4 className="text-lg font-bold text-slate-800 mb-2">{isHe ? 'מד החום של הרגשות' : 'The Feelings Thermometer'}</h4>
+                <p className="text-slate-500 text-sm">{isHe ? 'מסמנים כמה הרגש חזק, ומגלים מה יכול לעזור' : 'Mark how strong a feeling is, and what can help'}</p>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/activities/emotion-drawing">
+            <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all cursor-pointer">
+              <CardContent className="p-6 text-center">
+                <h4 className="text-lg font-bold text-slate-800 mb-2">{isHe ? 'ציור הרגש' : 'Draw the Feeling'}</h4>
+                <p className="text-slate-500 text-sm">{isHe ? 'בוחרים רגש ומציירים איך הוא נראה' : 'Pick a feeling and draw what it looks like'}</p>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
+        <div className="text-center mt-7">
+          <Link to="/activities" className="inline-flex items-center gap-2 text-slate-700 font-semibold hover:text-slate-900 underline">
+            {isHe ? 'לכל הפעילויות' : 'Explore all activities'}
+            <ArrowRight className={`w-4 h-4 ${isHe ? 'rotate-180' : ''}`} aria-hidden="true" />
+          </Link>
         </div>
       </section>
-
-      <ActivityPlaceTeaser />
 
       {/* ==================== FEATURES (unchanged from live Home) ==================== */}
       <section className="py-12">
@@ -668,28 +728,6 @@ export default function HomeNew() {
             );
           })}
         </div>
-      </section>
-
-      {/* ==================== MAYA SAMPLE (unchanged from live Home) ==================== */}
-      <section className="py-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <Card className="border-0 shadow-lg shadow-amber-100 overflow-hidden">
-            <CardContent className="p-0">
-              <div className="flex flex-col md:flex-row items-center gap-6 p-6 md:p-8" style={{ background: 'linear-gradient(135deg, #fff8ed 0%, #fde8c8 100%)' }}>
-                <div className="flex-1 text-center md:text-right">
-                  <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide mb-2">✨ {t('maya_sample')}</p>
-                  <h3 className="text-2xl font-bold text-slate-800 mb-2">{t('maya_title')}</h3>
-                  <Link to="/MayaStory">
-                    <Button className="rounded-xl px-6" style={{ background: '#c07028', color: 'white' }}>
-                      📖 {t('maya_btn')}
-                    </Button>
-                  </Link>
-                </div>
-                <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/7455564e3_MAYA.png" alt="Princess Maya" className="w-36 md:w-44 object-contain drop-shadow-lg rounded-md" />
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
       </section>
 
       {/* ==================== STORY GALLERY (moved lower - de-emphasise the catalog) ==================== */}
