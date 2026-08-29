@@ -83,15 +83,28 @@ function chipDestination(key) {
 // `bedtime` is the one addition. Wording comes from the shared dictionary where
 // a key already exists.
 const MOMENTS = [
-  { key: 'chip_new', to: '/PrepareStory' },
-  { key: 'chip_fear', to: `${createPageUrl('CreateStory')}?from=chip_fear&challenge=fears` },
-  { key: 'chip_moving', to: '/PrepareStory?topic=moving_home' },
-  { key: 'chip_friendship', to: `${createPageUrl('CreateStory')}?from=chip_friendship&challenge=social_difficulty` },
-  { key: 'chip_separation', to: `${createPageUrl('CreateStory')}?from=chip_separation&challenge=separation_anxiety` },
-  { key: 'chip_emotions', to: `${createPageUrl('CreateStory')}?from=chip_emotions&challenge=emotional_regulation` },
-  { key: 'bedtime', to: `${createPageUrl('CreateStory')}?from=chip_bedtime&challenge=sleep_issues`, he: 'שעת השינה', en: 'Bedtime' },
-  { key: 'chip_other', to: `${createPageUrl('CreateStory')}?from=chip_other` },
+  { key: 'chip_new', tone: 'peach', to: '/PrepareStory' },
+  { key: 'chip_fear', tone: 'lavender', to: `${createPageUrl('CreateStory')}?from=chip_fear&challenge=fears` },
+  { key: 'chip_moving', tone: 'blue', to: '/PrepareStory?topic=moving_home' },
+  { key: 'chip_friendship', tone: 'blush', to: `${createPageUrl('CreateStory')}?from=chip_friendship&challenge=social_difficulty` },
+  { key: 'chip_separation', tone: 'mint', to: `${createPageUrl('CreateStory')}?from=chip_separation&challenge=separation_anxiety` },
+  { key: 'chip_emotions', tone: 'rose', to: `${createPageUrl('CreateStory')}?from=chip_emotions&challenge=emotional_regulation` },
+  { key: 'bedtime', tone: 'night', to: `${createPageUrl('CreateStory')}?from=chip_bedtime&challenge=sleep_issues`, he: 'שעת השינה', en: 'Bedtime' },
+  { key: 'chip_other', tone: 'neutral', to: `${createPageUrl('CreateStory')}?from=chip_other` },
 ];
+
+// Soft StoryLeap colour identity per moment category. Full literal class strings
+// so the Tailwind scanner keeps them. No icons, no emoji - colour is the cue.
+const TONE = {
+  peach:    { card: 'bg-amber-50/70 border-amber-100 hover:border-amber-200',   sel: 'bg-amber-50 border-amber-300 ring-2 ring-amber-200',   swatch: 'bg-amber-200/80',  check: 'text-amber-600' },
+  lavender: { card: 'bg-violet-50/70 border-violet-100 hover:border-violet-200', sel: 'bg-violet-50 border-violet-300 ring-2 ring-violet-200', swatch: 'bg-violet-200/80', check: 'text-violet-600' },
+  blue:     { card: 'bg-sky-50/80 border-sky-100 hover:border-sky-200',          sel: 'bg-sky-50 border-sky-300 ring-2 ring-sky-200',          swatch: 'bg-sky-200/80',    check: 'text-sky-600' },
+  blush:    { card: 'bg-pink-50/70 border-pink-100 hover:border-pink-200',       sel: 'bg-pink-50 border-pink-300 ring-2 ring-pink-200',       swatch: 'bg-pink-200/80',   check: 'text-pink-600' },
+  mint:     { card: 'bg-teal-50/70 border-teal-100 hover:border-teal-200',       sel: 'bg-teal-50 border-teal-300 ring-2 ring-teal-200',       swatch: 'bg-teal-200/80',   check: 'text-teal-600' },
+  rose:     { card: 'bg-rose-50/70 border-rose-100 hover:border-rose-200',       sel: 'bg-rose-50 border-rose-300 ring-2 ring-rose-200',       swatch: 'bg-rose-200/80',   check: 'text-rose-600' },
+  night:    { card: 'bg-indigo-50/70 border-indigo-100 hover:border-indigo-200', sel: 'bg-indigo-50 border-indigo-300 ring-2 ring-indigo-200', swatch: 'bg-indigo-200/80', check: 'text-indigo-600' },
+  neutral:  { card: 'bg-slate-50 border-slate-200 hover:border-slate-300',       sel: 'bg-slate-100 border-slate-300 ring-2 ring-slate-200',   swatch: 'bg-slate-300/70', check: 'text-slate-600' },
+};
 
 const HERO_STORY_IMG =
   'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697f4b704975c71e9cf56f59/465dd64af_image3.png';
@@ -139,8 +152,9 @@ function HeroPreview({ isHe }) {
 }
 
 /*
- * The central Moment selector - larger, calmer, more premium, no emoji.
- * Pick a moment, then the primary CTA becomes contextual to that choice.
+ * The central Moment selector - the entry point to a StoryLeap experience.
+ * Larger, colour-coded, no emoji. Pick a moment, then the primary CTA becomes
+ * contextual to that choice.
  */
 function MomentBox({ isHe, t, onOpenModal }) {
   const navigate = useNavigate();
@@ -149,37 +163,46 @@ function MomentBox({ isHe, t, onOpenModal }) {
   const label = (m) => (m.he ? (isHe ? m.he : m.en) : t(m.key));
 
   return (
-    <div id="moments" className="scroll-mt-24 max-w-3xl mx-auto rounded-3xl bg-white/85 border border-white/70 shadow-xl shadow-slate-200/60 px-5 py-7 md:px-10 md:py-9">
-      <div className="text-center mb-5 md:mb-7">
+    <div id="experiences" className="scroll-mt-24 max-w-3xl mx-auto rounded-3xl bg-white/90 border border-white/80 shadow-xl shadow-slate-200/70 px-5 py-8 md:px-10 md:py-10">
+      <div className="text-center mb-6 md:mb-8">
+        <span className="inline-block text-[11px] font-bold tracking-wide text-violet-500 bg-violet-50 rounded-full px-3 py-1 mb-3">
+          {isHe ? 'כאן מתחילה חוויה' : 'A StoryLeap experience starts here'}
+        </span>
         <h2 className="text-xl md:text-3xl font-extrabold text-slate-800 mb-1.5">{t('hero_chips_title')}</h2>
         <p className="text-sm md:text-base text-slate-500">
           {isHe ? 'בוחרים את הרגע, ואנחנו מובילים אתכם לכלים הנכונים.' : "Choose the moment, and we'll guide you to the right tools."}
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {MOMENTS.map((m) => {
           const on = selected === m.key;
+          const T = TONE[m.tone] || TONE.neutral;
           return (
             <button
               key={m.key}
               type="button"
               aria-pressed={on}
               onClick={() => setSelected(on ? null : m.key)}
-              className={`flex items-center justify-between gap-1.5 rounded-2xl px-4 py-4 md:py-5 text-sm md:text-[15px] font-semibold text-start leading-snug transition-all duration-200 ${
-                on
-                  ? 'border-2 border-[#4FC3E8] bg-sky-50 text-slate-800 shadow-md'
-                  : 'border border-slate-200 bg-white text-slate-700 hover:border-[#9ad9ee] hover:shadow-md hover:-translate-y-0.5'
+              className={`relative flex flex-col items-start gap-2.5 text-start rounded-2xl border px-4 py-4 md:px-5 md:py-5 transition-all duration-200 ${
+                on ? `${T.sel} shadow-md` : `${T.card} hover:-translate-y-1 hover:shadow-lg`
               }`}
             >
-              <span>{label(m)}</span>
-              {on && <Check className="w-4 h-4 text-[#37b6df] shrink-0" />}
+              <span className={`w-8 h-8 rounded-xl ${T.swatch}`} aria-hidden="true" />
+              <span className="text-sm md:text-[15px] font-bold text-slate-700 leading-snug">{label(m)}</span>
+              {on && (
+                <Check
+                  className={`absolute w-4 h-4 ${T.check}`}
+                  strokeWidth={3}
+                  style={{ top: '0.7rem', insetInlineEnd: '0.7rem' }}
+                />
+              )}
             </button>
           );
         })}
       </div>
 
-      <div className="mt-6 md:mt-7 flex flex-col items-center gap-2.5">
+      <div className="mt-7 flex flex-col items-center gap-2.5">
         <Button
           size="lg"
           onClick={() => (sel ? navigate(sel.to) : onOpenModal())}
@@ -187,7 +210,7 @@ function MomentBox({ isHe, t, onOpenModal }) {
           style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)', boxShadow: '0 10px 40px rgba(255,111,181,0.25), 0 4px 20px rgba(79,195,232,0.2)' }}
         >
           {sel
-            ? (isHe ? 'לראות תמיכה עבור הרגע הזה ←' : 'Explore support for this moment →')
+            ? (isHe ? 'לגלות את החוויה הזו ←' : 'Explore this experience →')
             : (isHe ? 'בואו נתחיל יחד ←' : "Let's start together →")}
         </Button>
         {sel ? (
@@ -368,10 +391,14 @@ export default function HomeNew() {
                 {t('hero_badge')}
               </div>
               <h1 className="text-3xl md:text-5xl font-bold text-slate-800 mb-4 leading-tight">
-                {t('hero_headline')}
+                {isHe
+                  ? 'חוויות מותאמות אישית שעוזרות לילד/ה שלכם להרגיש שמבינים אותו/ה'
+                  : 'Personalized experiences that help your child feel understood'}
               </h1>
-              <p className="text-base md:text-lg text-slate-500 leading-relaxed whitespace-pre-line max-w-xl mx-auto md:mx-0">
-                {t('hero_headline_sub')}
+              <p className="text-base md:text-lg text-slate-500 leading-relaxed max-w-xl mx-auto md:mx-0">
+                {isHe
+                  ? 'ספרו לנו מה עובר על הילד/ה שלכם, ואנחנו נלווה אתכם בזה — סיפור מותאם אישית, פעילויות עדינות, והכוונה מעשית להורים.'
+                  : "Tell us what your child is going through, and we'll walk through it with you - a personalized story, gentle activities, and practical guidance for the grown-ups."}
               </p>
             </motion.div>
             <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.15 }}>
@@ -395,10 +422,12 @@ export default function HomeNew() {
       <section id="how" className="py-10">
         <div className="text-center mb-6">
           <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
-            {isHe ? 'איך זה עובד — הורה, ילד/ה, ביחד' : 'How it works — parent, child, together'}
+            {isHe ? 'איך זה עובד' : 'How it works'}
           </h2>
           <p className="text-slate-500">
-            {isHe ? 'לא משהו שהילד/ה עושה לבד. משהו שעוברים יחד.' : "Not something your child does alone. Something you move through together."}
+            {isHe
+              ? 'כל חוויה נבנית סביב רגע אחד אמיתי: הכוונה להורה, סיפור מותאם אישית, ופעילויות שמלוות אותו.'
+              : 'Each experience is built around one real moment: parent guidance, a personalized story, and activities that support it.'}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -452,10 +481,12 @@ export default function HomeNew() {
       <section className="py-8">
         <div className="text-center mb-6">
           <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-1">
-            {isHe ? 'פעילויות חינמיות לעשות יחד' : 'Free activities to do together'}
+            {isHe ? 'פעילויות שמלוות את החוויה' : 'Activities that support the experience'}
           </h3>
           <p className="text-slate-500 text-sm">
-            {isHe ? 'בלי הרשמה, בלי תשלום, פשוט לעשות יחד' : 'No signup, no payment, just do it together'}
+            {isHe
+              ? 'כלים קצרים לצד הסיפור — או בפני עצמם. בלי הרשמה, בלי תשלום.'
+              : 'Short tools to use alongside a story - or on their own. No signup, no payment.'}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
