@@ -58,6 +58,12 @@ import ActivityBreathing from './pages/ActivityBreathing';
 import ActivitySafePlace from './pages/ActivitySafePlace';
 import ActivityVisualRules from './pages/ActivityVisualRules';
 import ActivityCalmCorner from './pages/ActivityCalmCorner';
+import Games from './pages/Games';
+import GameClinic from './pages/GameClinic';
+import GamePizzeria from './pages/GamePizzeria';
+import GameGarage from './pages/GameGarage';
+import GameStore from './pages/GameStore';
+import GameActions from './pages/GameActions';
 // --- Redesign prototype (additive, isolated, noindex). Not in production nav. ---
 import HomeNew from './pages/HomeNew';
 
@@ -161,6 +167,12 @@ const AuthenticatedApp = () => {
       <Route path="/activities/safe-place" element={<LayoutWrapper currentPageName="ActivitySafePlace"><ActivitySafePlace /></LayoutWrapper>} />
       <Route path="/activities/visual-rules" element={<LayoutWrapper currentPageName="ActivityVisualRules"><ActivityVisualRules /></LayoutWrapper>} />
       <Route path="/activities/calm-corner" element={<LayoutWrapper currentPageName="ActivityCalmCorner"><ActivityCalmCorner /></LayoutWrapper>} />
+      <Route path="/games" element={<LayoutWrapper currentPageName="Games"><Games /></LayoutWrapper>} />
+      <Route path="/games/clinic" element={<LayoutWrapper currentPageName="GameClinic"><GameClinic /></LayoutWrapper>} />
+      <Route path="/games/pizzeria" element={<LayoutWrapper currentPageName="GamePizzeria"><GamePizzeria /></LayoutWrapper>} />
+      <Route path="/games/garage" element={<LayoutWrapper currentPageName="GameGarage"><GameGarage /></LayoutWrapper>} />
+      <Route path="/games/store" element={<LayoutWrapper currentPageName="GameStore"><GameStore /></LayoutWrapper>} />
+      <Route path="/games/actions" element={<LayoutWrapper currentPageName="GameActions"><GameActions /></LayoutWrapper>} />
       <Route path="/HomeNew" element={<LayoutWrapper currentPageName="HomeNew"><HomeNew /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
