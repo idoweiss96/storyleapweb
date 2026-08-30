@@ -24,12 +24,12 @@ export default function HomeScreen({ onStart }) {
 
   const SECTIONS = isEn
     ? [
-        { emoji: '💭', title: 'Feelings', desc: 'Emotions before starting kindergarten, things that might be a bit scary, and moments of separation.' },
-        { emoji: '👨‍👩‍👧', title: 'Who matters to you?', desc: 'Close people and friends.' },
-        { emoji: '🎨', title: 'What do you love?', desc: 'Hobbies, heroes, and what helps when things feel uncomfortable.' },
-        { emoji: '🎒', title: 'Kindergarten', desc: 'Expectations, small worries, and visiting the school.' },
-        { emoji: '🌟', title: 'Wishes', desc: "Wishes from the child and from you for the coming year." },
-        { emoji: '📸', title: 'Photos', desc: 'Your photo and family photos, to prepare the story.' },
+        { emoji: '💭', title: 'Feelings', desc: 'Before starting kindergarten and moments of separation' },
+        { emoji: '👨‍👩‍👧', title: 'Who matters to you?', desc: 'Close people and friends' },
+        { emoji: '🎨', title: 'What do you love?', desc: 'Hobbies, heroes, and what helps when uncomfortable' },
+        { emoji: '🎒', title: 'Kindergarten', desc: 'Expectations and visiting the school' },
+        { emoji: '🌟', title: 'Wishes', desc: 'For the coming year' },
+        { emoji: '📸', title: 'Photos', desc: 'Your photo and family photos' },
       ]
     : [
         { emoji: '💭', title: 'רגשות', desc: 'תחושות לפני העלייה לכיתה א׳ ורגעי פרידה' },
@@ -41,7 +41,7 @@ export default function HomeScreen({ onStart }) {
       ];
 
   const introText = isEn
-    ? "This is a time for a fun, shared conversation with your child about starting kindergarten. Ask together, answer together, and feel free to add your own perspective in the fields marked \"Parent\". Along the way, we'll go through several parts together:"
+    ? "This is a time for a fun, shared conversation with your child about starting kindergarten. Ask together and answer together. Along the way, we'll go through several parts together:"
     : 'זה הזמן לשיח משותף וכיפי עם הילד/ה לקראת העלייה לכיתה א׳. שאלו יחד וענו ביחד. לאורך הדרך נעבור יחד בכמה חלקים:';
 
   return (
