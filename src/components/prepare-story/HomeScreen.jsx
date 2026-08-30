@@ -33,20 +33,19 @@ export default function HomeScreen({ onStart }) {
         { emoji: '📸', title: 'Photos', desc: "Upload a photo of your child, so the character in the illustrations really looks like them." },
       ]
     : [
-        { emoji: '🗓️', title: 'הנושא', desc: 'מעבר דירה, אח חדש, ביקור ראשון אצל רופא השיניים, גמילה, כניסה לגן ועוד 46 נושאים.' },
-        { emoji: '📋', title: 'מה יקרה', desc: 'תארו את מה שצפוי לקרות, שלב אחר שלב ולפי הסדר. זה אחד החלקים החשובים ביותר בספר.' },
-        { emoji: '👂', title: 'איך זה ירגיש', desc: 'מה הילד או הילדה יראו, ישמעו וירגישו, כדי שהחוויה האמיתית תהיה מוכרת וצפויה יותר.' },
-        { emoji: '🙋', title: 'התפקיד שלהם', desc: 'מה הם יוכלו לעשות, לבחור או להגיד במהלך האירוע. כשיש לילד תפקיד ברור, קל יותר להרגיש חלק ממה שקורה.' },
-        { emoji: '📸', title: 'תמונות', desc: 'העלו תמונה של הילד או הילדה, כדי שהדמות באיורים תהיה דומה להם.' },
+        { emoji: '🗓️', title: 'מה עומד לקרות', desc: 'למשל מעבר דירה, גן חדש או ביקור אצל רופא' },
+        { emoji: '📋', title: 'איך זה ייראה', desc: 'מה צפוי לקרות, לפי הסדר' },
+        { emoji: '🧒', title: 'מה הילד/ה כבר יודע/ת', desc: 'ומה מרגיש סביב זה' },
+        { emoji: '📸', title: 'תמונות', desc: 'לא חובה, אבל יהפכו את הסיפור לאישי ומוכר יותר' },
       ];
 
   const introText = isEn
     ? 'A preparation book works best when it is accurate and concrete. When a child knows in advance what is about to happen, what things will look like, what they will hear and what the order will be, the event turns from something unfamiliar into something they already met in a story. So the more concrete you are with the details, the better the book can prepare them.'
-    : 'ספר הכנה עובד הכי טוב כשהוא מדויק ומוחשי. כשילד או ילדה יודעים מראש מה עומד לקרות, איך הדברים ייראו, מה הם ישמעו ומה יהיה הסדר, האירוע הופך ממשהו לא מוכר למשהו שכבר פגשו בסיפור. לכן, ככל שתהיו קונקרטיים יותר בפרטים, כך הספר יוכל להכין אותם טוב יותר.';
+    : 'כדי ליצור את הסיפור, נצטרך רק:';
 
   const noWorry = isEn
     ? "If your child hasn't asked questions or shown any concern, just say so. The book won't introduce fear or worry that isn't there. The goal is to prepare them for what's ahead, without creating new concerns."
-    : 'אם הילד או הילדה לא שאלו שאלות ולא הביעו חשש, פשוט כתבו את זה. הספר לא יכניס פחד או דאגה שלא קיימים. המטרה היא להכין אותם למה שצפוי, בלי ליצור חששות חדשים.';
+    : 'לא נוסיף לסיפור פחדים שהילד/ה לא הביע/ה.';
 
   return (
     <div className="min-h-[75vh] flex flex-col items-center justify-center px-4 py-10 rounded-3xl" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
@@ -69,12 +68,12 @@ export default function HomeScreen({ onStart }) {
           {isEn ? 'Turning the unfamiliar into the familiar 🗓️' : 'הופכים את הלא מוכר למוכר 🗓️'}
         </h1>
         <p className="text-[13px] text-center mb-4" style={{ color: '#FF6FB5' }}>
-          {isEn ? 'A personalized digital preparation book, 5 minutes to create' : 'ספר הכנה דיגיטלי מותאם אישית, 5 דקות ליצירה'}
+          {isEn ? 'A personal preparation story that helps your child know in advance what to expect' : 'סיפור הכנה אישי שעוזר לילד/ה להכיר מראש מה הולך לקרות ולהגיע מוכנים יותר'}
         </p>
 
         <div className="mb-5 rounded-2xl p-4 border" style={{ background: '#FFF8EC', borderColor: '#F5C842' }}>
-          <p className="text-[13px] leading-relaxed mb-3" style={{ color: '#7A5000' }}>
-            <span className="font-semibold">{isEn ? 'Before you start ♥' : 'לפני שמתחילים ♥'}</span> {introText}
+          <p className="text-[13px] leading-relaxed mb-3 font-semibold" style={{ color: '#7A5000' }}>
+            {introText}
           </p>
           <ul className="space-y-1.5">
             {SECTIONS.map((s, i) => (
@@ -88,7 +87,7 @@ export default function HomeScreen({ onStart }) {
 
         <div className="mb-5 rounded-2xl p-4 border" style={{ background: '#EAF8FD', borderColor: '#B8EBF7' }}>
           <p className="text-[12.5px] leading-relaxed" style={{ color: '#1A1A6E' }}>
-            <span className="font-semibold">{isEn ? "No difficulty required 🌤️" : 'לא חייב להיות קושי 🌤️'}</span> {noWorry}
+            <span className="font-semibold">{isEn ? "No worries or difficulty? Great. 💡" : 'אין חשש או קושי? מעולה. 💡'}</span> {noWorry}
           </p>
         </div>
 
@@ -97,7 +96,7 @@ export default function HomeScreen({ onStart }) {
           className="w-full py-3.5 rounded-[14px] text-white font-semibold hover:opacity-90 transition-opacity"
           style={{ background: 'linear-gradient(135deg, #4FC3E8, #FF6FB5)' }}
         >
-          {isEn ? "Let's create it →" : 'בואו ניצור אותו ←'}
+          {isEn ? "Let's create the preparation story →" : 'בואו ניצור סיפור הכנה ←'}
         </button>
       </motion.div>
 
