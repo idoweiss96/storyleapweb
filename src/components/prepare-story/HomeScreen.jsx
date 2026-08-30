@@ -33,19 +33,19 @@ export default function HomeScreen({ onStart }) {
         { emoji: '📸', title: 'Photos', desc: "Upload a photo of your child, so the character in the illustrations really looks like them." },
       ]
     : [
-        { emoji: '🗓️', title: 'מה עומד לקרות', desc: 'למשל מעבר דירה, גן חדש או ביקור אצל רופא' },
-        { emoji: '📋', title: 'איך זה ייראה', desc: 'מה צפוי לקרות, לפי הסדר' },
-        { emoji: '🧒', title: 'מה הילד/ה כבר יודע/ת', desc: 'ומה מרגיש סביב זה' },
+        { emoji: '🗓️', title: 'מה עומד לקרות', desc: 'למשל מעבר דירה, גן חדש, אח או אחות חדשים, או ביקור אצל רופא' },
+        { emoji: '📋', title: 'איך זה ייראה', desc: 'מה צפוי לקרות, שלב אחר שלב ולפי הסדר' },
+        { emoji: '🧒', title: 'מה הילד/ה כבר יודע/ת', desc: 'ומה הוא/היא מרגיש/ה סביב זה' },
         { emoji: '📸', title: 'תמונות', desc: 'לא חובה, אבל יהפכו את הסיפור לאישי ומוכר יותר' },
       ];
 
   const introText = isEn
     ? 'A preparation book works best when it is accurate and concrete. When a child knows in advance what is about to happen, what things will look like, what they will hear and what the order will be, the event turns from something unfamiliar into something they already met in a story. So the more concrete you are with the details, the better the book can prepare them.'
-    : 'כדי ליצור את הסיפור, נצטרך רק:';
+    : 'כשילד או ילדה יודעים מראש מה עומד לקרות, האירוע הופך ממשהו לא מוכר למשהו שכבר פגשו בסיפור. כדי ליצור את הסיפור, נצטרך רק:';
 
   const noWorry = isEn
     ? "If your child hasn't asked questions or shown any concern, just say so. The book won't introduce fear or worry that isn't there. The goal is to prepare them for what's ahead, without creating new concerns."
-    : 'לא נוסיף לסיפור פחדים שהילד/ה לא הביע/ה.';
+    : 'אם הילד או הילדה לא הביעו חשש, פשוט כתבו את זה. לא נוסיף לסיפור פחדים שלא הביעו, המטרה היא להכין אותם למה שצפוי בלי ליצור חששות חדשים.';
 
   return (
     <div className="min-h-[75vh] flex flex-col items-center justify-center px-4 py-10 rounded-3xl" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
