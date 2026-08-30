@@ -32,17 +32,17 @@ export default function HomeScreen({ onStart }) {
         { emoji: '📸', title: 'Photos', desc: 'Your photo and family photos, to prepare the story.' },
       ]
     : [
-        { emoji: '💭', title: 'רגשות', desc: 'לפני העלייה לכיתה א׳' },
-        { emoji: '👨‍👩‍👧', title: 'מי חשוב לך?', desc: 'קרובים וחברים' },
-        { emoji: '🎨', title: 'מה אוהבים?', desc: 'תחביבים וגיבורים' },
-        { emoji: '🎒', title: 'כיתה א׳', desc: 'ציפיות וביקור בבית הספר' },
-        { emoji: '🌟', title: 'משאלות', desc: 'לקראת השנה' },
-        { emoji: '📸', title: 'תמונות', desc: 'שלך ושל המשפחה' },
+        { emoji: '💭', title: 'רגשות', desc: 'תחושות לפני העלייה לכיתה א׳ ורגעי פרידה' },
+        { emoji: '👨‍👩‍👧', title: 'מי חשוב לך?', desc: 'אנשים קרובים וחברים' },
+        { emoji: '🎨', title: 'מה אוהבים?', desc: 'תחביבים, גיבורים ומה שעוזר כשלא נעים' },
+        { emoji: '🎒', title: 'כיתה א׳', desc: 'ציפיות, דאגות קטנות וביקור בבית הספר' },
+        { emoji: '🌟', title: 'משאלות', desc: 'איחולים של הילד/ה ושלכם לקראת השנה' },
+        { emoji: '📸', title: 'תמונות', desc: 'תמונה שלך ותמונות משפחה' },
       ];
 
   const introText = isEn
     ? "This is a time for a fun, shared conversation with your child about starting kindergarten. Ask together, answer together, and feel free to add your own perspective in the fields marked \"Parent\". Along the way, we'll go through several parts together:"
-    : 'שיח משותף וכיפי עם הילד/ה לקראת כיתה א׳. נעבור יחד בכמה חלקים:';
+    : 'זה הזמן לשיח משותף וכיפי עם הילד/ה לקראת העלייה לכיתה א׳. שאלו יחד וענו ביחד. לאורך הדרך נעבור יחד בכמה חלקים:';
 
   return (
     <div className="min-h-[75vh] flex flex-col items-center justify-center px-4 py-10 rounded-3xl" style={{ background: 'linear-gradient(135deg, #EAF8FD 0%, #FFF0F7 100%)' }}>
