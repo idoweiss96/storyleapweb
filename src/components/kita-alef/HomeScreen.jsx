@@ -72,6 +72,12 @@ export default function HomeScreen({ onStart }) {
         <div className="mb-5 rounded-2xl p-4 border" style={{ background: '#FFF8EC', borderColor: '#F5C842' }}>
           <p className="text-[13px] leading-relaxed mb-3" style={{ color: '#7A5000' }}>
             <span className="font-semibold">{isEn ? 'For parents ♥' : 'להורים ♥'}</span> {introText}
+            {' '}
+            <span className="font-bold">
+              {isEn
+                ? 'From your answers we\'ll create a personal, emotional story to prepare for kindergarten, with questions for a shared conversation.'
+                : 'מהתשובות שלכם ניצור סיפור רגשי ואישי להכנה לכיתה א׳, עם שאלות לשיח משותף.'}
+            </span>
           </p>
           <ul className="space-y-1.5">
             {SECTIONS.map((s, i) => (
