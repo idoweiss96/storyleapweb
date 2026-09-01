@@ -11,35 +11,79 @@
 html, body {
   height: 100%;
   overflow: hidden;
-  background: #efefef;
+  background: #f3f2fb;
   font-family: "Segoe UI", Tahoma, Arial, "Helvetica Neue", sans-serif;
   -webkit-text-size-adjust: 100%;
 }
 body { user-select: none; -webkit-tap-highlight-color: transparent; }
 
-/* dvh פותר את סרגל הכתובת הנייד שמכרסם מ-100vh. vh נשאר כגיבוי לדפדפן ישן. */
+/* הרקע הפסטלי משוחזר ב-CSS ולא כתמונה: שכבות של radial-gradient נותנות
+   את הבוקה והנצנוצים בכמה מאות בייטים במקום עוד קובץ בקובץ העצמאי.
+   הוא יושב על #stage, והסרגל התחתון שקוף — כך הרקע נמשך גם מתחתיו. */
 #stage {
   position: fixed; inset: 0;
   height: 100vh; height: 100dvh;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr auto;
-  background: linear-gradient(160deg, #fbfbfb 0%, #ededed 55%, #e3e3e3 100%);
+  background:
+    /* נצנוצים קטנים */
+    radial-gradient(circle at 22% 6%,  rgba(236,120,170,.55) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 66% 12%, rgba(120,160,235,.55) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 79% 33%, rgba(120,160,235,.45) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 13% 50%, rgba(150,120,215,.40) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 58% 68%, rgba(235,190,90,.50)  0 1.5px, transparent 2px),
+    /* הבזק אור */
+    radial-gradient(circle at 31% 52%, rgba(255,255,255,.95) 0 3%, rgba(255,255,255,0) 16%),
+    /* בוקה רך */
+    radial-gradient(circle at 48% 20%, rgba(255,255,255,.75) 0 4%, transparent 15%),
+    radial-gradient(circle at 20% 22%, rgba(255,255,255,.60) 0 5%, transparent 17%),
+    radial-gradient(circle at 72% 46%, rgba(255,255,255,.55) 0 4%, transparent 14%),
+    radial-gradient(circle at 40% 62%, rgba(255,255,255,.55) 0 5%, transparent 16%),
+    radial-gradient(circle at 63% 82%, rgba(255,255,255,.50) 0 4%, transparent 15%),
+    radial-gradient(circle at 15% 88%, rgba(255,255,255,.45) 0 4%, transparent 14%),
+    /* מעבר הצבע הבסיסי */
+    linear-gradient(178deg,
+      #f7e6f0 0%, #faf1f7 14%, #fdfaFC 30%,
+      #fbfaFE 48%, #f2f2fc 66%, #e7ecfa 84%, #dde8f9 100%);
   transition: background .45s ease;
 }
 
 #progress { position: absolute; top: 0; inset-inline: 0; height: 3px; width: 0;
   background: rgba(160,130,70,.55); transition: width .35s ease; z-index: 60; }
 
-#viewport { position: relative; overflow: hidden; grid-row: 1; }
+/* perspective נדרש כדי שסיבוב ה-Y של העמוד ייראה כדף שמתהפך ולא
+   כהתכווצות שטוחה. */
+#viewport { position: relative; overflow: hidden; grid-row: 1;
+  perspective: 2000px; perspective-origin: 50% 50%; }
 
 /* ── שקופיות ─────────────────────────────────────────────── */
 .slide {
   position: absolute; inset: 0;
   opacity: 0; pointer-events: none;
-  transition: opacity .4s ease;
+  transition: opacity .28s ease;
 }
 .slide.active { opacity: 1; pointer-events: auto; }
+
+/* ── דפדוף ───────────────────────────────────────────────
+   הדף נכנס מסובב סביב הציר האנכי שבצד הכריכה. RTL: קדימה = שמאלה,
+   ולכן הדף הנכנס מגיע מהצד הימני, ולאחור להפך. */
+.slide.active .book { animation: page-in-next .42s cubic-bezier(.22,.61,.36,1) both; }
+.slide.active.back .book { animation-name: page-in-prev; }
+
+@keyframes page-in-next {
+  from { transform: rotateY(-42deg) translateX(6%); opacity: .25; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes page-in-prev {
+  from { transform: rotateY(42deg) translateX(-6%); opacity: .25; }
+  to   { transform: none; opacity: 1; }
+}
+.book { transform-origin: center center; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide.active .book { animation: none; }
+}
 
 /* עמוד סיפור: הספר צף על הרקע הבהיר עם צל, כמו ב-HeyZine, ולא נמרח
    על כל המסך. הכריכה ועמוד הסיום נשארים מלאי־מסך. */
@@ -129,18 +173,16 @@ body { user-select: none; -webkit-tap-highlight-color: transparent; }
   background: #fdf6e3;
   position: relative;
 }
+/* בעמודי הסיפור נשאר רק מספר העמוד. שם הסיפור מופיע על הכריכה, וחזרה
+   עליו בכל עמוד רק גזלה מקום מהטקסט. */
 .page-head {
   flex-shrink: 0; position: relative;
   display: flex; align-items: center; justify-content: center;
-  min-height: clamp(34px, 6.2vmin, 74px);
-  padding: .4em clamp(46px, 9vmin, 90px);
+  min-height: clamp(24px, 4.2vmin, 46px);
+  padding: .3em clamp(14px, 3vmin, 30px);
   background: #f0e1c3; border-bottom: 2px solid #c8b48c;
 }
-.head-title { color: #c5962a; font-weight: 600; text-align: center;
-  line-height: 1.25; font-size: clamp(.66rem, 1.9vmin, 1.4rem);
-  overflow-wrap: break-word; }
-.head-page { position: absolute; inset-inline-end: clamp(10px, 2vmin, 26px);
-  color: #c5962a; white-space: nowrap;
+.head-page { color: #c5962a; white-space: nowrap;
   font-size: clamp(.58rem, 1.5vmin, 1.05rem); }
 
 .page-body {
@@ -177,39 +219,44 @@ body { user-select: none; -webkit-tap-highlight-color: transparent; }
   position: absolute; top: 50%; transform: translateY(-50%); z-index: 55;
   width: clamp(34px,6vmin,50px); height: clamp(34px,6vmin,50px);
   border-radius: 50%; cursor: pointer;
-  background: rgba(255,255,255,.82); border: 1px solid rgba(0,0,0,.14);
+  background: #7c3aed; border: none;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,.16);
+  box-shadow: 0 3px 12px rgba(124,58,237,.35);
   transition: background .2s, opacity .2s;
 }
-.nav svg { width: 42%; height: 42%; fill: none; stroke: #6b5836;
-  stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-.nav:hover { background: #fff; }
+.nav:hover { background: #6d28d9; }
+.nav svg { width: 42%; height: 42%; fill: none; stroke: #fff;
+  stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
 .nav[disabled] { opacity: 0; pointer-events: none; }
 #prev { inset-inline-start: clamp(4px,1.4vmin,20px); }
 #next { inset-inline-end:   clamp(4px,1.4vmin,20px); }
 
 /* ── סרגל תחתון — קריינות ומונה בלבד ─────────────────────── */
+/* שקוף בכוונה — הרקע של #stage נמשך מתחתיו במקום פס לבן חוצץ. */
 #bar {
   grid-row: 2; display: flex; align-items: center; justify-content: center;
   gap: 12px; padding: clamp(6px,1.2vmin,11px) clamp(12px,3vw,28px);
   padding-bottom: calc(clamp(6px,1.2vmin,11px) + env(safe-area-inset-bottom, 0px));
-  background: rgba(255,255,255,.72); border-top: 1px solid rgba(0,0,0,.08);
-  backdrop-filter: blur(8px); z-index: 50;
+  background: transparent; border: none; z-index: 50;
 }
 #audio-wrap { display: flex; align-items: center; gap: 10px; min-width: 0; }
 #audio-btn {
   width: clamp(36px,6.4vmin,46px); height: clamp(36px,6.4vmin,46px);
   flex-shrink: 0; border-radius: 50%; cursor: pointer;
-  background: #c5962a; border: none; color: #fff;
+  background: #7c3aed; border: none; color: #fff;
   font-size: clamp(.85rem,2.2vmin,1.1rem); line-height: 1;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.2); transition: background .2s;
+  box-shadow: 0 3px 12px rgba(124,58,237,.35); transition: background .2s;
 }
-#audio-btn:hover { background: #b0841f; }
+#audio-btn:hover { background: #6d28d9; }
 #audio-btn[disabled] { opacity: .28; cursor: default; box-shadow: none; }
-#counter { color: #7a6a4c; font-size: clamp(.68rem,1.8vmin,.9rem);
-  letter-spacing: .5px; white-space: nowrap; }
+
+/* direction: ltr כדי שמונה העמודים יוצג 3 / 5 ולא 5 / 3. המסמך RTL,
+   ומחרוזת של ספרות וסלאש היא תווים ניטרליים — האלגוריתם הדו-כיווני
+   הופך אותה. הבידוד מונע מהכפייה לדלוף החוצה. */
+#counter { color: #6b5b8a; font-size: clamp(.68rem,1.8vmin,.9rem);
+  letter-spacing: .5px; white-space: nowrap;
+  direction: ltr; unicode-bidi: isolate; }
 
 /* ── פורטרט: איור למעלה, טקסט למטה ───────────────────────── */
 /* ── פורטרט: עמוד בודד בכל פעם, כמו HeyZine בטלפון ─────────
@@ -264,7 +311,6 @@ body { user-select: none; -webkit-tap-highlight-color: transparent; }
         <div class="spread">
           <div class="panel-text">
             <div class="page-head">
-              <span class="head-title">המחנה החדש של מאיה</span>
               <span class="head-page">עמוד 1</span>
             </div>
             <div class="page-body">
@@ -281,7 +327,6 @@ body { user-select: none; -webkit-tap-highlight-color: transparent; }
         <div class="spread">
           <div class="panel-text">
             <div class="page-head">
-              <span class="head-title">המחנה החדש של מאיה</span>
               <span class="head-page">עמוד 2</span>
             </div>
             <div class="page-body">
@@ -298,7 +343,6 @@ body { user-select: none; -webkit-tap-highlight-color: transparent; }
         <div class="spread">
           <div class="panel-text">
             <div class="page-head">
-              <span class="head-title">המחנה החדש של מאיה</span>
               <span class="head-page">עמוד 3</span>
             </div>
             <div class="page-body">
@@ -315,7 +359,6 @@ body { user-select: none; -webkit-tap-highlight-color: transparent; }
         <div class="spread">
           <div class="panel-text">
             <div class="page-head">
-              <span class="head-title">המחנה החדש של מאיה</span>
               <span class="head-page">עמוד 4</span>
             </div>
             <div class="page-body">
@@ -332,7 +375,6 @@ body { user-select: none; -webkit-tap-highlight-color: transparent; }
         <div class="spread">
           <div class="panel-text">
             <div class="page-head">
-              <span class="head-title">המחנה החדש של מאיה</span>
               <span class="head-page">עמוד 5</span>
             </div>
             <div class="page-body">
@@ -579,14 +621,19 @@ function syncAudioBtn() {
 });
 
 /* ── מעבר בין עמודים ───────────────────────────────────── */
-function show(n) {
+function show(n, dir) {
   if (n < 0 || n >= steps.length) return;
   stopAudio();
-  slides.forEach(function (s) { s.classList.remove('active'); });
+  slides.forEach(function (s) { s.classList.remove('active', 'back'); });
 
   current = n;
   var st = steps[current];
   var s  = slides[st.i];
+  /* מפעילים מחדש את האנימציה גם כשנשארים באותה שקופית ומחליפים רק
+     חצי עמוד (איור→טקסט בפורטרט): בלי זה הדפדוף לא היה נראה שם. */
+  s.classList.remove('active');
+  void s.offsetWidth;
+  if (dir < 0) s.classList.add('back');
   s.classList.add('active');
 
   var sp = s.querySelector('.spread');
@@ -618,7 +665,7 @@ function show(n) {
   if (el && st.part !== 'img') fitText(el);
 }
 
-function go(d) { show(current + d); }
+function go(d) { show(current + d, d); }
 
 /* מקלדת: המסמך RTL, אז חץ שמאל מתקדם */
 document.addEventListener('keydown', function (e) {
