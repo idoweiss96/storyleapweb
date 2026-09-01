@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>המחנה החדש של מאיה</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #f3f2fb;
+  font-family: "Segoe UI", Tahoma, Arial, "Helvetica Neue", sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+body { user-select: none; -webkit-tap-highlight-color: transparent; }
+
+/* הרקע הפסטלי משוחזר ב-CSS ולא כתמונה: שכבות של radial-gradient נותנות
+   את הבוקה והנצנוצים בכמה מאות בייטים במקום עוד קובץ בקובץ העצמאי.
+   הוא יושב על #stage, והסרגל התחתון שקוף — כך הרקע נמשך גם מתחתיו. */
+#stage {
+  position: fixed; inset: 0;
+  height: 100vh; height: 100dvh;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  background:
+    /* נצנוצים קטנים */
+    radial-gradient(circle at 22% 6%,  rgba(236,120,170,.55) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 66% 12%, rgba(120,160,235,.55) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 79% 33%, rgba(120,160,235,.45) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 13% 50%, rgba(150,120,215,.40) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 58% 68%, rgba(235,190,90,.50)  0 1.5px, transparent 2px),
+    /* הבזק אור */
+    radial-gradient(circle at 31% 52%, rgba(255,255,255,.95) 0 3%, rgba(255,255,255,0) 16%),
+    /* בוקה רך */
+    radial-gradient(circle at 48% 20%, rgba(255,255,255,.75) 0 4%, transparent 15%),
+    radial-gradient(circle at 20% 22%, rgba(255,255,255,.60) 0 5%, transparent 17%),
+    radial-gradient(circle at 72% 46%, rgba(255,255,255,.55) 0 4%, transparent 14%),
+    radial-gradient(circle at 40% 62%, rgba(255,255,255,.55) 0 5%, transparent 16%),
+    radial-gradient(circle at 63% 82%, rgba(255,255,255,.50) 0 4%, transparent 15%),
+    radial-gradient(circle at 15% 88%, rgba(255,255,255,.45) 0 4%, transparent 14%),
+    /* מעבר הצבע הבסיסי */
+    linear-gradient(178deg,
+      #f7e6f0 0%, #faf1f7 14%, #fdfaFC 30%,
+      #fbfaFE 48%, #f2f2fc 66%, #e7ecfa 84%, #dde8f9 100%);
+  transition: background .45s ease;
+}
+
+#progress { position: absolute; top: 0; inset-inline: 0; height: 3px; width: 0;
+  background: rgba(160,130,70,.55); transition: width .35s ease; z-index: 60; }
+
+/* perspective נדרש כדי שסיבוב ה-Y של העמוד ייראה כדף שמתהפך ולא
+   כהתכווצות שטוחה. */
+#viewport { position: relative; overflow: hidden; grid-row: 1;
+  perspective: 2000px; perspective-origin: 50% 50%; }
+
+/* ── שקופיות ─────────────────────────────────────────────── */
+.slide {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity .28s ease;
+}
+.slide.active { opacity: 1; pointer-events: auto; }
+
+/* ── דפדוף ───────────────────────────────────────────────
+   הדף נכנס מסובב סביב הציר האנכי שבצד הכריכה. RTL: קדימה = שמאלה,
+   ולכן הדף הנכנס מגיע מהצד הימני, ולאחור להפך. */
+.slide.active .book { animation: page-in-next .42s cubic-bezier(.22,.61,.36,1) both; }
+.slide.active.back .book { animation-name: page-in-prev; }
+
+@keyframes page-in-next {
+  from { transform: rotateY(-42deg) translateX(6%); opacity: .25; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes page-in-prev {
+  from { transform: rotateY(42deg) translateX(-6%); opacity: .25; }
+  to   { transform: none; opacity: 1; }
+}
+.book { transform-origin: center center; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide.active .book { animation: none; }
+}
+
+/* עמוד סיפור: הספר צף על הרקע הבהיר עם צל, כמו ב-HeyZine, ולא נמרח
+   על כל המסך. הכריכה ועמוד הסיום נשארים מלאי־מסך. */
+.slide.story { display: flex; align-items: center; justify-content: center;
+  padding: clamp(6px, 2.2vmin, 30px); }
+
+/* ── כריכה וסיום ─────────────────────────────────────────── */
+/* גם הן עמוד 3:4 שצף על הרקע הבהיר עם צל, ולא מסך מלא. ב-HeyZine
+   הכריכה היא עמוד בודד גם בלנדסקייפ. */
+.cover, .ending {
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(6px, 2.2vmin, 30px);
+}
+/* ── עוטף הספר + ערימת קצוות העמודים ─────────────────────────
+   ה-JS קובע את מידות .book, והעמוד עצמו ממלא אותו. הערימה מצוירת
+   מחוץ לקצוות, ולכן היא חייבת עוטף — .spread ו-.page הם overflow:hidden
+   וגוזמים כל דבר שחורג מהם. */
+.book { position: relative; flex: 0 0 auto; }
+.book::before, .book::after {
+  content: ''; position: absolute;
+  top: 1.4%; bottom: 1.4%; width: clamp(4px, .9vmin, 9px);
+  background: repeating-linear-gradient(to right,
+    #fdfdfb 0 1.5px, #cec8ba 1.5px 2.2px);
+  box-shadow: 0 3px 12px rgba(0,0,0,.18);
+  border-radius: 2px; z-index: 0;
+}
+.book::before { inset-inline-start: calc(-1 * clamp(4px, .9vmin, 9px) + 1px); }
+.book::after  { inset-inline-end:   calc(-1 * clamp(4px, .9vmin, 9px) + 1px); }
+
+.spread, .page { width: 100%; height: 100%; position: relative; z-index: 1; }
+
+.page {
+  overflow: hidden;
+  box-shadow: 0 10px 44px rgba(0,0,0,.26), 0 2px 10px rgba(0,0,0,.14);
+}
+.cover-page  { background: #1b1205; }
+.ending-page { background: linear-gradient(145deg,#0f2a1f,#1a5c3a,#0f2a1f);
+  display: flex; align-items: center; justify-content: center; }
+
+/* cover ולא contain — make_cover_page גוזם למילוי העמוד (scale = max). */
+.cover-img { position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 1; }
+.cover-veil { position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(to bottom, rgba(0,0,0,.58) 0%, rgba(0,0,0,.05) 26%,
+              rgba(0,0,0,.05) 68%, rgba(0,0,0,.42) 100%); }
+.cover-box { position: relative; z-index: 3; text-align: center;
+  width: 88%; margin: 0 auto;
+  padding-top: calc(var(--pw, 700px) * 0.05); }
+
+/* --pw הוא רוחב העמוד בפיקסלים, שה-JS מציב על .book. הכותרת נגזרת ממנו
+   ולא מ-vw: היחידה הקודמת הייתה רוחב החלון, בעוד הכריכה היא עמוד 3:4
+   צר בהרבה, ולכן הכותרת התנפחה ונשברה לשלוש שורות במסך רחב.
+   6.4% מרוחב העמוד = הגודל הקודם פחות 30%, ונשאר קבוע בכל מכשיר. */
+.cover-title { color: #f5d78e; font-weight: 700; line-height: 1.2;
+  font-size: calc(var(--pw, 700px) * 0.064);
+  text-shadow: 0 0 6px #000, 0 0 22px rgba(0,0,0,.95); }
+.cover-page .btn { font-size: calc(var(--pw, 700px) * 0.026); }
+
+.ending-box { text-align: center; padding: 0 6%; }
+.ending-star { font-size: clamp(3rem, 11vw, 7rem); line-height: 1; }
+.ending-title { color: #f5d78e; font-weight: 700; margin: .2em 0 .6em;
+  font-size: clamp(2rem, 8vw, 4.5rem); text-shadow: 0 0 18px rgba(0,0,0,.9); }
+
+.btn {
+  background: rgba(245,215,142,.16); border: 2px solid #f5d78e; color: #f5d78e;
+  font: inherit; font-size: clamp(.95rem, 2.4vw, 1.2rem);
+  padding: .6em 1.8em; border-radius: 999px; cursor: pointer;
+  margin-top: 1em; transition: background .2s;
+}
+.btn:hover, .btn:focus-visible { background: rgba(245,215,142,.34); }
+
+/* ── עמוד סיפור ──────────────────────────────────────────── */
+/* המסמך RTL, והילד הראשון הוא panel-text — כלומר הטקסט מימין והאיור
+   משמאל, בדיוק כמו הפריסה שHeyZine מציג. */
+.spread {
+  display: flex; flex-direction: row;
+  background: #fdf6e3; overflow: hidden;
+  box-shadow: 0 10px 44px rgba(0,0,0,.26), 0 2px 10px rgba(0,0,0,.14);
+}
+
+/* מבנה עמוד הטקסט מחקה את העמוד המודפס שב-build_flipbook_pdf.py:
+   כותרת זהב, פס צד, פס תחתון ושוליים נדיבים. הגרסה הראשונה כאן הייתה
+   טקסט חשוף שמילא 100% מהפאנל — נמדד יפה, נראה כמו קיר טקסט. */
+.panel-text {
+  flex: 0 0 50%; min-width: 0;
+  display: flex; flex-direction: column;
+  background: #fdf6e3;
+  position: relative;
+}
+/* בעמודי הסיפור נשאר רק מספר העמוד. שם הסיפור מופיע על הכריכה, וחזרה
+   עליו בכל עמוד רק גזלה מקום מהטקסט. */
+.page-head {
+  flex-shrink: 0; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  min-height: clamp(24px, 4.2vmin, 46px);
+  padding: .3em clamp(14px, 3vmin, 30px);
+  background: #f0e1c3; border-bottom: 2px solid #c8b48c;
+}
+.head-page { color: #c5962a; white-space: nowrap;
+  font-size: clamp(.58rem, 1.5vmin, 1.05rem); }
+
+.page-body {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(14px, 3.6vmin, 62px);
+  border-inline-end: clamp(6px, 1.4vmin, 18px) solid #f0dcb4;
+}
+.page-foot { flex-shrink: 0; height: clamp(6px, 1.4vmin, 18px);
+  background: #f0dcb4; }
+
+/* גודל הטקסט נקבע ב-JS (fitText) ולא ב-CSS — clamp על vh נתן גופן קטן
+   יותר דווקא במסכים גדולים יותר. line-height חסר יחידה כדי שיגדל איתו. */
+.text-fit { width: 100%; color: #2c1a0e; text-align: start;
+  line-height: 1.85; font-size: 18px;
+  overflow-wrap: break-word; word-break: break-word; }
+
+/* האיור לעולם לא נגזם — בדיוק כמו make_image_page ב-build_flipbook_pdf.py,
+   שעושה scale = min(...). כשהעמוד הוא 3:4 והאיור 8:9, contain ממלא את כל
+   הרוחב ומשאיר פסים דקים בלבד למעלה ולמטה, מוכהים לוויניה. */
+.panel-img { flex: 0 0 50%; min-width: 0; position: relative; overflow: hidden;
+  background: #241d16; }
+.img-bg { position: absolute; inset: 0; background-size: cover;
+  background-position: center; filter: blur(24px) brightness(.4);
+  transform: scale(1.15); }
+.img-fg { position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; z-index: 1; }
+
+/* ── חצים ────────────────────────────────────────────────── */
+/* בלנדסקייפ בצדי הספר; בפורטרט בסרגל התחתון, כי שם העמוד תופס כמעט
+   את כל הרוחב והחצים היו מכסים טקסט.
+   RTL: inset-inline-start הוא הצד הימני, ושם יושב "הקודם". */
+.nav {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 55;
+  width: clamp(34px,6vmin,50px); height: clamp(34px,6vmin,50px);
+  border-radius: 50%; cursor: pointer;
+  background: #7c3aed; border: none;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 12px rgba(124,58,237,.35);
+  transition: background .2s, opacity .2s;
+}
+.nav:hover { background: #6d28d9; }
+.nav svg { width: 42%; height: 42%; fill: none; stroke: #fff;
+  stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+.nav[disabled] { opacity: 0; pointer-events: none; }
+#prev { inset-inline-start: clamp(4px,1.4vmin,20px); }
+#next { inset-inline-end:   clamp(4px,1.4vmin,20px); }
+
+/* ── סרגל תחתון — קריינות ומונה בלבד ─────────────────────── */
+/* שקוף בכוונה — הרקע של #stage נמשך מתחתיו במקום פס לבן חוצץ. */
+#bar {
+  grid-row: 2; display: flex; align-items: center; justify-content: center;
+  gap: 12px; padding: clamp(6px,1.2vmin,11px) clamp(12px,3vw,28px);
+  padding-bottom: calc(clamp(6px,1.2vmin,11px) + env(safe-area-inset-bottom, 0px));
+  background: transparent; border: none; z-index: 50;
+}
+#audio-wrap { display: flex; align-items: center; gap: 10px; min-width: 0; }
+#audio-btn {
+  width: clamp(36px,6.4vmin,46px); height: clamp(36px,6.4vmin,46px);
+  flex-shrink: 0; border-radius: 50%; cursor: pointer;
+  background: #7c3aed; border: none; color: #fff;
+  font-size: clamp(.85rem,2.2vmin,1.1rem); line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 12px rgba(124,58,237,.35); transition: background .2s;
+}
+#audio-btn:hover { background: #6d28d9; }
+#audio-btn[disabled] { opacity: .28; cursor: default; box-shadow: none; }
+
+/* direction: ltr כדי שמונה העמודים יוצג 3 / 5 ולא 5 / 3. המסמך RTL,
+   ומחרוזת של ספרות וסלאש היא תווים ניטרליים — האלגוריתם הדו-כיווני
+   הופך אותה. הבידוד מונע מהכפייה לדלוף החוצה. */
+#counter { color: #6b5b8a; font-size: clamp(.68rem,1.8vmin,.9rem);
+  letter-spacing: .5px; white-space: nowrap;
+  direction: ltr; unicode-bidi: isolate; }
+
+/* ── פורטרט: איור למעלה, טקסט למטה ───────────────────────── */
+/* ── פורטרט: עמוד בודד בכל פעם, כמו HeyZine בטלפון ─────────
+   הספר מקבל יחס 3:4 של עמוד יחיד, ובכל צעד מוצג רק אחד משני הפאנלים.
+   קודם האיור, אחריו הטקסט. ה-JS בונה את רשימת הצעדים לפי האוריינטציה. */
+@media (orientation: portrait) {
+  .spread { flex-direction: column; }
+  .panel-img, .panel-text { flex: 1 1 auto; width: 100%; min-height: 0; }
+  .spread.only-img  .panel-text { display: none; }
+  .spread.only-text .panel-img  { display: none; }
+  .page-body { border-inline-end: none;
+               border-bottom: clamp(5px,1.2vmin,14px) solid #f0dcb4; }
+
+  .nav { top: auto; transform: none;
+         bottom: calc(clamp(6px,1.2vmin,11px) + env(safe-area-inset-bottom, 0px)); }
+  #prev { inset-inline-start: clamp(14px,6vw,40px); }
+  #next { inset-inline-end:   clamp(14px,6vw,40px); }
+}
+
+/* ── טלפון שכוב: נשאר שתי עמודות ──────────────────────────
+   זה המקרה שנשבר קודם. מסך בגובה ~300px לא סובל פריסה מוערמת:
+   הטקסט והאיור קיבלו ~120px כל אחד. ברוחב יש די והותר מקום. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .spread { flex-direction: row; }
+  .panel-img  { flex: 0 0 46%; }
+  .panel-text { flex: 1 1 auto; }
+  .page-body { padding: clamp(10px,2.4vmin,20px); }
+  .slide.story { padding: 4px; }
+  #bar { padding-block: 4px; }
+  .nav, #audio-btn { width: 32px; height: 32px; font-size: .95rem; }
+}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="progress"></div>
+  <div id="viewport">
+    <section class="slide cover active">
+      <div class="book">
+        <div class="page cover-page">
+          <img class="cover-img" src="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/cover.jpg" alt="">
+          <div class="cover-veil"></div>
+          <div class="cover-box">
+            <h1 class="cover-title">המחנה החדש של מאיה</h1>
+            <button class="btn" onclick="go(1)">לחץ להתחלה</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="slide story" data-audio="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_01.mp3">
+      <div class="book">
+        <div class="spread">
+          <div class="panel-text">
+            <div class="page-head">
+              <span class="head-page">עמוד 1</span>
+            </div>
+            <div class="page-body">
+              <div class="text-fit">מאיה היא חוקרת ארצות אמיצה. היא אוהבת לצייר בעלי חיים בכל מקום שאליו היא מגיעה. היום מאיה ואימא הקימו מחנה חדש ביער הקסום. מאיה ציירה אריה על דף גדול וחשבה איזה יופי של הרפתקה מחכה להן.</div>
+            </div>
+            <div class="page-foot"></div>
+          </div>
+          <div class="panel-img"><div class="img-bg"></div><img class="img-fg" src="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_01.jpg" alt=""></div>
+        </div>
+      </div>
+    </section>
+    <section class="slide story" data-audio="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_02.mp3">
+      <div class="book">
+        <div class="spread">
+          <div class="panel-text">
+            <div class="page-head">
+              <span class="head-page">עמוד 2</span>
+            </div>
+            <div class="page-body">
+              <div class="text-fit">אבל כשהגיע הערב, הופיע יצור קטן ואפור שקוראים לו עננית הגעגוע. העננית ישבה למאיה על הכתף ולחשה מחשבה מדאיגה. מאיה חשבה: מה אם המחנה החדש לעולם לא יהיה הבית האמיתי שלי? אני רוצה לחזור למחנה הישן! מאיה הרגישה עצב גדול בבטן.</div>
+            </div>
+            <div class="page-foot"></div>
+          </div>
+          <div class="panel-img"><div class="img-bg"></div><img class="img-fg" src="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_02.jpg" alt=""></div>
+        </div>
+      </div>
+    </section>
+    <section class="slide story" data-audio="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_03.mp3">
+      <div class="book">
+        <div class="spread">
+          <div class="panel-text">
+            <div class="page-head">
+              <span class="head-page">עמוד 3</span>
+            </div>
+            <div class="page-body">
+              <div class="text-fit">אימא חיבקה את מאיה ואמרה: זה בסדר להרגיש עצב. אנחנו מתגעגעות למחנה הישן שלנו. זאת עננית הגעגוע שאומרת שהמחנה החדש ריק ולא מוכר. אבל בואי נבדוק אם זה נכון. בואי נראה אם אנחנו יכולות להביא את התחושה של הבית גם לכאן.</div>
+            </div>
+            <div class="page-foot"></div>
+          </div>
+          <div class="panel-img"><div class="img-bg"></div><img class="img-fg" src="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_03.jpg" alt=""></div>
+        </div>
+      </div>
+    </section>
+    <section class="slide story" data-audio="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_04.mp3">
+      <div class="book">
+        <div class="spread">
+          <div class="panel-text">
+            <div class="page-head">
+              <span class="head-page">עמוד 4</span>
+            </div>
+            <div class="page-body">
+              <div class="text-fit">מאיה החליטה לנסות את תרגיל ציור הכוח. היא לקחה צבעים וציירה את החיות שהיא הכי אוהבת. היא ציירה פיל ירוק וג'ירפה צהובה. היא אמרה לעצמה: אני מביאה את הבית איתי. מאיה תלתה את הציורים מסביב למיטה החדשה שלה באוהל. היא ראתה איך עננית הגעגוע מתכווצת והופכת לוורודה.</div>
+            </div>
+            <div class="page-foot"></div>
+          </div>
+          <div class="panel-img"><div class="img-bg"></div><img class="img-fg" src="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_04.jpg" alt=""></div>
+        </div>
+      </div>
+    </section>
+    <section class="slide story" data-audio="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_05.mp3">
+      <div class="book">
+        <div class="spread">
+          <div class="panel-text">
+            <div class="page-head">
+              <span class="head-page">עמוד 5</span>
+            </div>
+            <div class="page-body">
+              <div class="text-fit">הערב ירד שוב, אבל הפעם מאיה נכנסה למיטה במחנה החדש בלי לבקש לחזור לאחור. היא הסתכלה על ציור החיות שלה וחייכה. החיות כאן שומרות עליי, מאיה אמרה לאימא, אני הצלחתי להכין לי בית חדש. עננית הגעגוע נרדמה בשקט בפינה, ומאיה עצמה עיניים וישנה בשלווה.</div>
+            </div>
+            <div class="page-foot"></div>
+          </div>
+          <div class="panel-img"><div class="img-bg"></div><img class="img-fg" src="https://xhczjpgnlcqaofqplnxg.supabase.co/storage/v1/object/public/books/maya-demo/assets/page_05.jpg" alt=""></div>
+        </div>
+      </div>
+    </section>
+    <section class="slide ending">
+      <div class="book">
+        <div class="page ending-page">
+          <div class="ending-box">
+            <div class="ending-star">&#x1F31F;</div>
+            <div class="ending-title">סוף</div>
+            <button class="btn" onclick="show(0)">קרא את הסיפור שוב</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div id="bar">
+    <div id="audio-wrap">
+      <button id="audio-btn" onclick="toggleAudio()" aria-label="קריינות">&#9654;</button>
+      <span id="counter"></span>
+    </div>
+  </div>
+  <!-- SVG ולא ‹ › : אלה תווי Bidi_Mirrored, והדפדפן הופך אותם ויזואלית
+       בהקשר RTL. הצ'יברון כאן מצויר במפורש ולא מושפע מכיווניות. -->
+  <button class="nav" id="prev" onclick="go(-1)" aria-label="הקודם">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3.5 L18.5 12 L9 20.5"/></svg>
+  </button>
+  <button class="nav" id="next" onclick="go(1)" aria-label="הבא">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3.5 L5.5 12 L15 20.5"/></svg>
+  </button>
+</div>
+<audio id="player" preload="none"></audio>
+<script>
+var slides  = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var audio   = document.getElementById('player');
+var stage   = document.getElementById('stage');
+
+/* ── רשימת הצעדים ──────────────────────────────────────────
+   בלנדסקייפ צעד = עמוד כפול. בפורטרט כל עמוד סיפור מתפצל לשני צעדים,
+   איור ואז טקסט, כדי להציג עמוד בודד בכל פעם כמו HeyZine בטלפון.
+   הרשימה נבנית מחדש בכל סיבוב מכשיר, והמיקום הנוכחי נשמר. */
+var steps = [];
+var current = 0;
+var storyCount = slides.filter(function (s) {
+  return s.classList.contains('story');
+}).length;
+
+function isPortrait() {
+  return window.matchMedia('(orientation: portrait)').matches;
+}
+
+function storyPageOf(step) {
+  var n = 0;
+  for (var i = 0; i <= step.i; i++) {
+    if (slides[i].classList.contains('story')) n++;
+  }
+  return n;
+}
+
+function buildSteps() {
+  var prev = steps[current] || null;
+  var portrait = isPortrait();
+  steps = [];
+  slides.forEach(function (s, i) {
+    if (!s.classList.contains('story')) { steps.push({ i: i, part: null }); return; }
+    if (portrait) {
+      steps.push({ i: i, part: 'img' });
+      steps.push({ i: i, part: 'text' });
+    } else {
+      steps.push({ i: i, part: null });
+    }
+  });
+
+  current = 0;
+  if (prev) {
+    for (var k = 0; k < steps.length; k++) {
+      if (steps[k].i !== prev.i) continue;
+      current = k;
+      /* בסיבוב מפורטרט ללנדסקייפ שני הצעדים מתמזגים לאחד; בכיוון ההפוך
+         נוחתים על האיור, שהוא תחילת אותו עמוד. */
+      if (prev.part && steps[k].part === prev.part) break;
+      if (!prev.part) break;
+    }
+  }
+}
+
+/* ── התאמת גודל הגופן לפאנל ────────────────────────────────
+   חיפוש בינארי על הגופן הגדול ביותר שעדיין נכנס בלי גלישה.
+   רץ בטעינה, בשינוי גודל ובסיבוב המכשיר. */
+var FIT_MIN = 13, FIT_MAX = 54;
+
+/* עמוד ספר לא אמור להיות מלא בטקסט. מכוונים ל-78% מהשטח כדי להשאיר
+   אוויר סביב הבלוק, כמו בעמוד המודפס. רק אם זה מכריח גופן קטן מדי
+   (מסך צר) מרפים ומרשים למלא את כל הגובה. */
+var FILL_TARGET = 0.78, COMFORT_MIN = 19;
+
+function _largestThatFits(el, maxH, maxW) {
+  var lo = FIT_MIN, hi = FIT_MAX, best = 0;
+  while (lo <= hi) {
+    var mid = (lo + hi) >> 1;
+    el.style.fontSize = mid + 'px';
+    if (el.scrollHeight <= maxH && el.scrollWidth <= maxW) {
+      best = mid; lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  return best;
+}
+
+function fitText(el) {
+  var box = el.closest('.page-body');
+  if (!box) return;
+  var cs   = getComputedStyle(box);
+  var padY = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+  var padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+
+  /* scrollWidth/scrollHeight מוחזרים כמספרים שלמים, בעוד ה-padding שבור
+     (clamp על vmin). בלי סובלנות scrollWidth=881 נבדק מול availW=880.816
+     ונכשל תמיד — הלולאה נפלה לגופן המינימלי, אבל רק במסכים שבהם העיגול
+     נפל לרעתנו. הסובלנות ניתנת לרוחב בלבד: שם הבדיקה רק אמורה לתפוס מילה
+     בודדת שגולשת, ו-break-word כבר מטפל בזה. בגובה מעגלים כלפי מטה, כי שם
+     אפילו פיקסל אחד הוא שורה קטומה. */
+  var availH = Math.floor(box.clientHeight - padY);
+  var availW = box.clientWidth - padX + 1;
+  if (availH <= 0 || availW <= 0) return;
+
+  var best = _largestThatFits(el, Math.floor(availH * FILL_TARGET), availW);
+  if (best < COMFORT_MIN) best = _largestThatFits(el, availH, availW);
+  el.style.fontSize = (best || FIT_MIN) + 'px';
+}
+
+/* ── צורת הספר ──────────────────────────────────────────────
+   בלנדסקייפ נותנים לכריכה יחס 3:2 — שני עמודי 3:4 זה לצד זה, בדיוק
+   כמו ה-PDF שHeyZine מציג. בלי זה הפאנל יוצא רחב, ו-contain משאיר
+   פסים בצדדים שנראים כמו שוליים. בפורטרט אין אילוץ: שם הפאנל תפור
+   ליחס האיור דרך aspect-ratio ב-CSS. */
+var SPREAD_RATIO = 1.5;         /* שני עמודי 3:4 זה לצד זה */
+var PAGE_RATIO   = 0.75;        /* עמוד טקסט בודד */
+var IMG_RATIO    = 8 / 9;       /* היחס המדויק של האיורים (960x1080) */
+
+/* לעמוד האיור נותנים את יחס האיור עצמו, ואז contain ממלא אותו בדיוק
+   ואין פסים בכלל. לעמוד הטקסט נותנים 3:4 כמו עמוד מודפס. */
+function sizeSpread(slide) {
+  var book = slide.querySelector('.book');
+  var sp   = slide.querySelector('.spread, .page');
+  if (!book || !sp) return;
+  var vp = document.getElementById('viewport');
+  var cs = getComputedStyle(slide);
+  var availW = vp.clientWidth  - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  var availH = vp.clientHeight - parseFloat(cs.paddingTop)  - parseFloat(cs.paddingBottom);
+  if (availW <= 0 || availH <= 0) return;
+
+  /* הכריכה והסיום הם תמיד עמוד בודד — גם בלנדסקייפ, כמו ב-HeyZine. */
+  var ratio;
+  if (!slide.classList.contains('story')) {
+    ratio = PAGE_RATIO;
+  } else if (isPortrait()) {
+    ratio = sp.classList.contains('only-img') ? IMG_RATIO : PAGE_RATIO;
+  } else {
+    ratio = SPREAD_RATIO;
+  }
+
+  var w = Math.min(availW, availH * ratio);
+  book.style.width  = Math.floor(w) + 'px';
+  book.style.height = Math.floor(w / ratio) + 'px';
+
+  /* רוחב העמוד היחיד — בפריסה כפולה כל עמוד הוא חצי. הכותרות נגזרות
+     מזה כדי שיישארו באותו יחס לעמוד בכל מכשיר. */
+  var pageW = (ratio === SPREAD_RATIO) ? w / 2 : w;
+  book.style.setProperty('--pw', Math.floor(pageW) + 'px');
+}
+
+function sizeBook() {
+  document.querySelectorAll('.slide').forEach(sizeSpread);
+}
+
+/* הרקע המטושטש מקבל את התמונה מה-img שלידו, ולא מ-src משוכפל ב-HTML. */
+function paintBackdrops() {
+  document.querySelectorAll('.panel-img').forEach(function (panel) {
+    var img = panel.querySelector('.img-fg');
+    var bg  = panel.querySelector('.img-bg');
+    if (img && bg && !bg.style.backgroundImage) {
+      bg.style.backgroundImage = 'url("' + img.src + '")';
+    }
+  });
+}
+
+function fitAll() {
+  sizeBook();
+  var portrait = isPortrait();
+  /* פאנל של שקופית מוסתרת מדווח גובה 0, אז מודדים אותה כשהיא גלויה
+     זמנית מחוץ למסך. בפורטרט צריך גם להחיל only-text, אחרת הפאנל נמדד
+     בגודל שהוא לעולם לא יוצג בו. */
+  slides.forEach(function (s) {
+    var el = s.querySelector('.text-fit');
+    if (!el) return;
+    var sp = s.querySelector('.spread');
+    var wasActive = s.classList.contains('active');
+    var hadOnly   = sp && sp.className.indexOf('only-') !== -1;
+
+    if (!wasActive) { s.style.visibility = 'hidden'; s.classList.add('active'); }
+    if (portrait && sp && !hadOnly) sp.classList.add('only-text');
+    sizeSpread(s);
+
+    fitText(el);
+
+    if (portrait && sp && !hadOnly) sp.classList.remove('only-text');
+    if (!wasActive) { s.classList.remove('active'); s.style.visibility = ''; }
+  });
+}
+
+/* ── אודיו — ידני בלבד, שום נגינה אוטומטית ─────────────── */
+function stopAudio() {
+  audio.pause();
+  try { audio.currentTime = 0; } catch (e) {}
+  syncAudioBtn();
+}
+
+function toggleAudio() {
+  var btn = document.getElementById('audio-btn');
+  if (btn.disabled) return;
+  if (audio.paused) {
+    audio.play().catch(function () { syncAudioBtn(); });
+  } else {
+    audio.pause();
+  }
+  syncAudioBtn();
+}
+
+function syncAudioBtn() {
+  var btn = document.getElementById('audio-btn');
+  btn.innerHTML = (!audio.paused && !audio.ended) ? '&#9646;&#9646;' : '&#9654;';
+}
+['play', 'pause', 'ended'].forEach(function (ev) {
+  audio.addEventListener(ev, syncAudioBtn);
+});
+
+/* ── מעבר בין עמודים ───────────────────────────────────── */
+function show(n, dir) {
+  if (n < 0 || n >= steps.length) return;
+  stopAudio();
+  slides.forEach(function (s) { s.classList.remove('active', 'back'); });
+
+  current = n;
+  var st = steps[current];
+  var s  = slides[st.i];
+  /* מפעילים מחדש את האנימציה גם כשנשארים באותה שקופית ומחליפים רק
+     חצי עמוד (איור→טקסט בפורטרט): בלי זה הדפדוף לא היה נראה שם. */
+  s.classList.remove('active');
+  void s.offsetWidth;
+  if (dir < 0) s.classList.add('back');
+  s.classList.add('active');
+
+  var sp = s.querySelector('.spread');
+  if (sp) {
+    sp.classList.remove('only-img', 'only-text');
+    if (st.part) sp.classList.add('only-' + st.part);
+  }
+  sizeSpread(s);   /* היחס תלוי בקלאס, אז המידה נקבעת אחריו */
+
+  /* מחרוזת ריקה מחזירה את הרקע לגרדיאנט שב-CSS — עמודי הסיפור אמורים
+     לצוף עליו, ורק הכריכה והסיום צובעים את המסך בעצמם. */
+  stage.style.background = s.dataset.bg || '';
+
+  var src = s.dataset.audio || '';
+  var btn = document.getElementById('audio-btn');
+  if (src) { audio.src = src; btn.disabled = false; }
+  else     { audio.removeAttribute('src'); btn.disabled = true; }
+  syncAudioBtn();
+
+  var isStory = s.classList.contains('story');
+  document.getElementById('counter').textContent =
+    isStory ? storyPageOf(st) + ' / ' + storyCount : '';
+  document.getElementById('prev').disabled = (current === 0);
+  document.getElementById('next').disabled = (current === steps.length - 1);
+  document.getElementById('progress').style.width =
+    (current / (steps.length - 1)) * 100 + '%';
+
+  var el = s.querySelector('.text-fit');
+  if (el && st.part !== 'img') fitText(el);
+}
+
+function go(d) { show(current + d, d); }
+
+/* מקלדת: המסמך RTL, אז חץ שמאל מתקדם */
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowDown') go(1);
+  if (e.key === 'ArrowRight' || e.key === 'ArrowUp')   go(-1);
+  if (e.key === ' ') { e.preventDefault(); go(1); }
+});
+
+/* החלקה */
+var tx = 0, ty = 0;
+document.addEventListener('touchstart', function (e) {
+  tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', function (e) {
+  var dx = e.changedTouches[0].clientX - tx;
+  var dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 45) go(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+/* סיבוב המכשיר משנה את מספר הצעדים, לא רק את הפריסה — לכן בונים מחדש
+   את הרשימה ומצטרפים בחזרה לאותו עמוד. */
+var wasPortrait = isPortrait();
+
+function relayout() {
+  var nowPortrait = isPortrait();
+  if (nowPortrait !== wasPortrait) {
+    wasPortrait = nowPortrait;
+    buildSteps();
+  }
+  fitAll();
+  show(current);
+}
+
+var rt = null;
+function onResize() {
+  clearTimeout(rt);
+  rt = setTimeout(relayout, 140);
+}
+window.addEventListener('resize', onResize);
+window.addEventListener('orientationchange', onResize);
+
+/* הגופנים כבר מוכנים (מערכת בלבד), אבל התמונות משנות פריסה בטעינה */
+window.addEventListener('load', function () {
+  paintBackdrops();
+  fitAll();
+  show(current);
+});
+buildSteps();
+paintBackdrops();
+fitAll();
+show(0);
+</script>
+</body>
+</html>
