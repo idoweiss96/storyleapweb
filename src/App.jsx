@@ -68,6 +68,8 @@ import GameActions from './pages/GameActions';
 // --- Redesign prototype (additive, isolated, noindex). Not in production nav. ---
 import HomeNew from './pages/HomeNew';
 import ProfessionalsNew from './pages/ProfessionalsNew';
+// --- Visual schedule product preview (internal, noindex, not in nav). ---
+import VisualSchedulePreview from './pages/VisualSchedulePreview';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -178,6 +180,7 @@ const AuthenticatedApp = () => {
       <Route path="/games/actions" element={<LayoutWrapper currentPageName="GameActions"><GameActions /></LayoutWrapper>} />
       <Route path="/HomeNew" element={<LayoutWrapper currentPageName="HomeNew"><HomeNew /></LayoutWrapper>} />
       <Route path="/professionals-new" element={<LayoutWrapper currentPageName="ProfessionalsNew"><ProfessionalsNew /></LayoutWrapper>} />
+      <Route path="/visual-schedule-preview" element={<LayoutWrapper currentPageName="VisualSchedulePreview"><VisualSchedulePreview /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
