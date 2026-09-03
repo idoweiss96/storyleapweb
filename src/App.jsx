@@ -68,6 +68,8 @@ import GameActions from './pages/GameActions';
 // --- Redesign prototype (additive, isolated, noindex). Not in production nav. ---
 import HomeNew from './pages/HomeNew';
 import ProfessionalsNew from './pages/ProfessionalsNew';
+// --- Conversation cards pilot preview (additive, isolated, noindex). Not in production nav. ---
+import ConversationCardsPreview from './pages/ConversationCardsPreview';
 // --- Visual schedule product preview (internal, noindex, not in nav). ---
 import VisualSchedulePreview from './pages/VisualSchedulePreview';
 
@@ -181,6 +183,7 @@ const AuthenticatedApp = () => {
       <Route path="/HomeNew" element={<LayoutWrapper currentPageName="HomeNew"><HomeNew /></LayoutWrapper>} />
       <Route path="/professionals-new" element={<LayoutWrapper currentPageName="ProfessionalsNew"><ProfessionalsNew /></LayoutWrapper>} />
       <Route path="/visual-schedule-preview" element={<LayoutWrapper currentPageName="VisualSchedulePreview"><VisualSchedulePreview /></LayoutWrapper>} />
+      <Route path="/conversation-cards-preview" element={<LayoutWrapper currentPageName="ConversationCardsPreview"><ConversationCardsPreview /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
