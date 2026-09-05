@@ -47,7 +47,7 @@ export default function ConceptQuestionnaire() {
           <a href="/concept-home" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/449f3427e_Storyleap.jpg" alt="StoryLeap" style={{ height: 28, width: 'auto', mixBlendMode: 'multiply' }} />
           </a>
-          <span style={{ fontSize: 13, color: '#93979f', fontWeight: 400 }}>{stepLabel}</span>
+          <span style={{ fontSize: 16, color: '#93979f', fontWeight: 400 }}>{stepLabel}</span>
         </div>
         <div style={{ height: 4, borderRadius: 9999, background: '#dbe9fb', marginBottom: 32 }}>
           <div style={{ height: 4, borderRadius: 9999, background: '#181d27', width: `${progress}%` }}></div>
@@ -61,19 +61,19 @@ export default function ConceptQuestionnaire() {
               <p style={{ margin: '10px 0 24px', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Basics first, this is who the story is about, and what your child loves usually matters more than the situation itself.</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Child's name</label>
+                  <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Child's name</label>
                   <input type="text" placeholder="Maya" value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Age</label>
+                  <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Age</label>
                   <input type="text" placeholder="5" value={form.ageText} onChange={(e) => setForm((p) => ({ ...p, ageText: e.target.value }))} />
                 </div>
               </div>
-              <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>Gender</label>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>Gender</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {GENDERS.map((g) => chip(form.gender === g, () => setForm((p) => ({ ...p, gender: g })), g))}
               </div>
-              <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>What does your child love?</label>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>What does your child love?</label>
               <input type="text" placeholder="Dinosaurs, her cat Luna, the park near us" value={form.loves} onChange={(e) => setForm((p) => ({ ...p, loves: e.target.value }))} />
             </div>
           )}
@@ -104,8 +104,8 @@ export default function ConceptQuestionnaire() {
                   <button key={w} type="button" className={`sl-chip${form.world === w ? ' active' : ''}`} style={{ padding: '22px 12px', borderRadius: 20, fontWeight: 500 }} onClick={() => setForm((p) => ({ ...p, world: w }))}>{w}</button>
                 ))}
               </div>
-              <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>Child's photo (optional)</label>
-              <div style={{ border: '1.5px dashed #cfe0f4', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 14 }}>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>Child's photo (optional)</label>
+              <div style={{ border: '1.5px dashed #cfe0f4', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16 }}>
                 Upload a photo to make the story personal, used only for illustration, deleted within 30 days
               </div>
             </div>
@@ -124,7 +124,7 @@ export default function ConceptQuestionnaire() {
                   ['When it happens', form.trigger || '-'],
                   ['Reaction', form.feelings.length ? form.feelings.join(', ') : 'Not set yet'],
                 ].map(([label, value]) => (
-                  <div key={label} style={{ display: 'flex', gap: 16, justifyContent: 'space-between', fontSize: 15 }}>
+                  <div key={label} style={{ display: 'flex', gap: 16, justifyContent: 'space-between', fontSize: 17 }}>
                     <span style={{ color: '#93979f', fontWeight: 400 }}>{label}</span>
                     <span style={{ textAlign: 'right' }}>{value}</span>
                   </div>
@@ -132,15 +132,15 @@ export default function ConceptQuestionnaire() {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Email</label>
+                  <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Email</label>
                   <input type="text" placeholder="your@email.com" value={form.email} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Phone (optional)</label>
+                  <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Phone (optional)</label>
                   <input type="text" placeholder="050-0000000" value={form.phone} onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))} />
                 </div>
               </div>
-              <div style={{ marginTop: 18, background: '#f1e6ff', borderRadius: 16, padding: '16px 18px', fontSize: 14, lineHeight: 1.5, color: '#4a4d55' }}>
+              <div style={{ marginTop: 18, background: '#f1e6ff', borderRadius: 16, padding: '16px 18px', fontSize: 16, lineHeight: 1.5, color: '#4a4d55' }}>
                 A peek at the magic, before purchasing you'll see the first two pages of the story, no commitment.
               </div>
             </div>
@@ -158,15 +158,15 @@ export default function ConceptQuestionnaire() {
                   </button>
                 ))}
               </div>
-              <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Card number</label>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Card number</label>
               <input type="text" placeholder="4242 4242 4242 4242" />
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16 }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Expiry</label>
+                  <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Expiry</label>
                   <input type="text" placeholder="MM/YY" />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, marginBottom: 8 }}>CVC</label>
+                  <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, marginBottom: 8 }}>CVC</label>
                   <input type="text" placeholder="123" />
                 </div>
               </div>
@@ -182,7 +182,7 @@ export default function ConceptQuestionnaire() {
           )}
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginTop: 32 }}>
-            <button type="button" onClick={handleBack} style={{ border: 0, fontFamily: 'inherit', fontWeight: 400, fontSize: 15, background: 'transparent', color: '#93979f', padding: '12px 0' }}>
+            <button type="button" onClick={handleBack} style={{ border: 0, fontFamily: 'inherit', fontWeight: 400, fontSize: 17, background: 'transparent', color: '#93979f', padding: '12px 0' }}>
               {backLabel}
             </button>
             <button type="button" onClick={handleNext} style={{ border: 0, fontFamily: 'inherit', fontWeight: 500, fontSize: 16, letterSpacing: '-0.01em', background: '#181d27', color: '#fff', padding: '14px 32px', borderRadius: 9999, boxShadow: '0 1px 2px rgba(10,13,18,0.4)' }}>
