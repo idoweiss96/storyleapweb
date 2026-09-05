@@ -6,7 +6,7 @@ export default function SLSituations({ onPick, onStart }) {
     <section id="situations" style={{ maxWidth: 1200, margin: '0 auto', padding: '96px 32px 0' }}>
       <div style={{ textAlign: 'center', marginBottom: 48 }}>
         <h2 style={{ margin: 0, fontSize: 52, lineHeight: 1.12, letterSpacing: '-0.025em', fontWeight: 500 }}>Start with the moment you're in</h2>
-        <p style={{ margin: '16px auto 0', maxWidth: 560, fontSize: 18, lineHeight: 1.5, color: '#535862', fontWeight: 400 }}>Pick what's happening at home. Every story is written around your child's own situation, not a template.</p>
+        <p style={{ margin: '16px auto 0', maxWidth: 620, fontSize: 22, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>Pick what's happening at home. Every story is written around your child's own situation, not a template.</p>
       </div>
       <div className="sl-grid-4">
         {SITUATIONS.map((s) => (
