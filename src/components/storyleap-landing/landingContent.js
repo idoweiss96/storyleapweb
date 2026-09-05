@@ -55,3 +55,9 @@ export const FAQ_ITEMS = [
 export const QUICK_SITUATIONS = ['Starting kindergarten', 'Saying goodbye in the morning', 'Fear of the dark', 'Welcoming a new sibling', 'Moving to a new home', 'Big emotions'];
 export const AGES = ['3', '4', '5', '6', '7', '8', '9'];
 export const FEELINGS = ['Excited', 'Worried', 'Scared', 'Angry', 'Sad', 'Confused', 'Shy', 'Jealous', "Doesn't want to talk about it"];
+
+export const GENDERS = ['Boy', 'Girl', 'Other'];
+export const WORLDS = ['Space', 'Magical forest', 'Castle', 'Sports', 'Real life'];
+export const CHALLENGES = ['Fears', 'Social difficulty', 'Coping with changes', 'Emotional regulation', 'Trouble with goodbyes', 'Self confidence', 'Sleep issues'];
+export const REACTIONS = ['Outburst', 'Withdrawal', 'Crying', 'Attention seeking', 'Aggression', 'Avoidance'];
+export const PLANS = [['Single story', '$12'], ['3-story bundle', '$28']];

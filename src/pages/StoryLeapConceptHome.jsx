@@ -21,7 +21,7 @@ export default function StoryLeapConceptHome() {
   const [startStep, setStartStep] = useState(0);
 
   const openFlow = () => { setStartStep(0); setModalOpen(true); };
-  const pickSituation = (t) => { setTopic(t); setStartStep(1); setModalOpen(true); };
+  const pickSituation = (t) => { setTopic(t); setStartStep(0); setModalOpen(true); };
 
   return (
     <div className="sl-page" style={{ position: 'relative' }}>
