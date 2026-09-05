@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function SLHero({ onStart }) {
   const badge = (bg, pos, animClass, text) => (
-    <div style={{ position: 'absolute', zIndex: 2, ...pos, background: bg, color: '#0a0d12', fontSize: 15, padding: '13px 22px', borderRadius: 9999, boxShadow: '0 8px 18px rgba(4,69,144,0.10)' }} className={animClass}>{text}</div>
+    <div style={{ position: 'absolute', zIndex: 2, ...pos, background: bg, color: '#0a0d12', fontSize: 19, padding: '18px 30px', borderRadius: 9999, boxShadow: '0 8px 18px rgba(4,69,144,0.10)' }} className={animClass}>{text}</div>
   );
   return (
     <section style={{ position: 'relative', maxWidth: 1120, margin: '0 auto', padding: '72px 32px 40px', textAlign: 'center' }}>
