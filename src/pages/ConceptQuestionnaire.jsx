@@ -117,16 +117,21 @@ export default function ConceptQuestionnaire() {
               <p style={{ margin: '10px 0 24px', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>You can change anything before we start.</p>
               <div style={{ background: '#ebf5ff', borderRadius: 24, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 22 }}>
                 {[
-                  ['Child', (form.name.trim() || 'Not set yet') + (form.ageText ? `, age ${form.ageText}` : '') + (form.gender ? ` · ${form.gender}` : '')],
-                  ['Loves', form.loves || '-'],
-                  ['Story world', form.world || 'Not set yet'],
-                  ['Challenge', form.topic || 'Not set yet'],
-                  ['When it happens', form.trigger || '-'],
-                  ['Reaction', form.feelings.length ? form.feelings.join(', ') : 'Not set yet'],
-                ].map(([label, value]) => (
-                  <div key={label} style={{ display: 'flex', gap: 16, justifyContent: 'space-between', fontSize: 17 }}>
+                  ['Child', (form.name.trim() || 'Not set yet') + (form.ageText ? `, age ${form.ageText}` : '') + (form.gender ? ` · ${form.gender}` : ''), 0],
+                  ['Loves', form.loves || '-', 0],
+                  ['Story world', form.world || 'Not set yet', 2],
+                  ['Challenge', form.topic || 'Not set yet', 1],
+                  ['When it happens', form.trigger || '-', 1],
+                  ['Reaction', form.feelings.length ? form.feelings.join(', ') : 'Not set yet', 1],
+                ].map(([label, value, editStep]) => (
+                  <div key={label} style={{ display: 'flex', gap: 16, justifyContent: 'space-between', alignItems: 'center', fontSize: 17 }}>
                     <span style={{ color: '#93979f', fontWeight: 400 }}>{label}</span>
-                    <span style={{ textAlign: 'right' }}>{value}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <span style={{ textAlign: 'right' }}>{value}</span>
+                      <button type="button" onClick={() => setStep(editStep)} style={{ border: 0, background: 'transparent', color: '#0069e0', fontFamily: 'inherit', fontWeight: 500, fontSize: 15, cursor: 'pointer', padding: 0 }}>
+                        Edit
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
