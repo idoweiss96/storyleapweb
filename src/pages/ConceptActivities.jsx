@@ -54,7 +54,7 @@ function ConceptActivitiesInner() {
                 : 'A collection of short games for kids, to play alone or together with you, in a few minutes of connection.'}
             </p>
           </div>
-          <div style={{ flex: '1 1 380px', minWidth: 280 }}>
+          <div style={{ flex: '1 1 320px', maxWidth: 380, minWidth: 240 }}>
             <img
               src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/9011049d5_ChatGPTImageSep5202611_52_00PM.png"
               alt={isHe ? 'הורה וילדה משחקים עם כרטיסי רגשות' : 'A parent and child playing with feelings cards'}
