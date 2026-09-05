@@ -21,7 +21,7 @@ export default function SLHero({ onStart }) {
         {badge('#d3f6e3', { top: -18, right: -24 }, 'sl-float-b', 'Shared parent-child experience')}
         {badge('#cce7ff', { bottom: -20, left: -30 }, 'sl-drift', 'Based on psychological therapy methods')}
         {badge('#ffe9d9', { bottom: -24, right: -22 }, 'sl-float-a', 'Digital guidance')}
-        <div className="sl-img-ph" style={{ borderRadius: 24, height: 480, backgroundImage: "url(https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=1200&q=80)" }}></div>
+        <div className="sl-img-ph" style={{ borderRadius: 24, height: 480, backgroundImage: "url(https://media.base44.com/images/public/697f4b704975c71e9cf56f59/998da025d_ChatGPTImageSep5202608_18_44PM.png)" }}></div>
       </div>
     </section>
   );
