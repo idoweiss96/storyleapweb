@@ -27,6 +27,7 @@ export const GAMES = [
   {
     path: '/activities/feelings-explorer',
     icon: Compass,
+    color: 'sky',
     title: { en: 'Why Do I Feel This Way?', he: 'למה אני מרגיש/ה ככה?' },
     desc: {
       en: 'Step closer to a feeling until you find what happened',
@@ -36,6 +37,7 @@ export const GAMES = [
   {
     path: '/activities/emotion-wheel',
     icon: CircleDot,
+    color: 'pink',
     title: { en: 'The Emotion Wheel', he: 'גלגל הרגשות' },
     desc: {
       en: 'Spin the wheel and talk about the feeling it lands on',
@@ -46,6 +48,7 @@ export const GAMES = [
   {
     path: '/activities/strength-cards',
     icon: Gem,
+    color: 'amber',
     title: { en: 'My Strength Cards', he: 'קלפי החוזקות שלי' },
     desc: {
       en: 'Pick the cards that feel like you and print your strengths',
@@ -55,6 +58,7 @@ export const GAMES = [
   {
     path: '/activities/coping-cards',
     icon: LifeBuoy,
+    color: 'teal',
     title: { en: 'Cards That Help Me', he: 'הקלפים שעוזרים לי' },
     desc: {
       en: 'Build a personal calm-down kit and print it',
@@ -64,6 +68,7 @@ export const GAMES = [
   {
     path: '/activities/emotion-drawing',
     icon: Palette,
+    color: 'purple',
     title: { en: 'Draw the Feeling', he: 'ציור הרגש' },
     desc: {
       en: 'Pick a feeling and draw what it looks like',
@@ -74,6 +79,7 @@ export const GAMES = [
   {
     path: '/activities/emotion-thermometer',
     icon: Thermometer,
+    color: 'rose',
     title: { en: 'The Feelings Thermometer', he: 'מד החום של הרגשות' },
     desc: {
       en: 'Mark how strong a feeling is, and see what can help',
@@ -84,6 +90,7 @@ export const GAMES = [
   {
     path: '/activities/routine-board',
     icon: ClipboardList,
+    color: 'blue',
     title: { en: 'My Routine Board', he: 'לוח סדר היום שלי' },
     desc: {
       en: 'Build the day in order and print a board to hang up',
@@ -93,6 +100,7 @@ export const GAMES = [
   {
     path: '/activities/first-then',
     icon: ArrowRight,
+    color: 'green',
     title: { en: 'First, Then', he: 'קודם, ואז' },
     desc: {
       en: 'Two steps for the moments when moving on is hard',
@@ -102,6 +110,7 @@ export const GAMES = [
   {
     path: '/activities/choice-board',
     icon: Shuffle,
+    color: 'violet',
     title: { en: 'The Choice Board', he: 'לוח הבחירה' },
     desc: {
       en: 'Two to four options for a tricky moment in the day',
@@ -111,6 +120,7 @@ export const GAMES = [
   {
     path: '/activities/break-card',
     icon: Hand,
+    color: 'orange',
     title: { en: 'My Break Card', he: 'כרטיס ההפסקה שלי' },
     desc: {
       en: 'A card to show instead of having to explain',
@@ -121,6 +131,7 @@ export const GAMES = [
   {
     path: '/activities/body-map',
     icon: PersonStanding,
+    color: 'indigo',
     title: { en: 'My Body Map', he: 'מפת הגוף שלי' },
     desc: {
       en: 'Mark on the body where you feel the feeling',
@@ -130,6 +141,7 @@ export const GAMES = [
   {
     path: '/activities/emotion-cards',
     icon: Layers,
+    color: 'fuchsia',
     title: { en: 'Our Emotion Cards', he: 'קלפי הרגשות שלנו' },
     desc: {
       en: 'Build a deck, print it and cut out real cards',
@@ -139,6 +151,7 @@ export const GAMES = [
   {
     path: '/activities/emotion-checkin',
     icon: CalendarCheck,
+    color: 'cyan',
     title: { en: 'The Weekly Check-in', he: 'הצ׳ק-אין השבועי' },
     desc: {
       en: 'A printable chart to mark how each day went',
@@ -149,6 +162,7 @@ export const GAMES = [
   {
     path: '/activities/task-analysis',
     icon: ListOrdered,
+    color: 'orange',
     title: { en: 'Break Down a Task', he: 'פירוק משימה' },
     desc: {
       en: 'Split one hard task into small steps and see which are hard',
@@ -159,6 +173,7 @@ export const GAMES = [
   {
     path: '/activities/adl-sequence',
     icon: Droplet,
+    color: 'blue',
     title: { en: 'Picture Sequence', he: 'רצף בתמונות' },
     desc: {
       en: 'Ready-made strips for washing, brushing teeth and dressing',
@@ -169,6 +184,7 @@ export const GAMES = [
   {
     path: '/activities/routine-checklist',
     icon: CheckSquare,
+    color: 'green',
     title: { en: 'Routine Checklist', he: 'צ׳ק-ליסט שגרה' },
     desc: {
       en: 'A tick-box list, in a day or a whole-week version',
@@ -179,6 +195,7 @@ export const GAMES = [
   {
     path: '/activities/visual-timer',
     icon: Timer,
+    color: 'amber',
     title: { en: 'The Visual Timer', he: 'הטיימר החזותי' },
     desc: {
       en: 'Time you can see instead of count',
@@ -189,6 +206,7 @@ export const GAMES = [
   {
     path: '/activities/breathing',
     icon: Wind,
+    color: 'sky',
     title: { en: 'Breathing', he: 'נשימות' },
     desc: {
       en: 'Follow the circle and breathe with it',
@@ -199,6 +217,7 @@ export const GAMES = [
   {
     path: '/activities/safe-place',
     icon: Palmtree,
+    color: 'emerald',
     title: { en: 'My Safe Place', he: 'המקום הבטוח שלי' },
     desc: {
       en: 'Build a place to return to in your mind when things are hard',
@@ -209,6 +228,7 @@ export const GAMES = [
   {
     path: '/activities/visual-rules',
     icon: ScrollText,
+    color: 'slate',
     title: { en: 'Our House Rules', he: 'כללי הבית שלנו' },
     desc: {
       en: 'Up to six rules, phrased as what we do',
@@ -219,6 +239,7 @@ export const GAMES = [
   {
     path: '/activities/calm-corner',
     icon: Sprout,
+    color: 'green',
     title: { en: 'The Calm Corner', he: 'פינת הרוגע' },
     desc: {
       en: 'Set up a corner to go to, and agree how it works',

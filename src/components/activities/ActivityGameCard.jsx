@@ -6,6 +6,26 @@ import { useAuth } from '@/lib/AuthContext';
 import ComingSoonDialog from './ComingSoonDialog';
 import LoginRequiredDialog from './LoginRequiredDialog';
 
+// Literal Tailwind classes per color key (build purges non-literal strings, so
+// this must be a static lookup, not a template built from game.color).
+const ICON_STYLES = {
+  sky: { bg: 'bg-sky-100', text: 'text-sky-600' },
+  pink: { bg: 'bg-pink-100', text: 'text-pink-600' },
+  amber: { bg: 'bg-amber-100', text: 'text-amber-600' },
+  emerald: { bg: 'bg-emerald-100', text: 'text-emerald-600' },
+  purple: { bg: 'bg-purple-100', text: 'text-purple-600' },
+  rose: { bg: 'bg-rose-100', text: 'text-rose-600' },
+  indigo: { bg: 'bg-indigo-100', text: 'text-indigo-600' },
+  orange: { bg: 'bg-orange-100', text: 'text-orange-600' },
+  teal: { bg: 'bg-teal-100', text: 'text-teal-600' },
+  violet: { bg: 'bg-violet-100', text: 'text-violet-600' },
+  cyan: { bg: 'bg-cyan-100', text: 'text-cyan-600' },
+  fuchsia: { bg: 'bg-fuchsia-100', text: 'text-fuchsia-600' },
+  green: { bg: 'bg-green-100', text: 'text-green-600' },
+  blue: { bg: 'bg-blue-100', text: 'text-blue-600' },
+  slate: { bg: 'bg-slate-100', text: 'text-slate-600' },
+};
+
 // Renders one activity card according to its access tier:
 // - 'free': open to everyone, links straight to the activity.
 // - 'coming_soon': not clickable, shows a "Coming soon" badge + dialog.
@@ -19,6 +39,7 @@ export default function ActivityGameCard({ game, isHe }) {
   const access = game.access || 'auth';
   const isAdmin = user?.role === 'admin';
   const locked = access === 'auth' && !isAuthenticated;
+  const iconStyle = ICON_STYLES[game.color] || ICON_STYLES.slate;
 
   const cardBody = (
     <Card className="h-full border-0 shadow-lg shadow-slate-100 hover:shadow-xl transition-all rounded-2xl relative">
@@ -33,8 +54,8 @@ export default function ActivityGameCard({ game, isHe }) {
         </div>
       )}
       <CardContent className="p-6 text-center">
-        <div className="w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(255,111,181,0.12), rgba(79,195,232,0.12))' }}>
-          {game.icon && <game.icon className="w-7 h-7 text-slate-700" strokeWidth={1.75} />}
+        <div className={`w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center ${iconStyle.bg}`}>
+          {game.icon && <game.icon className={`w-7 h-7 ${iconStyle.text}`} strokeWidth={1.75} />}
         </div>
         <h2 className="text-base font-bold text-slate-800 mb-2">{isHe ? game.title.he : game.title.en}</h2>
         <p className="text-slate-500 text-sm">{isHe ? game.desc.he : game.desc.en}</p>
