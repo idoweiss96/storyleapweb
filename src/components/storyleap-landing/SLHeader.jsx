@@ -6,7 +6,7 @@ export default function SLHeader({ onStart }) {
     <header style={{ position: 'sticky', top: 0, zIndex: 40, backdropFilter: 'blur(12px)', background: 'rgba(235,245,255,0.82)' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '18px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
         <a href="#" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/449f3427e_Storyleap.jpg" alt="StoryLeap" style={{ height: 28, width: 'auto' }} />
+          <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/449f3427e_Storyleap.jpg" alt="StoryLeap" style={{ height: 28, width: 'auto', mixBlendMode: 'multiply' }} />
         </a>
         <nav className="sl-nav">
           {navLink('#situations', 'Situations')}
