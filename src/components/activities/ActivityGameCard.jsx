@@ -33,7 +33,9 @@ export default function ActivityGameCard({ game, isHe }) {
         </div>
       )}
       <CardContent className="p-6 text-center">
-        <div className="text-4xl mb-3">{game.emoji}</div>
+        <div className="w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(255,111,181,0.12), rgba(79,195,232,0.12))' }}>
+          {game.icon && <game.icon className="w-7 h-7 text-slate-700" strokeWidth={1.75} />}
+        </div>
         <h2 className="text-base font-bold text-slate-800 mb-2">{isHe ? game.title.he : game.title.en}</h2>
         <p className="text-slate-500 text-sm">{isHe ? game.desc.he : game.desc.en}</p>
       </CardContent>
