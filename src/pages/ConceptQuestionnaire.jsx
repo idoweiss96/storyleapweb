@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import '@/styles/storyleap-landing.css';
 import { GENDERS, WORLDS, CHALLENGES, REACTIONS, PLANS } from '@/components/storyleap-landing/landingContent';
 
-const STEP_LABELS = ['Child Details', 'Story World', 'Emotional Challenge', 'Summary & Contact', 'Payment'];
+const STEP_LABELS = ['Child Details', 'Emotional Challenge', 'Story World', 'Summary & Contact', 'Payment'];
 const LAST_STEP = 5;
 
 export default function ConceptQuestionnaire() {
@@ -75,26 +75,10 @@ export default function ConceptQuestionnaire() {
               </div>
               <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>What does your child love?</label>
               <input type="text" placeholder="Dinosaurs, her cat Luna, the park near us" value={form.loves} onChange={(e) => setForm((p) => ({ ...p, loves: e.target.value }))} />
-              <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>Child's photo (optional)</label>
-              <div style={{ border: '1.5px dashed #cfe0f4', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 14 }}>
-                Upload a photo to make the story personal, used only for illustration, deleted within 30 days
-              </div>
             </div>
           )}
 
           {step === 1 && (
-            <div>
-              <h3 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.025em', fontWeight: 500 }}>Story world</h3>
-              <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Where should the story take place?</p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
-                {WORLDS.map((w) => (
-                  <button key={w} type="button" className={`sl-chip${form.world === w ? ' active' : ''}`} style={{ padding: '22px 12px', borderRadius: 20, fontWeight: 500 }} onClick={() => setForm((p) => ({ ...p, world: w }))}>{w}</button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {step === 2 && (
             <div>
               <h3 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.025em', fontWeight: 500 }}>The challenge {child} faces</h3>
               <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Choose the closest one, or describe it below.</p>
@@ -107,6 +91,22 @@ export default function ConceptQuestionnaire() {
               <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>How does your child react?</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 {REACTIONS.map((f) => chip(form.feelings.includes(f), () => toggleReaction(f), f))}
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div>
+              <h3 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.025em', fontWeight: 500 }}>Story world</h3>
+              <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Where should the story take place?</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+                {WORLDS.map((w) => (
+                  <button key={w} type="button" className={`sl-chip${form.world === w ? ' active' : ''}`} style={{ padding: '22px 12px', borderRadius: 20, fontWeight: 500 }} onClick={() => setForm((p) => ({ ...p, world: w }))}>{w}</button>
+                ))}
+              </div>
+              <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>Child's photo (optional)</label>
+              <div style={{ border: '1.5px dashed #cfe0f4', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 14 }}>
+                Upload a photo to make the story personal, used only for illustration, deleted within 30 days
               </div>
             </div>
           )}
