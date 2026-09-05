@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '@/styles/storyleap-landing.css';
 import SLHeader from '@/components/storyleap-landing/SLHeader';
 import SLHero from '@/components/storyleap-landing/SLHero';
@@ -12,16 +13,13 @@ import SLTrust from '@/components/storyleap-landing/SLTrust';
 import SLFAQ from '@/components/storyleap-landing/SLFAQ';
 import SLCTA from '@/components/storyleap-landing/SLCTA';
 import SLFooter from '@/components/storyleap-landing/SLFooter';
-import SLQuestionnaireModal from '@/components/storyleap-landing/SLQuestionnaireModal';
 import SLFloatingClouds from '@/components/storyleap-landing/SLFloatingClouds';
 
 export default function StoryLeapConceptHome() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [topic, setTopic] = useState('');
-  const [startStep, setStartStep] = useState(0);
+  const navigate = useNavigate();
 
-  const openFlow = () => { setStartStep(0); setModalOpen(true); };
-  const pickSituation = (t) => { setTopic(t); setStartStep(0); setModalOpen(true); };
+  const openFlow = () => navigate('/concept-questionnaire');
+  const pickSituation = (t) => navigate(`/concept-questionnaire?topic=${encodeURIComponent(t)}`);
 
   return (
     <div className="sl-page" style={{ position: 'relative' }}>
@@ -38,7 +36,6 @@ export default function StoryLeapConceptHome() {
       <SLFAQ />
       <SLCTA onStart={openFlow} />
       <SLFooter />
-      <SLQuestionnaireModal open={modalOpen} initialTopic={topic} initialStep={startStep} onClose={() => setModalOpen(false)} />
     </div>
   );
 }

@@ -75,6 +75,7 @@ import VisualSchedulePreview from './pages/VisualSchedulePreview';
 // --- New homepage concept from uploaded static design (internal, noindex, not in nav). ---
 import StoryLeapConceptHome from './pages/StoryLeapConceptHome';
 import ConceptActivities from './pages/ConceptActivities';
+import ConceptQuestionnaire from './pages/ConceptQuestionnaire';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -188,6 +189,7 @@ const AuthenticatedApp = () => {
       <Route path="/visual-schedule-preview" element={<LayoutWrapper currentPageName="VisualSchedulePreview"><VisualSchedulePreview /></LayoutWrapper>} />
       <Route path="/concept-home" element={<StoryLeapConceptHome />} />
       <Route path="/concept-activities" element={<ConceptActivities />} />
+      <Route path="/concept-questionnaire" element={<ConceptQuestionnaire />} />
       <Route path="/conversation-cards-preview" element={<LayoutWrapper currentPageName="ConversationCardsPreview"><ConversationCardsPreview /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
