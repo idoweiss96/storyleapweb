@@ -58,7 +58,7 @@ export default function ConceptQuestionnaire() {
           {step === 0 && (
             <div>
               <h3 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.025em', fontWeight: 500 }}>Child details</h3>
-              <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Basics first, this is who the story is about, and what your child loves usually matters more than the situation itself.</p>
+              <p style={{ margin: '10px 0 24px', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Basics first, this is who the story is about, and what your child loves usually matters more than the situation itself.</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Child's name</label>
@@ -81,7 +81,7 @@ export default function ConceptQuestionnaire() {
           {step === 1 && (
             <div>
               <h3 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.025em', fontWeight: 500 }}>The challenge {child} faces</h3>
-              <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Choose the closest one, or describe it below.</p>
+              <p style={{ margin: '10px 0 24px', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Choose the closest one, or describe it below.</p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 {CHALLENGES.map((c) => chip(form.topic === c, () => setForm((p) => ({ ...p, topic: c })), c))}
               </div>
@@ -98,7 +98,7 @@ export default function ConceptQuestionnaire() {
           {step === 2 && (
             <div>
               <h3 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.025em', fontWeight: 500 }}>Story world</h3>
-              <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Where should the story take place?</p>
+              <p style={{ margin: '10px 0 24px', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Where should the story take place?</p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
                 {WORLDS.map((w) => (
                   <button key={w} type="button" className={`sl-chip${form.world === w ? ' active' : ''}`} style={{ padding: '22px 12px', borderRadius: 20, fontWeight: 500 }} onClick={() => setForm((p) => ({ ...p, world: w }))}>{w}</button>
@@ -114,7 +114,7 @@ export default function ConceptQuestionnaire() {
           {step === 3 && (
             <div>
               <h3 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.025em', fontWeight: 500 }}>Summary &amp; contact</h3>
-              <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>You can change anything before we start.</p>
+              <p style={{ margin: '10px 0 24px', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>You can change anything before we start.</p>
               <div style={{ background: '#ebf5ff', borderRadius: 24, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 22 }}>
                 {[
                   ['Child', (form.name.trim() || 'Not set yet') + (form.ageText ? `, age ${form.ageText}` : '') + (form.gender ? ` · ${form.gender}` : '')],
@@ -149,7 +149,7 @@ export default function ConceptQuestionnaire() {
           {step === 4 && (
             <div>
               <h3 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.025em', fontWeight: 500 }}>Choose a plan &amp; pay</h3>
-              <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>{doneTitle} once payment is complete.</p>
+              <p style={{ margin: '10px 0 24px', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>{doneTitle} once payment is complete.</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
                 {PLANS.map(([name, price]) => (
                   <button key={name} type="button" className={`sl-plan${form.plan === name ? ' active' : ''}`} onClick={() => setForm((p) => ({ ...p, plan: name }))}>
