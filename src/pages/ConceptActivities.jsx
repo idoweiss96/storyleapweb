@@ -3,7 +3,7 @@ import '@/styles/storyleap-landing.css';
 import SLHeader from '@/components/storyleap-landing/SLHeader';
 import SLFooter from '@/components/storyleap-landing/SLFooter';
 import SLFloatingClouds from '@/components/storyleap-landing/SLFloatingClouds';
-import { useLanguage } from '@/components/LanguageContext';
+import { LanguageProvider, useLanguage } from '@/components/LanguageContext';
 import PageMeta from '@/components/SEO/PageMeta';
 import ActivityGameCard from '@/components/activities/ActivityGameCard';
 import { GAMES } from '@/pages/Activities';
@@ -20,6 +20,14 @@ const META = {
 };
 
 export default function ConceptActivities() {
+  return (
+    <LanguageProvider>
+      <ConceptActivitiesInner />
+    </LanguageProvider>
+  );
+}
+
+function ConceptActivitiesInner() {
   const { lang } = useLanguage();
   const isHe = lang === 'he';
   const meta = isHe ? META.he : META.en;
