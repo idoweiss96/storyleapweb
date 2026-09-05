@@ -38,19 +38,30 @@ function ConceptActivitiesInner() {
       <SLFloatingClouds />
       <SLHeader />
 
-      <section style={{ position: 'relative', maxWidth: 1120, margin: '0 auto', padding: '72px 32px 40px', textAlign: 'center' }}>
-        <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fafdff', borderRadius: 9999, padding: '11px 22px', fontSize: 16, color: '#535862', marginBottom: 36 }}>
-          <span style={{ width: 9, height: 9, borderRadius: 9999, background: '#d3f6e3', display: 'block' }}></span>
-          {isHe ? 'חינם לגמרי' : 'Completely free'}
+      <section style={{ position: 'relative', maxWidth: 1200, margin: '0 auto', padding: '72px 32px 40px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 48 }}>
+          <div style={{ flex: '1 1 420px', textAlign: 'center' }}>
+            <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fafdff', borderRadius: 9999, padding: '11px 22px', fontSize: 16, color: '#535862', marginBottom: 36 }}>
+              <span style={{ width: 9, height: 9, borderRadius: 9999, background: '#d3f6e3', display: 'block' }}></span>
+              {isHe ? 'חינם לגמרי' : 'Completely free'}
+            </div>
+            <h1 style={{ margin: 0, fontSize: 'clamp(38px,6vw,64px)', lineHeight: 1.06, letterSpacing: '-0.03em', fontWeight: 500 }}>
+              {isHe ? 'מקום הפעילויות' : 'The Activity Place'}
+            </h1>
+            <p style={{ maxWidth: 560, margin: '28px auto 0', fontSize: 20, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>
+              {isHe
+                ? 'אוסף משחקים קצרים לילדים, לשחק לבד או יחד איתכם, בכמה דקות של חיבור.'
+                : 'A collection of short games for kids, to play alone or together with you, in a few minutes of connection.'}
+            </p>
+          </div>
+          <div style={{ flex: '1 1 380px', minWidth: 280 }}>
+            <img
+              src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/9011049d5_ChatGPTImageSep5202611_52_00PM.png"
+              alt={isHe ? 'הורה וילדה משחקים עם כרטיסי רגשות' : 'A parent and child playing with feelings cards'}
+              style={{ width: '100%', borderRadius: 32, display: 'block' }}
+            />
+          </div>
         </div>
-        <h1 style={{ margin: 0, fontSize: 'clamp(38px,7.2vw,72px)', lineHeight: 1.06, letterSpacing: '-0.03em', fontWeight: 500 }}>
-          {isHe ? 'מקום הפעילויות' : 'The Activity Place'}
-        </h1>
-        <p style={{ maxWidth: 700, margin: '28px auto 0', fontSize: 20, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>
-          {isHe
-            ? 'אוסף משחקים קצרים לילדים, לשחק לבד או יחד איתכם, בכמה דקות של חיבור.'
-            : 'A collection of short games for kids, to play alone or together with you, in a few minutes of connection.'}
-        </p>
       </section>
 
       <section style={{ maxWidth: 1200, margin: '0 auto', padding: '0 32px 96px' }}>
