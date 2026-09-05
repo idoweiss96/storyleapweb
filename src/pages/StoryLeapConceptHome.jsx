@@ -13,6 +13,7 @@ import SLFAQ from '@/components/storyleap-landing/SLFAQ';
 import SLCTA from '@/components/storyleap-landing/SLCTA';
 import SLFooter from '@/components/storyleap-landing/SLFooter';
 import SLQuestionnaireModal from '@/components/storyleap-landing/SLQuestionnaireModal';
+import SLFloatingClouds from '@/components/storyleap-landing/SLFloatingClouds';
 
 export default function StoryLeapConceptHome() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -23,7 +24,8 @@ export default function StoryLeapConceptHome() {
   const pickSituation = (t) => { setTopic(t); setStartStep(1); setModalOpen(true); };
 
   return (
-    <div className="sl-page">
+    <div className="sl-page" style={{ position: 'relative' }}>
+      <SLFloatingClouds />
       <SLHeader onStart={openFlow} />
       <SLHero onStart={openFlow} />
       <SLSituations onPick={pickSituation} onStart={openFlow} />
