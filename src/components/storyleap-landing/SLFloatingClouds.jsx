@@ -18,9 +18,9 @@ export default function SLFloatingClouds() {
     <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
       <style>{`
         @keyframes sl-cloud-drift {
-          0% { transform: translateX(0); }
-          50% { transform: translateX(40px); }
-          100% { transform: translateX(0); }
+          0% { transform: translate(0, 0); }
+          50% { transform: translate(40px, -18px); }
+          100% { transform: translate(0, 0); }
         }
       `}</style>
       <div style={{ position: 'absolute', top: '6%', left: '5%', width: 280, height: 92, animation: 'sl-cloud-drift 18s ease-in-out infinite' }}>
