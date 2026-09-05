@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import '@/styles/storyleap-landing.css';
+import { Pencil } from 'lucide-react';
 import { GENDERS, WORLDS, CHALLENGES, REACTIONS, PLANS } from '@/components/storyleap-landing/landingContent';
 
 const STEP_LABELS = ['Child Details', 'Emotional Challenge', 'Story World', 'Summary & Contact', 'Payment'];
@@ -128,8 +129,8 @@ export default function ConceptQuestionnaire() {
                     <span style={{ color: '#93979f', fontWeight: 400 }}>{label}</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                       <span style={{ textAlign: 'right' }}>{value}</span>
-                      <button type="button" onClick={() => setStep(editStep)} style={{ border: 0, background: 'transparent', color: '#0069e0', fontFamily: 'inherit', fontWeight: 500, fontSize: 15, cursor: 'pointer', padding: 0 }}>
-                        Edit
+                      <button type="button" onClick={() => setStep(editStep)} style={{ border: 0, background: 'transparent', color: '#0069e0', display: 'flex', alignItems: 'center', cursor: 'pointer', padding: 0 }}>
+                        <Pencil size={16} />
                       </button>
                     </div>
                   </div>
