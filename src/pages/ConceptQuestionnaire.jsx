@@ -76,6 +76,9 @@ export default function ConceptQuestionnaire() {
               </div>
               <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>What does your child love?</label>
               <input type="text" placeholder="Dinosaurs, her cat Luna, the park near us" value={form.loves} onChange={(e) => setForm((p) => ({ ...p, loves: e.target.value }))} />
+              <div style={{ marginTop: 28, background: '#f1e6ff', borderRadius: 16, padding: '18px 20px', fontSize: 16, lineHeight: 1.6, color: '#4a4d55' }}>
+                <strong style={{ color: '#0a0d12' }}>What is a social story?</strong> A short, personalized story that puts your child at the center of a familiar situation. It helps children understand and process what they're feeling, and gives you both a natural way to start talking about it together, often opening conversations that are hard to begin any other way.
+              </div>
             </div>
           )}
 
