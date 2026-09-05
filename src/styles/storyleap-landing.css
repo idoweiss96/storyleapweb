@@ -1,0 +1,23 @@
+.sl-page { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; background: #ebf5ff; color: #0a0d12; font-weight: 500; letter-spacing: -0.01em; overflow-x: hidden; }
+.sl-page * { box-sizing: border-box; }
+.sl-page a { color: #0069e0; text-decoration: none; }
+.sl-page a:hover { color: #0a0d12; }
+.sl-nav { display: flex; align-items: center; gap: 28px; font-size: 15px; color: #535862; }
+@media (max-width: 760px) { .sl-nav { display: none; } }
+.sl-img-ph { display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; }
+.sl-grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.sl-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 64px; align-items: start; }
+.sl-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+.sl-grid-3b { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.sl-chip { border: 1px solid #e3edf9; background: #fff; color: #0a0d12; padding: 11px 18px; border-radius: 9999px; font-family: inherit; font-weight: 400; font-size: 15px; cursor: pointer; transition: background-color .3s ease, color .2s ease; }
+.sl-chip.active { background: #181d27; color: #fff; }
+.sl-tile { cursor: pointer; transition: transform .4s cubic-bezier(.16,1,.3,1); }
+.sl-tile:hover { transform: translateY(-3px); }
+.sl-page input, .sl-page textarea { font-family: inherit; font-size: 16px; font-weight: 400; color: #0a0d12; background: #ebf5ff; border: 0; border-radius: 16px; padding: 16px 18px; width: 100%; }
+@keyframes sl-float-a { 0%,100% { transform: translate3d(0,0,0) } 50% { transform: translate3d(0,-26px,0) } }
+@keyframes sl-float-b { 0%,100% { transform: translate3d(0,0,0) } 50% { transform: translate3d(0,20px,0) } }
+@keyframes sl-drift { 0%,100% { transform: translate3d(0,0,0) rotate(0deg) } 50% { transform: translate3d(14px,-14px,0) rotate(4deg) } }
+.sl-float-a { animation: sl-float-a 14s ease-in-out infinite; }
+.sl-float-b { animation: sl-float-b 12s ease-in-out infinite; }
+.sl-drift { animation: sl-drift 14s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .sl-page *, .sl-page *::before, .sl-page *::after { animation: none !important; transition: none !important } }
