@@ -86,7 +86,7 @@ export default function ConceptQuestionnaire() {
                 {CHALLENGES.map((c) => chip(form.topic === c, () => setForm((p) => ({ ...p, topic: c })), c))}
               </div>
               <input type="text" placeholder="Or describe it in your own words" style={{ marginTop: 16 }} value={form.topic} onChange={(e) => setForm((p) => ({ ...p, topic: e.target.value }))} />
-              <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>When does it usually happen?</label>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>When does it usually happen?</label>
               <input type="text" placeholder="When she needs to say goodbye in the morning" value={form.trigger} onChange={(e) => setForm((p) => ({ ...p, trigger: e.target.value }))} />
               <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>How does your child react?</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
