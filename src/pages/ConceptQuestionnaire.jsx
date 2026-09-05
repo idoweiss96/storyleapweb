@@ -45,8 +45,7 @@ export default function ConceptQuestionnaire() {
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '28px 32px 80px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 28 }}>
           <a href="/concept-home" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 26, height: 26, borderRadius: 9999, background: '#181d27', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13 }}>S</div>
-            <span style={{ fontSize: 17, letterSpacing: '-0.03em', color: '#0a0d12' }}>StoryLeap</span>
+            <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/449f3427e_Storyleap.jpg" alt="StoryLeap" style={{ height: 28, width: 'auto', mixBlendMode: 'multiply' }} />
           </a>
           <span style={{ fontSize: 13, color: '#93979f', fontWeight: 400 }}>{stepLabel}</span>
         </div>
