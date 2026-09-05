@@ -69,11 +69,11 @@ export default function ConceptQuestionnaire() {
                   <input type="text" placeholder="5" value={form.ageText} onChange={(e) => setForm((p) => ({ ...p, ageText: e.target.value }))} />
                 </div>
               </div>
-              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>Gender</label>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>Gender</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {GENDERS.map((g) => chip(form.gender === g, () => setForm((p) => ({ ...p, gender: g })), g))}
               </div>
-              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>What does your child love?</label>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>What does your child love?</label>
               <input type="text" placeholder="Dinosaurs, her cat Luna, the park near us" value={form.loves} onChange={(e) => setForm((p) => ({ ...p, loves: e.target.value }))} />
             </div>
           )}
@@ -86,9 +86,9 @@ export default function ConceptQuestionnaire() {
                 {CHALLENGES.map((c) => chip(form.topic === c, () => setForm((p) => ({ ...p, topic: c })), c))}
               </div>
               <input type="text" placeholder="Or describe it in your own words" style={{ marginTop: 16 }} value={form.topic} onChange={(e) => setForm((p) => ({ ...p, topic: e.target.value }))} />
-              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>When does it usually happen?</label>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>When does it usually happen?</label>
               <input type="text" placeholder="When she needs to say goodbye in the morning" value={form.trigger} onChange={(e) => setForm((p) => ({ ...p, trigger: e.target.value }))} />
-              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>How does your child react?</label>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>How does your child react?</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
                 {REACTIONS.map((f) => chip(form.feelings.includes(f), () => toggleReaction(f), f))}
               </div>
@@ -104,7 +104,7 @@ export default function ConceptQuestionnaire() {
                   <button key={w} type="button" className={`sl-chip${form.world === w ? ' active' : ''}`} style={{ padding: '22px 12px', borderRadius: 20, fontWeight: 500 }} onClick={() => setForm((p) => ({ ...p, world: w }))}>{w}</button>
                 ))}
               </div>
-              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>Child's photo (optional)</label>
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>Child's photo (optional)</label>
               <div style={{ border: '1.5px dashed #cfe0f4', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16 }}>
                 Upload a photo to make the story personal, used only for illustration, deleted within 30 days
               </div>
