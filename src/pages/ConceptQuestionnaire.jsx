@@ -58,7 +58,7 @@ export default function ConceptQuestionnaire() {
           {step === 0 && (
             <div>
               <h3 style={{ margin: 0, fontSize: 30, letterSpacing: '-0.025em', fontWeight: 500 }}>Child details</h3>
-              <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Basics first — this is who the story is about, and what your child loves usually matters more than the situation itself.</p>
+              <p style={{ margin: '10px 0 24px', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Basics first, this is who the story is about, and what your child loves usually matters more than the situation itself.</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, marginBottom: 8 }}>Child's name</label>
@@ -77,7 +77,7 @@ export default function ConceptQuestionnaire() {
               <input type="text" placeholder="Dinosaurs, her cat Luna, the park near us" value={form.loves} onChange={(e) => setForm((p) => ({ ...p, loves: e.target.value }))} />
               <label style={{ display: 'block', fontSize: 14, color: '#535862', fontWeight: 400, margin: '22px 0 8px' }}>Child's photo (optional)</label>
               <div style={{ border: '1.5px dashed #cfe0f4', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 14 }}>
-                Upload a photo to make the story personal — used only for illustration, deleted within 30 days
+                Upload a photo to make the story personal, used only for illustration, deleted within 30 days
               </div>
             </div>
           )}
@@ -118,10 +118,10 @@ export default function ConceptQuestionnaire() {
               <div style={{ background: '#ebf5ff', borderRadius: 24, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 22 }}>
                 {[
                   ['Child', (form.name.trim() || 'Not set yet') + (form.ageText ? `, age ${form.ageText}` : '') + (form.gender ? ` · ${form.gender}` : '')],
-                  ['Loves', form.loves || '—'],
+                  ['Loves', form.loves || '-'],
                   ['Story world', form.world || 'Not set yet'],
                   ['Challenge', form.topic || 'Not set yet'],
-                  ['When it happens', form.trigger || '—'],
+                  ['When it happens', form.trigger || '-'],
                   ['Reaction', form.feelings.length ? form.feelings.join(', ') : 'Not set yet'],
                 ].map(([label, value]) => (
                   <div key={label} style={{ display: 'flex', gap: 16, justifyContent: 'space-between', fontSize: 15 }}>
@@ -141,7 +141,7 @@ export default function ConceptQuestionnaire() {
                 </div>
               </div>
               <div style={{ marginTop: 18, background: '#f1e6ff', borderRadius: 16, padding: '16px 18px', fontSize: 14, lineHeight: 1.5, color: '#4a4d55' }}>
-                A peek at the magic — before purchasing you'll see the first two pages of the story, no commitment.
+                A peek at the magic, before purchasing you'll see the first two pages of the story, no commitment.
               </div>
             </div>
           )}
