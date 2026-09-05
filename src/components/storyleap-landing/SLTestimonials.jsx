@@ -10,7 +10,7 @@ export default function SLTestimonials() {
       <div className="sl-grid-3">
         {TESTIMONIALS.map((t) => (
           <div key={t.by} style={{ background: '#fafdff', borderRadius: 32, padding: 36 }}>
-            <p style={{ margin: 0, fontSize: 17, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>{t.quote}</p>
+            <p style={{ margin: 0, fontSize: 17, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>&ldquo;{t.quote}&rdquo;</p>
             <div style={{ marginTop: 24, fontSize: 15 }}>{t.by}</div>
           </div>
         ))}
