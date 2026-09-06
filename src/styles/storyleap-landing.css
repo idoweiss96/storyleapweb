@@ -1,4 +1,4 @@
-.sl-page { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; background: #ebf5ff; color: #0a0d12; font-weight: 500; letter-spacing: -0.01em; overflow-x: hidden; }
+.sl-page { font-family: 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; background: #ebf5ff; color: #0a0d12; font-weight: 500; letter-spacing: -0.01em; overflow-x: hidden; }
 .sl-page * { box-sizing: border-box; }
 .sl-page a { color: #0069e0; text-decoration: none; }
 .sl-page a:hover { color: #0a0d12; }
