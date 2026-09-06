@@ -32,7 +32,6 @@ export default function ConceptQuestionnaire() {
   const handleBack = () => (step === 0 ? navigate('/concept-home') : setStep(step - 1));
 
   const child = form.name.trim() || 'your child';
-  const progress = Math.min(100, Math.round(((step + 1) / LAST_STEP) * 100));
   const stepLabel = step >= LAST_STEP ? 'Done' : `Step ${step + 1} of ${LAST_STEP} · ${STEP_LABELS[step]}`;
 
   const chip = (active, onClick, label, extraStyle = {}) => (
@@ -53,8 +52,10 @@ export default function ConceptQuestionnaire() {
           </a>
           <span style={{ fontSize: 16, color: '#93979f', fontWeight: 400 }}>{stepLabel}</span>
         </div>
-        <div style={{ height: 4, borderRadius: 9999, background: '#dbe9fb', marginBottom: 32 }}>
-          <div style={{ height: 4, borderRadius: 9999, background: '#181d27', width: `${progress}%` }}></div>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 32 }}>
+          {STEP_LABELS.map((_, i) => (
+            <div key={i} style={{ flex: 1, height: 6, borderRadius: 9999, background: i <= step ? '#181d27' : '#dbe9fb', transition: 'background 0.2s' }} />
+          ))}
         </div>
 
         <div style={{ background: '#fafdff', borderRadius: 32, padding: 40 }}>
