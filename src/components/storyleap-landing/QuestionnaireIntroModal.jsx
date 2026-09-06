@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { X } from 'lucide-react';
 
 const SLIDES = [
   {
@@ -25,7 +26,15 @@ export default function QuestionnaireIntroModal({ onClose }) {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,13,18,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-      <div style={{ background: '#fafdff', borderRadius: 28, padding: 36, maxWidth: 420, width: '100%', textAlign: 'center' }}>
+      <div style={{ background: '#fafdff', borderRadius: 28, padding: 36, maxWidth: 420, width: '100%', textAlign: 'center', position: 'relative' }}>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          style={{ position: 'absolute', top: 16, right: 16, border: 0, background: 'transparent', color: '#93979f', cursor: 'pointer', display: 'flex' }}
+        >
+          <X size={20} />
+        </button>
         <div style={{ fontSize: 40, marginBottom: 12 }}>{current.emoji}</div>
         <h3 style={{ margin: 0, fontSize: 24, letterSpacing: '-0.02em', fontWeight: 500 }}>{current.title}</h3>
         <p style={{ margin: '12px 0 0', fontSize: 17, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>{current.text}</p>
