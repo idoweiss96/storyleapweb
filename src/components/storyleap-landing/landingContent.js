@@ -26,9 +26,9 @@ export const GALLERY = [
 ];
 
 export const ACTIVITIES = [
-  { title: 'Emotion Wheel', desc: "Help your child find the word for what they're feeling.", color: '#f1e6ff' },
-  { title: 'Feelings Thermometer', desc: 'Show how big a feeling is right now, and what makes it smaller.', color: '#cce7ff' },
-  { title: 'Draw the Feeling', desc: 'When words are hard, drawing gives the feeling somewhere to go.', color: '#ffe9d9' },
+  { title: 'Emotion Wheel', desc: "Help your child find the word for what they're feeling.", color: '#f1e6ff', icon: 'SmilePlus' },
+  { title: 'Feelings Thermometer', desc: 'Show how big a feeling is right now, and what makes it smaller.', color: '#cce7ff', icon: 'Thermometer' },
+  { title: 'Draw the Feeling', desc: 'When words are hard, drawing gives the feeling somewhere to go.', color: '#ffe9d9', icon: 'Paintbrush' },
 ];
 
 export const TESTIMONIALS = [

@@ -1,5 +1,8 @@
 import React from 'react';
+import { SmilePlus, Thermometer, Paintbrush } from 'lucide-react';
 import { ACTIVITIES } from './landingContent';
+
+const ICONS = { SmilePlus, Thermometer, Paintbrush };
 
 export default function SLActivities() {
   return (
@@ -13,13 +16,18 @@ export default function SLActivities() {
           <a href="/concept-activities" style={{ fontSize: 15, color: '#0a0d12', background: '#ebf5ff', padding: '12px 24px', borderRadius: 9999 }}>See all activities</a>
         </div>
         <div className="sl-grid-3b">
-          {ACTIVITIES.map((a) => (
-            <div key={a.title} className="sl-tile" style={{ background: '#fff', border: '2px solid #ebf5ff', boxShadow: '0 8px 24px rgba(10,13,18,0.05)', borderRadius: 24, padding: 32, minHeight: 210, textAlign: 'center' }}>
-              <div style={{ width: 56, height: 56, margin: '0 auto 14px', borderRadius: 16, background: a.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}></div>
-              <h3 style={{ margin: 0, fontSize: 22, letterSpacing: '-0.02em', fontWeight: 500 }}>{a.title}</h3>
-              <p style={{ margin: '8px 0 0', fontSize: 17, lineHeight: 1.5, color: '#4a4d55', fontWeight: 400 }}>{a.desc}</p>
-            </div>
-          ))}
+          {ACTIVITIES.map((a) => {
+            const Icon = ICONS[a.icon];
+            return (
+              <div key={a.title} className="sl-tile" style={{ background: '#fff', border: '2px solid #ebf5ff', boxShadow: '0 8px 24px rgba(10,13,18,0.05)', borderRadius: 24, padding: 32, minHeight: 210, textAlign: 'center' }}>
+                <div style={{ width: 56, height: 56, margin: '0 auto 14px', borderRadius: 16, background: a.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {Icon && <Icon size={26} color="#0a0d12" strokeWidth={1.75} />}
+                </div>
+                <h3 style={{ margin: 0, fontSize: 22, letterSpacing: '-0.02em', fontWeight: 500 }}>{a.title}</h3>
+                <p style={{ margin: '8px 0 0', fontSize: 17, lineHeight: 1.5, color: '#4a4d55', fontWeight: 400 }}>{a.desc}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
