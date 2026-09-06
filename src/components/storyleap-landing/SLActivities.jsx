@@ -10,7 +10,7 @@ export default function SLActivities() {
             <h2 style={{ margin: 0, fontSize: 44, lineHeight: 1.14, letterSpacing: '-0.025em', fontWeight: 500 }}>Activities you can do today</h2>
             <p style={{ margin: '14px 0 0', maxWidth: 520, fontSize: 17, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>Short tools for naming and sizing feelings. Free, no account needed.</p>
           </div>
-          <a href="/activities" style={{ fontSize: 15, color: '#0a0d12', background: '#ebf5ff', padding: '12px 24px', borderRadius: 9999 }}>See all activities</a>
+          <a href="/concept-activities" style={{ fontSize: 15, color: '#0a0d12', background: '#ebf5ff', padding: '12px 24px', borderRadius: 9999 }}>See all activities</a>
         </div>
         <div className="sl-grid-3b">
           {ACTIVITIES.map((a) => (
