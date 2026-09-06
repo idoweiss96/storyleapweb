@@ -20,20 +20,23 @@ export default function ConceptQuestionnaire() {
     name: '', ageText: '', gender: '', loves: '',
     world: '', topic: initialTopic, trigger: '', feelings: [],
     email: '', phone: '', plan: 'Single story',
-    childPhotoUrl: '',
+    childPhotoUrl: '', parentPhotoUrl: '', parentRelation: '',
+    consentAccepted: false,
   });
-  const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const fileInputRef = useRef(null);
+  const [uploadingChildPhoto, setUploadingChildPhoto] = useState(false);
+  const [uploadingParentPhoto, setUploadingParentPhoto] = useState(false);
+  const childFileInputRef = useRef(null);
+  const parentFileInputRef = useRef(null);
 
-  const handlePhotoUpload = async (e) => {
+  const handlePhotoUpload = async (e, field, setUploading) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setUploadingPhoto(true);
+    setUploading(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setForm((p) => ({ ...p, childPhotoUrl: file_url }));
+      setForm((p) => ({ ...p, [field]: file_url }));
     } finally {
-      setUploadingPhoto(false);
+      setUploading(false);
     }
   };
 
@@ -126,12 +129,12 @@ export default function ConceptQuestionnaire() {
                 ))}
               </div>
               <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>Child's photo (optional)</label>
-              <input type="file" accept="image/*" ref={fileInputRef} onChange={handlePhotoUpload} style={{ display: 'none' }} />
+              <input type="file" accept="image/*" ref={childFileInputRef} onChange={(e) => handlePhotoUpload(e, 'childPhotoUrl', setUploadingChildPhoto)} style={{ display: 'none' }} />
               <div
-                onClick={() => !uploadingPhoto && fileInputRef.current?.click()}
+                onClick={() => !uploadingChildPhoto && childFileInputRef.current?.click()}
                 style={{ border: '2px dashed #a9c9f0', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16, cursor: 'pointer', background: '#f3f8ff' }}
               >
-                {uploadingPhoto ? (
+                {uploadingChildPhoto ? (
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                     <Loader2 size={18} className="animate-spin" /> Uploading...
                   </span>
@@ -150,6 +153,49 @@ export default function ConceptQuestionnaire() {
                   </div>
                 )}
               </div>
+
+              <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>Parent's photo (optional)</label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
+                {['Mom', 'Dad'].map((r) => chip(form.parentRelation === r, () => setForm((p) => ({ ...p, parentRelation: r })), r))}
+              </div>
+              <input type="file" accept="image/*" ref={parentFileInputRef} onChange={(e) => handlePhotoUpload(e, 'parentPhotoUrl', setUploadingParentPhoto)} style={{ display: 'none' }} />
+              <div
+                onClick={() => !uploadingParentPhoto && parentFileInputRef.current?.click()}
+                style={{ border: '2px dashed #a9c9f0', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16, cursor: 'pointer', background: '#f3f8ff' }}
+              >
+                {uploadingParentPhoto ? (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    <Loader2 size={18} className="animate-spin" /> Uploading...
+                  </span>
+                ) : form.parentPhotoUrl ? (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+                    <img src={form.parentPhotoUrl} alt="Parent" style={{ width: 48, height: 48, borderRadius: 12, objectFit: 'cover' }} />
+                    <span>{form.parentRelation ? `${form.parentRelation}'s photo added, tap to change` : 'Photo added, tap to change'}</span>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: 9999, background: '#dbe9fb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <ImagePlus size={22} color="#0069e0" />
+                    </div>
+                    <span style={{ color: '#0069e0', fontWeight: 500 }}>Click to upload a photo</span>
+                    <span style={{ fontSize: 14, color: '#7d8794' }}>Select who it's of above, used only for illustration</span>
+                  </div>
+                )}
+              </div>
+
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginTop: 32, fontSize: 16, lineHeight: 1.5, color: '#4a4d55', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={form.consentAccepted}
+                  onChange={(e) => setForm((p) => ({ ...p, consentAccepted: e.target.checked }))}
+                  style={{ width: 20, height: 20, marginTop: 2, flexShrink: 0 }}
+                />
+                <span>
+                  I consent to uploading my child's (and parent's) photo for a personalized story and agree to the{' '}
+                  <a href="/TermsOfUse" target="_blank" rel="noopener noreferrer" style={{ color: '#0069e0' }}>Terms of Use</a>.
+                  We commit to deleting the photos from our database within one month of upload.
+                </span>
+              </label>
             </div>
           )}
 
