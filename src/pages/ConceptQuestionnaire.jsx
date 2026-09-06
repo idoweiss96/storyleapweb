@@ -21,7 +21,7 @@ export default function ConceptQuestionnaire() {
     world: '', topic: initialTopic, trigger: '', feelings: [],
     email: '', phone: '', plan: 'Single story',
     childPhotoUrl: '', parentPhotoUrl: '', parentRelation: '',
-    consentAccepted: false,
+    consentAccepted: false, customReaction: '',
   });
   const [uploadingChildPhoto, setUploadingChildPhoto] = useState(false);
   const [uploadingParentPhoto, setUploadingParentPhoto] = useState(false);
@@ -114,8 +114,17 @@ export default function ConceptQuestionnaire() {
               <input type="text" placeholder="When she needs to say goodbye in the morning" value={form.trigger} onChange={(e) => setForm((p) => ({ ...p, trigger: e.target.value }))} />
               <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>How does your child react?</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                {REACTIONS.map((f) => chip(form.feelings.includes(f), () => toggleReaction(f), f))}
+                {[...REACTIONS, 'Other'].map((f) => chip(form.feelings.includes(f), () => toggleReaction(f), f))}
               </div>
+              {form.feelings.includes('Other') && (
+                <input
+                  type="text"
+                  placeholder="Describe how your child reacts"
+                  style={{ marginTop: 12 }}
+                  value={form.customReaction}
+                  onChange={(e) => setForm((p) => ({ ...p, customReaction: e.target.value }))}
+                />
+              )}
             </div>
           )}
 
@@ -210,7 +219,7 @@ export default function ConceptQuestionnaire() {
                   ['Story world', form.world || 'Not set yet', 2],
                   ['Challenge', form.topic || 'Not set yet', 1],
                   ['When it happens', form.trigger || '-', 1],
-                  ['Reaction', form.feelings.length ? form.feelings.join(', ') : 'Not set yet', 1],
+                  ['Reaction', form.feelings.length ? form.feelings.map((f) => (f === 'Other' && form.customReaction ? form.customReaction : f)).join(', ') : 'Not set yet', 1],
                 ].map(([label, value, editStep]) => (
                   <div key={label} style={{ display: 'flex', gap: 16, justifyContent: 'space-between', alignItems: 'center', fontSize: 17 }}>
                     <span style={{ color: '#93979f', fontWeight: 400 }}>{label}</span>
