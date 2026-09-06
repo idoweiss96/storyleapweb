@@ -12,7 +12,7 @@ export default function SLFAQ() {
               {f.q}
               <span style={{ display: 'block', color: '#93979f' }}>+</span>
             </summary>
-            <p style={{ margin: '16px 0 0', fontSize: 16, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>{f.a}</p>
+            <p style={{ margin: '16px 0 0', fontSize: 18, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>{f.a}</p>
           </details>
         ))}
       </div>

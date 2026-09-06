@@ -14,7 +14,7 @@ export default function SLGallery() {
             <div className="sl-img-ph" style={{ borderRadius: 24, height: 260, backgroundImage: `url(${g.img})` }}></div>
             <div style={{ padding: '22px 22px 14px' }}>
               <h3 style={{ margin: 0, fontSize: 21, letterSpacing: '-0.02em', fontWeight: 500 }}>{g.title}</h3>
-              <p style={{ margin: '8px 0 0', fontSize: 15, lineHeight: 1.5, color: '#535862', fontWeight: 400 }}>{g.subtitle}</p>
+              <p style={{ margin: '8px 0 0', fontSize: 17, lineHeight: 1.5, color: '#535862', fontWeight: 400 }}>{g.subtitle}</p>
             </div>
           </div>
         ))}

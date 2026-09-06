@@ -18,7 +18,7 @@ export default function SLActivities() {
               <div style={{ width: 44, height: 44, borderRadius: 9999, background: 'rgba(255,255,255,0.7)' }}></div>
               <div>
                 <h3 style={{ margin: 0, fontSize: 22, letterSpacing: '-0.02em', fontWeight: 500 }}>{a.title}</h3>
-                <p style={{ margin: '8px 0 0', fontSize: 15, lineHeight: 1.5, color: '#4a4d55', fontWeight: 400 }}>{a.desc}</p>
+                <p style={{ margin: '8px 0 0', fontSize: 17, lineHeight: 1.5, color: '#4a4d55', fontWeight: 400 }}>{a.desc}</p>
               </div>
             </div>
           ))}

@@ -10,7 +10,7 @@ export default function SLTrust() {
           {TRUST_POINTS.map((p) => (
             <div key={p.title}>
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 500 }}>{p.title}</h3>
-              <p style={{ margin: '8px 0 0', fontSize: 15, lineHeight: 1.55, color: '#4a4d55', fontWeight: 400 }}>{p.desc}</p>
+              <p style={{ margin: '8px 0 0', fontSize: 17, lineHeight: 1.55, color: '#4a4d55', fontWeight: 400 }}>{p.desc}</p>
             </div>
           ))}
         </div>

@@ -15,7 +15,7 @@ export default function SLHowItWorks({ onStart }) {
             <div key={s.title} style={{ background: '#fafdff', borderRadius: 32, padding: '36px 40px' }}>
               <div style={{ fontSize: 13, color: '#93979f', fontWeight: 400, marginBottom: 12 }}>{s.step}</div>
               <h3 style={{ margin: 0, fontSize: 26, letterSpacing: '-0.02em', fontWeight: 500 }}>{s.title}</h3>
-              <p style={{ margin: '12px 0 0', fontSize: 16, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>{s.desc}</p>
+              <p style={{ margin: '12px 0 0', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>{s.desc}</p>
             </div>
           ))}
         </div>
