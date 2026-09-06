@@ -156,7 +156,7 @@ export default function ConceptQuestionnaire() {
 
               <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>Parent's photo (optional)</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
-                {['Mom', 'Dad'].map((r) => chip(form.parentRelation === r, () => setForm((p) => ({ ...p, parentRelation: r })), r))}
+                {['Mom', 'Dad', 'Grandma', 'Grandpa', 'Pet'].map((r) => chip(form.parentRelation === r, () => setForm((p) => ({ ...p, parentRelation: r })), r))}
               </div>
               <input type="file" accept="image/*" ref={parentFileInputRef} onChange={(e) => handlePhotoUpload(e, 'parentPhotoUrl', setUploadingParentPhoto)} style={{ display: 'none' }} />
               <div
