@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import '@/styles/storyleap-landing.css';
-import { Pencil, Loader2 } from 'lucide-react';
+import { Pencil, Loader2, ImagePlus } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { GENDERS, WORLDS, CHALLENGES, REACTIONS, PLANS } from '@/components/storyleap-landing/landingContent';
 import QuestionnaireIntroModal from '@/components/storyleap-landing/QuestionnaireIntroModal';
@@ -129,7 +129,7 @@ export default function ConceptQuestionnaire() {
               <input type="file" accept="image/*" ref={fileInputRef} onChange={handlePhotoUpload} style={{ display: 'none' }} />
               <div
                 onClick={() => !uploadingPhoto && fileInputRef.current?.click()}
-                style={{ border: '1.5px dashed #cfe0f4', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16, cursor: 'pointer' }}
+                style={{ border: '2px dashed #a9c9f0', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16, cursor: 'pointer', background: '#f3f8ff' }}
               >
                 {uploadingPhoto ? (
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -141,7 +141,13 @@ export default function ConceptQuestionnaire() {
                     <span>Photo added, tap to change</span>
                   </div>
                 ) : (
-                  'Upload a photo to make the story personal, used only for illustration, deleted within 30 days'
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: 9999, background: '#dbe9fb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <ImagePlus size={22} color="#0069e0" />
+                    </div>
+                    <span style={{ color: '#0069e0', fontWeight: 500 }}>Click to upload a photo</span>
+                    <span style={{ fontSize: 14, color: '#7d8794' }}>Used only for illustration, deleted within 30 days</span>
+                  </div>
                 )}
               </div>
             </div>
