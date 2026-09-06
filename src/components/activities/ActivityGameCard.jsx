@@ -42,7 +42,7 @@ export default function ActivityGameCard({ game, isHe }) {
   const iconStyle = ICON_STYLES[game.color] || ICON_STYLES.slate;
 
   const cardBody = (
-    <Card className="h-full border border-sky-100 shadow-lg shadow-slate-100 hover:shadow-xl transition-all rounded-2xl relative">
+    <Card className="h-full border-2 border-sky-200 shadow-lg shadow-slate-100 hover:shadow-xl transition-all rounded-2xl relative">
       {access === 'coming_soon' && (
         <span className="absolute top-3 end-3 px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-700 text-white z-10">
           {isHe ? 'בקרוב' : 'Coming soon'}
