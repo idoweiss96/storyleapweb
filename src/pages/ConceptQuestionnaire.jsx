@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import '@/styles/storyleap-landing.css';
-import { Pencil } from 'lucide-react';
+import { Pencil, Loader2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import { GENDERS, WORLDS, CHALLENGES, REACTIONS, PLANS } from '@/components/storyleap-landing/landingContent';
 import QuestionnaireIntroModal from '@/components/storyleap-landing/QuestionnaireIntroModal';
 
@@ -19,7 +20,22 @@ export default function ConceptQuestionnaire() {
     name: '', ageText: '', gender: '', loves: '',
     world: '', topic: initialTopic, trigger: '', feelings: [],
     email: '', phone: '', plan: 'Single story',
+    childPhotoUrl: '',
   });
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingPhoto(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setForm((p) => ({ ...p, childPhotoUrl: file_url }));
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
 
   const toggleReaction = (f) => {
     setForm((prev) => ({
@@ -110,8 +126,23 @@ export default function ConceptQuestionnaire() {
                 ))}
               </div>
               <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>Child's photo (optional)</label>
-              <div style={{ border: '1.5px dashed #cfe0f4', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16 }}>
-                Upload a photo to make the story personal, used only for illustration, deleted within 30 days
+              <input type="file" accept="image/*" ref={fileInputRef} onChange={handlePhotoUpload} style={{ display: 'none' }} />
+              <div
+                onClick={() => !uploadingPhoto && fileInputRef.current?.click()}
+                style={{ border: '1.5px dashed #cfe0f4', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16, cursor: 'pointer' }}
+              >
+                {uploadingPhoto ? (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    <Loader2 size={18} className="animate-spin" /> Uploading...
+                  </span>
+                ) : form.childPhotoUrl ? (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+                    <img src={form.childPhotoUrl} alt="Child" style={{ width: 48, height: 48, borderRadius: 12, objectFit: 'cover' }} />
+                    <span>Photo added, tap to change</span>
+                  </div>
+                ) : (
+                  'Upload a photo to make the story personal, used only for illustration, deleted within 30 days'
+                )}
               </div>
             </div>
           )}
