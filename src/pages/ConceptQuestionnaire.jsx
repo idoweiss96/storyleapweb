@@ -191,9 +191,9 @@ export default function ConceptQuestionnaire() {
                   style={{ width: 20, height: 20, marginTop: 2, flexShrink: 0 }}
                 />
                 <span>
-                  I consent to uploading my child's (and parent's) photo for a personalized story and agree to the{' '}
+                  I consent to uploading these photos for a personalized story and agree to the{' '}
                   <a href="/TermsOfUse" target="_blank" rel="noopener noreferrer" style={{ color: '#0069e0' }}>Terms of Use</a>.
-                  We commit to deleting the photos from our database within one month of upload.
+                  Photos are deleted within a month.
                 </span>
               </label>
             </div>
