@@ -5,6 +5,7 @@ import { Pencil, Loader2, ImagePlus } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { GENDERS, WORLDS, CHALLENGES, REACTIONS, PLANS } from '@/components/storyleap-landing/landingContent';
 import QuestionnaireIntroModal from '@/components/storyleap-landing/QuestionnaireIntroModal';
+import ImageCropModal from '@/components/storyleap-landing/ImageCropModal';
 
 const STEP_LABELS = ['Child Details', 'Emotional Challenge', 'Story World', 'Summary & Contact', 'Payment'];
 const LAST_STEP = 5;
@@ -25,14 +26,30 @@ export default function ConceptQuestionnaire() {
   });
   const [uploadingChildPhoto, setUploadingChildPhoto] = useState(false);
   const [uploadingParentPhoto, setUploadingParentPhoto] = useState(false);
+  const [cropTarget, setCropTarget] = useState(null); // { field, setUploading, imageSrc }
   const childFileInputRef = useRef(null);
   const parentFileInputRef = useRef(null);
 
-  const handlePhotoUpload = async (e, field, setUploading) => {
+  const handlePhotoSelect = (e, field, setUploading) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const imageSrc = URL.createObjectURL(file);
+    setCropTarget({ field, setUploading, imageSrc });
+    e.target.value = '';
+  };
+
+  const handleCropCancel = () => {
+    if (cropTarget) URL.revokeObjectURL(cropTarget.imageSrc);
+    setCropTarget(null);
+  };
+
+  const handleCropConfirm = async (blob) => {
+    const { field, setUploading, imageSrc } = cropTarget;
+    URL.revokeObjectURL(imageSrc);
+    setCropTarget(null);
     setUploading(true);
     try {
+      const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       setForm((p) => ({ ...p, [field]: file_url }));
     } finally {
@@ -64,6 +81,9 @@ export default function ConceptQuestionnaire() {
   return (
     <div className="sl-page" style={{ minHeight: '100vh' }}>
       {showIntro && <QuestionnaireIntroModal onClose={() => setShowIntro(false)} />}
+      {cropTarget && (
+        <ImageCropModal imageSrc={cropTarget.imageSrc} onCancel={handleCropCancel} onConfirm={handleCropConfirm} />
+      )}
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '28px 32px 80px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 28 }}>
           <a href="/concept-home" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -138,7 +158,7 @@ export default function ConceptQuestionnaire() {
                 ))}
               </div>
               <label style={{ display: 'block', fontSize: 18, color: '#535862', fontWeight: 400, margin: '36px 0 8px' }}>Child's photo (optional)</label>
-              <input type="file" accept="image/*" ref={childFileInputRef} onChange={(e) => handlePhotoUpload(e, 'childPhotoUrl', setUploadingChildPhoto)} style={{ display: 'none' }} />
+              <input type="file" accept="image/*" ref={childFileInputRef} onChange={(e) => handlePhotoSelect(e, 'childPhotoUrl', setUploadingChildPhoto)} style={{ display: 'none' }} />
               <div
                 onClick={() => !uploadingChildPhoto && childFileInputRef.current?.click()}
                 style={{ border: '2px dashed #a9c9f0', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16, cursor: 'pointer', background: '#f3f8ff' }}
@@ -167,7 +187,7 @@ export default function ConceptQuestionnaire() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
                 {['Mom', 'Dad', 'Grandma', 'Grandpa', 'Pet'].map((r) => chip(form.parentRelation === r, () => setForm((p) => ({ ...p, parentRelation: r })), r))}
               </div>
-              <input type="file" accept="image/*" ref={parentFileInputRef} onChange={(e) => handlePhotoUpload(e, 'parentPhotoUrl', setUploadingParentPhoto)} style={{ display: 'none' }} />
+              <input type="file" accept="image/*" ref={parentFileInputRef} onChange={(e) => handlePhotoSelect(e, 'parentPhotoUrl', setUploadingParentPhoto)} style={{ display: 'none' }} />
               <div
                 onClick={() => !uploadingParentPhoto && parentFileInputRef.current?.click()}
                 style={{ border: '2px dashed #a9c9f0', borderRadius: 20, padding: 26, textAlign: 'center', color: '#7d8794', fontSize: 16, cursor: 'pointer', background: '#f3f8ff' }}
