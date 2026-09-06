@@ -263,7 +263,8 @@ export default function ConceptQuestionnaire() {
                 </div>
               </div>
               <div style={{ marginTop: 18, background: '#f1e6ff', borderRadius: 16, padding: '16px 18px', fontSize: 16, lineHeight: 1.5, color: '#4a4d55' }}>
-                A peek at the magic, before purchasing you'll see the first two pages of the story, no commitment.
+                <div style={{ fontWeight: 600, marginBottom: 4 }}>A glimpse before you decide</div>
+                Preview the first two pages of your personalized story before purchasing, with no commitment.
               </div>
             </div>
           )}
