@@ -11,11 +11,13 @@ export default function SLHowItWorks({ onStart }) {
           <button type="button" onClick={onStart} style={{ marginTop: 28, border: 0, fontFamily: 'inherit', fontWeight: 500, fontSize: 16, letterSpacing: '-0.01em', background: '#181d27', color: '#fff', padding: '15px 32px', borderRadius: 9999, boxShadow: '0 1px 2px rgba(10,13,18,0.4)' }}>Begin the questionnaire</button>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {HOW_STEPS.map((s) => (
-            <div key={s.title} style={{ background: '#fafdff', borderRadius: 32, padding: '36px 40px' }}>
-              <div style={{ fontSize: 13, color: '#93979f', fontWeight: 400, marginBottom: 12 }}>{s.step}</div>
-              <h3 style={{ margin: 0, fontSize: 26, letterSpacing: '-0.02em', fontWeight: 500 }}>{s.title}</h3>
-              <p style={{ margin: '12px 0 0', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>{s.desc}</p>
+          {HOW_STEPS.map((s, i) => (
+            <div key={s.title} style={{ background: '#fafdff', borderRadius: 32, padding: '36px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 24 }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: 26, letterSpacing: '-0.02em', fontWeight: 500 }}>{s.title}</h3>
+                <p style={{ margin: '12px 0 0', fontSize: 18, lineHeight: 1.55, color: '#535862', fontWeight: 400 }}>{s.desc}</p>
+              </div>
+              <div style={{ fontSize: 48, fontWeight: 700, color: '#cfe0f4', lineHeight: 1, flexShrink: 0 }}>{i + 1}</div>
             </div>
           ))}
         </div>
