@@ -8,7 +8,7 @@ export default function SLHero({ onStart }) {
     <section style={{ position: 'relative', maxWidth: 1120, margin: '0 auto', padding: '72px 32px 40px', textAlign: 'center' }}>
       <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fafdff', borderRadius: 9999, padding: '11px 22px', fontSize: 16, color: '#535862', marginBottom: 36 }}>
         <span style={{ width: 9, height: 9, borderRadius: 9999, background: '#d3f6e3', display: 'block' }}></span>
-        Personalized emotional stories for children ages 3–9
+        Helping parents and children talk, understand & connect
       </div>
       <h1 style={{ margin: 0, fontSize: 'clamp(38px,7.2vw,88px)', lineHeight: 1.06, letterSpacing: '-0.03em', fontWeight: 500 }}>What is your child<br />going through right now?</h1>
       <p style={{ maxWidth: 700, margin: '28px auto 0', fontSize: 23, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>Children do not always have the words to explain what they are feeling. StoryLeap turns those moments into an illustrated story built around your child, and gives you a natural way to talk about it together.</p>
