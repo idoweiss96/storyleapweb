@@ -17,7 +17,7 @@ export default function SLSituations({ onPick, onStart }) {
         ))}
       </div>
       <div style={{ textAlign: 'center', marginTop: 28 }}>
-        <button type="button" onClick={onStart} style={{ border: 0, fontFamily: 'inherit', fontWeight: 400, fontSize: 17, letterSpacing: '-0.01em', background: '#fafdff', color: '#0a0d12', padding: '20px 40px', borderRadius: 20 }}>Something else my child is going through</button>
+        <button type="button" onClick={onStart} style={{ border: 0, fontFamily: 'inherit', fontWeight: 500, fontSize: 17, letterSpacing: '-0.01em', background: '#fafdff', color: '#0a0d12', padding: '20px 40px', borderRadius: 20 }}>Something else my child is going through</button>
       </div>
     </section>
   );
