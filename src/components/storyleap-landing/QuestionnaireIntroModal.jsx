@@ -11,6 +11,11 @@ const SLIDES = [
     title: 'Why it matters',
     text: 'It gives you and your child a natural way to start talking about it together, often opening conversations that are hard to begin any other way.',
   },
+  {
+    emoji: '📩',
+    title: "It's yours to keep",
+    text: "After purchase, we'll email you the digital story together with conversation questions to go through with your child.",
+  },
 ];
 
 export default function QuestionnaireIntroModal({ onClose }) {
