@@ -24,18 +24,20 @@ export default function StoryLeapConceptHome() {
   return (
     <div className="sl-page" style={{ position: 'relative' }}>
       <SLFloatingClouds />
-      <SLHeader onStart={openFlow} />
-      <SLHero onStart={openFlow} />
-      <SLSituations onPick={pickSituation} onStart={openFlow} />
-      <SLHowItWorks onStart={openFlow} />
-      <SLGallery />
-      <SLActivities />
-      <SLParentSupport />
-      <SLTestimonials />
-      <SLTrust />
-      <SLFAQ />
-      <SLCTA onStart={openFlow} />
-      <SLFooter />
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <SLHeader onStart={openFlow} />
+        <SLHero onStart={openFlow} />
+        <SLSituations onPick={pickSituation} onStart={openFlow} />
+        <SLHowItWorks onStart={openFlow} />
+        <SLGallery />
+        <SLActivities />
+        <SLParentSupport />
+        <SLTestimonials />
+        <SLTrust />
+        <SLFAQ />
+        <SLCTA onStart={openFlow} />
+        <SLFooter />
+      </div>
     </div>
   );
 }

@@ -16,7 +16,7 @@ const Cloud = ({ style }) => (
 
 export default function SLFloatingClouds() {
   return (
-    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: -1 }}>
+    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
       <style>{`
         @keyframes sl-cloud-drift {
           0% { transform: translate(0, 0); }
