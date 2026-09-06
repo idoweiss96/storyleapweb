@@ -11,7 +11,7 @@ export default function SLHero({ onStart }) {
         Helping parents and children talk, understand & connect
       </div>
       <h1 style={{ margin: 0, fontSize: 'clamp(38px,7.2vw,88px)', lineHeight: 1.06, letterSpacing: '-0.03em', fontWeight: 500 }}>What is your child<br />going through right now?</h1>
-      <p style={{ maxWidth: 700, margin: '28px auto 0', fontSize: 23, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>Children do not always have the words to explain what they are feeling. StoryLeap turns those moments into an illustrated story built around your child, and gives you a natural way to talk about it together.</p>
+      <p style={{ maxWidth: 700, margin: '28px auto 0', fontSize: 23, lineHeight: 1.6, color: '#535862', fontWeight: 400 }}>Children don't always have the words to explain what they're feeling. StoryLeap turns everyday challenges into personalized stories, games and activities that help you understand your child and start meaningful conversations together.</p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginTop: 36 }}>
         <button type="button" onClick={onStart} style={{ border: 0, fontFamily: 'inherit', fontWeight: 500, fontSize: 20, letterSpacing: '-0.01em', background: '#181d27', color: '#fff', padding: '20px 44px', borderRadius: 9999, boxShadow: '0 1px 2px rgba(10,13,18,0.4)' }}>Create your child's story</button>
         <a href="#activities" style={{ fontSize: 20, color: '#0a0d12', background: '#fafdff', padding: '20px 40px', borderRadius: 9999 }}>Try a free activity</a>
