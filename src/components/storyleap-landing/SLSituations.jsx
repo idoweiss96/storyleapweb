@@ -11,7 +11,7 @@ export default function SLSituations({ onPick, onStart }) {
       <div className="sl-grid-4">
         {SITUATIONS.map((s) => (
           <button key={s.label} type="button" className="sl-tile" onClick={() => onPick(s.label)}
-            style={{ textAlign: 'left', border: 0, fontFamily: 'inherit', fontWeight: 500, letterSpacing: '-0.01em', background: s.color, borderRadius: 24, padding: '26px 24px', fontSize: 19, color: '#0a0d12', minHeight: 132, display: 'flex', alignItems: 'flex-end' }}>
+            style={{ textAlign: 'center', border: 0, fontFamily: 'inherit', fontWeight: 500, letterSpacing: '-0.01em', background: s.color, borderRadius: 24, padding: '26px 24px', fontSize: 19, color: '#0a0d12', minHeight: 132, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             {s.label}
           </button>
         ))}
