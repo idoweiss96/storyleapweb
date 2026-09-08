@@ -12,8 +12,7 @@ export default function SLFooter() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))', gap: 32 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 26, height: 26, borderRadius: 9999, background: '#181d27', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13 }}>S</div>
-            <span style={{ fontSize: 17, letterSpacing: '-0.03em' }}>StoryLeap</span>
+            <img src="https://media.base44.com/images/public/697f4b704975c71e9cf56f59/e41c4f352_Storyleap.svg" alt="StoryLeap" style={{ height: 26, width: 'auto' }} />
           </div>
           <p style={{ margin: '14px 0 0', maxWidth: 280, fontSize: 14, lineHeight: 1.55, color: '#93979f', fontWeight: 400 }}>Personalized emotional stories that help families talk about the hard parts of growing up.</p>
         </div>
