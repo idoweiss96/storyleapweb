@@ -14,7 +14,7 @@ export default function SLHero({ onStart }) {
       <p style={{ maxWidth: 900, margin: '28px auto 0', fontSize: 23, lineHeight: 1.6, color: '#535862', fontWeight: 400 }} className="[font-family:'Nunito_Sans',_sans-serif] font-semibold">Children don't always have the words for what they're feeling. StoryLeap helps you talk, understand and connect through personalized stories, games and activities.</p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginTop: 36 }}>
         <button type="button" onClick={onStart} style={{ border: 0, fontFamily: 'inherit', fontWeight: 500, fontSize: 20, letterSpacing: '-0.01em', background: '#181d27', color: '#fff', padding: '20px 44px', borderRadius: 9999, boxShadow: '0 1px 2px rgba(10,13,18,0.4)' }} className="[font-family:'Nunito_Sans',_sans-serif] font-semibold">Create your child's story</button>
-        <a href="#activities" style={{ fontSize: 20, color: '#0a0d12', background: '#fafdff', padding: '20px 40px', borderRadius: 9999 }}>Try a free activity</a>
+        <a href="#activities" style={{ fontSize: 20, color: '#0a0d12', background: '#fafdff', padding: '20px 40px', borderRadius: 9999, border: '2px solid #cce7ff' }}>Try a free activity</a>
       </div>
       <div style={{ position: 'relative', marginTop: 64, background: '#fafdff', borderRadius: 32, padding: 14, boxShadow: '0 14px 30px 4px rgba(4,69,144,0.07)' }}>
         {badge('#f1e6ff', { top: -22, left: -26 }, 'sl-float-a', 'Personalized emotional story')}
