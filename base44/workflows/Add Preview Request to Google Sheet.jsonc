@@ -1,0 +1,38 @@
+{
+  "name": "Add Preview Request to Google Sheet",
+  "description": "Appends free preview requests to the Questionnaire/\u05e9\u05d0\u05dc\u05d5\u05df Google Sheets tagged \"Preview Requested\", and flips that row to \"Preview Sent\" once an admin adds the preview link.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create",
+        "update"
+      ],
+      "entity_name": "StoryPreview"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "add_preview_request_to_google_sheet",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "addPreviewToSheet",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "addPreviewToSheet"
+  }
+}

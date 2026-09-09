@@ -1,0 +1,44 @@
+{
+  "name": "Check Story Links and Notify Parents",
+  "description": "Polls the Hebrew and English questionnaire Sheets for rows where the Story Link column just went from empty to filled and the Email Sent column isn't marked yet; sends the parent the ready-story email in their language and marks Email Sent so it never fires twice for the same row.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "interval",
+      "cron_expression": null,
+      "one_time_date": null,
+      "timezone": "UTC",
+      "interval_value": 5,
+      "interval_unit": "minutes",
+      "interval_anchor": "2026-07-30T14:29:04.332000",
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "check_story_links_and_notify_parents",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "checkStoryLinksAndNotify",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "checkStoryLinksAndNotify"
+  }
+}

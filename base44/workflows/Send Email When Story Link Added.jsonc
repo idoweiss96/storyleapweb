@@ -1,0 +1,37 @@
+{
+  "name": "Send Email When Story Link Added",
+  "description": "",
+  "trigger": {
+    "condition": "${ ((.trigger.changed_fields | index(\"story_link\") != null) and (.trigger.data.story_link != null and .trigger.data.story_link != \"\" and .trigger.data.story_link != [] and .trigger.data.story_link != {})) }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "update"
+      ],
+      "entity_name": "Story"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "send_email_when_story_link_added",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "onStoryLinkAdded",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "onStoryLinkAdded"
+  }
+}

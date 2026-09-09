@@ -1,0 +1,37 @@
+{
+  "name": "\u05d4\u05d5\u05e1\u05e4\u05ea \u05e1\u05d9\u05e4\u05d5\u05e8 \u05d7\u05d3\u05e9 \u05dc-Google Sheets",
+  "description": "",
+  "trigger": {
+    "condition": "${ ((.trigger.data.payment_status == \"story_generating\") and (.trigger.old_data.payment_status != \"story_generating\")) }",
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "Story"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "google_sheets",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "addStoryToSheet",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "addStoryToSheet"
+  }
+}

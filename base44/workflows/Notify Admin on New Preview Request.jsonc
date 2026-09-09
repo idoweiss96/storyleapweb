@@ -1,0 +1,37 @@
+{
+  "name": "Notify Admin on New Preview Request",
+  "description": "Sends a Gmail notification to the admin with the child's name, parent's email, and language whenever a new free story preview is requested.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "StoryPreview"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "notify_admin_on_new_preview_request",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "notifyNewPreviewRequest",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "notifyNewPreviewRequest"
+  }
+}
