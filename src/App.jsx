@@ -5,6 +5,8 @@ import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
+// --- Pet talk (pet-talk/ in the StoryLeap repo). Additive, full-screen, outside the site layout. ---
+import PetTalkPage from './pages/PetTalk';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Pricing from './pages/Pricing';
@@ -193,6 +195,7 @@ const AuthenticatedApp = () => {
       <Route path="/concept-questionnaire" element={<ConceptQuestionnaire />} />
       <Route path="/conversation-cards-preview" element={<LayoutWrapper currentPageName="ConversationCardsPreview"><ConversationCardsPreview /></LayoutWrapper>} />
       <Route path="/oauth/consent" element={<OAuthConsent />} />
+      <Route path="/pet-talk" element={<PetTalkPage />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
