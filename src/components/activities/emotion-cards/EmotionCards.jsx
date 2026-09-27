@@ -12,7 +12,7 @@ const STYLE = `
     position:relative;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
     min-height:96px;padding:12px 8px;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:15px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:15px;
     font-family:inherit;cursor:pointer;transition:.15s;
   }
   .ec-tile:hover{transform:translateY(-2px)}
@@ -43,7 +43,7 @@ const STYLE = `
 
   .ec-uses{
     margin-top:32px;padding:20px 22px;
-    background:rgba(255,255,255,.72);border:1.5px solid #EDE9F8;border-radius:18px;
+    background:rgba(255,255,255,.72);border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:18px;
   }
   .ec-uses h3{font-size:16px;font-weight:700;color:#1A1A6E;margin:0 0 12px;text-align:center}
   .ec-uses ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
