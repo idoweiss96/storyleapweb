@@ -67,6 +67,8 @@ import GamePizzeria from './pages/GamePizzeria';
 import GameGarage from './pages/GameGarage';
 import GameStore from './pages/GameStore';
 import GameActions from './pages/GameActions';
+import LearningGamePage from './components/learning-games/LearningGamePage';
+import { LEARNING_GAMES } from './components/learning-games/registry';
 // --- Redesign prototype (additive, isolated, noindex). Not in production nav. ---
 import HomeNew from './pages/HomeNew';
 import ProfessionalsNew from './pages/ProfessionalsNew';
@@ -187,6 +189,9 @@ const AuthenticatedApp = () => {
       <Route path="/games/garage" element={<LayoutWrapper currentPageName="GameGarage"><GameGarage /></LayoutWrapper>} />
       <Route path="/games/store" element={<LayoutWrapper currentPageName="GameStore"><GameStore /></LayoutWrapper>} />
       <Route path="/games/actions" element={<LayoutWrapper currentPageName="GameActions"><GameActions /></LayoutWrapper>} />
+      {LEARNING_GAMES.map((g) => (
+        <Route key={g.slug} path={g.path} element={<LayoutWrapper currentPageName="LearningGame"><LearningGamePage slug={g.slug} /></LayoutWrapper>} />
+      ))}
       <Route path="/HomeNew" element={<LayoutWrapper currentPageName="HomeNew"><HomeNew /></LayoutWrapper>} />
       <Route path="/professionals-new" element={<LayoutWrapper currentPageName="ProfessionalsNew"><ProfessionalsNew /></LayoutWrapper>} />
       <Route path="/visual-schedule-preview" element={<LayoutWrapper currentPageName="VisualSchedulePreview"><VisualSchedulePreview /></LayoutWrapper>} />
