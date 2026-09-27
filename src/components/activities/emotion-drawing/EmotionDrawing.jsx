@@ -16,7 +16,7 @@ const STYLE = `
 
   .ed-canvas{
     display:block;width:100%;height:auto;aspect-ratio:10/7;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:16px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:16px;
     box-shadow:0 4px 18px rgba(26,26,110,.10);
     touch-action:none;            /* let the child draw without scrolling the page */
     cursor:crosshair;
@@ -37,7 +37,7 @@ const STYLE = `
 
   .ed-brush{
     display:grid;place-items:center;width:38px;height:38px;border-radius:12px;
-    background:#fff;border:1.5px solid #EDE9F8;cursor:pointer;transition:.15s;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);cursor:pointer;transition:.15s;
   }
   .ed-brush span{display:block;border-radius:999px;background:#3f3f56}
   .ed-brush[aria-pressed="true"]{border-color:#FF6FB5;background:#FFF0F7}
@@ -46,7 +46,7 @@ const STYLE = `
   .ed-btn{
     display:inline-flex;align-items:center;gap:6px;
     font-family:inherit;font-size:14px;color:#475569;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:999px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:999px;
     padding:9px 15px;cursor:pointer;transition:.15s;
   }
   .ed-btn:hover:not(:disabled){background:#f8fafc}
