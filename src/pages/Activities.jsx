@@ -1,13 +1,15 @@
 import React from 'react';
 import {
-  Gamepad2, Sparkles, Compass, CircleDot, Gem, LifeBuoy, Palette, Thermometer,
+  Sparkles, Compass, CircleDot, Gem, LifeBuoy, Palette, Thermometer,
   ClipboardList, ArrowRight, Shuffle, Hand, PersonStanding, Layers, CalendarCheck,
   ListOrdered, Droplet, CheckSquare, Timer, Wind, Palmtree, ScrollText, Sprout,
 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/components/LanguageContext';
 import PageMeta from '@/components/SEO/PageMeta';
-import ActivityGameCard from '@/components/activities/ActivityGameCard';
+import ActivityTile, { TILE_STYLE } from '@/components/activities/ActivityTile';
+import ActivityBackdrop from '@/components/activities/shared/ActivityBackdrop';
+import { GROUPS, themeFor } from '@/components/activities/shared/activityThemes';
+import Critter from '@/components/games/shared/art/Critter';
 
 const ACTIVITIES_META = {
   en: {
@@ -253,54 +255,74 @@ export default function Activities() {
   const { lang } = useLanguage();
   const isHe = lang === 'he';
   const meta = isHe ? ACTIVITIES_META.he : ACTIVITIES_META.en;
+  const groupOf = (game) => themeFor(game.path.split('/').filter(Boolean).pop()).group;
 
   return (
     <div className="max-w-5xl mx-auto py-6 md:py-10">
       <PageMeta title={meta.title} description={meta.description} />
+      <style>{TILE_STYLE + HUB_STYLE}</style>
 
-      <header className="text-center mb-10">
-        <div
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-white text-sm font-medium mb-5"
-          style={{ background: 'linear-gradient(135deg, #FF6FB5, #4FC3E8)' }}
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>{isHe ? 'חינם לגמרי' : 'Completely free'}</span>
+      <header className="ah-hero">
+        <ActivityBackdrop scene="meadow" id="ah-hero" className="ah-bg" />
+        <div className="ah-inner">
+          <span className="ah-pill">
+            <Sparkles className="w-4 h-4" />
+            {isHe ? 'חינם לגמרי' : 'Completely free'}
+          </span>
+          <h1 className="ah-title">{isHe ? 'מקום הפעילויות' : 'The Activity Place'}</h1>
+          <p className="ah-sub">
+            {isHe
+              ? 'אוסף משחקים קצרים לילדים, לשחק לבד או יחד איתכם, בכמה דקות של חיבור.'
+              : 'A collection of short games for kids, to play alone or together with you, in a few minutes of connection.'}
+          </p>
+          <div className="ah-crew" aria-hidden="true">
+            {['fox', 'bunny', 'bear', 'penguin', 'cat'].map((sp, i) => (
+              <span key={sp} className="ah-member" style={{ animationDelay: `${i * 0.25}s` }}>
+                <Critter species={sp} expression="happy" size={i === 2 ? 84 : 64} />
+              </span>
+            ))}
+          </div>
         </div>
-
-        <h1 className="text-3xl md:text-5xl font-bold text-slate-800 mb-4">
-          {isHe ? 'מקום הפעילויות' : 'The Activity Place'}
-        </h1>
-
-        <p className="text-base md:text-lg text-slate-500 max-w-2xl mx-auto">
-          {isHe
-            ? 'אוסף משחקים קצרים לילדים, לשחק לבד או יחד איתכם, בכמה דקות של חיבור.'
-            : 'A collection of short games for kids, to play alone or together with you, in a few minutes of connection.'}
-        </p>
       </header>
 
-      {GAMES.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {GAMES.map((game) => (
-            <ActivityGameCard key={game.path} game={game} isHe={isHe} />
-          ))}
-        </div>
-      ) : (
-        <Card className="border-0 shadow-lg shadow-slate-100 rounded-2xl">
-          <CardContent className="py-16 px-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-slate-50 flex items-center justify-center">
-              <Gamepad2 className="w-8 h-8 text-slate-400" />
-            </div>
-            <h2 className="text-xl font-bold text-slate-800 mb-2">
-              {isHe ? 'המשחקים בדרך' : 'Games are on the way'}
+      {GROUPS.map((group) => {
+        const items = GAMES.filter((g) => groupOf(g) === group.id);
+        if (!items.length) return null;
+        return (
+          <section key={group.id} className="ah-group">
+            <h2 className="ah-gtitle">
+              <span className="ah-dot" style={{ background: group.color }} />
+              {isHe ? group.he : group.en}
             </h2>
-            <p className="text-slate-500 max-w-md mx-auto">
-              {isHe
-                ? 'אנחנו בונים כאן משחקים קטנים לילדים. חזרו בקרוב — הם יופיעו בדיוק במקום הזה.'
-                : "We're building small games for kids here. Come back soon — they'll show up right in this spot."}
-            </p>
-          </CardContent>
-        </Card>
-      )}
+            <div className="ah-grid">
+              {items.map((game) => (
+                <ActivityTile key={game.path} game={game} isHe={isHe} />
+              ))}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }
+
+const HUB_STYLE = `
+  .ah-hero{position:relative;overflow:hidden;border:2.5px solid #3A3357;border-radius:32px;margin-bottom:34px;
+    box-shadow:0 8px 0 rgba(58,51,87,.12)}
+  .ah-bg{position:absolute;inset:0;width:100%;height:100%}
+  .ah-inner{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:26px 16px 10px}
+  .ah-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:999px;color:#fff;font-weight:800;font-size:14px;
+    background:linear-gradient(135deg,#FF6FB5,#4FC3E8);border:2.2px solid #3A3357}
+  .ah-title{margin:0;font-size:clamp(30px,6vw,52px);font-weight:900;color:#1A1A6E;line-height:1.05;
+    text-shadow:0 3px 0 #fff, 0 -2px 0 #fff, 2px 0 0 #fff, -2px 0 0 #fff}
+  .ah-sub{margin:0;max-width:560px;font-size:16px;font-weight:600;color:#2a2a44;background:rgba(255,255,255,.85);
+    border-radius:14px;padding:6px 12px}
+  .ah-crew{display:flex;align-items:flex-end;gap:4px;margin-top:4px}
+  .ah-member{filter:drop-shadow(0 5px 6px rgba(26,26,110,.22));animation:ah-bob 3s ease-in-out infinite}
+  .ah-group{margin-bottom:34px}
+  .ah-gtitle{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:22px;font-weight:900;color:#1A1A6E}
+  .ah-dot{width:16px;height:16px;border-radius:999px;border:2.4px solid #3A3357}
+  .ah-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+  @keyframes ah-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @media (prefers-reduced-motion:reduce){.ah-member{animation:none}}
+`;
