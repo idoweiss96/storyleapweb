@@ -13,7 +13,7 @@ const STYLE = `
 
   .ta-row{
     display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:14px;
     padding:12px 14px;box-shadow:0 2px 10px rgba(26,26,110,.05);
     break-inside:avoid;
   }
@@ -27,7 +27,7 @@ const STYLE = `
   .ta-levels{display:flex;gap:5px;flex:0 0 auto}
   .ta-level{
     display:grid;place-items:center;width:36px;height:36px;border-radius:10px;
-    background:#fff;border:1.5px solid #EDE9F8;font-size:16px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);font-size:16px;
     cursor:pointer;transition:.15s;
   }
   .ta-level:hover{border-color:#c9c2e0}
@@ -37,7 +37,7 @@ const STYLE = `
   .ta-ctrl{display:flex;gap:4px;flex:0 0 auto}
   .ta-icon{
     display:grid;place-items:center;width:30px;height:30px;border-radius:9px;
-    background:#fff;border:1.5px solid #EDE9F8;color:#64748b;cursor:pointer;transition:.15s;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);color:#64748b;cursor:pointer;transition:.15s;
   }
   .ta-icon:hover:not(:disabled){background:#f8fafc;color:#1A1A6E}
   .ta-icon:disabled{opacity:.35;cursor:not-allowed}
@@ -46,7 +46,7 @@ const STYLE = `
   .ta-legend{
     display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
     margin:18px 0 0;padding:14px;
-    background:rgba(255,255,255,.66);border:1.5px solid #EDE9F8;border-radius:14px;
+    background:rgba(255,255,255,.66);border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:14px;
   }
   .ta-legend span{
     display:inline-flex;align-items:center;gap:6px;
@@ -59,7 +59,7 @@ const STYLE = `
 
   .ta-empty{
     text-align:center;color:rgba(26,26,46,.45);font-size:15px;line-height:1.6;
-    background:rgba(255,255,255,.6);border:1.5px dashed #EDE9F8;border-radius:16px;
+    background:rgba(255,255,255,.6);border:2px dashed #CFC7EA;border-radius:16px;
     padding:26px 20px;
   }
 
@@ -67,7 +67,7 @@ const STYLE = `
   .ta-field label{display:block;font-size:13.5px;font-weight:600;color:#1A1A6E;margin-bottom:7px}
   .ta-field input{
     width:100%;font-family:inherit;font-size:16px;color:#1a1a2e;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:12px;padding:12px 14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:12px;padding:12px 14px;
     transition:border-color .18s;
   }
   .ta-field input::placeholder{color:rgba(26,26,46,.34)}
@@ -76,7 +76,7 @@ const STYLE = `
   .ta-add{display:flex;gap:8px;margin-top:14px}
   .ta-add input{
     flex:1;min-width:0;font-family:inherit;font-size:15px;color:#1a1a2e;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:11px;padding:11px 13px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:11px;padding:11px 13px;
   }
   .ta-add input:focus{border-color:#FF6FB5;outline:none}
   .ta-add button{
