@@ -13,7 +13,7 @@ const STYLE = `
   .et-tube{
     display:flex;flex-direction:column;gap:4px;
     width:76px;padding:8px;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:999px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:999px;
     box-shadow:0 4px 18px rgba(26,26,110,.10);
   }
   .et-seg{
@@ -29,7 +29,7 @@ const STYLE = `
 
   .et-bulb{
     width:60px;height:60px;border-radius:999px;margin:2px auto 0;
-    border:1.5px solid #EDE9F8;background:#F4F4F9;
+    border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);background:#F4F4F9;
     display:grid;place-items:center;font-size:26px;
     transition:background .16s;
   }
