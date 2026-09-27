@@ -12,7 +12,7 @@ const STYLE = `
 
   .rb-item{
     display:flex;align-items:center;gap:14px;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:16px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:16px;
     padding:12px 14px;
     box-shadow:0 2px 10px rgba(26,26,110,.06);
     break-inside:avoid;
@@ -28,7 +28,7 @@ const STYLE = `
   .rb-ctrl{display:flex;gap:4px;flex:0 0 auto}
   .rb-icon{
     display:grid;place-items:center;width:32px;height:32px;border-radius:10px;
-    background:#fff;border:1.5px solid #EDE9F8;color:#64748b;cursor:pointer;transition:.15s;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);color:#64748b;cursor:pointer;transition:.15s;
   }
   .rb-icon:hover:not(:disabled){background:#f8fafc;color:#1A1A6E}
   .rb-icon:disabled{opacity:.35;cursor:not-allowed}
@@ -39,7 +39,7 @@ const STYLE = `
 
   .rb-empty{
     text-align:center;color:rgba(26,26,46,.45);font-size:15px;line-height:1.6;
-    background:rgba(255,255,255,.6);border:1.5px dashed #EDE9F8;border-radius:16px;
+    background:rgba(255,255,255,.6);border:2px dashed #CFC7EA;border-radius:16px;
     padding:26px 20px;
   }
 
@@ -53,7 +53,7 @@ const STYLE = `
   .rb-tile{
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
     min-height:82px;padding:10px 6px;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:14px;
     font-family:inherit;cursor:pointer;transition:.15s;
   }
   .rb-tile:hover{border-color:#FF6FB5;background:#FFF8FB;transform:translateY(-2px)}
@@ -70,7 +70,7 @@ const STYLE = `
   .rb-custom-row{display:flex;gap:8px}
   .rb-custom input{
     flex:1;min-width:0;font-family:inherit;font-size:15px;color:#1a1a2e;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:11px;padding:11px 13px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:11px;padding:11px 13px;
     transition:border-color .18s;
   }
   .rb-custom input::placeholder{color:rgba(26,26,46,.34)}
