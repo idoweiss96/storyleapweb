@@ -49,6 +49,13 @@ export const UI = {
     doneText: 'הסל ארוז והכסף בקופה. אפשר להחליף תפקידים ולשחק שוב.',
     newShop: 'קנייה חדשה',
     items: 'פריטים',
+    // 3D store
+    intro: 'משחק לשניים: הקונה מסתובב בחנות וממלא סל, והמוכר/ת סופר/ת מטבעות בקופה. אחרי כל קנייה מחליפים תפקידים!',
+    start: 'להיכנס לחנות',
+    shopHint: 'עמדו מול מוצר על המדף כדי לשים אותו בסל',
+    shopMore: 'עוד משהו? כשמסיימים — הולכים לקופה (העיגול הוורוד)',
+    basketFull: 'הסל מלא! אפשר ללכת לקופה',
+    putBack: 'להחזיר',
     parentTipLabel: 'טיפ להורה',
     parentTip:
       'המשחק הזה הכי טוב בשניים — שבו מול אותו מסך והחליפו תפקידים אחרי כל קנייה. הקונה מתאמן בבחירה ובוויתור, והמוכר בספירה ובעודף. אם הספירה קשה, התחילו מסל של פריט אחד בשקל אחד.',
@@ -78,6 +85,13 @@ export const UI = {
     doneText: 'The basket is packed and the money is in the till. Swap roles and play again.',
     newShop: 'New shopping trip',
     items: 'items',
+    // 3D store
+    intro: "A game for two: the shopper walks the store filling a basket, and the shopkeeper counts coins at the till. Swap roles after every trip!",
+    start: 'Enter the store',
+    shopHint: 'Stand at an item on the shelf to put it in the basket',
+    shopMore: 'Anything else? When done — go to the till (the pink circle)',
+    basketFull: 'The basket is full! Head to the till',
+    putBack: 'Put back',
     parentTipLabel: 'Parent tip',
     parentTip:
       'This game works best with two people — sit at the same screen and swap roles after each trip. The shopper practises choosing and letting go; the shopkeeper practises counting and giving change. If counting is hard, start with a basket holding one item that costs one coin.',
