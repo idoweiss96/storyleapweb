@@ -24,7 +24,7 @@ const STYLE = `
   .bm-side{flex:1;min-width:250px;max-width:360px}
 
   .bm-summary{
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:18px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:18px;
     padding:20px 18px;box-shadow:0 4px 18px rgba(26,26,110,.07);
     break-inside:avoid;
   }
