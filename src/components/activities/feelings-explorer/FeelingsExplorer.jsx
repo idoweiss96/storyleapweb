@@ -39,7 +39,7 @@ const STYLE = `
   .fx-step{text-align:center;font-size:16px;font-weight:700;color:#334155;margin:0 0 14px}
 
   .fx-result{
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:20px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:20px;
     padding:26px 22px;box-shadow:0 6px 24px rgba(26,26,110,.08);
     break-inside:avoid;
   }
