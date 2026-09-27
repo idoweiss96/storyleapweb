@@ -29,14 +29,14 @@ const STYLE = `
   .vr-remove{
     position:absolute;top:7px;inset-inline-end:7px;
     display:grid;place-items:center;width:24px;height:24px;border-radius:999px;
-    background:#fff;border:1.5px solid #EDE9F8;color:#94a3b8;cursor:pointer;transition:.15s;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);color:#94a3b8;cursor:pointer;transition:.15s;
   }
   .vr-remove:hover{color:#1A1A6E;border-color:#FF6FB5}
   .vr-remove:focus-visible{outline:2.5px solid #1A1A6E;outline-offset:2px}
 
   .vr-empty{
     text-align:center;color:rgba(26,26,46,.45);font-size:15px;line-height:1.6;
-    background:rgba(255,255,255,.6);border:1.5px dashed #EDE9F8;border-radius:16px;
+    background:rgba(255,255,255,.6);border:2px dashed #CFC7EA;border-radius:16px;
     padding:26px 20px;
   }
 
@@ -51,7 +51,7 @@ const STYLE = `
   .vr-tile{
     display:flex;align-items:center;gap:11px;text-align:start;
     padding:12px 14px;min-height:58px;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:13px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:13px;
     font-family:inherit;cursor:pointer;transition:.15s;
   }
   .vr-tile:hover:not(:disabled){border-color:#FF6FB5;background:#FFF8FB;transform:translateY(-2px)}
@@ -69,7 +69,7 @@ const STYLE = `
   .vr-custom-row{display:flex;gap:8px}
   .vr-custom input{
     flex:1;min-width:0;font-family:inherit;font-size:15px;color:#1a1a2e;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:11px;padding:11px 13px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:11px;padding:11px 13px;
   }
   .vr-custom input:focus{border-color:#FF6FB5;outline:none}
   .vr-custom button{
