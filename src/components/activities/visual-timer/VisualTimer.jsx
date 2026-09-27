@@ -26,7 +26,7 @@ const STYLE = `
   .vt-field label{display:block;font-size:13.5px;font-weight:600;color:#1A1A6E;margin-bottom:7px;text-align:center}
   .vt-field input{
     width:100%;font-family:inherit;font-size:16px;color:#1a1a2e;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:12px;padding:12px 14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:12px;padding:12px 14px;
     transition:border-color .18s;
   }
   .vt-field input:focus{border-color:#FF6FB5;outline:none}
@@ -46,7 +46,7 @@ const STYLE = `
   .vt-time{
     display:grid;place-items:center;min-height:56px;
     font-family:inherit;font-size:15px;font-weight:700;color:#1A1A6E;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:14px;
     cursor:pointer;transition:.15s;
   }
   .vt-time:hover{border-color:#FF6FB5;background:#FFF8FB;transform:translateY(-2px)}
