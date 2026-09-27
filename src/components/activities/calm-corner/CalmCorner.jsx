@@ -41,7 +41,7 @@ const STYLE = `
 
   .cc2-empty{
     text-align:center;color:rgba(26,26,46,.45);font-size:15px;line-height:1.6;
-    background:rgba(255,255,255,.6);border:1.5px dashed #EDE9F8;border-radius:16px;
+    background:rgba(255,255,255,.6);border:2px dashed #CFC7EA;border-radius:16px;
     padding:26px 20px;
   }
 
@@ -50,7 +50,7 @@ const STYLE = `
   .cc2-field input{
     width:100%;max-width:380px;margin:0 auto;display:block;
     font-family:inherit;font-size:16px;color:#1a1a2e;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:12px;padding:12px 14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:12px;padding:12px 14px;
     transition:border-color .18s;
   }
   .cc2-field input:focus{border-color:#6FD0C4;outline:none}
@@ -59,7 +59,7 @@ const STYLE = `
   .cc2-tile{
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
     min-height:84px;padding:10px 6px;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:14px;
     font-family:inherit;cursor:pointer;transition:.15s;
   }
   .cc2-tile:hover{transform:translateY(-2px)}
@@ -73,7 +73,7 @@ const STYLE = `
   .cc2-agree button{
     display:flex;align-items:center;gap:11px;text-align:start;
     padding:12px 14px;min-height:58px;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:13px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:13px;
     font-family:inherit;cursor:pointer;transition:.15s;
   }
   .cc2-agree button:hover{transform:translateY(-2px)}
@@ -90,7 +90,7 @@ const STYLE = `
   .cc2-custom-row{display:flex;gap:8px}
   .cc2-custom input{
     flex:1;min-width:0;font-family:inherit;font-size:15px;color:#1a1a2e;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:11px;padding:11px 13px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:11px;padding:11px 13px;
   }
   .cc2-custom input:focus{border-color:#6FD0C4;outline:none}
   .cc2-custom button{
