@@ -43,7 +43,7 @@ const STYLE = `
   .br-round{
     min-width:64px;padding:11px 16px;
     font-family:inherit;font-size:15px;font-weight:700;color:#1A1A6E;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:14px;
     cursor:pointer;transition:.15s;
   }
   .br-round:hover{border-color:#FF6FB5;background:#FFF8FB}
