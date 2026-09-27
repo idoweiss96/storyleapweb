@@ -156,6 +156,11 @@ export const UI = {
     allDoneTitle: 'כל החיות טופלו!',
     allDoneText: 'טיפלתם בכל מי שהגיע היום לקליניקה. אפשר לפתוח אותה שוב מחר.',
     patientOf: 'מטופל {n} מתוך {total}',
+    // 3D clinic
+    intro: 'אתם הרופא/ה! חיות מחכות בחדר ההמתנה. כל אחת תספר מה כואב לה — הביאו לה את הכלי שהיא מבקשת מהארונות.',
+    start: 'לפתוח את הקליניקה',
+    pickTool: 'איזה כלי היא צריכה? עמדו מול הארון המתאים כדי לקחת אותו',
+    bringTool: 'הביאו את הכלי למטופל — לעיגול הוורוד',
     parentTipLabel: 'טיפ להורה',
     parentTip:
       'המשחק הזה נועד להכין לביקור אמיתי אצל רופא. שחקו בו לפני התור, ותנו לילד/ה להיות הרופא/ה — מי שמחזיק את המדחום פחות מפחד ממנו. אפשר לעצור בכל שלב ולשאול "מה הוא מרגיש עכשיו?".',
@@ -173,6 +178,11 @@ export const UI = {
     allDoneTitle: 'Every animal has been treated!',
     allDoneText: 'You took care of everyone who came to the clinic today. You can open it again tomorrow.',
     patientOf: 'Patient {n} of {total}',
+    // 3D clinic
+    intro: 'You are the doctor! Animals are waiting in the waiting room. Each will tell you what hurts — bring them the tool they ask for from the cabinets.',
+    start: 'Open the clinic',
+    pickTool: 'Which tool do they need? Stand at the right cabinet to take it',
+    bringTool: 'Bring the tool to your patient — to the pink circle',
     parentTipLabel: 'Parent tip',
     parentTip:
       'This game is made for preparing a child for a real doctor visit. Play it before the appointment and let your child be the doctor — whoever holds the thermometer is less afraid of it. You can pause any time and ask "how do you think he feels now?".',
