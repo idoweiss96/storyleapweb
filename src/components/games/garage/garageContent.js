@@ -91,6 +91,12 @@ export const UI = {
     allDoneTitle: 'המוסך סגור להיום',
     allDoneText: 'תיקנתם את כל הרכבים שהגיעו. כולם נסעו הביתה מרוצים.',
     fuelLabel: 'דלק',
+    // 3D garage
+    intro: 'אתם המכונאים! רכבים נכנסים למוסך עם תקלות שרואים עליהם. הביאו מהקיר את הכלי שמתאים לכל תקלה, ואז צבעו.',
+    start: 'לפתוח את המוסך',
+    pickTool: 'איזה כלי מתקן את התקלה? עמדו מול הכלי כדי לקחת אותו',
+    bringTool: 'הביאו את הכלי לרכב — לעיגול הוורוד',
+    paintHint: 'דרכו על צבע כדי לצבוע את הרכב, ולחצו "לנסוע!"',
     parentTipLabel: 'טיפ להורה',
     parentTip:
       'לכל תקלה יש כלי אחד שמתאים לה, וזה מה שהופך את המשחק לתרגול של התאמה — לא של ניחוש. אם הילד/ה בוחר/ת כלי לא מתאים, שאלו "מה הכלי הזה עושה?" במקום לתקן. אין הפסד ואין ניקוד, אז אפשר לנסות כמה שרוצים.',
@@ -111,6 +117,12 @@ export const UI = {
     allDoneTitle: 'The garage is closed for today',
     allDoneText: 'You fixed every car that came in. They all drove home happy.',
     fuelLabel: 'Fuel',
+    // 3D garage
+    intro: 'You are the mechanics! Cars roll in with faults you can see. Bring the tool that matches each fault from the wall, then paint.',
+    start: 'Open the garage',
+    pickTool: 'Which tool fixes it? Stand at the tool to take it',
+    bringTool: 'Bring the tool to the car — the pink circle',
+    paintHint: 'Step on a colour to paint the car, then press "Drive away!"',
     parentTipLabel: 'Parent tip',
     parentTip:
       'Each fault has exactly one matching tool, which makes this a matching game rather than a guessing one. If your child picks the wrong tool, try asking "what does that tool do?" instead of correcting. There is no losing and no score, so trying is free.',
