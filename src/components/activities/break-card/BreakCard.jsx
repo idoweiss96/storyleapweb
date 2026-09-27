@@ -65,7 +65,7 @@ const STYLE = `
   .bc-tile{
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
     min-height:86px;padding:10px 6px;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:14px;
     font-family:inherit;cursor:pointer;transition:.15s;
   }
   .bc-tile:hover{border-color:#FF6FB5;background:#FFF8FB;transform:translateY(-2px)}
@@ -82,7 +82,7 @@ const STYLE = `
   .bc-custom-row{display:flex;gap:8px}
   .bc-custom input{
     flex:1;min-width:0;font-family:inherit;font-size:15px;color:#1a1a2e;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:11px;padding:11px 13px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:11px;padding:11px 13px;
     transition:border-color .18s;
   }
   .bc-custom input::placeholder{color:rgba(26,26,46,.34)}
