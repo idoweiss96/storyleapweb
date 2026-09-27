@@ -18,7 +18,7 @@ const STYLE = `
 
   .adl-step{
     display:flex;align-items:center;gap:14px;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:16px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:16px;
     padding:14px 16px;box-shadow:0 2px 10px rgba(26,26,110,.06);
     break-inside:avoid;
   }
