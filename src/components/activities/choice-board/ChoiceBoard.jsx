@@ -40,14 +40,14 @@ const STYLE = `
   .cb-remove{
     position:absolute;top:8px;inset-inline-end:8px;
     display:grid;place-items:center;width:26px;height:26px;border-radius:999px;
-    background:#fff;border:1.5px solid #EDE9F8;color:#94a3b8;cursor:pointer;transition:.15s;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);color:#94a3b8;cursor:pointer;transition:.15s;
   }
   .cb-remove:hover{color:#1A1A6E;border-color:#FF6FB5}
   .cb-remove:focus-visible{outline:2.5px solid #1A1A6E;outline-offset:2px}
 
   .cb-empty{
     text-align:center;color:rgba(26,26,46,.45);font-size:15px;line-height:1.6;
-    background:rgba(255,255,255,.6);border:1.5px dashed #EDE9F8;border-radius:16px;
+    background:rgba(255,255,255,.6);border:2px dashed #CFC7EA;border-radius:16px;
     padding:26px 20px;
   }
 
@@ -61,7 +61,7 @@ const STYLE = `
   .cb-tile{
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
     min-height:82px;padding:10px 6px;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:14px;
     font-family:inherit;cursor:pointer;transition:.15s;
   }
   .cb-tile:hover:not(:disabled){border-color:#FF6FB5;background:#FFF8FB;transform:translateY(-2px)}
@@ -78,7 +78,7 @@ const STYLE = `
   .cb-custom-row{display:flex;gap:8px}
   .cb-custom input{
     flex:1;min-width:0;font-family:inherit;font-size:15px;color:#1a1a2e;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:11px;padding:11px 13px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:11px;padding:11px 13px;
     transition:border-color .18s;
   }
   .cb-custom input::placeholder{color:rgba(26,26,46,.34)}
@@ -94,7 +94,7 @@ const STYLE = `
   .cb-own{margin-top:18px}
   .cb-own input{
     width:100%;font-family:inherit;font-size:16px;color:#1a1a2e;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:14px;padding:14px 16px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:14px;padding:14px 16px;
     transition:border-color .18s;
   }
   .cb-own input:focus{border-color:#FF6FB5;outline:none}
