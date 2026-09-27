@@ -31,7 +31,7 @@ const STYLE = `
 
   .sp-empty{
     text-align:center;color:rgba(26,26,46,.45);font-size:15px;line-height:1.6;
-    background:rgba(255,255,255,.6);border:1.5px dashed #EDE9F8;border-radius:16px;
+    background:rgba(255,255,255,.6);border:2px dashed #CFC7EA;border-radius:16px;
     padding:26px 20px;
   }
 
@@ -43,7 +43,7 @@ const STYLE = `
   .sp-q label span{font-size:20px}
   .sp-q input{
     width:100%;font-family:inherit;font-size:16px;color:#1a1a2e;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:12px;padding:12px 14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:12px;padding:12px 14px;
     transition:border-color .18s;
   }
   .sp-q input::placeholder{color:rgba(26,26,46,.32)}
