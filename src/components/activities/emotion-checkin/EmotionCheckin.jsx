@@ -13,7 +13,7 @@ const STYLE = `
   .ck *{box-sizing:border-box}
 
   .ck-chart{
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:18px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:18px;
     padding:20px 16px;box-shadow:0 4px 18px rgba(26,26,110,.07);
     overflow-x:auto;break-inside:avoid;
   }
@@ -43,7 +43,7 @@ const STYLE = `
 
   .ck-needmore{
     text-align:center;color:rgba(26,26,46,.45);font-size:15px;line-height:1.6;
-    background:rgba(255,255,255,.6);border:1.5px dashed #EDE9F8;border-radius:16px;
+    background:rgba(255,255,255,.6);border:2px dashed #CFC7EA;border-radius:16px;
     padding:26px 20px;
   }
 
@@ -57,7 +57,7 @@ const STYLE = `
   .ck-name label{display:block;font-size:13.5px;font-weight:600;color:#1A1A6E;margin-bottom:7px;text-align:center}
   .ck-name input{
     width:100%;font-family:inherit;font-size:16px;color:#1a1a2e;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:12px;padding:11px 14px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:12px;padding:11px 14px;
     transition:border-color .18s;
   }
   .ck-name input:focus{border-color:#FF6FB5;outline:none}
@@ -67,7 +67,7 @@ const STYLE = `
     position:relative;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
     min-height:92px;padding:12px 8px;text-align:center;
-    background:#fff;border:1.5px solid #EDE9F8;border-radius:15px;
+    background:#fff;border:2px solid #D8D0EE;box-shadow:0 3px 0 rgba(58,51,87,.1);border-radius:15px;
     font-family:inherit;cursor:pointer;transition:.15s;
   }
   .ck-tile:hover:not(:disabled){transform:translateY(-2px)}
