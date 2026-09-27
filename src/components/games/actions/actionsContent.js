@@ -38,6 +38,9 @@ export const UI = {
     soundOn: 'להשמיע את המילה',
     soundOff: 'בלי קול',
     again: 'עוד פעם',
+    // 3D playground
+    intro: 'טופי בגן המשחקים ומחכה למילה. לחצו על מילה למטה — וטופי יעשה אותה! אפשר גם להסתובב איתו בגן.',
+    start: 'לגן המשחקים',
     parentTipLabel: 'טיפ להורה',
     parentTip:
       'המשחק בנוי סביב פעלים, שהם לרוב השלב הקשה יותר אחרי שמות עצם. אמרו את המילה יחד עם הלחיצה, ואחר כך נסו הפוך: אתם עושים את הפעולה והילד/ה מוצא/ת את המילה. אפשר להפעיל קול כדי לשמוע את המילה בקול רם.',
@@ -52,6 +55,9 @@ export const UI = {
     soundOn: 'Say the word out loud',
     soundOff: 'Sound off',
     again: 'Again',
+    // 3D playground
+    intro: 'Topi is at the playground waiting for a word. Tap a word below — and Topi does it! You can walk around with Topi too.',
+    start: 'To the playground',
     parentTipLabel: 'Parent tip',
     parentTip:
       'This game is built around verbs, usually the harder step after nouns. Say the word out loud together with the tap, then try it in reverse: you act it out and your child finds the word. Turn the sound on to hear each word spoken.',
