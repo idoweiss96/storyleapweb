@@ -33,6 +33,22 @@ const COL_KITA_CHILD_NAME = 2;
 const COL_KITA_STORY_LINK = 32;
 const COL_KITA_EMAIL_SENT = 33; // column AH
 
+// Google APIs return transient 429/5xx (e.g. 503 UNAVAILABLE); retry with backoff before giving up.
+async function fetchWithRetry(url, options = {}, attempts = 4) {
+  let lastErr;
+  for (let a = 0; a < attempts; a++) {
+    try {
+      const res = await fetch(url, { ...options, signal: AbortSignal.timeout(20000) });
+      if (res.ok || (res.status !== 429 && res.status < 500)) return res;
+      lastErr = new Error(`HTTP ${res.status}: ${await res.text()}`);
+    } catch (e) {
+      lastErr = e;
+    }
+    if (a < attempts - 1) await new Promise(r => setTimeout(r, 1000 * 2 ** a));
+  }
+  throw lastErr;
+}
+
 function isMarkedSent(value) {
   const v = (value || '').toString().trim().toUpperCase();
   return v === 'TRUE' || v === '✔' || v === 'V' || v === 'YES';
@@ -51,7 +67,7 @@ function colLetter(index) {
 
 async function markEmailSent(spreadsheetId, sheetName, rowNumber, accessToken, colIndex = COL_EMAIL_SENT) {
   const col = colLetter(colIndex);
-  await fetch(
+  await fetchWithRetry(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!${col}${rowNumber}?valueInputOption=USER_ENTERED`,
     {
       method: 'PUT',
@@ -62,7 +78,7 @@ async function markEmailSent(spreadsheetId, sheetName, rowNumber, accessToken, c
 }
 
 async function processSheet(base44, spreadsheetId, sheetName, isHebrew, accessToken) {
-  const res = await fetch(
+  const res = await fetchWithRetry(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!${RANGE}`,
     { headers: { 'Authorization': `Bearer ${accessToken}` } }
   );
@@ -155,7 +171,7 @@ async function processSheet(base44, spreadsheetId, sheetName, isHebrew, accessTo
 }
 
 async function processKitaAlefSheet(base44, spreadsheetId, sheetName, accessToken, kitaStories) {
-  const res = await fetch(
+  const res = await fetchWithRetry(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!${RANGE_KITA}`,
     { headers: { 'Authorization': `Bearer ${accessToken}` } }
   );
@@ -212,14 +228,24 @@ export default async function(req) {
 
     const kitaStories = await base44.asServiceRole.entities.KitaAlefStory.filter({}, '-created_date', 500);
 
-    const [heResult, enResult, kitaHeResult, kitaEnResult] = await Promise.all([
+    const settled = await Promise.allSettled([
       processSheet(base44, SPREADSHEET_ID_HE, SHEET_NAME_HE, true, accessToken),
       processSheet(base44, SPREADSHEET_ID_EN, SHEET_NAME_EN, false, accessToken),
       processKitaAlefSheet(base44, SPREADSHEET_ID_KITA_HE, SHEET_NAME_KITA_HE, accessToken, kitaStories),
       processKitaAlefSheet(base44, SPREADSHEET_ID_KITA_EN, SHEET_NAME_KITA_EN, accessToken, kitaStories),
     ]);
 
-    return Response.json({ success: true, hebrew: heResult, english: enResult, kita_alef_hebrew: kitaHeResult, kita_alef_english: kitaEnResult });
+    const names = ['hebrew', 'english', 'kita_alef_hebrew', 'kita_alef_english'];
+    const out = {};
+    const errors = {};
+    settled.forEach((r, idx) => {
+      if (r.status === 'fulfilled') out[names[idx]] = r.value;
+      else errors[names[idx]] = r.reason?.message || String(r.reason);
+    });
+    if (settled.every(r => r.status === 'rejected')) {
+      return Response.json({ error: 'All sheets failed', errors }, { status: 500 });
+    }
+    return Response.json({ success: Object.keys(errors).length === 0, ...out, errors });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
